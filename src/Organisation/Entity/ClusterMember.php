@@ -20,32 +20,24 @@ use Doctrine\Common\Collections;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IctOrganisation
+ * ClusterMember
  *
- * @ORM\Table(name="ict_organisation")
+ * @ORM\Table(name="cluster_organisation")
  * @ORM\Entity
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
- * @Annotation\Name("ict_organisation")
+ * @Annotation\Name("cluster_organisation")
  */
-class IctOrganisation //extends EntityAbstract
+class ClusterMember // extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="ict_id", type="integer", nullable=false)
+     * @ORM\Column(name="cluster_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @var integer
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="General\Entity\Country", inversedBy="ictOrganisation")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=false)
-     * })
-     * @var \General\Entity\Country
-     */
-    private $country;
-    /**
-     * @ORM\ManyToOne(targetEntity="Organisation")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="clusterMember", cascade={"persist"})
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
@@ -53,9 +45,11 @@ class IctOrganisation //extends EntityAbstract
      */
     private $organisation;
     /**
-     * @ORM\ManyToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="ictOrganisation")
-     * @Annotation\Exclude()
-     * @var \Affiliation\Entity\Affiliation[]
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Cluster", inversedBy="clusterMember", cascade={"persist"})
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")
+     * })
+     * @var \Organisation\Entity\Cluster
      */
-    private $affiliation;
+    private $cluster;
 }

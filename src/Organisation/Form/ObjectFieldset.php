@@ -7,7 +7,7 @@
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
  */
-namespace Content\Form;
+namespace Organisation\Form;
 
 use Zend\Form\Fieldset;
 use Zend\Form\Annotation\AnnotationBuilder;
@@ -17,7 +17,7 @@ use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 
-use Content\Entity;
+use Organisation\Entity;
 
 class ObjectFieldset extends Fieldset
 {
