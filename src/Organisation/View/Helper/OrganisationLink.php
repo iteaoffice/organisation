@@ -14,6 +14,7 @@ namespace Organisation\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 
 use Organisation\Entity;
+use Organisation\Service;
 
 /**
  * Create a link to an organisation
@@ -26,60 +27,69 @@ class OrganisationLink extends AbstractHelper
 {
 
     /**
-     * @param \Organisation\Entity\Organisation $subArea
-     * @param                                 $action
-     * @param                                 $show
+     * @param \Organisation\Entity\Organisation $organisationService
+     * @param                                   $action
+     * @param                                   $show
      *
      * @return string
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function __invoke(Entity\Organisation $subArea = null, $action = 'view', $show = 'name')
+    public function __invoke(
+        Service\OrganisationService $organisationService = null,
+        $action = 'view',
+        $show = 'name',
+        $branch = null)
     {
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
         $serverUrl = $this->view->plugin('serverUrl');
         $isAllowed = $this->view->plugin('isAllowed');
 
-        if (!$isAllowed('organisation', $action)) {
-            if ($action === 'view' && $show === 'name') {
-                return $subArea;
-            }
-
-            return '';
-        }
+//        if (!$isAllowed('organisation', $action)) {
+//            if ($action === 'view' && $show === 'name') {
+//                return $organisationService;
+//            }
+//
+//            return '';
+//        }
 
         switch ($action) {
             case 'new':
-                $router  = 'zfcadmin/organisation-manager/new';
-                $text    = sprintf($translate("txt-new-area"));
-                $subArea = new Entity\Organisation();
+                $router              = 'zfcadmin/organisation-manager/new';
+                $text                = sprintf($translate("txt-new-organisation"));
+                $organisationService = new Entity\Organisation();
                 break;
             case 'edit':
                 $router = 'zfcadmin/organisation-manager/edit';
-                $text   = sprintf($translate("txt-edit-organisation-%s"), $subArea);
+                $text   = sprintf($translate("txt-edit-organisation-%s"),
+                    $organisationService->parseOrganisationWithBranch($branch)
+                );
                 break;
             case 'view':
-                $router = 'organisation/organisation';
-                $text   = sprintf($translate("txt-view-organisation-%s"), $subArea);
+                $router = 'route-10';
+                $text   = sprintf($translate("txt-view-organisation-%s"),
+                    $organisationService->parseOrganisationWithBranch($branch)
+                );
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
 
-        if (is_null($subArea)) {
+        if (is_null($organisationService)) {
             throw new \RuntimeException(
                 sprintf(
                     "Area needs to be an instance of %s, %s given in %s",
                     "Organisation\Entity\Organisation",
-                    get_class($subArea),
+                    get_class($organisationService),
                     __CLASS__
                 )
             );
         }
 
         $params = array(
-            'id'     => $subArea->getId(),
+            'id'     => $organisationService->getOrganisation()->getId(),
+            'docRef' => $organisationService->getOrganisation()->getDocRef(),
             'entity' => 'organisation'
         );
 
@@ -101,12 +111,13 @@ class OrganisationLink extends AbstractHelper
                 $classes[]     = "btn btn-primary";
                 break;
             case 'name':
-                $linkContent[] = $subArea->getName();
+                $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);
                 break;
             default:
-                $linkContent[] = $subArea;
+                $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);
                 break;
         }
+
 
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 

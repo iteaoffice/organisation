@@ -10,23 +10,22 @@
 $config = array(
     'controllers'     => array(
         'invokables' => array(
-            'organisation'         => 'Organisation\Controller\OrganisationController',
+            'organisation-index'   => 'Organisation\Controller\OrganisationController',
             'organisation-manager' => 'Organisation\Controller\OrganisationManagerController',
         ),
     ),
-    'view_helpers'    => array(
-        'invokables' => array(
-            'organisationLink' => 'Organisation\View\Helper\OrganisationLink',
-
-        )
+    'view_manager'    => array(
+        'template_path_stack' => array(
+            __DIR__ . '/../view'
+        ),
     ),
     'service_manager' => array(
         'factories'  => array(
             'organisation-assertion' => 'Organisation\Acl\Assertion\Organisation',
         ),
         'invokables' => array(
-            'organisation_generic_service'     => 'Organisation\Service\OrganisationService',
-            'organisation_form_service'        => 'Organisation\Service\FormService',
+            'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
+            'organisation_form_service'             => 'Organisation\Service\FormService',
             'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation',
 
         )
@@ -39,7 +38,7 @@ $config = array(
                     __DIR__ . '/../src/Organisation/Entity/'
                 )
             ),
-            'orm_default'               => array(
+            'orm_default'                    => array(
                 'drivers' => array(
                     'Organisation\Entity' => 'organisation_annotation_driver',
                 )

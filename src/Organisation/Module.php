@@ -23,7 +23,8 @@ class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ServiceProviderInterface,
     Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface
+    Feature\BootstrapListenerInterface,
+    Feature\ViewHelperProviderInterface
 {
 
     public function getAutoloaderConfig()
@@ -56,6 +57,16 @@ class Module implements
     public function getServiceConfig()
     {
         return include __DIR__ . '/../../config/services.config.php';
+    }
+
+    /**
+     * Go to the service configuration
+     *
+     * @return array
+     */
+    public function getViewHelperConfig()
+    {
+        return include __DIR__ . '/../../config/viewhelpers.config.php';
     }
 
     /**

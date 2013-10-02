@@ -165,4 +165,10 @@ class Financial
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
+    /**
+     * @ORM\OneToMany(targetEntity="\Invoice\Entity\FinancialRow", cascade={"persist"}, mappedBy="financial")
+     * @Annotation\Exclude()
+     * @var \Invoice\Entity\FinancialRow[]
+     */
+    private $financialRow;
 }

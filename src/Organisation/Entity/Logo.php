@@ -68,4 +68,124 @@ class Logo
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
+
+    /**
+     * Although an alternative does not have a clear hash, we can create one based on the id;
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return sha1($this->id . $this->getOrganisation()->getOrganisation());
+    }
+
+    /**
+     * @return string
+     * @todo: make the location of the logo dynamic
+     */
+    public function getCacheFileName()
+    {
+        $cacheDir = __DIR__ . '/../../../../../../public' .
+            DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'organisation-logo';
+
+        return $cacheDir . DIRECTORY_SEPARATOR
+        . $this->getHash() . '.'
+        . $this->getContentType()->getExtension();
+    }
+
+    /**
+     * @param \General\Entity\ContentType $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * @return \General\Entity\ContentType
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param \DateTime $dateUpdated
+     */
+    public function setDateUpdated($dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $logoExtension
+     */
+    public function setLogoExtension($logoExtension)
+    {
+        $this->logoExtension = $logoExtension;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogoExtension()
+    {
+        return $this->logoExtension;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param string $organisationLogo
+     */
+    public function setOrganisationLogo($organisationLogo)
+    {
+        $this->organisationLogo = $organisationLogo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganisationLogo()
+    {
+        return $this->organisationLogo;
+    }
 }

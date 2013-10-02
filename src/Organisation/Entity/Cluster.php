@@ -45,9 +45,57 @@ class Cluster //extends EntityAbstract
      */
     private $organisation;
     /**
-     * @ORM\OneToMany(targetEntity="\Organisation\Entity\ClusterMember", cascade={"persist"}, mappedBy="cluster")
+     * @ORM\ManyToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="clusterMember")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\ClusterMember[]
+     * @var \Organisation\Entity\Organisation[]
      */
-    private $clusterMember;
+    private $member;
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation[] $member
+     */
+    public function setMember($member)
+    {
+        $this->member = $member;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation[]
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
 }

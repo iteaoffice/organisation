@@ -1,0 +1,35 @@
+<h1>{{ organisationService.organisation }}</h1>
+
+{% set country = [organisationService.organisation.country] %}
+
+<div class="pull-right">
+    {{ organisationLogo(organisationService) }}
+</div>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-type") }}</dt>
+    <dd>{{ organisationService.organisation.type }}</dd>
+    <dt>{{ translate("txt-country") }}</dt>
+    <dd>{{ organisationService.organisation.country }}</dd>
+    <dt>{{ translate("txt-website") }}</dt>
+    {% for web in organisationService.organisation.web %}
+        <dd>{{ web|raw }}</dd>
+    {% endfor %}
+</dl>
+
+{% if organisationService.organisation.description %}
+    <h3>{{ translate("txt-description") }}</h3>
+    {{ organisationService.organisation.description|raw }}
+{% endif %}
+
+<h3>{{ translate("txt-cluster-membership") }}</h3>
+{% for cluster in organisationService.organisation.clusterMember %}
+    {{ cluster.organisation }}
+    {% set country = country|merge([cluster.organisation.country]) %}
+{% else %}
+    {{ translate("txt-organisation-is-not-active-in-a-cluster") }}
+{% endfor %}
+
+<h3>{{ translate("txt-activity-map") }}</h3>
+
+{{ countryMap(country) }}

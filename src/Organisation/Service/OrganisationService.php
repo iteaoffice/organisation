@@ -9,6 +9,8 @@
  */
 namespace Organisation\Service;
 
+use Organisation\Entity\Organisation;
+
 /**
  * OrganisationService
  *
@@ -25,19 +27,84 @@ class OrganisationService extends ServiceAbstract
      * @var OrganisationService
      */
     protected $organisationService;
+    /**
+     * @var Organisation
+     */
+    protected $organisation;
 
     /**
-     * Find 1 entity based on the name
+     * @param int $id
      *
-     * @param   $entity
-     * @param   $name
-     *
-     * @return object
+     * @return OrganisationService;
      */
-    public function findEntityByName($entity, $name)
+    public function setOrganisationId($id)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findOneBy(
-            array('name' => $name)
+        $this->setOrganisation($this->findEntityById('organisation', $id));
+
+        return $this;
+    }
+
+
+    /**
+     * @param $docRef
+     *
+     * @return null|OrganisationService
+     */
+    public function findOrganisationByDocRef($docRef)
+    {
+        $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
+            array('docRef' => $docRef));
+
+        /**
+         * Return null when no project can be found
+         */
+        if (is_null($organisation)) {
+            return null;
+        }
+
+        return $this->createServiceElement($organisation);
+    }
+
+    /**
+     * @param $branch
+     *
+     * @return string
+     */
+    public function parseOrganisationWithBranch($branch)
+    {
+        return trim(
+            preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $this->getOrganisation() . ' ${3}', $branch)
         );
+    }
+
+    /**
+     * @param Organisation $organisation
+     *
+     * @return OrganisationService
+     */
+    private function createServiceElement(Organisation $organisation)
+    {
+        $organisationService = new self();
+        $organisationService->setServiceLocator($this->getServiceLocator());
+        $organisationService->organisation = $organisation;
+
+        return $organisationService;
+    }
+
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
     }
 }
