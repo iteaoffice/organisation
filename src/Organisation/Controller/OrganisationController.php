@@ -69,7 +69,6 @@ class OrganisationController extends AbstractActionController implements
         return new ViewModel(array('organisation' => $organisation));
     }
 
-
     /**
      * Edit an entity
      *
