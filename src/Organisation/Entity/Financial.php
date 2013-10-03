@@ -9,9 +9,15 @@
  */
 namespace Organisation\Entity;
 
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
+
+use Doctrine\Common\Collections;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * OrganisationFinancial
@@ -34,6 +40,7 @@ class Financial
 
     const NO_REQUIRED_PURCHASE_ORDER = 0;
     const REQUIRED_PURCHASE_ORDER    = 1;
+
 
     /**
      * Textual versions of the vat status
@@ -76,6 +83,7 @@ class Financial
         self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
         self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
     );
+
 
     /**
      * @ORM\Column(name="financial_id", type="integer", nullable=false)

@@ -134,6 +134,7 @@ class OrganisationHandler extends AbstractHelper
             array('paginator' => $paginator));
     }
 
+
     /**
      * @param OrganisationService $organisationService
      *
@@ -146,6 +147,7 @@ class OrganisationHandler extends AbstractHelper
 
         return $this->getView()->render('organisation/partial/list/project.twig', array('projects' => $projects));
     }
+
 
     /**
      * @param \Content\Entity\Handler $handler

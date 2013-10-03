@@ -266,7 +266,7 @@ class Organisation extends EntityAbstract
      */
     public function __toString()
     {
-        return (string) $this->organisation . ', ' . $this->getCountry()->getIso3();
+        return (string)$this->organisation . ', ' . $this->getCountry()->getIso3();
     }
 
     /**
@@ -330,6 +330,7 @@ class Organisation extends EntityAbstract
                 )
             );
         }
+
 
         return $this->inputFilter;
     }
@@ -699,3 +700,4 @@ class Organisation extends EntityAbstract
         return $this->web;
     }
 }
+

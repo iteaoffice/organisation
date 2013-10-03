@@ -17,6 +17,7 @@ use Zend\Form\Annotation;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Type
@@ -45,6 +46,7 @@ class Type extends EntityAbstract
         self::NO_INVOICE => 'txt-invoice',
         self::INVOICE    => 'txt-no-invoice',
     );
+
 
     /**
      * @ORM\Column(name="type_id", type="integer", nullable=false)
@@ -121,7 +123,7 @@ class Type extends EntityAbstract
      */
     public function __toString()
     {
-        return (string) $this->description;
+        return (string)$this->description;
     }
 
     /**

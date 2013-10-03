@@ -118,6 +118,7 @@ class OrganisationLink extends AbstractHelper
                 break;
         }
 
+
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 
         return sprintf(

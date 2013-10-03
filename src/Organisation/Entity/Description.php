@@ -9,9 +9,15 @@
  */
 namespace Organisation\Entity;
 
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
+
+use Doctrine\Common\Collections;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * IctOrganisation
@@ -49,7 +55,7 @@ class Description
      */
     public function __toString()
     {
-        return (string) $this->description;
+        return (string)$this->description;
     }
 
     /**

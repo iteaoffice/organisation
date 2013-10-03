@@ -14,6 +14,7 @@ namespace Organisation\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 
 use Organisation\Service;
+use Organisation\Entity;
 
 /**
  * Create a link to an organisation
@@ -69,6 +70,7 @@ var_dump($logo->count());
             'ext'  => $logo->getContentType()->getExtension(),
             'id'   => $logo->getOrganisation()->getId()
         );
+
 
         $image = sprintf(
             $imageUrl,
