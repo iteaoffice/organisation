@@ -15,8 +15,8 @@ use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Doctrine\Common\Collections;
+
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
