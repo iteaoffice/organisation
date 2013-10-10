@@ -140,7 +140,7 @@ class Organisation extends EntityAbstract
     private $domain;
     /**
      * @ORM\ManyToMany(targetEntity="Program\Entity\Technology", inversedBy="organisation")
-     * @ORM\JoinTable(name="cluster_organisation",
+     * @ORM\JoinTable(name="organisation_technology",
      *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
      *            inverseJoinColumns={@ORM\JoinColumn(name="technology_id", referencedColumnName="technology_id")}
      * )

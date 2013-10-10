@@ -7,6 +7,12 @@
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
  */
+namespace Organisation;
+
+use Organisation\Entity\Organisation;
+
+$organisation = new Organisation();
+
 return array(
     'bjyauthorize' => array(
         // resource providers provide a list of resources that will be tracked
@@ -42,7 +48,9 @@ return array(
             /* If this guard is specified here (i.e. it is enabled), it will block
              * access to all routes unless they are specified here.
              */
-            'BjyAuthorize\Guard\Route' => array(),
+            'BjyAuthorize\Guard\Route' => array(
+                array('route' => 'route-' . $organisation->get('underscore_full_entity_name'), 'roles' => array()),
+            ),
         ),
     ),
 );

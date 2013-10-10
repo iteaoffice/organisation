@@ -67,7 +67,7 @@ class OrganisationLink extends AbstractHelper
                 );
                 break;
             case 'view':
-                $router = 'route-10';
+                $router = 'route-' . $organisationService->getOrganisation()->get("underscore_full_entity_name");
                 $text   = sprintf($translate("txt-view-organisation-%s"),
                     $organisationService->parseOrganisationWithBranch($branch)
                 );
