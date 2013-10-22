@@ -10,6 +10,8 @@
 namespace Organisation\Service;
 
 use Organisation\Entity\Organisation;
+use General\Entity\Country;
+use Project\Entity\Project;
 
 /**
  * OrganisationService
@@ -78,6 +80,49 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * Give a list of organisations per country. A flag can be triggered to toggle only active projects
+     *
+     * @param Country $country
+     * @param bool    $onlyActive
+     *
+     * @return array
+     */
+    public function findOrganisationByCountry(Country $country, $onlyActive = true)
+    {
+        $organisations = array();
+
+        $organisationPerCountry = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
+            ->findOrganisationByCountry($country, $onlyActive);
+
+        foreach ($organisationPerCountry as $organisation) {
+            $organisations[] = $this->createServiceElement($organisation);
+        }
+
+        return $organisations;
+    }
+
+    /**
+     * Produce a list of organisations for a project (only active)
+     *
+     * @param Project $project
+     *
+     * @return OrganisationService[]
+     */
+    public function findOrganisationByProject(Project $project)
+    {
+        $organisations = array();
+
+        foreach ($project->getAffiliation() as $affiliation) {
+            if (is_null($affiliation->getDateEnd())) {
+                $organisations[] = $this->createServiceElement($affiliation->getOrganisation());
+            }
+        }
+
+        return $organisations;
+    }
+
+
+    /**
      * @param Organisation $organisation
      *
      * @return OrganisationService
@@ -94,10 +139,14 @@ class OrganisationService extends ServiceAbstract
 
     /**
      * @param \Organisation\Entity\Organisation $organisation
+     *
+     * @return OrganisationService
      */
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
+
+        return $this;
     }
 
     /**

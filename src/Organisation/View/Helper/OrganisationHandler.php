@@ -18,10 +18,9 @@ use Zend\Paginator\Paginator;
 use Zend\Mvc\Router\Http\RouteMatch;
 
 use Organisation\Service\OrganisationService;
-
 use Project\Service\ProjectService;
-
 use Content\Entity\Handler;
+use General\View\Helper\CountryMap;
 
 /**
  * Class OrganisationHandler
@@ -53,6 +52,10 @@ class OrganisationHandler extends AbstractHelper
      * @var RouteMatch
      */
     protected $routeMatch = null;
+    /**
+     * @var CountryMap
+     */
+    protected $countryMap;
 
     /**
      * @param HelperPluginManager $helperPluginManager
@@ -65,6 +68,7 @@ class OrganisationHandler extends AbstractHelper
             ->get('application')
             ->getMvcEvent()
             ->getRouteMatch();
+        $this->countryMap          = $helperPluginManager->get('countryMap');
     }
 
     /**
@@ -98,12 +102,29 @@ class OrganisationHandler extends AbstractHelper
                 return $this->parseOrganisationProjectList($this->getOrganisationService());
                 break;
 
+            case 'organisation_map':
+                $countryMap = $this->countryMap;
+
+                /**
+                 * Collect the list of countries from the organisation and cluster
+                 */
+                $countries = array($this->getOrganisationService()->getOrganisation()->getCountry());
+                foreach ($this->getOrganisationService()->getOrganisation()->getClusterMember() as $cluster) {
+                    $countries[] = $cluster->getOrganisation()->getCountry();
+                }
+
+
+                return $countryMap($countries);
+                break;
+                break;
+
             default:
                 return sprintf("No handler available for <code>%s</code> in class <code>%s</code>",
                     $this->getHandler()->getHandler(),
                     __CLASS__);
         }
     }
+
 
     /**
      * @param OrganisationService $organisationService

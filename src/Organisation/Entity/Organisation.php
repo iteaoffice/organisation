@@ -23,7 +23,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Organisation
  *
  * @ORM\Table(name="organisation")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  */
@@ -123,6 +123,7 @@ class Organisation extends EntityAbstract
     private $type;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OrderBy({"main"="DESC"})
      * @var \Organisation\Entity\Web[]
      */
     private $web;

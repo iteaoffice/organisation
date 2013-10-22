@@ -1,4 +1,12 @@
 <?php
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Organisation
+ * @package     Entity
+ * @author      Johan van der Heide <info@japaveh.nl>
+ * @copyright   Copyright (c) 2004-2013 Debranova
+ */
 
 namespace Organisation\Entity;
 
@@ -12,6 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Web
 {
+    const NOT_MAIN = 0;
+    const MAIN     = 1;
+
     /**
      * @ORM\Column(name="web_id", type="integer", nullable=false)
      * @ORM\Id
@@ -32,7 +43,7 @@ class Web
     /**
      * @ORM\ManyToOne(targetEntity="Organisation", cascade={"persist"}, inversedBy="web")
      * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=true)
+     *  @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=true)
      * })
      * @var \Organisation\Entity\Organisation
      */

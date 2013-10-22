@@ -10,9 +10,12 @@
 
 return array(
     'factories'  => array(
-        'organisationHandler' => function ($sm) {
-            return new \Organisation\View\Helper\OrganisationHandler($sm);
-        },
+        'organisationHandler'      => function ($sm) {
+                return new \Organisation\View\Helper\OrganisationHandler($sm);
+            },
+        'organisationServiceProxy' => function ($sm) {
+                return new \Organisation\View\Helper\OrganisationServiceProxy($sm);
+            }
     ),
     'invokables' => array(
         'organisationLogo' => 'Organisation\View\Helper\OrganisationLogo',

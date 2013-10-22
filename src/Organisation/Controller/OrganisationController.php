@@ -69,6 +69,53 @@ class OrganisationController extends AbstractActionController implements
         return new ViewModel(array('organisation' => $organisation));
     }
 
+    /**
+     * Show the details of 1 organisation
+     *
+     * @return \Zend\View\Model\ViewModel
+     */
+    public function logoAction()
+    {
+        $this->layout(false);
+        $response = $this->getResponse();
+
+        $organisationService = $this->getOrganisationService()->setOrganisationId(
+            $this->getEvent()->getRouteMatch()->getParam('id')
+        );
+
+        $response->getHeaders()
+            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+            ->addHeaderLine("Pragma: public");
+
+        if ($organisationService->getOrganisation()->getLogo()->count() > 0) {
+
+            /**
+             * an organisation can have multiple logo's. Simply take the first one in the array
+             */
+            $logos = $organisationService->getOrganisation()->getLogo()->toArray();
+            $logo  = array_shift($logos);
+
+            $file = stream_get_contents($logo->getOrganisationLogo());
+
+            $response->getHeaders()
+                ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
+                ->addHeaderLine('Content-Length: ' . (string)strlen($file));
+
+            $response->setContent($file);
+
+            return $response;
+        } else {
+            $response->getHeaders()
+                ->addHeaderLine('Content-Type: image/jpg');
+            $response->setStatusCode(404);
+            /**
+             * $config = $this->getServiceLocator()->get('config');
+             * readfile($config['file_config']['upload_dir'] . DIRECTORY_SEPARATOR . 'removed.jpg');
+             */
+        }
+    }
+
 
     /**
      * Edit an entity
@@ -142,7 +189,7 @@ class OrganisationController extends AbstractActionController implements
      */
     public function getOrganisationService()
     {
-        return $this->getServiceLocator()->get('organisation_generic_service');
+        return $this->getServiceLocator()->get('organisation_organisation_service');
     }
 
     /**

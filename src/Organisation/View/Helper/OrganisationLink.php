@@ -79,7 +79,7 @@ class OrganisationLink extends AbstractHelper
         if (is_null($organisationService)) {
             throw new \RuntimeException(
                 sprintf(
-                    "Area needs to be an instance of %s, %s given in %s",
+                    "organisation needs to be an instance of %s, %s given in %s",
                     "Organisation\Entity\Organisation",
                     get_class($organisationService),
                     __CLASS__

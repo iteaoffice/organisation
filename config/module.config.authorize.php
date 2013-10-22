@@ -50,6 +50,7 @@ return array(
              */
             'BjyAuthorize\Guard\Route' => array(
                 array('route' => 'route-' . $organisation->get('underscore_full_entity_name'), 'roles' => array()),
+                array('route' => 'organisation/logo', 'roles' => array()),
             ),
         ),
     ),

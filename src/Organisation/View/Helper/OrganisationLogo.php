@@ -36,11 +36,15 @@ class OrganisationLogo extends AbstractHelper
         $url  = $this->getView()->plugin('url');
         $logo = $organisationService->getOrganisation()->getLogo();
 
-        if (is_null($logo)) {
+        if ($logo->count() === 0) {
             return 'no logo';
         }
-var_dump($logo->count());
-        $logo = current($logo);
+
+        /**
+         * The company can have multiple logo's. We now take just the first one
+         */
+        $logos = $logo->toArray();
+        $logo  = array_shift($logos);
 
         /**
          * Check if the file is cached and if so, pull it from the assets-folder
@@ -59,11 +63,12 @@ var_dump($logo->count());
         } else {
             file_put_contents(
                 $logo->getCacheFileName(),
-                is_resource($logo->getLogo()) ? stream_get_contents($logo->getLogo()) : $logo->getLogo()
+                is_resource($logo->getOrganisationLogo()) ?
+                    stream_get_contents($logo->getOrganisationLogo()) : $logo->getOrganisationLogo()
             );
         }
 
-        $imageUrl = '<img src="%s?%s" id="%s">';
+        $imageUrl = '<img src="%s" id="%s">';
 
         $params = array(
             'hash' => $logo->getHash(),
@@ -75,7 +80,6 @@ var_dump($logo->count());
         $image = sprintf(
             $imageUrl,
             $url($router, $params),
-            $logo->getDateUpdated()->getTimestamp(),
             'organisation_logo_' . $organisationService->getOrganisation()->getId()
         );
 
