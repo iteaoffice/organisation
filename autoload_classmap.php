@@ -21,6 +21,7 @@ return array(
   'Organisation\Form\FilterCreateObject'                  => __DIR__ . '/src/Organisation/Form/FilterCreateObject.php',
   'Organisation\Form\ObjectFieldset'                      => __DIR__ . '/src/Organisation/Form/ObjectFieldset.php',
   'Organisation\Module'                                   => __DIR__ . '/src/Organisation/Module.php',
+  'Organisation\Repository\Organisation'                  => __DIR__ . '/src/Organisation/Repository/Organisation.php',
   'Organisation\Service\FormService'                      => __DIR__ . '/src/Organisation/Service/FormService.php',
   'Organisation\Service\FormServiceAwareInterface'        => __DIR__ . '/src/Organisation/Service/FormServiceAwareInterface.php',
   'Organisation\Service\OrganisationService'              => __DIR__ . '/src/Organisation/Service/OrganisationService.php',
@@ -29,4 +30,5 @@ return array(
   'Organisation\View\Helper\OrganisationHandler'          => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
   'Organisation\View\Helper\OrganisationLink'             => __DIR__ . '/src/Organisation/View/Helper/OrganisationLink.php',
   'Organisation\View\Helper\OrganisationLogo'             => __DIR__ . '/src/Organisation/View/Helper/OrganisationLogo.php',
+  'Organisation\View\Helper\OrganisationServiceProxy'     => __DIR__ . '/src/Organisation/View/Helper/OrganisationServiceProxy.php',
 );
