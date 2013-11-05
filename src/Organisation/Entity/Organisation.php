@@ -217,6 +217,12 @@ class Organisation extends EntityAbstract
      * @var \Invoice\Entity\Invoice[]
      */
     private $invoice;
+    /**
+     * @ORM\OneToMany(targetEntity="Event\Entity\Booth\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     * @var \Event\Entity\Booth\Financial[]
+     */
+    private $boothFinancial;
 
     /**
      * Class constructor
@@ -237,6 +243,7 @@ class Organisation extends EntityAbstract
         $this->financialDebtor = new Collections\ArrayCollection();
         $this->programDoa      = new Collections\ArrayCollection();
         $this->invoice         = new Collections\ArrayCollection();
+        $this->boothFinancial  = new Collections\ArrayCollection();
     }
 
     /**
@@ -267,7 +274,8 @@ class Organisation extends EntityAbstract
      */
     public function __toString()
     {
-        return (string)$this->organisation . ', ' . $this->getCountry()->getIso3();
+        return (string)$this->organisation;
+        //        return (string)$this->organisation . ', ' . $this->getCountry()->getIso3();
     }
 
     /**
@@ -699,6 +707,22 @@ class Organisation extends EntityAbstract
     public function getWeb()
     {
         return $this->web;
+    }
+
+    /**
+     * @param \Event\Entity\Booth\Financial[] $boothFinancial
+     */
+    public function setBoothFinancial($boothFinancial)
+    {
+        $this->boothFinancial = $boothFinancial;
+    }
+
+    /**
+     * @return \Event\Entity\Booth\Financial[]
+     */
+    public function getBoothFinancial()
+    {
+        return $this->boothFinancial;
     }
 }
 
