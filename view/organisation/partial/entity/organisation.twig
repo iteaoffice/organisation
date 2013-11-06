@@ -5,18 +5,6 @@
     {{ organisationLogo(organisationService) }}
 </div>
 
-<dl class="dl-horizontal">
-    <dt>{{ translate("txt-type") }}</dt>
-    <dd>{{ organisationService.organisation.type }}</dd>
-    <dt>{{ translate("txt-country") }}</dt>
-    <dd>{{ countryFlag(organisationService.organisation.country, 15) }}
-        {{ countryLink(organisationService.organisation.country,'view', 'name') }}</dd>
-    <dt>{{ translate("txt-website") }}</dt>
-    {% for web in organisationService.organisation.web %}
-        <dd>{{ web|raw }}</dd>
-    {% endfor %}
-</dl>
-
 {% if organisationService.organisation.description %}
     <h3>{{ translate("txt-description") }}</h3>
     {{ organisationService.organisation.description|raw }}

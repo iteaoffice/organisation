@@ -28,10 +28,11 @@ class OrganisationLogo extends AbstractHelper
 
     /**
      * @param Service\OrganisationService $organisationService
+     * @param null                        $class
      *
      * @return string
      */
-    public function __invoke(Service\OrganisationService $organisationService = null)
+    public function __invoke(Service\OrganisationService $organisationService = null, $class = null)
     {
         $url  = $this->getView()->plugin('url');
         $logo = $organisationService->getOrganisation()->getLogo();
@@ -68,7 +69,10 @@ class OrganisationLogo extends AbstractHelper
             );
         }
 
-        $imageUrl = '<img src="%s" id="%s">';
+        $classes   = array('img-responsive');
+        $classes[] = $class;
+
+        $imageUrl = '<img src="%s" id="%s" class="%s">';
 
         $params = array(
             'hash' => $logo->getHash(),
@@ -80,7 +84,8 @@ class OrganisationLogo extends AbstractHelper
         $image = sprintf(
             $imageUrl,
             $url($router, $params),
-            'organisation_logo_' . $organisationService->getOrganisation()->getId()
+            'organisation_logo_' . $organisationService->getOrganisation()->getId(),
+            implode(' ', $classes)
         );
 
         return $image;

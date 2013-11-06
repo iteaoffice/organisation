@@ -77,15 +77,17 @@ class OrganisationHandler extends AbstractHelper
      */
     public function render()
     {
-        if (is_null($this->getOrganisationService()) || is_null($this->getOrganisationService()->getOrganisation())) {
-//            return ("The selected organisation cannot be found");
-        }
+
 
         $this->getView()->headTitle()->append("Organisation");
 
         switch ($this->getHandler()->getHandler()) {
 
             case 'organisation':
+
+//                if (is_null($this->getOrganisationService()) || is_null($this->getOrganisationService()->getOrganisation())) {
+//                    return ("The selected organisation cannot be found");
+//                }
 
                 $this->getView()->headTitle()->append($this->getOrganisationService()->getOrganisation()->getOrganisation());
 
@@ -99,7 +101,21 @@ class OrganisationHandler extends AbstractHelper
                 return $this->parseOrganisationList($page);
                 break;
             case 'organisation_project':
+
+                if (is_null($this->getOrganisationService()) || is_null($this->getOrganisationService()->getOrganisation())) {
+                    return ("The selected organisation cannot be found");
+                }
+
                 return $this->parseOrganisationProjectList($this->getOrganisationService());
+                break;
+
+            case 'organisation_metadata':
+
+                if (is_null($this->getOrganisationService()) || is_null($this->getOrganisationService()->getOrganisation())) {
+                    return ("The selected organisation cannot be found");
+                }
+
+                return $this->parseOrganisationMetadata($this->getOrganisationService());
                 break;
 
             case 'organisation_map':
@@ -134,6 +150,17 @@ class OrganisationHandler extends AbstractHelper
     public function parseOrganisation(OrganisationService $organisationService)
     {
         return $this->getView()->render('organisation/partial/entity/organisation',
+            array('organisationService' => $organisationService));
+    }
+
+    /**
+     * @param OrganisationService $organisationService
+     *
+     * @return string
+     */
+    public function parseOrganisationMetadata(OrganisationService $organisationService)
+    {
+        return $this->getView()->render('organisation/partial/entity/organisation-metadata',
             array('organisationService' => $organisationService));
     }
 
@@ -206,6 +233,11 @@ class OrganisationHandler extends AbstractHelper
     public function setDocRef($docRef)
     {
         $organisationService = $this->getOrganisationService()->findOrganisationByDocRef($docRef);
+
+        if (is_null($organisationService)) {
+            return null;
+        }
+
         $this->setOrganisationService($organisationService);
 
         return $this->getOrganisationService();
