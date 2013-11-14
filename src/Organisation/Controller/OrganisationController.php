@@ -23,7 +23,8 @@ use Organisation\Entity;
  * @package     Controller
  */
 class OrganisationController extends AbstractActionController implements
-    FormServiceAwareInterface, ServiceLocatorAwareInterface
+    FormServiceAwareInterface,
+    ServiceLocatorAwareInterface
 {
     /**
      * @var OrganisationService
