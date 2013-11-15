@@ -23,6 +23,33 @@ class Organisation extends EntityRepository
     /**
      * Give a list of organisations
      *
+     * @param         $onlyActive
+     *
+     * @return Entity\Organisation[];
+     */
+    public function findOrganisations($onlyActive)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('o');
+        $qb->distinct('o.id');
+
+        $qb->from('Organisation\Entity\Organisation', 'o');
+        $qb->join('o.affiliation', 'a');
+        $qb->join('a.project', 'p');
+
+        //Limit to only the active projects
+        if ($onlyActive) {
+            $projectRepository = $this->getEntityManager()->getRepository('Project\Entity\Project');
+            $qb                = $projectRepository->onlyActiveProject($qb);
+        }
+
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Give a list of organisations by country
+     *
      * @param Country $country
      * @param         $onlyActive
      *

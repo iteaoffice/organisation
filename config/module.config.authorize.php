@@ -11,8 +11,6 @@ namespace Organisation;
 
 use Organisation\Entity\Organisation;
 
-$organisation = new Organisation();
-
 return array(
     'bjyauthorize' => array(
         // resource providers provide a list of resources that will be tracked
@@ -49,7 +47,6 @@ return array(
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => array(
-                array('route' => 'route-' . $organisation->get('underscore_full_entity_name'), 'roles' => array()),
                 array('route' => 'organisation/logo', 'roles' => array()),
             ),
         ),

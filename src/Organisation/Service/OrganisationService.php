@@ -80,12 +80,33 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * Give a list of organisations. A flag can be triggered to toggle only active projects
+     *
+     * @param bool $onlyActive
+     *
+     * @return OrganisationService[]
+     */
+    public function findOrganisations($onlyActive = true)
+    {
+        $organisations = array();
+
+        $organisationPerCountry = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
+            ->findOrganisations($onlyActive);
+
+        foreach ($organisationPerCountry as $organisation) {
+            $organisations[] = $this->createServiceElement($organisation);
+        }
+
+        return $organisations;
+    }
+
+    /**
      * Give a list of organisations per country. A flag can be triggered to toggle only active projects
      *
      * @param Country $country
      * @param bool    $onlyActive
      *
-     * @return array
+     * @return OrganisationService[]
      */
     public function findOrganisationByCountry(Country $country, $onlyActive = true)
     {

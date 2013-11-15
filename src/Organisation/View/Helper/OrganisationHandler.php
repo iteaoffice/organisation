@@ -165,21 +165,16 @@ class OrganisationHandler extends AbstractHelper
     }
 
     /**
-     * @param $page
+     * Produce a list of organisation
      *
      * @return string
      */
-    public function parseOrganisationList($page)
+    public function parseOrganisationList()
     {
-        $organisation = $this->getOrganisationService()->findAllOrganisationByYear($this->getYear());
-
-        $paginator = new Paginator(new ArrayAdapter($organisation));
-        $paginator->setDefaultItemCountPerPage(9);
-        $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
+        $organisations = $this->getOrganisationService()->findOrganisations(true);
 
         return $this->getView()->render('organisation/partial/list/organisation',
-            array('paginator' => $paginator));
+            array('organisations' => $organisations));
     }
 
 
