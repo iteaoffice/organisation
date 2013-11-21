@@ -14,8 +14,8 @@
     {% for organisation in organisations %}
         <tr>
             <td>{{ organisationLink(organisation,'view','name') }}</td>
-            {#<td>{{ countryLink(organisation.organisation.country,'view','name') }}</td>#}
-            <td>{{ organisation.type }}</td>
+            <td>{{ countryLink(organisation.organisation.country,'view','name') }}</td>
+            <td>{{ organisation.organisation.type }}</td>
         </tr>
     {% endfor %}
     </tbody>
