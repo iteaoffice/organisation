@@ -123,6 +123,23 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * Find a country based on three criteria: Name, CountryObject and the emailaddress
+     *
+     * @param string  $name
+     * @param Country $country
+     * @param string  $emailAddress
+     *
+     * @return Organisation[]
+     */
+    public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
+    {
+        $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
+            ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
+
+        return $organisations;
+    }
+
+    /**
      * Produce a list of organisations for a project (only active)
      *
      * @param Project $project

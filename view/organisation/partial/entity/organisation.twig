@@ -14,5 +14,5 @@
 {% for cluster in organisationService.organisation.clusterMember %}
     {{ cluster.organisation }}
 {% else %}
-    {{ translate("txt-organisation-is-not-active-in-a-cluster") }}
+    {{ translate("txt-organisation-%s-is-not-active-in-a-cluster")|format(organisationService.organisation) }}
 {% endfor %}

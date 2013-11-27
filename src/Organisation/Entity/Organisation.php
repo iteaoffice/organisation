@@ -236,7 +236,6 @@ class Organisation extends EntityAbstract
         $this->cluster         = new Collections\ArrayCollection();
         $this->clusterMember   = new Collections\ArrayCollection();
         $this->log             = new Collections\ArrayCollection();
-        $this->description     = new Collections\ArrayCollection();
         $this->logo            = new Collections\ArrayCollection();
         $this->note            = new Collections\ArrayCollection();
         $this->financial       = new Collections\ArrayCollection();
