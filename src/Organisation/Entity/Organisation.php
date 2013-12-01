@@ -223,6 +223,12 @@ class Organisation extends EntityAbstract
      * @var \Event\Entity\Booth\Financial[]
      */
     private $boothFinancial;
+    /**
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     * @var \Program\Entity\Call\Doa[]
+     */
+    private $doa;
 
     /**
      * Class constructor
@@ -243,6 +249,7 @@ class Organisation extends EntityAbstract
         $this->programDoa      = new Collections\ArrayCollection();
         $this->invoice         = new Collections\ArrayCollection();
         $this->boothFinancial  = new Collections\ArrayCollection();
+        $this->doa             = new Collections\ArrayCollection();
     }
 
     /**
@@ -722,6 +729,22 @@ class Organisation extends EntityAbstract
     public function getBoothFinancial()
     {
         return $this->boothFinancial;
+    }
+
+    /**
+     * @param \Program\Entity\Call\Doa[] $doa
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
+    }
+
+    /**
+     * @return \Program\Entity\Call\Doa[]
+     */
+    public function getDoa()
+    {
+        return $this->doa;
     }
 }
 
