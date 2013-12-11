@@ -11,6 +11,8 @@
  */
 namespace Organisation\View\Helper;
 
+use Zend\View\HelperPluginManager;
+use Zend\ServiceManager\ServiceManager;
 use Zend\View\Helper\AbstractHelper;
 
 use Organisation\Entity;
@@ -27,9 +29,25 @@ class OrganisationLink extends AbstractHelper
 {
 
     /**
-     * @param \Organisation\Entity\Organisation $organisationService
-     * @param                                   $action
-     * @param                                   $show
+     * @var ServiceManager
+     */
+    protected $sm;
+
+    /**
+     * @param HelperPluginManager $helperPluginManager
+     */
+    public function __construct(HelperPluginManager $helperPluginManager)
+    {
+        $this->sm = $helperPluginManager->getServiceLocator();
+    }
+
+    /**
+     * @param Service\OrganisationService $organisationService
+     * @param string                      $action
+     * @param string                      $show
+     * @param null                        $branch
+     * @param null                        $page
+     * @param null                        $alternativeShow
      *
      * @return string
      * @throws \RuntimeException
@@ -39,8 +57,14 @@ class OrganisationLink extends AbstractHelper
         Service\OrganisationService $organisationService = null,
         $action = 'view',
         $show = 'name',
-        $branch = null)
+        $branch = null,
+        $page = null,
+        $alternativeShow = null)
     {
+
+        $router  = $this->sm->get('router');
+        $request = $this->sm->get('request');
+
         $translate = $this->view->plugin('translate');
         $url       = $this->view->plugin('url');
         $serverUrl = $this->view->plugin('serverUrl');
@@ -54,6 +78,16 @@ class OrganisationLink extends AbstractHelper
 //            return '';
 //        }
 
+        $routeMatch = $this->view->getHelperPluginManager()->getServiceLocator()
+            ->get('application')
+            ->getMvcEvent()
+            ->getRouteMatch();
+
+        $params = array(
+            'entity' => 'organisation'
+        );
+
+
         switch ($action) {
             case 'new':
                 $router              = 'zfcadmin/organisation-manager/new';
@@ -65,6 +99,23 @@ class OrganisationLink extends AbstractHelper
                 $text   = sprintf($translate("txt-edit-organisation-%s"),
                     $organisationService->parseOrganisationWithBranch($branch)
                 );
+                break;
+            case 'list':
+
+                $matchedRoute = $router->match($request);
+                /**
+                 * For a list in the front-end simply use the MatchedRouteName
+                 */
+                $router = $matchedRoute->getMatchedRouteName();
+                /**
+                 * Push the docRef in the params array
+                 */
+                $params['docRef'] = $matchedRoute->getParam('docRef');
+
+                $text                = sprintf($translate("txt-list-projects"));
+                $organisationService = new Service\OrganisationService();
+                $organisation        = new Entity\Organisation();
+                $organisationService->setOrganisation($organisation);
                 break;
             case 'view':
                 $router = 'route-' . $organisationService->getOrganisation()->get("underscore_full_entity_name");
@@ -87,11 +138,9 @@ class OrganisationLink extends AbstractHelper
             );
         }
 
-        $params = array(
-            'id'     => $organisationService->getOrganisation()->getId(),
-            'docRef' => $organisationService->getOrganisation()->getDocRef(),
-            'entity' => 'organisation'
-        );
+        $params['id']   = $organisationService->getOrganisation()->getId();
+        $params['page'] = !is_null($page) ? $page : null;
+
 
         $classes     = array();
         $linkContent = array();
@@ -99,19 +148,21 @@ class OrganisationLink extends AbstractHelper
         switch ($show) {
             case 'icon':
                 if ($action === 'edit') {
-                    $linkContent[] = '<i class="icon-pencil"></i>';
-                } elseif ($action === 'delete') {
-                    $linkContent[] = '<i class="icon-remove"></i>';
+                    $linkContent[] = '<span class="glyphicon glyphicon-edit"></span>';
                 } else {
-                    $linkContent[] = '<i class="icon-info-sign"></i>';
+                    $linkContent[] = '<span class="glyphicon glyphicon-info-sign"></span>';
                 }
                 break;
             case 'button':
-                $linkContent[] = '<i class="icon-pencil icon-white"></i> ' . $text;
+                $linkContent[] = '<span class="glyphicon glyphicon-info"></span> ' . $text;
                 $classes[]     = "btn btn-primary";
                 break;
             case 'name':
                 $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);
+                break;
+            case 'paginator':
+
+                $linkContent[] = $alternativeShow;
                 break;
             default:
                 $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);

@@ -78,24 +78,26 @@ class OrganisationHandler extends AbstractHelper
     public function render()
     {
 
-
-        $this->getView()->headTitle()->append("Organisation");
-
+        $translate = $this->getView()->plugin('translate');
         switch ($this->getHandler()->getHandler()) {
 
             case 'organisation':
 
-//                if (is_null($this->getOrganisationService()) || is_null($this->getOrganisationService()->getOrganisation())) {
-//                    return ("The selected organisation cannot be found");
-//                }
+                if (is_null($this->getOrganisationService()) ||
+                    is_null($this->getOrganisationService()->getOrganisation())
+                ) {
+                    return ("The selected organisation cannot be found");
+                }
 
+
+                $this->getView()->headTitle()->append($translate("txt-organisation"));
                 $this->getView()->headTitle()->append($this->getOrganisationService()->getOrganisation()->getOrganisation());
 
                 return $this->parseOrganisation($this->getOrganisationService());
                 break;
             case 'organisation_list':
 
-                $this->getView()->headTitle()->append('List');
+                $this->getView()->headTitle()->append($translate("txt-organisation-list"));
                 $page = $this->routeMatch->getParam('page');
 
                 return $this->parseOrganisationList($page);
@@ -167,14 +169,22 @@ class OrganisationHandler extends AbstractHelper
     /**
      * Produce a list of organisation
      *
+     * @param $page
+     *
      * @return string
      */
-    public function parseOrganisationList()
+    public function parseOrganisationList($page)
     {
         $organisations = $this->getOrganisationService()->findOrganisations(true);
 
+        $paginator = new Paginator(new ArrayAdapter($organisations));
+        $paginator->setDefaultItemCountPerPage($organisations === 'all' ? PHP_INT_MAX : 15);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
+
+
         return $this->getView()->render('organisation/partial/list/organisation',
-            array('organisations' => $organisations));
+            array('paginator' => $paginator));
     }
 
 

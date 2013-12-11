@@ -44,6 +44,7 @@ class Organisation extends EntityRepository
             $qb                = $projectRepository->onlyActiveProject($qb);
         }
 
+        $qb->orderBy('o.organisation', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

@@ -152,9 +152,14 @@ class OrganisationService extends ServiceAbstract
 
         foreach ($project->getAffiliation() as $affiliation) {
             if (is_null($affiliation->getDateEnd())) {
-                $organisations[] = $this->createServiceElement($affiliation->getOrganisation());
+                //Add the organisation in the key to sort on it
+                $organisations[$affiliation->getOrganisation()->getOrganisation()] =
+                    $this->createServiceElement($affiliation->getOrganisation());
             }
         }
+
+        //Sort on the key (ASC)
+        ksort($organisations);
 
         return $organisations;
     }
