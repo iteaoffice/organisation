@@ -28,7 +28,7 @@ return array(
                 'type'          => 'Literal',
                 'priority'      => 1000,
                 'options'       => array(
-                    'route'    => '/assets',
+                    'route'    => '/assets/' . DEBRANOVA_HOST,
                     'defaults' => array(
                         'controller' => 'index',
                         'action'     => 'index',

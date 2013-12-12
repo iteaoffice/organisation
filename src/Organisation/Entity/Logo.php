@@ -85,12 +85,10 @@ class Logo
      */
     public function getCacheFileName()
     {
-        $cacheDir = __DIR__ . '/../../../../../../public' .
-            DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'organisation-logo';
+        $cacheDir = __DIR__ . '/../../../../../../public' . DIRECTORY_SEPARATOR . 'assets' .
+            DEBRANOVA_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
 
-        return $cacheDir . DIRECTORY_SEPARATOR
-        . $this->getHash() . '.'
-        . $this->getContentType()->getExtension();
+        return $cacheDir . DIRECTORY_SEPARATOR . $this->getHash() . '.' . $this->getContentType()->getExtension();
     }
 
     /**
