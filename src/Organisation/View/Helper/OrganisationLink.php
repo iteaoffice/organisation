@@ -118,8 +118,9 @@ class OrganisationLink extends AbstractHelper
                 $organisationService->setOrganisation($organisation);
                 break;
             case 'view':
-                $router = 'route-' . $organisationService->getOrganisation()->get("underscore_full_entity_name");
-                $text   = sprintf($translate("txt-view-organisation-%s"),
+                $router           = 'route-' . $organisationService->getOrganisation()->get("underscore_full_entity_name");
+                $params['docRef'] = $organisationService->getOrganisation()->getDocRef();
+                $text             = sprintf($translate("txt-view-organisation-%s"),
                     $organisationService->parseOrganisationWithBranch($branch)
                 );
                 break;

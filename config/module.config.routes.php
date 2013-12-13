@@ -59,28 +59,7 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'organisations' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/list[/page/:page].html',
-                            'defaults' => array(
-                                'action' => 'organisations',
-                            ),
-                        ),
-                    ),
-                    'organisation'  => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'       => '/[:docRef].html',
-                            'constraints' => array(
-                                'docRef' => '\d+',
-                            ),
-                            'defaults'    => array(
-                                'action' => 'organisation',
-                            ),
-                        ),
-                    ),
-                    'logo'          => array(
+                    'logo' => array(
                         'type'    => 'Segment',
                         'options' => array(
                             'route'       => '/logo/[:id].[:ext]',
@@ -89,15 +68,6 @@ return array(
                             ),
                             'defaults'    => array(
                                 'action' => 'logo',
-                            ),
-                        ),
-                    ),
-                    'edit'          => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/edit/[:entity]/[:id].html',
-                            'defaults' => array(
-                                'action' => 'edit',
                             ),
                         ),
                     ),
