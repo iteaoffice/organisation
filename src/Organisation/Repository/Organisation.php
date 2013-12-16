@@ -26,7 +26,7 @@ class Organisation extends EntityRepository
      *
      * @param         $onlyActive
      *
-     * @return Entity\Organisation[];
+     * @return \Doctrine\ORM\Query
      */
     public function findOrganisations($onlyActive)
     {
@@ -46,7 +46,7 @@ class Organisation extends EntityRepository
 
         $qb->orderBy('o.organisation', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery();
     }
 
     /**

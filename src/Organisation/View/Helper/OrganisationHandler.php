@@ -13,9 +13,10 @@ namespace Organisation\View\Helper;
 
 use Zend\View\HelperPluginManager;
 use Zend\View\Helper\AbstractHelper;
-use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
-use Zend\Mvc\Router\Http\RouteMatch;
+
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
@@ -131,9 +132,7 @@ class OrganisationHandler extends AbstractHelper
                     $countries[] = $cluster->getOrganisation()->getCountry();
                 }
 
-
                 return $countryMap($countries);
-                break;
                 break;
 
             default:
@@ -175,10 +174,10 @@ class OrganisationHandler extends AbstractHelper
      */
     public function parseOrganisationList($page)
     {
-        $organisations = $this->getOrganisationService()->findOrganisations(true);
+        $organisationQuery = $this->getOrganisationService()->findOrganisations(true);
 
-        $paginator = new Paginator(new ArrayAdapter($organisations));
-        $paginator->setDefaultItemCountPerPage($organisations === 'all' ? PHP_INT_MAX : 15);
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 

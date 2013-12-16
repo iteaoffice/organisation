@@ -12,9 +12,10 @@
         <tbody>
         {% for organisation in paginator.getCurrentItems() %}
             <tr>
-                <td>{{ organisationLink(organisation,'view','name') }}</td>
-                <td>{{ countryLink(organisation.organisation.country,'view','name') }}</td>
-                <td>{{ organisation.organisation.type }}</td>
+                {% set organisationService = organisationServiceProxy(organisation) %}
+                <td>{{ organisationLink(organisationService,'view','name') }}</td>
+                <td>{{ countryLink(organisation.country,'view','name') }}</td>
+                <td>{{ organisation.type }}</td>
             </tr>
         {% endfor %}
         </tbody>

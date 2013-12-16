@@ -84,20 +84,13 @@ class OrganisationService extends ServiceAbstract
      *
      * @param bool $onlyActive
      *
-     * @return OrganisationService[]
+     * @return \Doctrine\ORM\Query
      */
     public function findOrganisations($onlyActive = true)
     {
-        $organisations = array();
-
-        $organisationPerCountry = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-            ->findOrganisations($onlyActive);
-
-        foreach ($organisationPerCountry as $organisation) {
-            $organisations[] = $this->createServiceElement($organisation);
-        }
-
-        return $organisations;
+        return $this->getEntityManager()->getRepository(
+            $this->getFullEntityName('organisation')
+        )->findOrganisations($onlyActive);
     }
 
     /**
