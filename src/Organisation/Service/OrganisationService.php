@@ -99,20 +99,12 @@ class OrganisationService extends ServiceAbstract
      * @param Country $country
      * @param bool    $onlyActive
      *
-     * @return OrganisationService[]
+     * @return \Doctrine\ORM\Query
      */
     public function findOrganisationByCountry(Country $country, $onlyActive = true)
     {
-        $organisations = array();
-
-        $organisationPerCountry = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
             ->findOrganisationByCountry($country, $onlyActive);
-
-        foreach ($organisationPerCountry as $organisation) {
-            $organisations[] = $this->createServiceElement($organisation);
-        }
-
-        return $organisations;
     }
 
     /**
@@ -155,6 +147,20 @@ class OrganisationService extends ServiceAbstract
         ksort($organisations);
 
         return $organisations;
+    }
+
+    /**
+     * Search for organisations based on a search-item
+     *
+     * @param $searchItem
+     * @param $maxResults
+     *
+     * @return Organisation[]
+     */
+    public function searchOrganisation($searchItem, $maxResults)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
+            ->searchOrganisations($searchItem, $maxResults);
     }
 
 

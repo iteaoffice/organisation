@@ -48,6 +48,7 @@ return array(
              */
             'BjyAuthorize\Guard\Route' => array(
                 array('route' => 'organisation/logo', 'roles' => array()),
+                array('route' => 'organisation/search', 'roles' => array()),
             ),
         ),
     ),

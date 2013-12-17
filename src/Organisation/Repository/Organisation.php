@@ -55,7 +55,7 @@ class Organisation extends EntityRepository
      * @param Country $country
      * @param         $onlyActive
      *
-     * @return Entity\Organisation[];
+     * @return \Doctrine\ORM\Query
      */
     public function findOrganisationByCountry(Country $country, $onlyActive)
     {
@@ -77,8 +77,37 @@ class Organisation extends EntityRepository
         $qb->setParameter(8, $country);
 
 
+        return $qb->getQuery();
+    }
+
+    /**
+     * This is basic search for organisations (based on the name, number and description
+     *
+     * @param string $searchItem
+     * @param int    $maxResults
+     *
+     * @return Entity\Organisation[]
+     */
+    public function searchOrganisations($searchItem, $maxResults = 12)
+    {
+
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('o');
+        $qb->distinct('o.id');
+
+        $qb->from('Organisation\Entity\Organisation', 'o');
+
+        $qb->andWhere('o.organisation LIKE :searchItem');
+
+        $qb->setParameter('searchItem', "%" . $searchItem . "%");
+
+        $qb->setMaxResults($maxResults);
+
+        $qb->orderBy('o.organisation', 'DESC');
+
         return $qb->getQuery()->getResult();
     }
+
 
     /**
      * @param         $name

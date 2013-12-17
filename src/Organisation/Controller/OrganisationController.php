@@ -12,11 +12,14 @@ namespace Organisation\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\Paginator\Adapter\ArrayAdapter;
+use Zend\Paginator\Paginator;
 
 use Organisation\Service\OrganisationService;
 use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\FormService;
 use Organisation\Entity;
+use Organisation\Form\Search;
 
 /**
  * @category    Organisation
@@ -147,6 +150,33 @@ class OrganisationController extends AbstractActionController implements
         }
 
         return new ViewModel(array('form' => $form, 'entity' => $entity));
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function searchAction()
+    {
+        $this->layout(false);
+        $searchItem = $this->getRequest()->getQuery()->get('search_item');
+        $maxResults = $this->getRequest()->getQuery()->get('max_rows');
+
+        $projectSearchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults);
+        $searchForm          = new Search();
+        $searchForm->setData($_POST);
+
+        /**
+         * Include a paginator to be able to have later paginated search results in pages
+         */
+        $paginator = new Paginator(new ArrayAdapter($projectSearchResult));
+        $paginator->setDefaultItemCountPerPage($maxResults);
+        $paginator->setCurrentPageNumber(1);
+        $paginator->setPageRange(1);
+
+        $viewModel = new ViewModel(array('paginator' => $paginator, 'form' => $searchForm));
+        $viewModel->setTemplate('organisation/partial/list/organisation');
+
+        return $viewModel;
     }
 
     /**

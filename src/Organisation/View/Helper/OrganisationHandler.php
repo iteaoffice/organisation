@@ -14,13 +14,16 @@ namespace Organisation\View\Helper;
 use Zend\View\HelperPluginManager;
 use Zend\View\Helper\AbstractHelper;
 use Zend\Paginator\Paginator;
+use Zend\Mvc\Router\RouteMatch;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
 use Organisation\Service\OrganisationService;
+use Organisation\Form\Search;
 use Project\Service\ProjectService;
 use Content\Entity\Handler;
+use Content\Service\ArticleService;
 use General\View\Helper\CountryMap;
 
 /**
@@ -37,6 +40,10 @@ class OrganisationHandler extends AbstractHelper
      * @var ProjectService
      */
     protected $projectService;
+    /**
+     * @var ArticleService
+     */
+    protected $articleService;
     /**
      * @var Handler
      */
@@ -57,6 +64,10 @@ class OrganisationHandler extends AbstractHelper
      * @var CountryMap
      */
     protected $countryMap;
+    /**
+     * @var int
+     */
+    protected $limit = 5;
 
     /**
      * @param HelperPluginManager $helperPluginManager
@@ -65,6 +76,7 @@ class OrganisationHandler extends AbstractHelper
     {
         $this->organisationService = $helperPluginManager->getServiceLocator()->get('organisation_organisation_service');
         $this->projectService      = $helperPluginManager->getServiceLocator()->get('project_project_service');
+        $this->articleService      = $helperPluginManager->getServiceLocator()->get('content_article_service');
         $this->routeMatch          = $helperPluginManager->getServiceLocator()
             ->get('application')
             ->getMvcEvent()
@@ -119,6 +131,12 @@ class OrganisationHandler extends AbstractHelper
                 }
 
                 return $this->parseOrganisationMetadata($this->getOrganisationService());
+                break;
+
+            case 'organisation_article':
+
+                return $this->parseOrganisationArticleList($this->getOrganisationService());
+
                 break;
 
             case 'organisation_map':
@@ -181,9 +199,14 @@ class OrganisationHandler extends AbstractHelper
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
+        $searchForm = new Search();
 
         return $this->getView()->render('organisation/partial/list/organisation',
-            array('paginator' => $paginator));
+            array(
+                'paginator' => $paginator,
+                'form'      => $searchForm
+            )
+        );
     }
 
 
@@ -198,6 +221,29 @@ class OrganisationHandler extends AbstractHelper
         $projects = $this->projectService->findProjectByOrganisation($organisationService->getOrganisation());
 
         return $this->getView()->render('organisation/partial/list/project.twig', array('projects' => $projects));
+    }
+
+    /**
+     * @param OrganisationService $organisationService
+     *
+     * @return \Content\Entity\Article[]
+     */
+    public function parseOrganisationArticleList(OrganisationService $organisationService)
+    {
+        $articles = $this->articleService->findArticlesByOrganisation(
+            $organisationService->getOrganisation(),
+            $this->getLimit()
+        );
+
+        /**
+         * Parse the organisationService in to have the these functions available in the view
+         */
+
+        return $this->getView()->render('organisation/partial/list/article.twig', array(
+            'organisationService' => $organisationService,
+            'articles'            => $articles,
+            'limit'               => $this->getLimit(),
+        ));
     }
 
 
@@ -261,5 +307,21 @@ class OrganisationHandler extends AbstractHelper
     public function getOrganisationService()
     {
         return $this->organisationService;
+    }
+
+    /**
+     * @param int $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
     }
 }

@@ -124,6 +124,12 @@ class OrganisationLink extends AbstractHelper
                     $organisationService->parseOrganisationWithBranch($branch)
                 );
                 break;
+            case 'view-article':
+                $router = 'route-' . $organisationService->getOrganisation()->get('underscore_full_entity_name') . '-article';
+                $text   = sprintf($translate("txt-view-article-for-organisation-%s"),
+                    $organisationService->parseOrganisationWithBranch($branch)
+                );
+                break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
         }
@@ -139,9 +145,9 @@ class OrganisationLink extends AbstractHelper
             );
         }
 
+
         $params['id']   = $organisationService->getOrganisation()->getId();
         $params['page'] = !is_null($page) ? $page : null;
-
 
         $classes     = array();
         $linkContent = array();

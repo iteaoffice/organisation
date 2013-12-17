@@ -59,7 +59,16 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'logo' => array(
+                    'search' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/search',
+                            'defaults' => array(
+                                'action' => 'search',
+                            ),
+                        ),
+                    ),
+                    'logo'   => array(
                         'type'    => 'Segment',
                         'options' => array(
                             'route'       => '/logo/[:id].[:ext]',
