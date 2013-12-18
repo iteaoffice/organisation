@@ -1,17 +1,19 @@
 {% if  articles|length > 0 %}
-    <h3>{{ translate("txt-related-articles-for-organisation-%s")|format(organisationService.organisation) }}</h3>
-    <ul class="list-group">
-        {% for article in articles %}
-            <li class="list-group-item">
-                {{ articleTypeIcon(article.type) }}
-                {{ articleLink(article,'view-public','name') }}
-            </li>
-        {% else %}
-            {{ ztbalert().info(translate("txt-no-article-found"))|raw }}
-        {% endfor %}
+    <div class="well well-sm">
+        <h3>{{ translate("txt-related-articles-for-organisation-%s")|format(organisationService.organisation) }}</h3>
+        <ul class="list-unstyled list-documents">
+            {% for article in articles %}
+                <li>
+                    {{ articleTypeIcon(article.type) }}
+                    {{ articleLink(article,'view-public','name') }}
+                </li>
+            {% else %}
+                {{ ztbalert().info(translate("txt-no-article-found"))|raw }}
+            {% endfor %}
 
-        {% if limit != 0 %}
-            {{ organisationLink(organisationService,'view-article', 'more') }}
-        {% endif %}
-    </ul>
+            {% if limit != 0 %}
+                {{ organisationLink(organisationService,'view-article', 'more') }}
+            {% endif %}
+        </ul>
+    </div>
 {% endif %}
