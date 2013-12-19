@@ -20,6 +20,7 @@ return array(
   'Organisation\Form\CreateObject'                        => __DIR__ . '/src/Organisation/Form/CreateObject.php',
   'Organisation\Form\FilterCreateObject'                  => __DIR__ . '/src/Organisation/Form/FilterCreateObject.php',
   'Organisation\Form\ObjectFieldset'                      => __DIR__ . '/src/Organisation/Form/ObjectFieldset.php',
+  'Organisation\Form\Search'                              => __DIR__ . '/src/Organisation/Form/Search.php',
   'Organisation\Module'                                   => __DIR__ . '/src/Organisation/Module.php',
   'Organisation\Repository\Organisation'                  => __DIR__ . '/src/Organisation/Repository/Organisation.php',
   'Organisation\Service\FormService'                      => __DIR__ . '/src/Organisation/Service/FormService.php',

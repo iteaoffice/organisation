@@ -117,7 +117,9 @@ class OrganisationHandler extends AbstractHelper
                 break;
             case 'organisation_project':
 
-                if (is_null($this->getOrganisationService()) || is_null($this->getOrganisationService()->getOrganisation())) {
+                if (is_null($this->getOrganisationService()) ||
+                    is_null($this->getOrganisationService()->getOrganisation())
+                ) {
                     return ("The selected organisation cannot be found");
                 }
 
@@ -126,7 +128,9 @@ class OrganisationHandler extends AbstractHelper
 
             case 'organisation_metadata':
 
-                if (is_null($this->getOrganisationService()) || is_null($this->getOrganisationService()->getOrganisation())) {
+                if (is_null($this->getOrganisationService()) ||
+                    is_null($this->getOrganisationService()->getOrganisation())
+                ) {
                     return ("The selected organisation cannot be found");
                 }
 
@@ -217,7 +221,6 @@ class OrganisationHandler extends AbstractHelper
      */
     public function parseOrganisationProjectList(OrganisationService $organisationService)
     {
-
         $projects = $this->projectService->findProjectByOrganisation($organisationService->getOrganisation());
 
         return $this->getView()->render('organisation/partial/list/project.twig', array('projects' => $projects));
