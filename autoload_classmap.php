@@ -28,6 +28,7 @@ return array(
   'Organisation\Service\OrganisationService'              => __DIR__ . '/src/Organisation/Service/OrganisationService.php',
   'Organisation\Service\ServiceAbstract'                  => __DIR__ . '/src/Organisation/Service/ServiceAbstract.php',
   'Organisation\Service\ServiceInterface'                 => __DIR__ . '/src/Organisation/Service/ServiceInterface.php',
+  'Organisation\Version\Version'                          => __DIR__ . '/src/Organisation/Version/Version.php',
   'Organisation\View\Helper\OrganisationHandler'          => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
   'Organisation\View\Helper\OrganisationLink'             => __DIR__ . '/src/Organisation/View/Helper/OrganisationLink.php',
   'Organisation\View\Helper\OrganisationLogo'             => __DIR__ . '/src/Organisation/View/Helper/OrganisationLogo.php',

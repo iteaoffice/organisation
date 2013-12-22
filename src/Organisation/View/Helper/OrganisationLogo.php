@@ -1,20 +1,19 @@
 <?php
 
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     View
  * @subpackage  Helper
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Organisation\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 
 use Organisation\Service;
-use Organisation\Entity;
 
 /**
  * Create a link to an organisation

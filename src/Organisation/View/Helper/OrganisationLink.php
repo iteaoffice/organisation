@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     View
  * @subpackage  Helper
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Organisation\View\Helper;
 
@@ -87,7 +87,6 @@ class OrganisationLink extends AbstractHelper
             'entity' => 'organisation'
         );
 
-
         switch ($action) {
             case 'new':
                 $router              = 'zfcadmin/organisation-manager/new';
@@ -146,7 +145,6 @@ class OrganisationLink extends AbstractHelper
             );
         }
 
-
         $params['id']   = $organisationService->getOrganisation()->getId();
         $params['page'] = !is_null($page) ? $page : null;
 
@@ -179,7 +177,6 @@ class OrganisationLink extends AbstractHelper
                 $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);
                 break;
         }
-
 
         $uri = '<a href="%s" title="%s" class="%s">%s</a>';
 

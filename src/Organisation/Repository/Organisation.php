@@ -4,8 +4,8 @@
  *
  * @category    Organisation
  * @package     Repository
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Organisation\Repository;
 
@@ -24,7 +24,7 @@ class Organisation extends EntityRepository
     /**
      * Give a list of organisations
      *
-     * @param         $onlyActive
+     * @param   $onlyActive
      *
      * @return \Doctrine\ORM\Query
      */
@@ -76,7 +76,6 @@ class Organisation extends EntityRepository
         $qb->andWhere('o.country = ?8');
         $qb->setParameter(8, $country);
 
-
         return $qb->getQuery();
     }
 
@@ -107,7 +106,6 @@ class Organisation extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
 
     /**
      * @param         $name

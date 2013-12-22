@@ -1,11 +1,11 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     Service
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Organisation\Service;
 
@@ -45,7 +45,6 @@ class OrganisationService extends ServiceAbstract
 
         return $this;
     }
-
 
     /**
      * @param $docRef
@@ -163,7 +162,6 @@ class OrganisationService extends ServiceAbstract
             ->searchOrganisations($searchItem, $maxResults);
     }
 
-
     /**
      * @param Organisation $organisation
      *
@@ -177,7 +175,6 @@ class OrganisationService extends ServiceAbstract
 
         return $organisationService;
     }
-
 
     /**
      * @param \Organisation\Entity\Organisation $organisation

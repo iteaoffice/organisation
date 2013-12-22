@@ -1,4 +1,6 @@
-organisation
-===========
+Organisation
+============
 
-Module for the management of affiliates
+Version: 1.0.1-dev
+
+Module for the management of organisations

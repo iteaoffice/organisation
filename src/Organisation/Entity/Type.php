@@ -4,8 +4,8 @@
  *
  * @category    Organisation
  * @package     Entity
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Debranova
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 Debranova
  */
 namespace Organisation\Entity;
 
@@ -17,7 +17,6 @@ use Zend\Form\Annotation;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Type
@@ -46,7 +45,6 @@ class Type extends EntityAbstract
         self::NO_INVOICE => 'txt-invoice',
         self::INVOICE    => 'txt-no-invoice',
     );
-
 
     /**
      * @ORM\Column(name="type_id", type="integer", nullable=false)
@@ -123,7 +121,7 @@ class Type extends EntityAbstract
      */
     public function __toString()
     {
-        return (string)$this->description;
+        return (string) $this->description;
     }
 
     /**

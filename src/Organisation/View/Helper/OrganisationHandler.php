@@ -1,12 +1,12 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     View
  * @subpackage  Helper
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 
 namespace Organisation\View\Helper;
@@ -102,7 +102,6 @@ class OrganisationHandler extends AbstractHelper
                     return ("The selected organisation cannot be found");
                 }
 
-
                 $this->getView()->headTitle()->append($translate("txt-organisation"));
                 $this->getView()->headTitle()->append($this->getOrganisationService()->getOrganisation()->getOrganisation());
 
@@ -138,7 +137,6 @@ class OrganisationHandler extends AbstractHelper
                 break;
 
             case 'organisation_article':
-
                 return $this->parseOrganisationArticleList($this->getOrganisationService());
 
                 break;
@@ -163,7 +161,6 @@ class OrganisationHandler extends AbstractHelper
                     __CLASS__);
         }
     }
-
 
     /**
      * @param OrganisationService $organisationService
@@ -213,7 +210,6 @@ class OrganisationHandler extends AbstractHelper
         );
     }
 
-
     /**
      * @param OrganisationService $organisationService
      *
@@ -248,7 +244,6 @@ class OrganisationHandler extends AbstractHelper
             'limit'               => $this->getLimit(),
         ));
     }
-
 
     /**
      * @param \Content\Entity\Handler $handler
