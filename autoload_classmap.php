@@ -10,7 +10,7 @@ return array(
   'Organisation\Entity\Financial'                         => __DIR__ . '/src/Organisation/Entity/Financial.php',
   'Organisation\Entity\HydrateInterface'                  => __DIR__ . '/src/Organisation/Entity/HydrateInterface.php',
   'Organisation\Entity\IctOrganisation'                   => __DIR__ . '/src/Organisation/Entity/IctOrganisation.php',
-  'Organisation\Entity\OrganisationLink'                  => __DIR__ . '/src/Organisation/Entity/Link.php',
+  'Organisation\Entity\Link'                              => __DIR__ . '/src/Organisation/Entity/Link.php',
   'Organisation\Entity\Log'                               => __DIR__ . '/src/Organisation/Entity/Log.php',
   'Organisation\Entity\Logo'                              => __DIR__ . '/src/Organisation/Entity/Logo.php',
   'Organisation\Entity\Note'                              => __DIR__ . '/src/Organisation/Entity/Note.php',
