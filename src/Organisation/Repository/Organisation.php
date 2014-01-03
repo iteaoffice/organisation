@@ -76,6 +76,8 @@ class Organisation extends EntityRepository
         $qb->andWhere('o.country = ?8');
         $qb->setParameter(8, $country);
 
+        $qb->orderBy('o.organisation', 'ASC');
+
         return $qb->getQuery();
     }
 
@@ -102,7 +104,7 @@ class Organisation extends EntityRepository
 
         $qb->setMaxResults($maxResults);
 
-        $qb->orderBy('o.organisation', 'DESC');
+        $qb->orderBy('o.organisation', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

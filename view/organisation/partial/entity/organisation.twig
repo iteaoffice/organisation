@@ -10,9 +10,9 @@
     {{ organisationService.organisation.description|raw }}
 {% endif %}
 
-<h3>{{ translate("txt-cluster-membership") }}</h3>
-{% for cluster in organisationService.organisation.clusterMember %}
-    {{ cluster.organisation }}
-{% else %}
-    {{ translate("txt-organisation-%s-is-not-active-in-a-cluster")|format(organisationService.organisation) }}
-{% endfor %}
+{% if organisationService.organisation.clusterMember.count > 0 %}
+    <h3>{{ translate("txt-cluster-membership") }}</h3>
+    {% for cluster in organisationService.organisation.clusterMember %}
+        {{ cluster.organisation }}
+    {% endfor %}
+{% endif %}
