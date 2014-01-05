@@ -103,7 +103,23 @@ class OrganisationHandler extends AbstractHelper
                 }
 
                 $this->getView()->headTitle()->append($translate("txt-organisation"));
-                $this->getView()->headTitle()->append($this->getOrganisationService()->getOrganisation()->getOrganisation());
+                $this->getView()->headTitle()->append(
+                    $this->getOrganisationService()->getOrganisation()->getOrganisation()
+                );
+
+                $organisationLink = $this->view->plugin('organisationLink');
+                $this->getView()->headMeta()->setProperty('og:type',
+                    $translate("txt-organisation")
+                );
+                $this->getView()->headMeta()->setProperty('og:title',
+                    $this->getOrganisationService()->getOrganisation()->getOrganisation()
+                );
+                //$this->getView()->headMeta()->setProperty('og:description', $this->getOrganisationService()->getOrganisation()->getDescription());
+                $this->getView()->headMeta()->setProperty('og:url', $organisationLink->__invoke(
+                        $this->getOrganisationService(), 'view', 'social'
+                    )
+                );
+
 
                 return $this->parseOrganisation($this->getOrganisationService());
                 break;

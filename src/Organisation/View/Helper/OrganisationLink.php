@@ -173,6 +173,9 @@ class OrganisationLink extends AbstractHelper
 
                 $linkContent[] = $alternativeShow;
                 break;
+            case 'social':
+                return $serverUrl() . $url($router, $params);
+                break;
             default:
                 $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);
                 break;

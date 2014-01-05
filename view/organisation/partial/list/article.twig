@@ -1,19 +1,18 @@
 {% if  articles|length > 0 %}
     <div class="well well-sm">
         <h3>{{ translate("txt-related-articles-for-organisation-%s")|format(organisationService.organisation) }}</h3>
-        <ul class="list-unstyled list-documents">
+        <table class="table">
             {% for article in articles %}
-                <li>
-                    {{ articleTypeIcon(article.type) }}
-                    {{ articleLink(article,'view-public','name') }}
-                </li>
-            {% else %}
-                {{ ztbalert().info(translate("txt-no-article-found"))|raw }}
+                <tr>
+                    <td>{{ articleTypeIcon(article.type) }}</td>
+                    <td>{{ articleLink(article,'view-public','name') }}</td>
+                </tr>
             {% endfor %}
+        </table>
 
-            {% if limit != 0 %}
-                {{ organisationLink(organisationService,'view-article', 'more') }}
-            {% endif %}
-        </ul>
+        {% if limit != 0 %}
+            {{ organisationLink(organisationService,'view-article', 'more') }}
+        {% endif %}
+
     </div>
 {% endif %}
