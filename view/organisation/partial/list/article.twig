@@ -4,7 +4,7 @@
         <table class="table">
             {% for article in articles %}
                 <tr>
-                    <td>{{ articleTypeIcon(article.type) }}</td>
+                    <td class="label-cell">{{ articleTypeIcon(article.type) }}</td>
                     <td>{{ articleLink(article,'view-public','name') }}</td>
                 </tr>
             {% endfor %}
