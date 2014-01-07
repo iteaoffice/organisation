@@ -1,21 +1,22 @@
-<div id="organisation-list">
-    <h1 id="title">{{ translate("txt-organisation-list") }}</h1>
+<h1 id="title">
+    {{ translate("txt-organisation-list") }}
+    <div id="throbber"></div>
+</h1>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <p class="lead">{{ translate("txt-organisation-list-explanation") }}</p>
-        </div>
-
-        <div class="col-sm-6">
-            <div id="throbber"></div>
-            {% do form.prepare() %}
-            {{ form().openTag(form)|raw }}
-            {{ formelement(form.get('search')) }}
-            {{ form().closeTag()|raw }}
-        </div>
-
+<div class="row">
+    <div class="col-sm-6">
+        <p class="lead">{{ translate("txt-organisation-list-explanation") }}</p>
     </div>
 
+    <div class="col-sm-6">
+        {% do form.prepare() %}
+        {{ form().openTag(form)|raw }}
+        {{ formelement(form.get('search')) }}
+        {{ form().closeTag()|raw }}
+    </div>
+</div>
+
+<div id="organisation-list">
     {% if paginator.pageRange > 0 %}
         <table class="table table-condensed table-striped table-hover">
             <thead>
@@ -43,33 +44,51 @@
 
 <script type="text/javascript">
     $(function () {
-        $("#search").autocomplete({
-            source: function (request, response) {
+        $("#search").keyup(function (e) {
+
+            delay(function () {
                 $.ajax({
                     url: 'organisation/search',
                     data: {
                         max_rows: 12,
-                        search_item: request.term
+                        search_item: $("#search").val()
                     },
                     success: function (data) {
                         $("#organisation-list").html(data);
+                        $("#throbber").remove();
                     },
                     error: function (event, ui) {
                         alert("Search Failed");
                     }
                 });
-            },
-            minLength: 2,
-            select: function (event, ui) {
-                log(ui.item ?
-                        "Selected: " + ui.item.label :
-                        "Nothing selected, input was " + this.value);
-            },
-            search: function () {
-                var throb = new Throbber({color: '#00A651'});
-                throb.appendTo(document.getElementById('title'));
-                throb.start();
-            }
-        });
+            }, 100);
+
+        }).bind("paste", function (e) {
+                    // have to do this so the DOM can catch up on mouse right-click paste
+                    setTimeout(function () {
+                        $.ajax({
+                            url: 'organisation/search',
+                            data: {
+                                max_rows: 12,
+                                search_item: $("#search").val()
+                            },
+                            success: function (data) {
+                                $("#organisation-list").html(data);
+                                $("#throbber").remove();
+                            },
+                            error: function (event, ui) {
+                                alert("Search Failed");
+                            }
+                        });
+                    }, 500);
+                });
     });
+
+    var delay = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
 </script>

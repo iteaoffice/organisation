@@ -1,0 +1,25 @@
+<div id="organisation-list">
+    {% if paginator.pageRange > 0 %}
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+            <tr>
+                <th>{{ translate("txt-organisation") }}</th>
+                <th>{{ translate("txt-country") }}</th>
+                <th>{{ translate("txt-type") }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for organisation in paginator.getCurrentItems() %}
+                <tr>
+                    {% set organisationService = organisationServiceProxy(organisation) %}
+                    <td>{{ organisationLink(organisationService,'view','name') }}</td>
+                    <td>{{ countryLink(organisation.country,'view','name') }}</td>
+                    <td>{{ organisation.type }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% include 'organisation/partial/pagination-control.twig' with {'paginator': paginator} %}
+    {% endif %}
+</div>

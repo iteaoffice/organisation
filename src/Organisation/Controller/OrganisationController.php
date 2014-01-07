@@ -104,7 +104,7 @@ class OrganisationController extends AbstractActionController implements
 
             $response->getHeaders()
                 ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-                ->addHeaderLine('Content-Length: ' . (string) strlen($file));
+                ->addHeaderLine('Content-Length: ' . (string)strlen($file));
 
             $response->setContent($file);
 
@@ -161,20 +161,18 @@ class OrganisationController extends AbstractActionController implements
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
         $maxResults = $this->getRequest()->getQuery()->get('max_rows');
 
-        $projectSearchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults);
-        $searchForm          = new Search();
-        $searchForm->setData($_POST);
+        $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults);
 
         /**
          * Include a paginator to be able to have later paginated search results in pages
          */
-        $paginator = new Paginator(new ArrayAdapter($projectSearchResult));
+        $paginator = new Paginator(new ArrayAdapter($searchResult));
         $paginator->setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
 
-        $viewModel = new ViewModel(array('paginator' => $paginator, 'form' => $searchForm));
-        $viewModel->setTemplate('organisation/partial/list/organisation');
+        $viewModel = new ViewModel(array('paginator' => $paginator));
+        $viewModel->setTemplate('organisation/partial/list/organisation-search');
 
         return $viewModel;
     }
