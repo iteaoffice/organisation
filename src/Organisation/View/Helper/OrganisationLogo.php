@@ -43,40 +43,17 @@ class OrganisationLogo extends AbstractHelper
         /**
          * The company can have multiple logo's. We now take just the first one
          */
-        $logos = $logo->toArray();
-        $logo  = array_shift($logos);
+        $logo   = $organisationService->getOrganisation()->getLogo()->first();
+        $router = 'assets/organisation-logo';
 
-        /**
-         * Check if the file is cached and if so, pull it from the assets-folder
-         */
-        $router = 'organisation/logo';
-
-        if (file_exists($logo->getCacheFileName())) {
-            /**
-             * The file exists, but is it not updated?
-             */
-            if ($logo->getDateUpdated()->getTimestamp() > filemtime($logo->getCacheFileName())) {
-                unlink($logo->getCacheFileName());
-            } else {
-                $router = 'assets/organisation-logo';
-            }
-        } else {
-            file_put_contents(
-                $logo->getCacheFileName(),
-                is_resource($logo->getOrganisationLogo()) ?
-                    stream_get_contents($logo->getOrganisationLogo()) : $logo->getOrganisationLogo()
-            );
-        }
-
-        $classes   = array('img-responsive');
+        $classes   = array();
         $classes[] = $class;
 
         $imageUrl = '<img src="%s" id="%s" class="%s">';
 
         $params = array(
-            'hash' => $logo->getHash(),
-            'ext'  => $logo->getContentType()->getExtension(),
-            'id'   => $logo->getOrganisation()->getId()
+            'ext' => $logo->getContentType()->getExtension(),
+            'id'  => $logo->getId()
         );
 
 

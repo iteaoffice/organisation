@@ -26,11 +26,10 @@ return array(
             ),
             'assets'                => array(
                 'type'          => 'Literal',
-                'priority'      => 1000,
                 'options'       => array(
                     'route'    => '/assets/' . DEBRANOVA_HOST,
                     'defaults' => array(
-                        'controller' => 'index',
+                        'controller' => 'organisation-index',
                         'action'     => 'index',
                     ),
                 ),
@@ -39,9 +38,9 @@ return array(
                     'organisation-logo' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => "/organisation-logo/[:hash].[:ext]",
+                            'route'    => "/organisation-logo/[:id].[:ext]",
                             'defaults' => array(
-                                'action' => 'display',
+                                'action' => 'logo',
                             ),
                         ),
                     ),

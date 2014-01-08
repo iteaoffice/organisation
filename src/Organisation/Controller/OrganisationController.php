@@ -81,43 +81,40 @@ class OrganisationController extends AbstractActionController implements
     public function logoAction()
     {
         $this->layout(false);
-        $response = $this->getResponse();
 
-        $organisationService = $this->getOrganisationService()->setOrganisationId(
+        $logo     = $this->getOrganisationService()->findEntityById(
+            'logo',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
+        $response = $this->getResponse();
+
+        /**
+         * Return null when no image can be found
+         */
+        if (is_null($logo)) {
+            return $response;
+        }
+
+        $file = stream_get_contents($logo->getOrganisationLogo());
+
+        /**
+         * Create a cache-version of the file
+         */
+        if (!file_exists($logo->getCacheFileName())) {
+            //Save a copy of the file in the caching-folder
+            file_put_contents($logo->getCacheFileName(), $file);
+        }
 
         $response->getHeaders()
             ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public");
+            ->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: ' . (string)strlen($file));
 
-        if ($organisationService->getOrganisation()->getLogo()->count() > 0) {
+        $response->setContent($file);
 
-            /**
-             * an organisation can have multiple logo's. Simply take the first one in the array
-             */
-            $logos = $organisationService->getOrganisation()->getLogo()->toArray();
-            $logo  = array_shift($logos);
-
-            $file = stream_get_contents($logo->getOrganisationLogo());
-
-            $response->getHeaders()
-                ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-                ->addHeaderLine('Content-Length: ' . (string)strlen($file));
-
-            $response->setContent($file);
-
-            return $response;
-        } else {
-            $response->getHeaders()
-                ->addHeaderLine('Content-Type: image/jpg');
-            $response->setStatusCode(404);
-            /**
-             * $config = $this->getServiceLocator()->get('config');
-             * readfile($config['file_config']['upload_dir'] . DIRECTORY_SEPARATOR . 'removed.jpg');
-             */
-        }
+        return $response;
     }
 
 
@@ -178,9 +175,9 @@ class OrganisationController extends AbstractActionController implements
     }
 
     /**
-     * Trigger to switch layout
+     * @param \Zend\Mvc\Controller\string $layout
      *
-     * @param $layout
+     * @return void|\Zend\Mvc\Controller\Plugin\Layout|\Zend\View\Model\ModelInterface
      */
     public function layout($layout)
     {

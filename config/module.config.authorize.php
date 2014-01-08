@@ -47,6 +47,7 @@ return array(
              * access to all routes unless they are specified here.
              */
             'BjyAuthorize\Guard\Route' => array(
+                array('route' => 'assets/organisation-logo', 'roles' => array()),
                 array('route' => 'organisation/logo', 'roles' => array()),
                 array('route' => 'organisation/search', 'roles' => array()),
             ),
