@@ -51,7 +51,7 @@ class Web
 
     public function __toString()
     {
-        $url = '<a href="%s">%s</a>';
+        $url = '<a href="http://%s">%s</a>';
 
         return sprintf($url, $this->web, $this->web);
     }

@@ -15,6 +15,7 @@ use Zend\View\HelperPluginManager;
 use Zend\View\Helper\AbstractHelper;
 use Zend\Paginator\Paginator;
 use Zend\Mvc\Router\RouteMatch;
+use Zend\Session\Service\StorageFactory;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -68,6 +69,14 @@ class OrganisationHandler extends AbstractHelper
      * @var int
      */
     protected $limit = 5;
+    /**
+     * @var StorageFactory
+     */
+    protected $cache;
+    /**
+     * @var array
+     */
+    protected $config;
 
     /**
      * @param HelperPluginManager $helperPluginManager
@@ -82,6 +91,8 @@ class OrganisationHandler extends AbstractHelper
             ->getMvcEvent()
             ->getRouteMatch();
         $this->countryMap          = $helperPluginManager->get('countryMap');
+        $this->cache               = $helperPluginManager->getServiceLocator()->get('organisation_cache');
+        $this->config              = $helperPluginManager->getServiceLocator()->get('organisation_module_config');
     }
 
     /**
@@ -233,9 +244,22 @@ class OrganisationHandler extends AbstractHelper
      */
     public function parseOrganisationProjectList(OrganisationService $organisationService)
     {
-        $projects = $this->projectService->findProjectByOrganisation($organisationService->getOrganisation());
 
-        return $this->getView()->render('organisation/partial/list/project.twig', array('projects' => $projects));
+        $success = false;
+        $key     = $this->config['cache_key'] . '-organisation-project-list-html-organisation-' .
+            $organisationService->getOrganisation()->getId();
+        $html    = $this->cache->getItem($key, $success);
+
+        if (!$success) {
+            $projects = $this->projectService->findProjectByOrganisation($organisationService->getOrganisation());
+            $html     = $this->getView()->render(
+                'organisation/partial/list/project',
+                array('projects' => $projects)
+            );
+            $this->cache->setItem($key, $html);
+        }
+
+        return $html;
     }
 
     /**

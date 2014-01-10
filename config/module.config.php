@@ -22,7 +22,9 @@ $config = array(
     ),
     'service_manager' => array(
         'factories'  => array(
-            'organisation-assertion' => 'Organisation\Acl\Assertion\Organisation',
+            'organisation-assertion'     => 'Organisation\Acl\Assertion\Organisation',
+            'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory',
+            'organisation_cache'         => 'Organisation\Service\CacheFactory',
         ),
         'invokables' => array(
             'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
@@ -60,6 +62,7 @@ $configFiles = array(
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
+    __DIR__ . '/module.config.organisation.php',
 );
 
 foreach ($configFiles as $configFile) {
