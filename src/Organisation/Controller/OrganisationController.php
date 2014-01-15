@@ -80,13 +80,20 @@ class OrganisationController extends AbstractActionController implements
      */
     public function logoAction()
     {
-        $this->layout(false);
+        $response = $this->getResponse();
 
-        $logo     = $this->getOrganisationService()->findEntityById(
+        /**
+         * Return null when no id can be found
+         */
+        if (is_null($this->getEvent()->getRouteMatch()->getParam('id', null))) {
+            return $response;
+        }
+
+        $logo = $this->getOrganisationService()->findEntityById(
             'logo',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-        $response = $this->getResponse();
+
 
         /**
          * Return null when no image can be found

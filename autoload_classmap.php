@@ -23,6 +23,8 @@ return array(
   'Organisation\Form\Search'                              => __DIR__ . '/src/Organisation/Form/Search.php',
   'Organisation\Module'                                   => __DIR__ . '/src/Organisation/Module.php',
   'Organisation\Repository\Organisation'                  => __DIR__ . '/src/Organisation/Repository/Organisation.php',
+  'Organisation\Service\CacheFactory'                     => __DIR__ . '/src/Organisation/Service/CacheFactory.php',
+  'Organisation\Service\ConfigServiceFactory'             => __DIR__ . '/src/Organisation/Service/ConfigServiceFactory.php',
   'Organisation\Service\FormService'                      => __DIR__ . '/src/Organisation/Service/FormService.php',
   'Organisation\Service\FormServiceAwareInterface'        => __DIR__ . '/src/Organisation/Service/FormServiceAwareInterface.php',
   'Organisation\Service\OrganisationService'              => __DIR__ . '/src/Organisation/Service/OrganisationService.php',
