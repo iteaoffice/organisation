@@ -32,7 +32,7 @@ return array(
                     // allow guests and users (and admins, through inheritance)
                     // the "wear" privilege on the resource "pants"d
                     array(array('public'), 'organisation', array('listings', 'view')),
-                    array(array('admin'), 'organisation', array('edit', 'new', 'delete'))
+                    array(array('office'), 'organisation', array('edit', 'new', 'delete'))
                 ),
                 // Don't mix allow/deny rules if you are using role inheritance.
                 // There are some weird bugs.

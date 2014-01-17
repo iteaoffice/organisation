@@ -131,7 +131,6 @@ class OrganisationHandler extends AbstractHelper
                     )
                 );
 
-
                 return $this->parseOrganisation($this->getOrganisationService());
                 break;
             case 'organisation_list':

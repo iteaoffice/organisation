@@ -24,9 +24,9 @@ class CacheFactory implements FactoryInterface
     /**
      * Create a cache
      *
-     * @param   ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return  StorageInterface
+     * @return StorageInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {

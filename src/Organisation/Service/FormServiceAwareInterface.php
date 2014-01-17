@@ -9,8 +9,6 @@
  */
 namespace Organisation\Service;
 
-use Organisation\Service\FormService;
-
 interface FormServiceAwareInterface
 {
     /**

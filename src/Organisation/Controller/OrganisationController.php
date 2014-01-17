@@ -94,7 +94,6 @@ class OrganisationController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
 
-
         /**
          * Return null when no image can be found
          */
@@ -117,13 +116,12 @@ class OrganisationController extends AbstractActionController implements
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
             ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string)strlen($file));
+            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
 
         $response->setContent($file);
 
         return $response;
     }
-
 
     /**
      * Edit an entity
