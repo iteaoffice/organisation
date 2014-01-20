@@ -87,7 +87,7 @@ return array(
                         'type'          => 'Segment',
                         'priority'      => 1000,
                         'options'       => array(
-                            'route'    => '/organisation-manager',
+                            'route'    => '/organisation',
                             'defaults' => array(
                                 'controller' => 'organisation-manager',
                                 'action'     => 'index',
@@ -95,6 +95,16 @@ return array(
                         ),
                         'may_terminate' => true,
                         'child_routes'  => array(
+                            'list'   => array(
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => array(
+                                    'route'    => '/list[/:page].html',
+                                    'defaults' => array(
+                                        'action' => 'list',
+                                    ),
+                                ),
+                            ),
                             'new'    => array(
                                 'type'    => 'Segment',
                                 'options' => array(
