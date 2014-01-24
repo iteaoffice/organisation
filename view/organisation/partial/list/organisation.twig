@@ -9,10 +9,16 @@
     </div>
 
     <div class="col-sm-6">
-        {% do form.prepare() %}
-        {{ form().openTag(form)|raw }}
-        {{ formelement(form.get('search')) }}
-        {{ form().closeTag()|raw }}
+        <div class="pull-right">
+            <form class="form-inline" role="form" id="organisationSearch">
+                <div class="form-group">
+                    <label class="sr-only" for="search-box">{{ translate('txt-search') }}</label>
+                    <input type="search" class="form-control col-md-12" id="search" name="q"
+                           placeholder="{{ translate("txt-search-item") }}">
+                </div>
+                <input type="submit" value="{{ translate("txt-search") }}" class="btn btn-primary">
+            </form>
+        </div>
     </div>
 </div>
 
@@ -43,10 +49,8 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        $("#search").keyup(function (e) {
-
-            delay(function () {
+    $("#organisationSearch").on('submit', function (e) {
+                e.preventDefault();
                 $.ajax({
                     url: 'organisation/search',
                     data: {
@@ -61,34 +65,6 @@
                         alert("Search Failed");
                     }
                 });
-            }, 100);
-
-        }).bind("paste", function (e) {
-                    // have to do this so the DOM can catch up on mouse right-click paste
-                    setTimeout(function () {
-                        $.ajax({
-                            url: 'organisation/search',
-                            data: {
-                                max_rows: 12,
-                                search_item: $("#search").val()
-                            },
-                            success: function (data) {
-                                $("#organisation-list").html(data);
-                                $("#throbber").remove();
-                            },
-                            error: function (event, ui) {
-                                alert("Search Failed");
-                            }
-                        });
-                    }, 500);
-                });
-    });
-
-    var delay = (function () {
-        var timer = 0;
-        return function (callback, ms) {
-            clearTimeout(timer);
-            timer = setTimeout(callback, ms);
-        };
-    })();
+            }
+    );
 </script>

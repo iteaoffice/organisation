@@ -116,7 +116,7 @@ class OrganisationController extends AbstractActionController implements
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
             ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
+            ->addHeaderLine('Content-Length: ' . (string)strlen($file));
 
         $response->setContent($file);
 
@@ -145,7 +145,7 @@ class OrganisationController extends AbstractActionController implements
 
             $view = new ViewModel(array($this->getEvent()->getRouteMatch()->getParam('entity') => $form->getData()));
             $view->setTemplate(
-                "organisation/partial/" . $this->getEvent()->getRouteMatch()->getParam('entity') . '.twig'
+                "organisation/partial/" . $this->getEvent()->getRouteMatch()->getParam('entity')
             );
 
             return $view;

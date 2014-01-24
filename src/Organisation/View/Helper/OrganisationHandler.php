@@ -21,7 +21,6 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
 use Organisation\Service\OrganisationService;
-use Organisation\Form\Search;
 use Project\Service\ProjectService;
 use Content\Entity\Handler;
 use Content\Service\ArticleService;
@@ -226,12 +225,9 @@ class OrganisationHandler extends AbstractHelper
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        $searchForm = new Search();
-
         return $this->getView()->render('organisation/partial/list/organisation',
             array(
                 'paginator' => $paginator,
-                'form'      => $searchForm
             )
         );
     }
@@ -277,7 +273,7 @@ class OrganisationHandler extends AbstractHelper
          * Parse the organisationService in to have the these functions available in the view
          */
 
-        return $this->getView()->render('organisation/partial/list/article.twig', array(
+        return $this->getView()->render('organisation/partial/list/article', array(
             'organisationService' => $organisationService,
             'articles'            => $articles,
             'limit'               => $this->getLimit(),
