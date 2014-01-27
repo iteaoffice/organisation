@@ -17,6 +17,8 @@ use Zend\Paginator\Paginator;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Session\Service\StorageFactory;
 
+use ZfcTwig\View\TwigRenderer;
+
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 
@@ -76,6 +78,11 @@ class OrganisationHandler extends AbstractHelper
      * @var array
      */
     protected $config;
+    /**
+     * @var TwigRenderer;
+     */
+    protected $zfcTwigRenderer;
+
 
     /**
      * @param HelperPluginManager $helperPluginManager
@@ -92,6 +99,10 @@ class OrganisationHandler extends AbstractHelper
         $this->countryMap          = $helperPluginManager->get('countryMap');
         $this->cache               = $helperPluginManager->getServiceLocator()->get('organisation_cache');
         $this->config              = $helperPluginManager->getServiceLocator()->get('organisation_module_config');
+        /**
+         * Load the TwigRenderer directly form the plugin manager to avoid a fallback to the standard PhpRenderer
+         */
+        $this->zfcTwigRenderer = $helperPluginManager->getServiceLocator()->get('ZfcTwigRenderer');
     }
 
     /**
@@ -194,7 +205,7 @@ class OrganisationHandler extends AbstractHelper
      */
     public function parseOrganisation(OrganisationService $organisationService)
     {
-        return $this->getView()->render('organisation/partial/entity/organisation',
+        return $this->zfcTwigRenderer->render('organisation/partial/entity/organisation',
             array('organisationService' => $organisationService));
     }
 
@@ -205,7 +216,7 @@ class OrganisationHandler extends AbstractHelper
      */
     public function parseOrganisationMetadata(OrganisationService $organisationService)
     {
-        return $this->getView()->render('organisation/partial/entity/organisation-metadata',
+        return $this->zfcTwigRenderer->render('organisation/partial/entity/organisation-metadata',
             array('organisationService' => $organisationService));
     }
 
@@ -225,7 +236,7 @@ class OrganisationHandler extends AbstractHelper
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        return $this->getView()->render('organisation/partial/list/organisation',
+        return $this->zfcTwigRenderer->render('organisation/partial/list/organisation',
             array(
                 'paginator' => $paginator,
             )
@@ -247,7 +258,7 @@ class OrganisationHandler extends AbstractHelper
 
         if (!$success) {
             $projects = $this->projectService->findProjectByOrganisation($organisationService->getOrganisation());
-            $html     = $this->getView()->render(
+            $html     = $this->zfcTwigRenderer->render(
                 'organisation/partial/list/project',
                 array('projects' => $projects)
             );
@@ -273,7 +284,7 @@ class OrganisationHandler extends AbstractHelper
          * Parse the organisationService in to have the these functions available in the view
          */
 
-        return $this->getView()->render('organisation/partial/list/article', array(
+        return $this->zfcTwigRenderer->render('organisation/partial/list/article', array(
             'organisationService' => $organisationService,
             'articles'            => $articles,
             'limit'               => $this->getLimit(),
