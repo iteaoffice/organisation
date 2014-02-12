@@ -127,15 +127,16 @@ class OrganisationService extends ServiceAbstract
      * Produce a list of organisations for a project (only active)
      *
      * @param Project $project
+     * @param bool    $onlyActive
      *
      * @return OrganisationService[]
      */
-    public function findOrganisationByProject(Project $project)
+    public function findOrganisationByProject(Project $project, $onlyActive = true)
     {
         $organisations = array();
 
         foreach ($project->getAffiliation() as $affiliation) {
-            if (is_null($affiliation->getDateEnd())) {
+            if ($onlyActive && is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
                 $organisations[$affiliation->getOrganisation()->getOrganisation()] =
                     $this->createServiceElement($affiliation->getOrganisation());
