@@ -178,7 +178,7 @@ class Organisation extends EntityAbstract
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\Description[]
+     * @var \Organisation\Entity\Description
      */
     private $description;
     /**
@@ -280,7 +280,7 @@ class Organisation extends EntityAbstract
      */
     public function __toString()
     {
-        return (string) $this->organisation;
+        return (string)$this->organisation;
         //        return (string) $this->organisation . ', ' . $this->getCountry()->getIso3();
     }
 
@@ -475,7 +475,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Description[] $description
+     * @param \Organisation\Entity\Description $description
      */
     public function setDescription($description)
     {
@@ -483,7 +483,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Description[]
+     * @return \Organisation\Entity\Description
      */
     public function getDescription()
     {
