@@ -194,17 +194,18 @@ class Organisation extends EntityAbstract
      */
     private $note;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\Financial[]
+     * @var \Organisation\Entity\Financial
      */
     private $financial;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="debtor")
      * @Annotation\Exclude()
      * @var \Organisation\Entity\Financial[]
+     *  private $financialDebtor;
      */
-    private $financialDebtor;
+
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\ProgramDoa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -235,21 +236,19 @@ class Organisation extends EntityAbstract
      */
     public function __construct()
     {
-        $this->organisation    = new Collections\ArrayCollection();
-        $this->affiliation     = new Collections\ArrayCollection();
-        $this->domain          = new Collections\ArrayCollection();
-        $this->technology      = new Collections\ArrayCollection();
-        $this->cluster         = new Collections\ArrayCollection();
-        $this->clusterMember   = new Collections\ArrayCollection();
-        $this->log             = new Collections\ArrayCollection();
-        $this->logo            = new Collections\ArrayCollection();
-        $this->note            = new Collections\ArrayCollection();
-        $this->financial       = new Collections\ArrayCollection();
-        $this->financialDebtor = new Collections\ArrayCollection();
-        $this->programDoa      = new Collections\ArrayCollection();
-        $this->invoice         = new Collections\ArrayCollection();
-        $this->boothFinancial  = new Collections\ArrayCollection();
-        $this->doa             = new Collections\ArrayCollection();
+        $this->organisation   = new Collections\ArrayCollection();
+        $this->affiliation    = new Collections\ArrayCollection();
+        $this->domain         = new Collections\ArrayCollection();
+        $this->technology     = new Collections\ArrayCollection();
+        $this->cluster        = new Collections\ArrayCollection();
+        $this->clusterMember  = new Collections\ArrayCollection();
+        $this->log            = new Collections\ArrayCollection();
+        $this->logo           = new Collections\ArrayCollection();
+        $this->note           = new Collections\ArrayCollection();
+        $this->programDoa     = new Collections\ArrayCollection();
+        $this->invoice        = new Collections\ArrayCollection();
+        $this->boothFinancial = new Collections\ArrayCollection();
+        $this->doa            = new Collections\ArrayCollection();
     }
 
     /**
@@ -523,7 +522,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Financial[] $financial
+     * @param \Organisation\Entity\Financial $financial
      */
     public function setFinancial($financial)
     {
@@ -531,28 +530,28 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Financial[]
+     * @return \Organisation\Entity\Financial
      */
     public function getFinancial()
     {
         return $this->financial;
     }
 
-    /**
-     * @param \Organisation\Entity\Financial[] $financialDebtor
-     */
-    public function setFinancialDebtor($financialDebtor)
-    {
-        $this->financialDebtor = $financialDebtor;
-    }
-
-    /**
-     * @return \Organisation\Entity\Financial[]
-     */
-    public function getFinancialDebtor()
-    {
-        return $this->financialDebtor;
-    }
+    //    /**
+    //     * @param \Organisation\Entity\Financial[] $financialDebtor
+    //     */
+    //    public function setFinancialDebtor($financialDebtor)
+    //    {
+    //        $this->financialDebtor = $financialDebtor;
+    //    }
+    //
+    //    /**
+    //     * @return \Organisation\Entity\Financial[]
+    //     */
+    //    public function getFinancialDebtor()
+    //    {
+    //        return $this->financialDebtor;
+    //    }
 
     /**
      * @param int $id

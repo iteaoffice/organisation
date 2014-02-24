@@ -35,6 +35,9 @@ class Financial
     const NO_REQUIRED_PURCHASE_ORDER = 0;
     const REQUIRED_PURCHASE_ORDER    = 1;
 
+    const NO_EMAIL_DELIVERY = 0;
+    const EMAIL_DELIVERY    = 1;
+
     /**
      * Textual versions of the vat status
      *
@@ -65,6 +68,16 @@ class Financial
     protected $omitContactTemplates = array(
         self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
         self::OMIT_CONTACT    => 'txt-omit-contact',
+    );
+
+    /**
+     * Textual versions of the email templates
+     *
+     * @var array
+     */
+    protected $emailTemplates = array(
+        self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
+        self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
     );
 
     /**
@@ -145,8 +158,11 @@ class Financial
      */
     private $requiredPurchaseOrder;
     /**
-     * @ORM\Column(name="email", type="boolean", nullable=false)
-     * @var boolean
+     * @ORM\Column(name="email", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"emailTemplates"})
+     * @Annotation\Attributes({"label":"txt-delivery-by-email-order"})
+     * @var int
      */
     private $email;
     /**
@@ -163,4 +179,212 @@ class Financial
      * @var \Invoice\Entity\FinancialRow[]
      */
     private $financialRow;
+
+    /**
+     * @param string $bic
+     */
+    public function setBic($bic)
+    {
+        $this->bic = $bic;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBic()
+    {
+        return $this->bic;
+    }
+
+    /**
+     * @param \DateTime $dateVat
+     */
+    public function setDateVat($dateVat)
+    {
+        $this->dateVat = $dateVat;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateVat()
+    {
+        return $this->dateVat;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $debtor
+     */
+    public function setDebtor($debtor)
+    {
+        $this->debtor = $debtor;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation
+     */
+    public function getDebtor()
+    {
+        return $this->debtor;
+    }
+
+    /**
+     * @param boolean $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param \Invoice\Entity\FinancialRow[] $financialRow
+     */
+    public function setFinancialRow($financialRow)
+    {
+        $this->financialRow = $financialRow;
+    }
+
+    /**
+     * @return \Invoice\Entity\FinancialRow[]
+     */
+    public function getFinancialRow()
+    {
+        return $this->financialRow;
+    }
+
+    /**
+     * @param string $iban
+     */
+    public function setIban($iban)
+    {
+        $this->iban = $iban;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIban()
+    {
+        return $this->iban;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $omitContact
+     */
+    public function setOmitContact($omitContact)
+    {
+        $this->omitContact = $omitContact;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOmitContact()
+    {
+        return $this->omitContact;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param int $requiredPurchaseOrder
+     */
+    public function setRequiredPurchaseOrder($requiredPurchaseOrder)
+    {
+        $this->requiredPurchaseOrder = $requiredPurchaseOrder;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRequiredPurchaseOrder()
+    {
+        return $this->requiredPurchaseOrder;
+    }
+
+    /**
+     * @param int $shiftVat
+     */
+    public function setShiftVat($shiftVat)
+    {
+        $this->shiftVat = $shiftVat;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShiftVat()
+    {
+        return $this->shiftVat;
+    }
+
+    /**
+     * @param string $vat
+     */
+    public function setVat($vat)
+    {
+        $this->vat = $vat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVat()
+    {
+        return $this->vat;
+    }
+
+    /**
+     * @param int $vatStatus
+     */
+    public function setVatStatus($vatStatus)
+    {
+        $this->vatStatus = $vatStatus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVatStatus()
+    {
+        return $this->vatStatus;
+    }
 }
