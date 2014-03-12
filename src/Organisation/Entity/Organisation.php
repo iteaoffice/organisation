@@ -205,7 +205,6 @@ class Organisation extends EntityAbstract
      * @var \Organisation\Entity\Financial[]
      *  private $financialDebtor;
      */
-
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\ProgramDoa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
