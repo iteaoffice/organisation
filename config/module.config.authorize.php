@@ -9,8 +9,6 @@
  */
 namespace Organisation;
 
-use Organisation\Entity\Organisation;
-
 return array(
     'bjyauthorize' => array(
         // resource providers provide a list of resources that will be tracked
@@ -50,6 +48,9 @@ return array(
                 array('route' => 'assets/organisation-logo', 'roles' => array()),
                 array('route' => 'organisation/logo', 'roles' => array()),
                 array('route' => 'organisation/search', 'roles' => array()),
+                array('route' => 'organisation-manager/list', 'roles' => array('office')),
+                array('route' => 'organisation-manager/edit', 'roles' => array('office')),
+                array('route' => 'organisation-manager/new', 'roles' => array('office')),
             ),
         ),
     ),

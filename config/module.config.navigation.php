@@ -17,7 +17,7 @@ return array(
                 'route'    => 'zfcadmin/organisation-manager/list',
                 'resource' => 'zfcadmin',
                 'pages'    => array(
-                    'contacts' => array(
+                    'organisations' => array(
                         'label' => "txt-organisations",
                         'route' => 'zfcadmin/organisation-manager/list',
                     ),

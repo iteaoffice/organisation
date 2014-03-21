@@ -43,7 +43,8 @@ class OrganisationLogo extends AbstractHelper
         /**
          * The company can have multiple logo's. We now take just the first one
          */
-        $logo   = $organisationService->getOrganisation()->getLogo()->first();
+        $logo = $organisationService->getOrganisation()->getLogo()->first();
+
         $router = 'assets/organisation-logo';
 
         $classes   = array();
@@ -55,7 +56,6 @@ class OrganisationLogo extends AbstractHelper
             'ext' => $logo->getContentType()->getExtension(),
             'id'  => $logo->getId()
         );
-
 
         $image = sprintf(
             $imageUrl,

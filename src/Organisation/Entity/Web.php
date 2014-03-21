@@ -11,6 +11,8 @@
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
 
 /**
  * OrganisationWeb
@@ -18,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="organisation_web")
  * @ORM\Entity
  */
-class Web
+class Web extends EntityAbstract
 {
     const NOT_MAIN = 0;
     const MAIN     = 1;
@@ -49,12 +51,61 @@ class Web
      */
     private $organisation;
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $url = '<a href="http://%s">%s</a>';
 
         return sprintf($url, $this->web, $this->web);
     }
+
+    /**
+     * Magic Getter
+     *
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * Magic Setter
+     *
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
+    /**
+     * Set input filter
+     *
+     * @param  InputFilterInterface $inputFilter
+     *
+     * @return InputFilterAwareInterface
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+    }
+
+    /**
+     * Retrieve input filter
+     *
+     * @return InputFilterInterface
+     */
+    public function getInputFilter()
+    {
+    }
+
 
     /**
      * @param int $id

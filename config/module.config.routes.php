@@ -10,21 +10,7 @@
 return array(
     'router' => array(
         'routes' => array(
-            'organisation_shortcut' => array(
-                'type'     => 'Segment',
-                'priority' => -1000,
-                'options'  => array(
-                    'route'       => 'o/:id',
-                    'constraints' => array(
-                        'id' => '\d+',
-                    ),
-                    'defaults'    => array(
-                        'controller' => 'organisation-index',
-                        'action'     => 'organisationRedirect',
-                    ),
-                ),
-            ),
-            'assets'                => array(
+            'assets'       => array(
                 'type'          => 'Literal',
                 'options'       => array(
                     'route'    => '/assets/' . DEBRANOVA_HOST,
@@ -40,13 +26,15 @@ return array(
                         'options' => array(
                             'route'    => "/organisation-logo/[:id].[:ext]",
                             'defaults' => array(
-                                'action' => 'logo',
+                                //Explicitly add the controller here as the assets are collected
+                                'controller' => 'organisation-index',
+                                'action'     => 'logo',
                             ),
                         ),
                     ),
                 ),
             ),
-            'organisation'          => array(
+            'organisation' => array(
                 'type'          => 'Literal',
                 'priority'      => 1000,
                 'options'       => array(
@@ -81,7 +69,7 @@ return array(
                     ),
                 ),
             ),
-            'zfcadmin'              => array(
+            'zfcadmin'     => array(
                 'child_routes' => array(
                     'organisation-manager' => array(
                         'type'          => 'Segment',
@@ -108,16 +96,25 @@ return array(
                             'new'    => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'    => '/new/:entity',
+                                    'route'    => '/new.html',
                                     'defaults' => array(
                                         'action' => 'new',
+                                    ),
+                                ),
+                            ),
+                            'view'   => array(
+                                'type'    => 'Segment',
+                                'options' => array(
+                                    'route'    => '/view/[:id].html',
+                                    'defaults' => array(
+                                        'action' => 'view',
                                     ),
                                 ),
                             ),
                             'edit'   => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'    => '/edit/:entity/:id',
+                                    'route'    => '/edit/[:id].html',
                                     'defaults' => array(
                                         'action' => 'edit',
                                     ),
@@ -126,7 +123,7 @@ return array(
                             'delete' => array(
                                 'type'    => 'Segment',
                                 'options' => array(
-                                    'route'    => '/delete/:entity/:id',
+                                    'route'    => '/delete/[:id].html',
                                     'defaults' => array(
                                         'action' => 'delete',
                                     ),

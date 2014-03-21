@@ -124,46 +124,15 @@ class OrganisationController extends AbstractActionController implements
     }
 
     /**
-     * Edit an entity
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
-    public function editAction()
-    {
-        $this->layout(false);
-        $entity = $this->getOrganisationService()->findEntityById(
-            $this->getEvent()->getRouteMatch()->getParam('entity'),
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
-
-        $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
-        $form->setAttribute('class', 'form-vertical live-form-edit');
-        $form->setAttribute('id', 'organisation-' . strtolower($entity->get('entity_name')) . '-' . $entity->getId());
-
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            $this->getOrganisationService()->updateEntity($form->getData());
-
-            $view = new ViewModel(array($this->getEvent()->getRouteMatch()->getParam('entity') => $form->getData()));
-            $view->setTemplate(
-                "organisation/partial/" . $this->getEvent()->getRouteMatch()->getParam('entity')
-            );
-
-            return $view;
-        }
-
-        return new ViewModel(array('form' => $form, 'entity' => $entity));
-    }
-
-    /**
      * @return ViewModel
      */
     public function searchAction()
     {
-        $this->layout(false);
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
         $maxResults = $this->getRequest()->getQuery()->get('max_rows');
+        $countryId  = $this->getRequest()->getQuery()->get('country');
 
-        $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults);
+        $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
 
         /**
          * Include a paginator to be able to have later paginated search results in pages
@@ -174,23 +143,10 @@ class OrganisationController extends AbstractActionController implements
         $paginator->setPageRange(1);
 
         $viewModel = new ViewModel(array('paginator' => $paginator));
+        $viewModel->setTerminal(true);
         $viewModel->setTemplate('organisation/partial/list/organisation-search');
 
         return $viewModel;
-    }
-
-    /**
-     * @param \Zend\Mvc\Controller\string $layout
-     *
-     * @return void|\Zend\Mvc\Controller\Plugin\Layout|\Zend\View\Model\ModelInterface
-     */
-    public function layout($layout)
-    {
-        if (false === $layout) {
-            $this->getEvent()->getViewModel()->setTemplate('layout/nolayout');
-        } else {
-            $this->getEvent()->getViewModel()->setTemplate('layout/' . $layout);
-        }
     }
 
     /**

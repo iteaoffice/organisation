@@ -117,7 +117,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
     {
-        $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
+        $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
             ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
 
         return $organisations;
@@ -152,15 +152,16 @@ class OrganisationService extends ServiceAbstract
     /**
      * Search for organisations based on a search-item
      *
-     * @param $searchItem
-     * @param $maxResults
+     * @param      $searchItem
+     * @param      $maxResults
+     * @param null $countryId
      *
      * @return Organisation[]
      */
-    public function searchOrganisation($searchItem, $maxResults)
+    public function searchOrganisation($searchItem, $maxResults, $countryId = null)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-            ->searchOrganisations($searchItem, $maxResults);
+            ->searchOrganisations($searchItem, $maxResults, $countryId);
     }
 
     /**

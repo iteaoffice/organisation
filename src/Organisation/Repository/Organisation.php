@@ -86,10 +86,11 @@ class Organisation extends EntityRepository
      *
      * @param string $searchItem
      * @param int    $maxResults
+     * @param null   $countryId
      *
      * @return Entity\Organisation[]
      */
-    public function searchOrganisations($searchItem, $maxResults = 12)
+    public function searchOrganisations($searchItem, $maxResults = 12, $countryId)
     {
 
         $qb = $this->_em->createQueryBuilder();
@@ -101,6 +102,11 @@ class Organisation extends EntityRepository
         $qb->andWhere('o.organisation LIKE :searchItem');
 
         $qb->setParameter('searchItem', "%" . $searchItem . "%");
+
+        if (!is_null($countryId)) {
+            $qb->andWhere('o.country = ?3');
+            $qb->setParameter(3, $countryId);
+        }
 
         $qb->setMaxResults($maxResults);
 
@@ -124,11 +130,6 @@ class Organisation extends EntityRepository
 
         $qb->from('Organisation\Entity\Organisation', 'o');
 
-        /**
-         * Do a filter based on the organisation name
-         */
-        $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%" . $name . "%");
 
         //Select projects based on a type
         $subSelect = $this->_em->createQueryBuilder();
@@ -142,15 +143,23 @@ class Organisation extends EntityRepository
          */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($emailAddress);
+
         $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
 
-        $qb->orWhere($qb->expr()->in('o.id', $subSelect->getDQL()));
+        //We want a match on the email address
+        $qb->andWhere($qb->expr()->in('o.id', $subSelect->getDQL()));
 
         /**
          * Limit on the country
          */
         $qb->andWhere('o.country = ?3');
         $qb->setParameter(3, $country->getId());
+
+        /**
+         * Do a filter based on the organisation name
+         */
+        $qb->andWhere('o.organisation LIKE :searchItem');
+        $qb->setParameter('searchItem', "%" . $name . "%");
 
         return $qb->getQuery()->getResult();
     }

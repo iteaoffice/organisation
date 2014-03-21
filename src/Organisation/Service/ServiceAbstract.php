@@ -15,6 +15,9 @@ use Zend\Authentication\AuthenticationService;
 
 use Doctrine\ORM\EntityManager;
 
+use Organisation\Entity\Type;
+use Organisation\Entity\Organisation;
+
 use Organisation\Entity\EntityAbstract;
 
 /**
@@ -51,16 +54,12 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      *
      * @param      $entity
      * @param      $id
-     * @param bool $populate
      *
-     * @return object
+     * @return Type|Organisation
      */
-    public function findEntityById($entity, $id, $populate = false)
+    public function findEntityById($entity, $id)
     {
-        $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
-        if ($entity) {
-            return $entity;
-        }
+        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
     }
 
     /**
