@@ -78,6 +78,12 @@ class Organisation extends EntityAbstract
      */
     private $affiliation;
     /**
+     * @ORM\OneToMany(targetEntity="Affiliation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     * @var \Affiliation\Entity\Financial
+     */
+    private $affiliationFinancial;
+    /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country",inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=true)
@@ -203,8 +209,8 @@ class Organisation extends EntityAbstract
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="debtor")
      * @Annotation\Exclude()
      * @var \Organisation\Entity\Financial[]
-     *  private $financialDebtor;
      */
+    private $financialDebtor;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\ProgramDoa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -235,19 +241,21 @@ class Organisation extends EntityAbstract
      */
     public function __construct()
     {
-        $this->organisation   = new Collections\ArrayCollection();
-        $this->affiliation    = new Collections\ArrayCollection();
-        $this->domain         = new Collections\ArrayCollection();
-        $this->technology     = new Collections\ArrayCollection();
-        $this->cluster        = new Collections\ArrayCollection();
-        $this->clusterMember  = new Collections\ArrayCollection();
-        $this->log            = new Collections\ArrayCollection();
-        $this->logo           = new Collections\ArrayCollection();
-        $this->note           = new Collections\ArrayCollection();
-        $this->programDoa     = new Collections\ArrayCollection();
-        $this->invoice        = new Collections\ArrayCollection();
-        $this->boothFinancial = new Collections\ArrayCollection();
-        $this->doa            = new Collections\ArrayCollection();
+        $this->organisation         = new Collections\ArrayCollection();
+        $this->affiliation          = new Collections\ArrayCollection();
+        $this->affiliationFinancial = new Collections\ArrayCollection();
+        $this->domain               = new Collections\ArrayCollection();
+        $this->technology           = new Collections\ArrayCollection();
+        $this->cluster              = new Collections\ArrayCollection();
+        $this->clusterMember        = new Collections\ArrayCollection();
+        $this->financialDebtor      = new Collections\ArrayCollection();
+        $this->log                  = new Collections\ArrayCollection();
+        $this->logo                 = new Collections\ArrayCollection();
+        $this->note                 = new Collections\ArrayCollection();
+        $this->programDoa           = new Collections\ArrayCollection();
+        $this->invoice              = new Collections\ArrayCollection();
+        $this->boothFinancial       = new Collections\ArrayCollection();
+        $this->doa                  = new Collections\ArrayCollection();
     }
 
     /**
@@ -741,5 +749,37 @@ class Organisation extends EntityAbstract
     public function getDoa()
     {
         return $this->doa;
+    }
+
+    /**
+     * @param \Organisation\Entity\Financial[] $financialDebtor
+     */
+    public function setFinancialDebtor($financialDebtor)
+    {
+        $this->financialDebtor = $financialDebtor;
+    }
+
+    /**
+     * @return \Organisation\Entity\Financial[]
+     */
+    public function getFinancialDebtor()
+    {
+        return $this->financialDebtor;
+    }
+
+    /**
+     * @param \Affiliation\Entity\Financial $affiliationFinancial
+     */
+    public function setAffiliationFinancial($affiliationFinancial)
+    {
+        $this->affiliationFinancial = $affiliationFinancial;
+    }
+
+    /**
+     * @return \Affiliation\Entity\Financial
+     */
+    public function getAffiliationFinancial()
+    {
+        return $this->affiliationFinancial;
     }
 }

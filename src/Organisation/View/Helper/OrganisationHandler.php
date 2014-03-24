@@ -83,7 +83,6 @@ class OrganisationHandler extends AbstractHelper
      */
     protected $zfcTwigRenderer;
 
-
     /**
      * @param HelperPluginManager $helperPluginManager
      */

@@ -18,7 +18,6 @@ use Zend\Paginator\Paginator;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\FormService;
-use Organisation\Entity;
 use Organisation\Form\Search;
 
 /**
@@ -116,7 +115,7 @@ class OrganisationController extends AbstractActionController implements
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
             ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string)strlen($file));
+            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
 
         $response->setContent($file);
 

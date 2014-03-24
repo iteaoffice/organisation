@@ -89,7 +89,7 @@ class Web extends EntityAbstract
     /**
      * Set input filter
      *
-     * @param  InputFilterInterface $inputFilter
+     * @param InputFilterInterface $inputFilter
      *
      * @return InputFilterAwareInterface
      */
@@ -105,7 +105,6 @@ class Web extends EntityAbstract
     public function getInputFilter()
     {
     }
-
 
     /**
      * @param int $id

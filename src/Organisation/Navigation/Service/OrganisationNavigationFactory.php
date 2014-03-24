@@ -16,7 +16,6 @@ use Zend\Mvc\Router\Http\RouteMatch;
 
 use Organisation\Service\OrganisationService;
 
-
 /**
  * Factory for the Project admin navigation
  *
@@ -33,7 +32,6 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
      * @var OrganisationService;
      */
     protected $organisationService;
-
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
@@ -61,7 +59,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
              * Go over both arrays and check if the new entities can be added
              */
             $pages['organisation']['pages']['view'] = array(
-                'label'      => (string)$this->organisationService->parseFullName(),
+                'label'      => (string) $this->organisationService->parseFullName(),
                 'route'      => 'zfcadmin/organisation-manager/view',
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,
@@ -90,7 +88,6 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
                 )
             );
         }
-
 
         return $pages;
     }

@@ -166,7 +166,7 @@ class Financial
      */
     private $email;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financial", cascade="persist")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financial", cascade="persist")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      * })

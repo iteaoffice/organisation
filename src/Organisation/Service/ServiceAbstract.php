@@ -52,8 +52,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     /**
      * Find 1 entity based on the id
      *
-     * @param      $entity
-     * @param      $id
+     * @param   $entity
+     * @param   $id
      *
      * @return Type|Organisation
      */

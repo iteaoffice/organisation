@@ -130,7 +130,6 @@ class Organisation extends EntityRepository
 
         $qb->from('Organisation\Entity\Organisation', 'o');
 
-
         //Select projects based on a type
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('wo');
