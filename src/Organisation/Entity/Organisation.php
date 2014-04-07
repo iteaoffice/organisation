@@ -212,9 +212,9 @@ class Organisation extends EntityAbstract
      */
     private $financialDebtor;
     /**
-     * @ORM\OneToMany(targetEntity="\Program\Entity\ProgramDoa", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Program\Entity\ProgramDoa[]
+     * @var \Program\Entity\Doa[]
      */
     private $programDoa;
     /**
@@ -640,7 +640,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\ProgramDoa[] $programDoa
+     * @param \Program\Entity\Doa[] $programDoa
      */
     public function setProgramDoa($programDoa)
     {
@@ -648,7 +648,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\ProgramDoa[]
+     * @return \Program\Entity\Doa[]
      */
     public function getProgramDoa()
     {

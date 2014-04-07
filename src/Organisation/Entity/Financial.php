@@ -9,6 +9,9 @@
  */
 namespace Organisation\Entity;
 
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\Form\Annotation;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -19,24 +22,24 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="organisation_financial")
  * @ORM\Entity
  */
-class Financial
+class Financial extends EntityAbstract
 {
     const VAT_STATUS_UNDEFINED = 0;
-    const VAT_STATUS_VALID     = 1;
-    const VAT_STATUS_INVALID   = 2;
+    const VAT_STATUS_VALID = 1;
+    const VAT_STATUS_INVALID = 2;
     const VAT_STATUS_UNCHECKED = 3;
 
     const VAT_NOT_SHIFT = 0;
-    const VAT_SHIFT     = 1;
+    const VAT_SHIFT = 1;
 
     const NO_OMIT_CONTACT = 0;
-    const OMIT_CONTACT    = 1;
+    const OMIT_CONTACT = 1;
 
     const NO_REQUIRED_PURCHASE_ORDER = 0;
-    const REQUIRED_PURCHASE_ORDER    = 1;
+    const REQUIRED_PURCHASE_ORDER = 1;
 
     const NO_EMAIL_DELIVERY = 0;
-    const EMAIL_DELIVERY    = 1;
+    const EMAIL_DELIVERY = 1;
 
     /**
      * Textual versions of the vat status
@@ -181,6 +184,136 @@ class Financial
     private $financialRow;
 
     /**
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
+    /**
+     * ToString
+     * Return the id here for form population
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->organisation;
+    }
+
+    /**
+     * @param InputFilterInterface $inputFilter
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function setInputFilter(InputFilterInterface $inputFilter)
+    {
+        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
+    }
+
+    /**
+     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
+     */
+    public function getInputFilter()
+    {
+        if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+            $factory     = new InputFactory();
+
+            $inputFilter->add(
+                $factory->createInput(
+                    array(
+                        'name'       => 'vat',
+                        'required'   => true,
+                        'filters'    => array(
+                            array('name' => 'StripTags'),
+                            array('name' => 'StringTrim'),
+                        ),
+                        'validators' => array(
+                            array(
+                                'name'    => 'StringLength',
+                                'options' => array(
+                                    'encoding' => 'UTF-8',
+                                    'min'      => 1,
+                                    'max'      => 255,
+                                ),
+                            ),
+                        ),
+                    )
+                )
+            );
+        }
+
+        return $this->inputFilter;
+    }
+
+    /**
+     * Needed for the hydration of form elements
+     * @return array
+     */
+    public function getArrayCopy()
+    {
+        return array(
+            'vat' => $this->vat,
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getEmailTemplates()
+    {
+        return $this->emailTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOmitContactTemplates()
+    {
+        return $this->omitContactTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequiredPurchaseOrderTemplates()
+    {
+        return $this->requiredPurchaseOrderTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVatShiftTemplates()
+    {
+        return $this->vatShiftTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVatStatusTemplates()
+    {
+        return $this->vatStatusTemplates;
+    }
+
+
+    /**
      * @param string $bic
      */
     public function setBic($bic)
@@ -237,10 +370,16 @@ class Financial
     }
 
     /**
-     * @return boolean
+     * @param bool $textual
+     *
+     * @return int|string
      */
-    public function getEmail()
+    public function getEmail($textual = false)
     {
+        if ($textual) {
+            return $this->emailTemplates[$this->email];
+        }
+
         return $this->email;
     }
 
