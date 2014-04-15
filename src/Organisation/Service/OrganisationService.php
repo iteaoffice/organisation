@@ -124,6 +124,22 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * Find a country based on three criteria: Name, CountryObject
+     *
+     * @param string  $name
+     * @param Country $country
+     *
+     * @return Organisation
+     */
+    public function findOrganisationByNameCountry($name, Country $country)
+    {
+        $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
+            ->findOrganisationByNameCountry($name, $country);
+
+        return $organisations;
+    }
+
+    /**
      * Produce a list of organisations for a project (only active)
      *
      * @param Project $project

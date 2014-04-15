@@ -120,7 +120,7 @@ class Organisation extends EntityRepository
      * @param Country $country
      * @param         $emailAddress
      *
-     * @return Entity\Organisation|null
+     * @return Entity\Organisation[]|null
      */
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
     {
@@ -161,5 +161,34 @@ class Organisation extends EntityRepository
         $qb->setParameter('searchItem', "%" . $name . "%");
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param         $name
+     * @param Country $country
+     *
+     * @return Entity\Organisation|null
+     */
+    public function findOrganisationByNameCountry($name, Country $country)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('o');
+        $qb->distinct('o.id');
+
+        $qb->from('Organisation\Entity\Organisation', 'o');
+
+        /**
+         * Limit on the country
+         */
+        $qb->andWhere('o.country = ?3');
+        $qb->setParameter(3, $country->getId());
+
+        /**
+         * Do a filter based on the organisation name
+         */
+        $qb->andWhere('o.organisation LIKE :searchItem');
+        $qb->setParameter('searchItem', "%" . $name . "%");
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }
