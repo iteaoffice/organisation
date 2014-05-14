@@ -9,8 +9,8 @@
  */
 namespace Organisation\Service;
 
-use Organisation\Entity\Organisation;
 use General\Entity\Country;
+use Organisation\Entity\Organisation;
 use Project\Entity\Project;
 
 /**
@@ -47,6 +47,14 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return is_null($this->organisation) || is_null($this->organisation->getId());
+    }
+
+    /**
      * @param $docRef
      *
      * @return null|OrganisationService
@@ -54,7 +62,8 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByDocRef($docRef)
     {
         $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
-            array('docRef' => $docRef));
+            array('docRef' => $docRef)
+        );
 
         /**
          * Return null when no project can be found
@@ -67,6 +76,20 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @param Organisation $organisation
+     *
+     * @return OrganisationService
+     */
+    private function createServiceElement(Organisation $organisation)
+    {
+        $organisationService = new self();
+        $organisationService->setServiceLocator($this->getServiceLocator());
+        $organisationService->organisation = $organisation;
+
+        return $organisationService;
+    }
+
+    /**
      * @param $branch
      *
      * @return string
@@ -76,6 +99,26 @@ class OrganisationService extends ServiceAbstract
         return trim(
             preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $this->getOrganisation() . ' ${3}', $branch)
         );
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     *
+     * @return OrganisationService
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
     }
 
     /**
@@ -103,7 +146,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByCountry(Country $country, $onlyActive = true)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-            ->findOrganisationByCountry($country, $onlyActive);
+                    ->findOrganisationByCountry($country, $onlyActive);
     }
 
     /**
@@ -118,7 +161,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
     {
         $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
-            ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
+                              ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
 
         return $organisations;
     }
@@ -134,7 +177,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByNameCountry($name, Country $country)
     {
         $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
-            ->findOrganisationByNameCountry($name, $country);
+                              ->findOrganisationByNameCountry($name, $country);
 
         return $organisations;
     }
@@ -154,8 +197,9 @@ class OrganisationService extends ServiceAbstract
         foreach ($project->getAffiliation() as $affiliation) {
             if ($onlyActive && is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
-                $organisations[$affiliation->getOrganisation()->getOrganisation()] =
-                    $this->createServiceElement($affiliation->getOrganisation());
+                $organisations[$affiliation->getOrganisation()->getOrganisation()] = $this->createServiceElement(
+                    $affiliation->getOrganisation()
+                );
             }
         }
 
@@ -177,40 +221,6 @@ class OrganisationService extends ServiceAbstract
     public function searchOrganisation($searchItem, $maxResults, $countryId = null)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-            ->searchOrganisations($searchItem, $maxResults, $countryId);
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return OrganisationService
-     */
-    private function createServiceElement(Organisation $organisation)
-    {
-        $organisationService = new self();
-        $organisationService->setServiceLocator($this->getServiceLocator());
-        $organisationService->organisation = $organisation;
-
-        return $organisationService;
-    }
-
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     *
-     * @return OrganisationService
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
+                    ->searchOrganisations($searchItem, $maxResults, $countryId);
     }
 }

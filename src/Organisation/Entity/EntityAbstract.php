@@ -16,8 +16,13 @@ use Zend\InputFilter\InputFilterAwareInterface;
  *
  * @author  Johan van der Heide <johan.van.der.heide@itea3.org>
  */
-abstract class EntityAbstract implements EntityInterface, InputFilterAwareInterface
+abstract class EntityAbstract implements
+    EntityInterface,
+    InputFilterAwareInterface
 {
+    /**
+     * @var
+     */
     protected $inputFilter;
 
     /**
@@ -67,7 +72,8 @@ abstract class EntityAbstract implements EntityInterface, InputFilterAwareInterf
                 return preg_replace_callback(
                     '/([A-Z])/',
                     $underscore,
-                    lcfirst(str_replace('\\', '', __NAMESPACE__) . $this->get('entity_name')));
+                    lcfirst(str_replace('\\', '', __NAMESPACE__) . $this->get('entity_name'))
+                );
         }
     }
 }

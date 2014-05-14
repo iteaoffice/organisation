@@ -286,7 +286,7 @@ class Organisation extends EntityAbstract
      */
     public function __toString()
     {
-        return (string)$this->organisation;
+        return (string) $this->organisation;
     }
 
     /**

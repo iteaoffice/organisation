@@ -9,22 +9,21 @@
  */
 namespace Organisation\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-
+use Organisation\Service\FormService;
 use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\OrganisationService;
-use Organisation\Service\FormService;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Model\ViewModel;
 
 /**
  *
  */
 class OrganisationManagerController extends AbstractActionController implements
-    FormServiceAwareInterface, ServiceLocatorAwareInterface
+    FormServiceAwareInterface,
+    ServiceLocatorAwareInterface
 {
-
     /**
      * @var OrganisationService;
      */
@@ -39,20 +38,6 @@ class OrganisationManagerController extends AbstractActionController implements
     protected $serviceLocator;
 
     /**
-     * Trigger to switch layout
-     *
-     * @param $layout
-     */
-    public function layout($layout)
-    {
-        if (false === $layout) {
-            $this->getEvent()->getViewModel()->setTemplate('layout/nolayout');
-        } else {
-            $this->getEvent()->getViewModel()->setTemplate('layout/' . $layout);
-        }
-    }
-
-    /**
      * Give a list of messages
      *
      * @return \Zend\View\Model\ViewModel
@@ -62,6 +47,48 @@ class OrganisationManagerController extends AbstractActionController implements
         $messages = $this->getOrganisationService()->findAll('message');
 
         return new ViewModel(array('messages' => $messages));
+    }
+
+    /**
+     * Gateway to the Organisation Service
+     *
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        return $this->getServiceLocator()->get('organisation_generic_service');
+    }
+
+    /**
+     * @param $organisationService
+     *
+     * @return OrganisationManagerController
+     */
+    public function setOrganisationService($organisationService)
+    {
+        $this->organisationService = $organisationService;
+
+        return $this;
+    }
+
+    /**
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return OrganisationManagerController|void
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+
+        return $this;
     }
 
     /**
@@ -100,6 +127,26 @@ class OrganisationManagerController extends AbstractActionController implements
         }
 
         return new ViewModel(array('form' => $form, 'entity' => $entity, 'fullVersion' => true));
+    }
+
+    /**
+     * @return \Organisation\Service\FormService
+     */
+    public function getFormService()
+    {
+        return $this->formService;
+    }
+
+    /**
+     * @param $formService
+     *
+     * @return OrganisationManagerController
+     */
+    public function setFormService($formService)
+    {
+        $this->formService = $formService;
+
+        return $this;
     }
 
     /**
@@ -146,67 +193,5 @@ class OrganisationManagerController extends AbstractActionController implements
         return $this->redirect()->toRoute(
             'zfcadmin/organisation-manager/' . $entity->get('dashed_entity_name') . 's'
         );
-    }
-
-    /**
-     * @return \Organisation\Service\FormService
-     */
-    public function getFormService()
-    {
-        return $this->formService;
-    }
-
-    /**
-     * @param $formService
-     *
-     * @return OrganisationManagerController
-     */
-    public function setFormService($formService)
-    {
-        $this->formService = $formService;
-
-        return $this;
-    }
-
-    /**
-     * Gateway to the Organisation Service
-     *
-     * @return OrganisationService
-     */
-    public function getOrganisationService()
-    {
-        return $this->getServiceLocator()->get('organisation_generic_service');
-    }
-
-    /**
-     * @param $organisationService
-     *
-     * @return OrganisationManagerController
-     */
-    public function setOrganisationService($organisationService)
-    {
-        $this->organisationService = $organisationService;
-
-        return $this;
-    }
-
-    /**
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return OrganisationManagerController|void
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
     }
 }

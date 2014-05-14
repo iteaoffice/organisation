@@ -11,12 +11,11 @@
  */
 namespace Organisation\View\Helper;
 
-use Zend\View\HelperPluginManager;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\AbstractHelper;
-
 use Organisation\Entity;
 use Organisation\Service;
+use Zend\ServiceManager\ServiceManager;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Create a link to an organisation
@@ -27,7 +26,6 @@ use Organisation\Service;
  */
 class OrganisationLink extends AbstractHelper
 {
-
     /**
      * @var ServiceManager
      */
@@ -59,8 +57,8 @@ class OrganisationLink extends AbstractHelper
         $show = 'name',
         $branch = null,
         $page = null,
-        $alternativeShow = null)
-    {
+        $alternativeShow = null
+    ) {
 
         $router  = $this->sm->get('router');
         $request = $this->sm->get('request');
@@ -70,18 +68,18 @@ class OrganisationLink extends AbstractHelper
         $serverUrl = $this->view->plugin('serverUrl');
         $isAllowed = $this->view->plugin('isAllowed');
 
-//        if (!$isAllowed('organisation', $action)) {
-//            if ($action === 'view' && $show === 'name') {
-//                return $organisationService;
-//            }
-//
-//            return '';
-//        }
+        //        if (!$isAllowed('organisation', $action)) {
+        //            if ($action === 'view' && $show === 'name') {
+        //                return $organisationService;
+        //            }
+        //
+        //            return '';
+        //        }
 
         $routeMatch = $this->view->getHelperPluginManager()->getServiceLocator()
-            ->get('application')
-            ->getMvcEvent()
-            ->getRouteMatch();
+                                 ->get('application')
+                                 ->getMvcEvent()
+                                 ->getRouteMatch();
 
         $params = array(
             'entity' => 'organisation'
@@ -95,8 +93,11 @@ class OrganisationLink extends AbstractHelper
                 break;
             case 'edit':
                 $router = 'zfcadmin/organisation-manager/edit';
-                $text   = sprintf($translate("txt-edit-organisation-%s"),
-                    $organisationService->parseOrganisationWithBranch($branch)
+                $text   = sprintf(
+                    $translate("txt-edit-organisation-%s"),
+                    $organisationService->parseOrganisationWithBranch(
+                        $branch
+                    )
                 );
                 break;
             case 'list':
@@ -117,16 +118,28 @@ class OrganisationLink extends AbstractHelper
                 $organisationService->setOrganisation($organisation);
                 break;
             case 'view':
-                $router           = 'route-' . $organisationService->getOrganisation()->get("underscore_full_entity_name");
+                $router           = 'route-' .
+                    $organisationService->getOrganisation()->get(
+                        "underscore_full_entity_name"
+                    );
                 $params['docRef'] = $organisationService->getOrganisation()->getDocRef();
-                $text             = sprintf($translate("txt-view-organisation-%s"),
-                    $organisationService->parseOrganisationWithBranch($branch)
+                $text             = sprintf(
+                    $translate("txt-view-organisation-%s"),
+                    $organisationService->parseOrganisationWithBranch(
+                        $branch
+                    )
                 );
                 break;
             case 'view-article':
-                $router           = 'route-' . $organisationService->getOrganisation()->get('underscore_full_entity_name') . '-article';
-                $text             = sprintf($translate("txt-view-article-for-organisation-%s"),
-                    $organisationService->parseOrganisationWithBranch($branch)
+                $router           = 'route-' .
+                    $organisationService->getOrganisation()->get(
+                        'underscore_full_entity_name'
+                    ) . '-article';
+                $text             = sprintf(
+                    $translate("txt-view-article-for-organisation-%s"),
+                    $organisationService->parseOrganisationWithBranch(
+                        $branch
+                    )
                 );
                 $params['docRef'] = $organisationService->getOrganisation()->getDocRef();
                 break;

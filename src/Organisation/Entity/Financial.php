@@ -211,7 +211,7 @@ class Financial extends EntityAbstract
      */
     public function __toString()
     {
-        return (string)$this->organisation;
+        return (string) $this->organisation;
     }
 
     /**
@@ -311,7 +311,6 @@ class Financial extends EntityAbstract
     {
         return $this->vatStatusTemplates;
     }
-
 
     /**
      * @param string $bic

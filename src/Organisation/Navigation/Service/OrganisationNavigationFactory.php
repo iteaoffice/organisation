@@ -10,11 +10,10 @@
  */
 namespace Organisation\Navigation\Service;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Navigation\Service\DefaultNavigationFactory;
-use Zend\Mvc\Router\Http\RouteMatch;
-
 use Organisation\Service\OrganisationService;
+use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Navigation\Service\DefaultNavigationFactory;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Factory for the Project admin navigation
@@ -47,7 +46,8 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
         $this->organisationService = $serviceLocator->get('organisation_organisation_service');
         $translate                 = $serviceLocator->get('viewhelpermanager')->get('translate');
 
-        if (in_array($this->routeMatch->getMatchedRouteName(),
+        if (in_array(
+            $this->routeMatch->getMatchedRouteName(),
             array(
                 'zfcadmin/organisation-manager/view',
                 'zfcadmin/organisation-manager/edit',
@@ -60,7 +60,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
              * Go over both arrays and check if the new entities can be added
              */
             $pages['organisation']['pages']['view'] = array(
-                'label'      => (string)$this->organisationService->getOrganisation()->getOrganisation(),
+                'label'      => (string) $this->organisationService->getOrganisation()->getOrganisation(),
                 'route'      => 'zfcadmin/organisation-manager/view',
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,
@@ -79,8 +79,10 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
              */
 
             $pages['organisation']['pages']['organisation']['pages']['edit'] = array(
-                'label'      => sprintf($translate("txt-edit-organisation-%s"),
-                    $this->organisationService->getOrganisation()->getOrganisation()),
+                'label'      => sprintf(
+                    $translate("txt-edit-organisation-%s"),
+                    $this->organisationService->getOrganisation()->getOrganisation()
+                ),
                 'route'      => 'zfcadmin/organisation-manager/edit',
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,

@@ -1,9 +1,8 @@
-<h1>{{ organisationService.organisation }}</h1>
-
-
 <div class="pull-right">
     {{ organisationLogo(organisationService) }}
 </div>
+
+<h1>{{ organisationService.organisation }}</h1>
 
 {% if organisationService.organisation.description %}
     <h3>{{ translate("txt-description") }}</h3>

@@ -11,7 +11,7 @@ namespace OrganisationTest\Entity;
 
 use Organisation\Entity\Organisation;
 
-class ProjectTest extends \PHPUnit_Framework_TestCase
+class OrganisationTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testCanCreateEntity()

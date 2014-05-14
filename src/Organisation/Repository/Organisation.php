@@ -10,7 +10,6 @@
 namespace Organisation\Repository;
 
 use Doctrine\ORM\EntityRepository;
-
 use General\Entity\Country;
 use Organisation\Entity;
 use Zend\Validator\EmailAddress;
@@ -90,7 +89,7 @@ class Organisation extends EntityRepository
      *
      * @return Entity\Organisation[]
      */
-    public function searchOrganisations($searchItem, $maxResults = 12, $countryId)
+    public function searchOrganisations($searchItem, $maxResults = 12, $countryId = null)
     {
 
         $qb = $this->_em->createQueryBuilder();
