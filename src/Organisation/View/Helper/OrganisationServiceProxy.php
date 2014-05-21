@@ -11,11 +11,10 @@
 
 namespace Organisation\View\Helper;
 
-use Zend\View\HelperPluginManager;
-use Zend\View\Helper\AbstractHelper;
-
 use Organisation\Entity\Organisation;
 use Organisation\Service\OrganisationService;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class OrganisationHandler
@@ -33,7 +32,9 @@ class OrganisationServiceProxy extends AbstractHelper
      */
     public function __construct(HelperPluginManager $helperPluginManager)
     {
-        $this->organisationService = $helperPluginManager->getServiceLocator()->get('organisation_organisation_service');
+        $this->organisationService = clone $helperPluginManager->getServiceLocator()->get(
+            'organisation_organisation_service'
+        );
     }
 
     /**

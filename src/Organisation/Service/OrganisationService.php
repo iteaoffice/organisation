@@ -9,9 +9,11 @@
  */
 namespace Organisation\Service;
 
+use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
 use Project\Entity\Project;
+use Zend\Stdlib\Parameters;
 
 /**
  * OrganisationService
@@ -72,6 +74,8 @@ class OrganisationService extends ServiceAbstract
             return null;
         }
 
+        $this->setOrganisation($organisation);
+
         return $this->createServiceElement($organisation);
     }
 
@@ -82,8 +86,7 @@ class OrganisationService extends ServiceAbstract
      */
     private function createServiceElement(Organisation $organisation)
     {
-        $organisationService = new self();
-        $organisationService->setServiceLocator($this->getServiceLocator());
+        $organisationService               = clone $this;
         $organisationService->organisation = $organisation;
 
         return $organisationService;
@@ -150,7 +153,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * Find a country based on three criteria: Name, CountryObject and the emailaddress
+     * Find a country based on three criteria: Name, CountryObject and the email address
      *
      * @param string  $name
      * @param Country $country
@@ -160,10 +163,8 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
     {
-        $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
-                              ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
-
-        return $organisations;
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
+                    ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
     }
 
     /**
@@ -176,10 +177,20 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationByNameCountry($name, Country $country)
     {
-        $organisations = $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
-                              ->findOrganisationByNameCountry($name, $country);
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
+                    ->findOrganisationByNameCountry($name, $country);
+    }
 
-        return $organisations;
+    /**
+     * @param Meeting    $meeting
+     * @param Parameters $search
+     *
+     * @return Organisation[]
+     */
+    public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
+                    ->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
     }
 
     /**

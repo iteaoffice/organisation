@@ -10,8 +10,11 @@
 namespace Organisation\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Event\Entity\Meeting\Meeting;
+use Event\Entity\Registration;
 use General\Entity\Country;
 use Organisation\Entity;
+use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
 /**
@@ -189,5 +192,66 @@ class Organisation extends EntityRepository
         $qb->setParameter('searchItem', "%" . $name . "%");
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * Find participants based on the given criteria
+     *
+     * @param Meeting    $meeting
+     * @param Parameters $search
+     *
+     * @return Registration[]
+     */
+    public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('o');
+        $queryBuilder->distinct('o.id');
+
+        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
+        $queryBuilder->join('o.contactOrganisation', 'co');
+        $queryBuilder->join('o.description', 'd');
+
+        /**
+         * The search can be refined on country and type, include the results here
+         */
+        if ($search->get('country') && $search->get('country') !== '0') {
+            $queryBuilder->join('o.country', 'country');
+            $queryBuilder->andWhere('country.id = ?7');
+            $queryBuilder->setParameter(7, $search->get('country'));
+        }
+
+        /**
+         * The search can be refined on country and type, include the results here
+         */
+        if ($search->get('organisationType')) {
+            $queryBuilder->join('o.type', 'type');
+            $queryBuilder->andWhere($queryBuilder->expr()->in('type.id', $search->get('organisationType')));
+        }
+
+        $queryBuilder->andWhere($queryBuilder->expr()->like('d.description', '?4'));
+
+        /**
+         * Limit the results to the registered users
+         */
+        $subSelect = $this->_em->createQueryBuilder();
+        $subSelect->select('c');
+        $subSelect->from('Event\Entity\Registration', 'r');
+        $subSelect->join('r.contact', 'c');
+        $subSelect->where('r.meeting = ?1');
+        $subSelect->andWhere($subSelect->expr()->isNull('r.dateEnd'));
+        $subSelect->andWhere('r.hideInList = ?2');
+        $subSelect->andWhere('r.overbooked = ?3');
+
+        $queryBuilder->andWhere($queryBuilder->expr()->in('co.contact', $subSelect->getDQL()));
+
+        $queryBuilder->setParameter(1, $meeting->getId());
+        $queryBuilder->setParameter(2, Registration::NOT_HIDE_IN_LIST);
+        $queryBuilder->setParameter(3, Registration::NOT_OVERBOOKED);
+        $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
+
+        $queryBuilder->addOrderBy('o.organisation', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }
