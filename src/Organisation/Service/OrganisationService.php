@@ -203,7 +203,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationByProject(Project $project, $onlyActive = true)
     {
-        $organisations = array();
+        $organisations = [];
 
         foreach ($project->getAffiliation() as $affiliation) {
             if ($onlyActive && is_null($affiliation->getDateEnd())) {
@@ -226,12 +226,13 @@ class OrganisationService extends ServiceAbstract
      * @param      $searchItem
      * @param      $maxResults
      * @param null $countryId
+     * @param bool $onlyActive
      *
      * @return Organisation[]
      */
-    public function searchOrganisation($searchItem, $maxResults, $countryId = null)
+    public function searchOrganisation($searchItem, $maxResults, $countryId = null, $onlyActive = true)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-                    ->searchOrganisations($searchItem, $maxResults, $countryId);
+                    ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActive);
     }
 }

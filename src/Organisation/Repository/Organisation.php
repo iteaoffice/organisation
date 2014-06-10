@@ -42,8 +42,7 @@ class Organisation extends EntityRepository
 
         //Limit to only the active projects
         if ($onlyActive) {
-            $projectRepository = $this->getEntityManager()->getRepository('Project\Entity\Project');
-            $qb                = $projectRepository->onlyActiveProject($qb);
+            $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
         }
 
         $qb->orderBy('o.organisation', 'ASC');
@@ -71,8 +70,7 @@ class Organisation extends EntityRepository
 
         //Limit to only the active projects
         if ($onlyActive) {
-            $projectRepository = $this->getEntityManager()->getRepository('Project\Entity\Project');
-            $qb                = $projectRepository->onlyActiveProject($qb);
+            $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
         }
 
         $qb->andWhere('o.country = ?8');
@@ -89,10 +87,11 @@ class Organisation extends EntityRepository
      * @param string $searchItem
      * @param int    $maxResults
      * @param null   $countryId
+     * @param bool   $onlyActivegit com
      *
      * @return Entity\Organisation[]
      */
-    public function searchOrganisations($searchItem, $maxResults = 12, $countryId = null)
+    public function searchOrganisations($searchItem, $maxResults = 12, $countryId = null, $onlyActive = true)
     {
 
         $qb = $this->_em->createQueryBuilder();
@@ -100,14 +99,19 @@ class Organisation extends EntityRepository
         $qb->distinct('o.id');
 
         $qb->from('Organisation\Entity\Organisation', 'o');
-
         $qb->andWhere('o.organisation LIKE :searchItem');
-
         $qb->setParameter('searchItem', "%" . $searchItem . "%");
 
         if (!is_null($countryId)) {
             $qb->andWhere('o.country = ?3');
             $qb->setParameter(3, $countryId);
+        }
+
+        //Limit to only the active projects
+        if ($onlyActive) {
+            $qb->join('o.affiliation', 'a');
+            $qb->join('a.project', 'p');
+            $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
         }
 
         $qb->setMaxResults($maxResults);

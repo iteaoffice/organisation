@@ -129,7 +129,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 /**
                  * @var $countryMap CountryMap
                  */
-                $countryMap = $this->serviceLocator->get('countyMap');
+                $countryMap = $this->serviceLocator->get('countryMap');
 
                 return $countryMap($countries);
                 break;
@@ -324,7 +324,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     }
 
     /**
-     * @return array()
+     * @return []
      */
     public function getConfig()
     {

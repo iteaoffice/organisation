@@ -5,22 +5,22 @@
  * If you have a ./config/autoload/ directory set up for your project, you can
  * drop this config file in it and change the values as you wish.
  */
-$settings = array(
+$settings = [
     // cache options have to be compatible with Zend\Cache\StorageFactory::factory
-    'cache_options' => array(
-        'adapter' => array(
+    'cache_options' => [
+        'adapter' => [
             'name' => 'apc',
-        ),
-        'plugins' => array(
+        ],
+        'plugins' => [
             'serializer',
-        )
-    ),
+        ]
+    ],
     'cache_key'     => 'organisation-cache-' . DEBRANOVA_HOST
-);
+];
 
 /**
  * You do not need to edit below this line
  */
-return array(
+return [
     'organisation-config' => $settings,
-);
+];

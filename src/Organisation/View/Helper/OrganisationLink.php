@@ -161,8 +161,8 @@ class OrganisationLink extends AbstractHelper
         $params['id']   = $organisationService->getOrganisation()->getId();
         $params['page'] = !is_null($page) ? $page : null;
 
-        $classes     = array();
-        $linkContent = array();
+        $classes     = [];
+        $linkContent = [];
 
         switch ($show) {
             case 'icon':

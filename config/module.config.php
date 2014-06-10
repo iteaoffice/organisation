@@ -7,9 +7,15 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+use Organisation\Controller\ControllerInitializer;
+use Organisation\Service\ServiceInitializer;
+
 $config = array(
     'controllers'     => array(
-        'invokables' => array(
+        'initializers' => [
+            ControllerInitializer::class
+        ],
+        'invokables'   => array(
             'organisation-index'   => 'Organisation\Controller\OrganisationController',
             'organisation-manager' => 'Organisation\Controller\OrganisationManagerController',
         ),
@@ -18,12 +24,15 @@ $config = array(
         'template_map' => include __DIR__ . '/../template_map.php',
     ),
     'service_manager' => array(
-        'factories'  => array(
+        'initializers' => [
+            ServiceInitializer::class
+        ],
+        'factories'    => array(
             'organisation-assertion'     => 'Organisation\Acl\Assertion\Organisation',
             'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory',
             'organisation_cache'         => 'Organisation\Service\CacheFactory',
         ),
-        'invokables' => array(
+        'invokables'   => array(
             'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
             'organisation_form_service'             => 'Organisation\Service\FormService',
             'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation',
