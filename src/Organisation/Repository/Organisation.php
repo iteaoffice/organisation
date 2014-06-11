@@ -87,7 +87,7 @@ class Organisation extends EntityRepository
      * @param string $searchItem
      * @param int    $maxResults
      * @param null   $countryId
-     * @param bool   $onlyActivegit com
+     * @param bool   $onlyActive
      *
      * @return Entity\Organisation[]
      */
@@ -233,7 +233,12 @@ class Organisation extends EntityRepository
             $queryBuilder->andWhere($queryBuilder->expr()->in('type.id', $search->get('organisationType')));
         }
 
-        $queryBuilder->andWhere($queryBuilder->expr()->like('d.description', '?4'));
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->like('d.description', '?4'),
+                $queryBuilder->expr()->like('o.organisation', '?4')
+            )
+        );
 
         /**
          * Limit the results to the registered users
