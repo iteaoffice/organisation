@@ -47,7 +47,7 @@ class OrganisationLogo extends AbstractHelper
 
         $router = 'assets/organisation-logo';
 
-        $classes   = [];
+        $classes   = ['img-responsive'];
         $classes[] = $class;
 
         $imageUrl = '<img src="%s" id="%s" class="%s">';

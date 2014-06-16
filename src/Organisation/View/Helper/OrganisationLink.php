@@ -11,11 +11,8 @@
  */
 namespace Organisation\View\Helper;
 
-use Organisation\Entity;
-use Organisation\Service;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
+use Organisation\Entity\Organisation;
+use Organisation\Service\OrganisationService;
 
 /**
  * Create a link to an organisation
@@ -24,35 +21,33 @@ use Zend\View\HelperPluginManager;
  * @package     View
  * @subpackage  Helper
  */
-class OrganisationLink extends AbstractHelper
+class OrganisationLink extends LinkAbstract
 {
     /**
-     * @var ServiceManager
+     * @var OrganisationService
      */
-    protected $sm;
+    protected $organisationService;
+    /**
+     * The branch of the organisation
+     *
+     * @var string
+     */
+    protected $branch;
 
     /**
-     * @param HelperPluginManager $helperPluginManager
-     */
-    public function __construct(HelperPluginManager $helperPluginManager)
-    {
-        $this->sm = $helperPluginManager->getServiceLocator();
-    }
-
-    /**
-     * @param Service\OrganisationService $organisationService
-     * @param string                      $action
-     * @param string                      $show
-     * @param null                        $branch
-     * @param null                        $page
-     * @param null                        $alternativeShow
+     * @param OrganisationService $organisationService
+     * @param string              $action
+     * @param string              $show
+     * @param null                $branch
+     * @param null                $page
+     * @param null                $alternativeShow
      *
      * @return string
      * @throws \RuntimeException
      * @throws \Exception
      */
     public function __invoke(
-        Service\OrganisationService $organisationService = null,
+        OrganisationService $organisationService = null,
         $action = 'view',
         $show = 'name',
         $branch = null,
@@ -60,148 +55,167 @@ class OrganisationLink extends AbstractHelper
         $alternativeShow = null
     ) {
 
-        $router  = $this->sm->get('router');
-        $request = $this->sm->get('request');
+        $this->setOrganisationService($organisationService);
+        $this->setAction($action);
+        $this->setShow($show);
 
-        $translate = $this->view->plugin('translate');
-        $url       = $this->view->plugin('url');
-        $serverUrl = $this->view->plugin('serverUrl');
-        $isAllowed = $this->view->plugin('isAllowed');
+        /**
+         * If the alternativeShow is not null, use it an otherwise take the page
+         */
+        if (!is_null($alternativeShow)) {
+            $this->setAlternativeShow($alternativeShow);
+        } else {
+            $this->setAlternativeShow($page);
+        }
 
-        //        if (!$isAllowed('organisation', $action)) {
-        //            if ($action === 'view' && $show === 'name') {
-        //                return $organisationService;
-        //            }
-        //
-        //            return '';
-        //        }
+        $this->addRouterParam('entity', 'organisation');
+        if (!$this->getOrganisationService()->isEmpty()) {
 
-        $routeMatch = $this->view->getHelperPluginManager()->getServiceLocator()
-                                 ->get('application')
-                                 ->getMvcEvent()
-                                 ->getRouteMatch();
+            /**
+             * Set the non-standard options needed to give an other link value
+             */
+            $this->setShowOptions(
+                [
+                    'more' => $this->translate("txt-read-more"),
+                    'name' => $this->getOrganisationService()->parseOrganisationWithBranch(
+                        $this->getBranch()
+                    )
+                ]
+            );
 
-        $params = array(
-            'entity' => 'organisation'
-        );
+            $this->addRouterParam('id', $this->getOrganisationService()->getOrganisation()->getId());
+        }
 
-        switch ($action) {
+        $this->addRouterParam('page', $page);
+
+        return $this->createLink();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function parseAction()
+    {
+        if (in_array(
+            $this->getAction(),
+            [
+                'view',
+                'view-article',
+            ]
+        )
+        ) {
+
+            if ($this->getOrganisationService()->isEmpty()) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        "ProjectService is cannot be null for %s",
+                        $this->getAction()
+                    )
+                );
+            }
+
+            $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
+        }
+
+        switch ($this->getAction()) {
             case 'new':
-                $router              = 'zfcadmin/organisation-manager/new';
-                $text                = sprintf($translate("txt-new-organisation"));
-                $organisationService = new Entity\Organisation();
+                $this->setRouter('zfcadmin/organisation-manager/new');
+                $this->setText($this->translate("txt-new-organisation"));
                 break;
             case 'edit':
-                $router = 'zfcadmin/organisation-manager/edit';
-                $text   = sprintf(
-                    $translate("txt-edit-organisation-%s"),
-                    $organisationService->parseOrganisationWithBranch(
-                        $branch
+                $this->setRouter('zfcadmin/organisation-manager/edit');
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-edit-organisation-%s"),
+                        $this->getOrganisationService()->parseOrganisationWithBranch(
+                            $this->getBranch()
+                        )
                     )
                 );
                 break;
             case 'list':
 
-                $matchedRoute = $router->match($request);
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
                  */
-                $router = $matchedRoute->getMatchedRouteName();
+                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
                 /**
                  * Push the docRef in the params array
                  */
-                $params['docRef'] = $matchedRoute->getParam('docRef');
-
-                $text                = sprintf($translate("txt-list-projects"));
-                $organisationService = new Service\OrganisationService();
-                $organisation        = new Entity\Organisation();
-                $organisationService->setOrganisation($organisation);
+                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
+                $this->setText($this->translate("txt-list-organisations"));
                 break;
             case 'view':
-                $router           = 'route-' .
-                    $organisationService->getOrganisation()->get(
-                        "underscore_full_entity_name"
-                    );
-                $params['docRef'] = $organisationService->getOrganisation()->getDocRef();
-                $text             = sprintf(
-                    $translate("txt-view-organisation-%s"),
-                    $organisationService->parseOrganisationWithBranch(
-                        $branch
+                $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
+                $this->setRouter(
+                    'route-' . $this->getOrganisationService()->getOrganisation()->get("underscore_full_entity_name")
+                );
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-organisation-%s"),
+                        $this->getOrganisationService()->parseOrganisationWithBranch(
+                            $this->getBranch()
+                        )
                     )
                 );
+
                 break;
             case 'view-article':
-                $router           = 'route-' .
-                    $organisationService->getOrganisation()->get(
-                        'underscore_full_entity_name'
-                    ) . '-article';
-                $text             = sprintf(
-                    $translate("txt-view-article-for-organisation-%s"),
-                    $organisationService->parseOrganisationWithBranch(
-                        $branch
+                $this->setRouter(
+                    'route-' . $this->getOrganisationService()->getOrganisation()->get(
+                        "underscore_full_entity_name"
+                    ) . '-article'
+                );
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-article-for-organisation-%s"),
+                        $this->getOrganisationService()->parseOrganisationWithBranch(
+                            $this->getBranch()
+                        )
                     )
                 );
-                $params['docRef'] = $organisationService->getOrganisation()->getDocRef();
+                $params['docRef'] = $this->getOrganisationService()->getOrganisation()->getDocRef();
                 break;
             default:
-                throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
+                throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
+        }
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        if (is_null($this->organisationService)) {
+            $this->organisationService = new OrganisationService();
+            $organisation              = new Organisation();
+            $this->organisationService->setOrganisation($organisation);
         }
 
-        if (is_null($organisationService)) {
-            throw new \RuntimeException(
-                sprintf(
-                    "organisation needs to be an instance of %s, %s given in %s",
-                    "Organisation\Entity\Organisation",
-                    get_class($organisationService),
-                    __CLASS__
-                )
-            );
-        }
+        return $this->organisationService;
+    }
 
-        $params['id']   = $organisationService->getOrganisation()->getId();
-        $params['page'] = !is_null($page) ? $page : null;
+    /**
+     * @param OrganisationService $organisationService
+     */
+    public function setOrganisationService($organisationService)
+    {
+        $this->organisationService = $organisationService;
+    }
 
-        $classes     = [];
-        $linkContent = [];
+    /**
+     * @return string
+     */
+    public function getBranch()
+    {
+        return $this->branch;
+    }
 
-        switch ($show) {
-            case 'icon':
-                if ($action === 'edit') {
-                    $linkContent[] = '<span class="glyphicon glyphicon-edit"></span>';
-                } else {
-                    $linkContent[] = '<span class="glyphicon glyphicon-info-sign"></span>';
-                }
-                break;
-            case 'button':
-                $linkContent[] = '<span class="glyphicon glyphicon-info"></span> ' . $text;
-                $classes[]     = "btn btn-primary";
-                break;
-            case 'name':
-                $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);
-                break;
-            case 'more':
-                $linkContent[] = $translate("txt-read-more");
-                break;
-            case 'paginator':
-
-                $linkContent[] = $alternativeShow;
-                break;
-            case 'social':
-                return $serverUrl() . $url($router, $params);
-                break;
-            default:
-                $linkContent[] = $organisationService->parseOrganisationWithBranch($branch);
-                break;
-        }
-
-        $uri = '<a href="%s" title="%s" class="%s">%s</a>';
-
-        return sprintf(
-            $uri,
-            $serverUrl->__invoke() . $url($router, $params),
-            $text,
-            implode($classes),
-            implode($linkContent)
-        );
+    /**
+     * @param string $branch
+     */
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
     }
 }

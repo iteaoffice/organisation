@@ -7,8 +7,10 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 use Organisation\Controller\ControllerInitializer;
 use Organisation\Service\ServiceInitializer;
+use Organisation\View\Helper\ViewHelperInitializer;
 
 $config = array(
     'controllers'     => array(
@@ -22,6 +24,17 @@ $config = array(
     ),
     'view_manager'    => array(
         'template_map' => include __DIR__ . '/../template_map.php',
+    ),
+    'view_helpers'    => array(
+        'initializers' => [
+            ViewHelperInitializer::class
+        ],
+        'invokables'   => [
+            'organisationHandler'      => 'Organisation\View\Helper\OrganisationHandler',
+            'organisationServiceProxy' => 'Organisation\View\Helper\OrganisationServiceProxy',
+            'organisationLink'         => 'Organisation\View\Helper\OrganisationLink',
+            'organisationLogo'         => 'Organisation\View\Helper\OrganisationLogo',
+        ]
     ),
     'service_manager' => array(
         'initializers' => [

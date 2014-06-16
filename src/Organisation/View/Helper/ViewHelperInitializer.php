@@ -2,47 +2,47 @@
 /**
  * Japaveh Webdesign copyright message placeholder
  *
- * @category    Controller
- * @package     Service
+ * @category    Organisation
+ * @package     Controller
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   2004-2014 Japaveh Webdesign
  * @license     http://solodb.net/license.txt proprietary
  * @link        http://solodb.net
  */
-namespace Organisation\Controller;
+namespace Organisation\View\Helper;
 
-use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\OrganisationServiceAwareInterface;
-use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Japaveh Webdesign copyright message placeholder
  *
- * @category    Controller
- * @package     Service
+ * @category    Organisation
+ * @package     Controller
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   2004-2014 Japaveh Webdesign
  * @license     http://solodb.net/license.txt proprietary
  * @link        http://solodb.net
  */
-class ControllerInitializer implements InitializerInterface
+class ViewHelperInitializer implements InitializerInterface
 {
     /**
-     * @param                                           $instance
-     * @param ServiceLocatorInterface|ControllerManager $serviceLocator
+     * @param                                             $instance
+     * @param ServiceLocatorInterface|HelperPluginManager $serviceLocator
      *
-     * @return $this
+     * @return AbstractHelper
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
+
         if (!is_object($instance)) {
             return;
         }
 
         $arrayCheck = [
-            FormServiceAwareInterface::class         => 'organisation_form_service',
             OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
         ];
 
