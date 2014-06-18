@@ -9,16 +9,12 @@
  */
 namespace Organisation\Service;
 
+use Organisation\Entity\EntityAbstract;
+use Organisation\Entity\Organisation;
+use Organisation\Entity\Type;
+use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Authentication\AuthenticationService;
-
-use Doctrine\ORM\EntityManager;
-
-use Organisation\Entity\Type;
-use Organisation\Entity\Organisation;
-
-use Organisation\Entity\EntityAbstract;
 
 /**
  * ServiceAbstract

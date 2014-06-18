@@ -45,7 +45,6 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
         $router                    = $application->getMvcEvent()->getRouter();
         $this->organisationService = $serviceLocator->get('organisation_organisation_service');
         $translate                 = $serviceLocator->get('viewhelpermanager')->get('translate');
-
         if (in_array(
             $this->routeMatch->getMatchedRouteName(),
             array(
@@ -54,7 +53,6 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
             )
         )
         ) {
-
             $this->organisationService->setOrganisationId($this->routeMatch->getParam('id'));
             /**
              * Go over both arrays and check if the new entities can be added
@@ -70,14 +68,11 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
                 )
             );
         }
-
         if ($this->routeMatch->getMatchedRouteName() === 'zfcadmin/organisation-manager/edit') {
-
             $this->organisationService->setOrganisationId($this->routeMatch->getParam('id'));
             /**
              * Go over both arrays and check if the new entities can be added
              */
-
             $pages['organisation']['pages']['organisation']['pages']['edit'] = array(
                 'label'      => sprintf(
                     $translate("txt-edit-organisation-%s"),

@@ -13,7 +13,6 @@ use Organisation\Entity\Organisation;
 
 class OrganisationTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testCanCreateEntity()
     {
         $organisation = new Organisation();

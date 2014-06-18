@@ -10,13 +10,12 @@
  */
 namespace Organisation\Service;
 
+use Zend\Form;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Form;
 
 class FormService implements ServiceLocatorAwareInterface
 {
-
     /**
      * @var \Zend\Form\Form
      */
@@ -42,15 +41,11 @@ class FormService implements ServiceLocatorAwareInterface
         if (!$entity) {
             $entity = $this->getOrganisationService()->getEntity($className);
         }
-
         $formName = 'organisation_' . $entity->get('underscore_entity_name') . '_form';
         $form     = $this->getServiceLocator()->get($formName);
-
         $filterName = 'organisation_' . $entity->get('underscore_entity_name') . '_form_filter';
         $filter     = $this->getServiceLocator()->get($filterName);
-
         $form->setInputFilter($filter);
-
         if ($bind) {
             $form->bind($entity);
         }

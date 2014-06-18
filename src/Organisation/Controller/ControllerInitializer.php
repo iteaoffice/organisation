@@ -40,17 +40,14 @@ class ControllerInitializer implements InitializerInterface
         if (!is_object($instance)) {
             return;
         }
-
         $arrayCheck = [
             FormServiceAwareInterface::class         => 'organisation_form_service',
             OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
         ];
-
         /**
          * @var $sm ServiceLocatorInterface
          */
         $sm = $serviceLocator->getServiceLocator();
-
         /**
          * Go over each interface to see if we should add an interface
          */

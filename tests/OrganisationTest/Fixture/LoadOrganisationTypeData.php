@@ -3,7 +3,6 @@ namespace OrganisationTest\Fixture;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
-
 use Organisation\Entity\Type;
 
 class LoadOrganisationTypeData extends AbstractFixture
@@ -19,7 +18,6 @@ class LoadOrganisationTypeData extends AbstractFixture
         $organisationType->setType('Test organisation type');
         $organisationType->setDescription('This is the description');
         $organisationType->setInvoice(Type::INVOICE);
-
         $manager->persist($organisationType);
         $manager->flush();
     }

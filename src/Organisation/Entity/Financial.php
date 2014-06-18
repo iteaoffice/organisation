@@ -9,12 +9,11 @@
  */
 namespace Organisation\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
+use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\Form\Annotation;
-
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * OrganisationFinancial
@@ -25,22 +24,17 @@ use Doctrine\ORM\Mapping as ORM;
 class Financial extends EntityAbstract
 {
     const VAT_STATUS_UNDEFINED = 0;
-    const VAT_STATUS_VALID = 1;
-    const VAT_STATUS_INVALID = 2;
+    const VAT_STATUS_VALID     = 1;
+    const VAT_STATUS_INVALID   = 2;
     const VAT_STATUS_UNCHECKED = 3;
-
     const VAT_NOT_SHIFT = 0;
-    const VAT_SHIFT = 1;
-
+    const VAT_SHIFT     = 1;
     const NO_OMIT_CONTACT = 0;
-    const OMIT_CONTACT = 1;
-
+    const OMIT_CONTACT    = 1;
     const NO_REQUIRED_PURCHASE_ORDER = 0;
-    const REQUIRED_PURCHASE_ORDER = 1;
-
+    const REQUIRED_PURCHASE_ORDER    = 1;
     const NO_EMAIL_DELIVERY = 0;
-    const EMAIL_DELIVERY = 1;
-
+    const EMAIL_DELIVERY    = 1;
     /**
      * Textual versions of the vat status
      *
@@ -52,7 +46,6 @@ class Financial extends EntityAbstract
         self::VAT_STATUS_INVALID   => 'txt-vat-status-invalid',
         self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
     );
-
     /**
      * Textual versions of the vat shift
      *
@@ -62,7 +55,6 @@ class Financial extends EntityAbstract
         self::VAT_NOT_SHIFT => 'txt-no-vat-shift',
         self::VAT_SHIFT     => 'txt-vat-shift',
     );
-
     /**
      * Textual versions of the vat shift
      *
@@ -72,7 +64,6 @@ class Financial extends EntityAbstract
         self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
         self::OMIT_CONTACT    => 'txt-omit-contact',
     );
-
     /**
      * Textual versions of the email templates
      *
@@ -82,7 +73,6 @@ class Financial extends EntityAbstract
         self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
         self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
     );
-
     /**
      * Textual versions of the vat shift
      *
@@ -92,7 +82,6 @@ class Financial extends EntityAbstract
         self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
         self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
     );
-
     /**
      * @ORM\Column(name="financial_id", type="integer", nullable=false)
      * @ORM\Id
@@ -233,7 +222,6 @@ class Financial extends EntityAbstract
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory     = new InputFactory();
-
             $inputFilter->add(
                 $factory->createInput(
                     array(

@@ -11,10 +11,9 @@
  */
 namespace Organisation;
 
-use Zend\ModuleManager\Feature; //Makes the module class more strict
-use Zend\EventManager\EventInterface;
-
 use Organisation\Service\FormServiceAwareInterface;
+use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature;
 
 /**
  *
@@ -26,7 +25,6 @@ class Module implements
     Feature\BootstrapListenerInterface,
     Feature\ViewHelperProviderInterface
 {
-
     public function getAutoloaderConfig()
     {
         return array(

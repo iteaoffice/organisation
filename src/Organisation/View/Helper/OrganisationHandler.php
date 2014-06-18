@@ -8,7 +8,6 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-
 namespace Organisation\View\Helper;
 
 use Content\Entity\Content;
@@ -50,15 +49,11 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     public function __invoke(Content $content)
     {
         $this->extractContentParam($content);
-
         switch ($content->getHandler()->getHandler()) {
-
             case 'organisation':
-
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
-
                 $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation"));
                 $this->serviceLocator->get('headtitle')->append(
                     $this->getOrganisationService()->getOrganisation()->getOrganisation()
@@ -86,39 +81,29 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 );
 
                 return $this->parseOrganisation($this->getOrganisationService());
-
             case 'organisation_list':
-
                 $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation-list"));
                 $page = $this->getRouteMatch()->getParam('page');
 
                 return $this->parseOrganisationList($page);
-
             case 'organisation_project':
-
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationProjectList($this->getOrganisationService());
                 break;
-
             case 'organisation_metadata':
-
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationMetadata($this->getOrganisationService());
                 break;
-
             case 'organisation_article':
                 return $this->parseOrganisationArticleList($this->getOrganisationService());
-
                 break;
-
             case 'organisation_map':
-
                 /**
                  * Collect the list of countries from the organisation and cluster
                  */
@@ -133,7 +118,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
 
                 return $countryMap($countries);
                 break;
-
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
@@ -152,7 +136,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
             $this->setDocRef($this->getRouteMatch()->getParam('docRef'));
         }
-
         foreach ($content->getContentParam() as $param) {
             /**
              * When the parameterId is 0 (so we want to get the article from the URL
@@ -171,11 +154,9 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                     }
                     $this->setLimit($limit);
                     break;
-
                 case 'organisation':
                     $this->setId($param->getParameterId());
                     break;
-
                 default:
                     break;
             }
@@ -283,7 +264,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     public function parseOrganisationList($page)
     {
         $organisationQuery = $this->getOrganisationService()->findOrganisations(true);
-
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
         $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
         $paginator->setCurrentPageNumber($page);
@@ -304,13 +284,11 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationProjectList(OrganisationService $organisationService)
     {
-
         $success = false;
         $config  = $this->getConfig();
         $key     = $config['cache_key'] . '-organisation-project-list-html-organisation-' .
             $organisationService->getOrganisation()->getId();
         $html    = $this->getCache()->getItem($key, $success);
-
         if (!$success) {
             $projects = $this->getProjectService()->findProjectByOrganisation($organisationService->getOrganisation());
             $html     = $this->getRenderer()->render(

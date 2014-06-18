@@ -9,9 +9,8 @@
  */
 namespace Organisation\Entity;
 
-use Zend\Form\Annotation;
-
 use Doctrine\ORM\Mapping as ORM;
+use Zend\Form\Annotation;
 
 /**
  * IctOrganisation

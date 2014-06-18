@@ -7,7 +7,6 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-
 use Organisation\Controller\ControllerInitializer;
 use Organisation\Service\ServiceInitializer;
 use Organisation\View\Helper\ViewHelperInitializer;
@@ -49,7 +48,6 @@ $config = array(
             'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
             'organisation_form_service'             => 'Organisation\Service\FormService',
             'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation',
-
         )
     ),
     'doctrine'        => array(
@@ -76,16 +74,13 @@ $config = array(
         ),
     )
 );
-
 $configFiles = array(
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
     __DIR__ . '/module.config.organisation.php',
 );
-
 foreach ($configFiles as $configFile) {
     $config = Zend\Stdlib\ArrayUtils::merge($config, include $configFile);
 }
-
 return $config;

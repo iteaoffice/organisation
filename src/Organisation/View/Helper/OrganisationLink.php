@@ -54,11 +54,9 @@ class OrganisationLink extends LinkAbstract
         $page = null,
         $alternativeShow = null
     ) {
-
         $this->setOrganisationService($organisationService);
         $this->setAction($action);
         $this->setShow($show);
-
         /**
          * If the alternativeShow is not null, use it an otherwise take the page
          */
@@ -67,10 +65,8 @@ class OrganisationLink extends LinkAbstract
         } else {
             $this->setAlternativeShow($page);
         }
-
         $this->addRouterParam('entity', 'organisation');
         if (!$this->getOrganisationService()->isEmpty()) {
-
             /**
              * Set the non-standard options needed to give an other link value
              */
@@ -82,10 +78,8 @@ class OrganisationLink extends LinkAbstract
                     )
                 ]
             );
-
             $this->addRouterParam('id', $this->getOrganisationService()->getOrganisation()->getId());
         }
-
         $this->addRouterParam('page', $page);
 
         return $this->createLink();
@@ -104,7 +98,6 @@ class OrganisationLink extends LinkAbstract
             ]
         )
         ) {
-
             if ($this->getOrganisationService()->isEmpty()) {
                 throw new \InvalidArgumentException(
                     sprintf(
@@ -113,10 +106,8 @@ class OrganisationLink extends LinkAbstract
                     )
                 );
             }
-
             $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
         }
-
         switch ($this->getAction()) {
             case 'new':
                 $this->setRouter('zfcadmin/organisation-manager/new');
@@ -134,7 +125,6 @@ class OrganisationLink extends LinkAbstract
                 );
                 break;
             case 'list':
-
                 /**
                  * For a list in the front-end simply use the MatchedRouteName
                  */
@@ -158,7 +148,6 @@ class OrganisationLink extends LinkAbstract
                         )
                     )
                 );
-
                 break;
             case 'view-article':
                 $this->setRouter(

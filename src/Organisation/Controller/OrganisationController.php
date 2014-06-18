@@ -9,16 +9,15 @@
  */
 namespace Organisation\Controller;
 
+use Organisation\Form\Search;
+use Organisation\Service\FormService;
+use Organisation\Service\FormServiceAwareInterface;
+use Organisation\Service\OrganisationService;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
-
-use Organisation\Service\OrganisationService;
-use Organisation\Service\FormServiceAwareInterface;
-use Organisation\Service\FormService;
-use Organisation\Form\Search;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\View\Model\ViewModel;
 
 /**
  * @category    Organisation
@@ -80,28 +79,23 @@ class OrganisationController extends AbstractActionController implements
     public function logoAction()
     {
         $response = $this->getResponse();
-
         /**
          * Return null when no id can be found
          */
         if (is_null($this->getEvent()->getRouteMatch()->getParam('id', null))) {
             return $response;
         }
-
         $logo = $this->getOrganisationService()->findEntityById(
             'logo',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
-
         /**
          * Return null when no image can be found
          */
         if (is_null($logo)) {
             return $response;
         }
-
         $file = stream_get_contents($logo->getOrganisationLogo());
-
         /**
          * Create a cache-version of the file
          */
@@ -109,14 +103,12 @@ class OrganisationController extends AbstractActionController implements
             //Save a copy of the file in the caching-folder
             file_put_contents($logo->getCacheFileName(), $file);
         }
-
         $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
-
+                 ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+                 ->addHeaderLine("Pragma: public")
+                 ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
+                 ->addHeaderLine('Content-Length: ' . (string) strlen($file));
         $response->setContent($file);
 
         return $response;
@@ -130,9 +122,7 @@ class OrganisationController extends AbstractActionController implements
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
         $maxResults = $this->getRequest()->getQuery()->get('max_rows');
         $countryId  = $this->getRequest()->getQuery()->get('country');
-
         $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
-
         /**
          * Include a paginator to be able to have later paginated search results in pages
          */
@@ -140,7 +130,6 @@ class OrganisationController extends AbstractActionController implements
         $paginator->setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
-
         $viewModel = new ViewModel(array('paginator' => $paginator));
         $viewModel->setTerminal(true);
         $viewModel->setTemplate('organisation/partial/list/organisation-search');

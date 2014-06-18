@@ -11,9 +11,8 @@
  */
 namespace Organisation\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-
 use Organisation\Service;
+use Zend\View\Helper\AbstractHelper;
 
 /**
  * Create a link to an organisation
@@ -24,7 +23,6 @@ use Organisation\Service;
  */
 class OrganisationLogo extends AbstractHelper
 {
-
     /**
      * @param Service\OrganisationService $organisationService
      * @param null                        $class
@@ -35,28 +33,21 @@ class OrganisationLogo extends AbstractHelper
     {
         $url  = $this->getView()->plugin('url');
         $logo = $organisationService->getOrganisation()->getLogo();
-
         if ($logo->count() === 0) {
             return 'no logo';
         }
-
         /**
          * The company can have multiple logo's. We now take just the first one
          */
         $logo = $organisationService->getOrganisation()->getLogo()->first();
-
         $router = 'assets/organisation-logo';
-
         $classes   = ['img-responsive'];
         $classes[] = $class;
-
         $imageUrl = '<img src="%s" id="%s" class="%s">';
-
         $params = array(
             'ext' => $logo->getContentType()->getExtension(),
             'id'  => $logo->getId()
         );
-
         $image = sprintf(
             $imageUrl,
             $url($router, $params),

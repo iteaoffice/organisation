@@ -7,7 +7,6 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
-
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -24,7 +23,6 @@ class Web extends EntityAbstract
 {
     const NOT_MAIN = 0;
     const MAIN     = 1;
-
     /**
      * @ORM\Column(name="web_id", type="integer", nullable=false)
      * @ORM\Id

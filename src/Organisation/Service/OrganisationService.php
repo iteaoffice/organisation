@@ -66,14 +66,12 @@ class OrganisationService extends ServiceAbstract
         $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
             array('docRef' => $docRef)
         );
-
         /**
          * Return null when no project can be found
          */
         if (is_null($organisation)) {
             return null;
         }
-
         $this->setOrganisation($organisation);
 
         return $this->createServiceElement($organisation);
@@ -204,7 +202,6 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByProject(Project $project, $onlyActive = true)
     {
         $organisations = [];
-
         foreach ($project->getAffiliation() as $affiliation) {
             if ($onlyActive && is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
@@ -213,7 +210,6 @@ class OrganisationService extends ServiceAbstract
                 );
             }
         }
-
         //Sort on the key (ASC)
         ksort($organisations);
 

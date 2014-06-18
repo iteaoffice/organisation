@@ -38,11 +38,9 @@ class ServiceInitializer implements InitializerInterface
         if (!is_object($instance)) {
             return;
         }
-
         $arrayCheck = [
             OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
         ];
-
         /**
          * Go over each interface to see if we should add an interface
          */

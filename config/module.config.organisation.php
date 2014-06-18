@@ -17,7 +17,6 @@ $settings = [
     ],
     'cache_key'     => 'organisation-cache-' . DEBRANOVA_HOST
 ];
-
 /**
  * You do not need to edit below this line
  */
