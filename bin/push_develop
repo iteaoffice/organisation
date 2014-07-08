@@ -1,0 +1,12 @@
+#!/bin/bash
+
+SRC_DIR="`pwd`"
+cd "`dirname "$0"`"
+cd ".."
+
+git push origin develop --tags
+git push origin master
+
+REV="`git rev-parse HEAD`"
+
+php ocular.phar code-coverage:upload --format=php-clover --repository=g/debranova/project --revision="$REV"  clover.xml
