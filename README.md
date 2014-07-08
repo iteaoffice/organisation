@@ -1,6 +1,7 @@
 debranova/organisation
 ======================
 
-Version: 1.0.1-dev
+master branch: 1.1-dev
+develop branch: 1.2-dev
 
 Module for the management of organisations

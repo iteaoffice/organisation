@@ -23,18 +23,18 @@ use Zend\InputFilter\InputFilterInterface;
  */
 class Financial extends EntityAbstract
 {
-    const VAT_STATUS_UNDEFINED = 0;
-    const VAT_STATUS_VALID     = 1;
-    const VAT_STATUS_INVALID   = 2;
-    const VAT_STATUS_UNCHECKED = 3;
-    const VAT_NOT_SHIFT = 0;
-    const VAT_SHIFT     = 1;
-    const NO_OMIT_CONTACT = 0;
-    const OMIT_CONTACT    = 1;
+    const VAT_STATUS_UNDEFINED       = 0;
+    const VAT_STATUS_VALID           = 1;
+    const VAT_STATUS_INVALID         = 2;
+    const VAT_STATUS_UNCHECKED       = 3;
+    const VAT_NOT_SHIFT              = 0;
+    const VAT_SHIFT                  = 1;
+    const NO_OMIT_CONTACT            = 0;
+    const OMIT_CONTACT               = 1;
     const NO_REQUIRED_PURCHASE_ORDER = 0;
     const REQUIRED_PURCHASE_ORDER    = 1;
-    const NO_EMAIL_DELIVERY = 0;
-    const EMAIL_DELIVERY    = 1;
+    const NO_EMAIL_DELIVERY          = 0;
+    const EMAIL_DELIVERY             = 1;
     /**
      * Textual versions of the vat status
      *
@@ -120,6 +120,7 @@ class Financial extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"shiftVatTemplates"})
      * @Annotation\Attributes({"label":"txt-shift-vat"})
+     * @deprecated
      * @var int
      */
     private $shiftVat;
@@ -171,6 +172,17 @@ class Financial extends EntityAbstract
      * @var \Invoice\Entity\FinancialRow[]
      */
     private $financialRow;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->vatStatus             = self::VAT_STATUS_UNCHECKED;
+        $this->shiftVat              = self::VAT_NOT_SHIFT;
+        $this->omitContact           = self::NO_OMIT_CONTACT;
+        $this->requiredPurchaseOrder = self::REQUIRED_PURCHASE_ORDER;
+    }
 
     /**
      * @param $property
