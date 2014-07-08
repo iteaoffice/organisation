@@ -1,6 +1,6 @@
 <?php
 
-
+namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="organisation_link")
  * @ORM\Entity
  */
-class OrganisationLink
+class Link
 {
     /**
      * @var integer
@@ -20,7 +20,6 @@ class OrganisationLink
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $linkId;
-
     /**
      * @var \Organisation
      *
@@ -30,7 +29,6 @@ class OrganisationLink
      * })
      */
     private $organisation1;
-
     /**
      * @var \Organisation
      *
@@ -40,6 +38,4 @@ class OrganisationLink
      * })
      */
     private $organisation2;
-
-
 }

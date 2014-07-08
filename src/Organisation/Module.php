@@ -1,20 +1,19 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    SoloDB
  * @package     Organisation
  * @subpackage  Module
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  * @version     4.0
  */
 namespace Organisation;
 
-use Zend\ModuleManager\Feature; //Makes the module class more strict
-use Zend\EventManager\EventInterface;
-
 use Organisation\Service\FormServiceAwareInterface;
+use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature;
 
 /**
  *
@@ -23,9 +22,9 @@ class Module implements
     Feature\AutoloaderProviderInterface,
     Feature\ServiceProviderInterface,
     Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface
+    Feature\BootstrapListenerInterface,
+    Feature\ViewHelperProviderInterface
 {
-
     public function getAutoloaderConfig()
     {
         return array(
@@ -56,6 +55,16 @@ class Module implements
     public function getServiceConfig()
     {
         return include __DIR__ . '/../../config/services.config.php';
+    }
+
+    /**
+     * Go to the service configuration
+     *
+     * @return array
+     */
+    public function getViewHelperConfig()
+    {
+        return include __DIR__ . '/../../config/viewhelpers.config.php';
     }
 
     /**

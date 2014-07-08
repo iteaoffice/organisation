@@ -1,19 +1,18 @@
 <?php
 
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     View
  * @subpackage  Helper
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Organisation\View\Helper;
 
-use Zend\View\Helper\AbstractHelper;
-
-use Organisation\Entity;
+use Organisation\Entity\Organisation;
+use Organisation\Service\OrganisationService;
 
 /**
  * Create a link to an organisation
@@ -22,100 +21,190 @@ use Organisation\Entity;
  * @package     View
  * @subpackage  Helper
  */
-class OrganisationLink extends AbstractHelper
+class OrganisationLink extends LinkAbstract
 {
+    /**
+     * @var OrganisationService
+     */
+    protected $organisationService;
+    /**
+     * The branch of the organisation
+     *
+     * @var string
+     */
+    protected $branch;
 
     /**
-     * @param \Organisation\Entity\Organisation $subArea
-     * @param                                 $action
-     * @param                                 $show
+     * @param OrganisationService $organisationService
+     * @param string              $action
+     * @param string              $show
+     * @param null                $branch
+     * @param null                $page
+     * @param null                $alternativeShow
      *
      * @return string
      * @throws \RuntimeException
      * @throws \Exception
      */
-    public function __invoke(Entity\Organisation $subArea = null, $action = 'view', $show = 'name')
-    {
-        $translate = $this->view->plugin('translate');
-        $url       = $this->view->plugin('url');
-        $serverUrl = $this->view->plugin('serverUrl');
-        $isAllowed = $this->view->plugin('isAllowed');
-
-        if (!$isAllowed('organisation', $action)) {
-            if ($action === 'view' && $show === 'name') {
-                return $subArea;
-            }
-
-            return '';
+    public function __invoke(
+        OrganisationService $organisationService = null,
+        $action = 'view',
+        $show = 'name',
+        $branch = null,
+        $page = null,
+        $alternativeShow = null
+    ) {
+        $this->setOrganisationService($organisationService);
+        $this->setAction($action);
+        $this->setShow($show);
+        /**
+         * If the alternativeShow is not null, use it an otherwise take the page
+         */
+        if (!is_null($alternativeShow)) {
+            $this->setAlternativeShow($alternativeShow);
+        } else {
+            $this->setAlternativeShow($page);
         }
+        $this->addRouterParam('entity', 'organisation');
+        if (!$this->getOrganisationService()->isEmpty()) {
+            /**
+             * Set the non-standard options needed to give an other link value
+             */
+            $this->setShowOptions(
+                [
+                    'more' => $this->translate("txt-read-more"),
+                    'name' => $this->getOrganisationService()->parseOrganisationWithBranch(
+                        $this->getBranch()
+                    )
+                ]
+            );
+            $this->addRouterParam('id', $this->getOrganisationService()->getOrganisation()->getId());
+        }
+        $this->addRouterParam('page', $page);
 
-        switch ($action) {
+        return $this->createLink();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function parseAction()
+    {
+        if (in_array(
+            $this->getAction(),
+            [
+                'view',
+                'view-article',
+            ]
+        )
+        ) {
+            if ($this->getOrganisationService()->isEmpty()) {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        "ProjectService is cannot be null for %s",
+                        $this->getAction()
+                    )
+                );
+            }
+            $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
+        }
+        switch ($this->getAction()) {
             case 'new':
-                $router  = 'zfcadmin/organisation-manager/new';
-                $text    = sprintf($translate("txt-new-area"));
-                $subArea = new Entity\Organisation();
+                $this->setRouter('zfcadmin/organisation-manager/new');
+                $this->setText($this->translate("txt-new-organisation"));
                 break;
             case 'edit':
-                $router = 'zfcadmin/organisation-manager/edit';
-                $text   = sprintf($translate("txt-edit-organisation-%s"), $subArea);
+                $this->setRouter('zfcadmin/organisation-manager/edit');
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-edit-organisation-%s"),
+                        $this->getOrganisationService()->parseOrganisationWithBranch(
+                            $this->getBranch()
+                        )
+                    )
+                );
+                break;
+            case 'list':
+                /**
+                 * For a list in the front-end simply use the MatchedRouteName
+                 */
+                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
+                /**
+                 * Push the docRef in the params array
+                 */
+                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
+                $this->setText($this->translate("txt-list-organisations"));
                 break;
             case 'view':
-                $router = 'organisation/organisation';
-                $text   = sprintf($translate("txt-view-organisation-%s"), $subArea);
+                $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
+                $this->setRouter(
+                    'route-' . $this->getOrganisationService()->getOrganisation()->get("underscore_full_entity_name")
+                );
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-organisation-%s"),
+                        $this->getOrganisationService()->parseOrganisationWithBranch(
+                            $this->getBranch()
+                        )
+                    )
+                );
+                break;
+            case 'view-article':
+                $this->setRouter(
+                    'route-' . $this->getOrganisationService()->getOrganisation()->get(
+                        "underscore_full_entity_name"
+                    ) . '-article'
+                );
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-view-article-for-organisation-%s"),
+                        $this->getOrganisationService()->parseOrganisationWithBranch(
+                            $this->getBranch()
+                        )
+                    )
+                );
+                $params['docRef'] = $this->getOrganisationService()->getOrganisation()->getDocRef();
                 break;
             default:
-                throw new \Exception(sprintf("%s is an incorrect action for %s", $action, __CLASS__));
+                throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
+        }
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        if (is_null($this->organisationService)) {
+            $this->organisationService = new OrganisationService();
+            $organisation              = new Organisation();
+            $this->organisationService->setOrganisation($organisation);
         }
 
-        if (is_null($subArea)) {
-            throw new \RuntimeException(
-                sprintf(
-                    "Area needs to be an instance of %s, %s given in %s",
-                    "Organisation\Entity\Organisation",
-                    get_class($subArea),
-                    __CLASS__
-                )
-            );
-        }
+        return $this->organisationService;
+    }
 
-        $params = array(
-            'id'     => $subArea->getId(),
-            'entity' => 'organisation'
-        );
+    /**
+     * @param OrganisationService $organisationService
+     */
+    public function setOrganisationService($organisationService)
+    {
+        $this->organisationService = $organisationService;
+    }
 
-        $classes     = array();
-        $linkContent = array();
+    /**
+     * @return string
+     */
+    public function getBranch()
+    {
+        return $this->branch;
+    }
 
-        switch ($show) {
-            case 'icon':
-                if ($action === 'edit') {
-                    $linkContent[] = '<i class="icon-pencil"></i>';
-                } elseif ($action === 'delete') {
-                    $linkContent[] = '<i class="icon-remove"></i>';
-                } else {
-                    $linkContent[] = '<i class="icon-info-sign"></i>';
-                }
-                break;
-            case 'button':
-                $linkContent[] = '<i class="icon-pencil icon-white"></i> ' . $text;
-                $classes[]     = "btn btn-primary";
-                break;
-            case 'name':
-                $linkContent[] = $subArea->getName();
-                break;
-            default:
-                $linkContent[] = $subArea;
-                break;
-        }
-
-        $uri = '<a href="%s" title="%s" class="%s">%s</a>';
-
-        return sprintf(
-            $uri,
-            $serverUrl->__invoke() . $url($router, $params),
-            $text,
-            implode($classes),
-            implode($linkContent)
-        );
+    /**
+     * @param string $branch
+     */
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
     }
 }

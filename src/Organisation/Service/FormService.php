@@ -1,24 +1,21 @@
 <?php
 
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     Service
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Organisation\Service;
 
+use Zend\Form;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Form;
-
-use Organisation\Service\OrganisationService;
 
 class FormService implements ServiceLocatorAwareInterface
 {
-
     /**
      * @var \Zend\Form\Form
      */
@@ -44,15 +41,11 @@ class FormService implements ServiceLocatorAwareInterface
         if (!$entity) {
             $entity = $this->getOrganisationService()->getEntity($className);
         }
-
         $formName = 'organisation_' . $entity->get('underscore_entity_name') . '_form';
         $form     = $this->getServiceLocator()->get($formName);
-
         $filterName = 'organisation_' . $entity->get('underscore_entity_name') . '_form_filter';
         $filter     = $this->getServiceLocator()->get($filterName);
-
         $form->setInputFilter($filter);
-
         if ($bind) {
             $form->bind($entity);
         }
@@ -67,7 +60,7 @@ class FormService implements ServiceLocatorAwareInterface
      *
      * @return array|object
      */
-    public function prepare($className, $entity = null, $data = array())
+    public function prepare($className, $entity = null, $data = [])
     {
         $form = $this->getForm($className, $entity, true);
         $form->setData($data);

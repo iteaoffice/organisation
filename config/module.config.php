@@ -1,34 +1,53 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     Config
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+use Organisation\Controller\ControllerInitializer;
+use Organisation\Service\ServiceInitializer;
+use Organisation\View\Helper\ViewHelperInitializer;
+
 $config = array(
     'controllers'     => array(
-        'invokables' => array(
-            'organisation'         => 'Organisation\Controller\OrganisationController',
+        'initializers' => [
+            ControllerInitializer::class
+        ],
+        'invokables'   => array(
+            'organisation-index'   => 'Organisation\Controller\OrganisationController',
             'organisation-manager' => 'Organisation\Controller\OrganisationManagerController',
         ),
     ),
+    'view_manager'    => array(
+        'template_map' => include __DIR__ . '/../template_map.php',
+    ),
     'view_helpers'    => array(
-        'invokables' => array(
-            'organisationLink' => 'Organisation\View\Helper\OrganisationLink',
-
-        )
+        'initializers' => [
+            ViewHelperInitializer::class
+        ],
+        'invokables'   => [
+            'organisationHandler'      => 'Organisation\View\Helper\OrganisationHandler',
+            'organisationServiceProxy' => 'Organisation\View\Helper\OrganisationServiceProxy',
+            'organisationLink'         => 'Organisation\View\Helper\OrganisationLink',
+            'organisationLogo'         => 'Organisation\View\Helper\OrganisationLogo',
+        ]
     ),
     'service_manager' => array(
-        'factories'  => array(
-            'organisation-assertion' => 'Organisation\Acl\Assertion\Organisation',
+        'initializers' => [
+            ServiceInitializer::class
+        ],
+        'factories'    => array(
+            'organisation-assertion'     => 'Organisation\Acl\Assertion\Organisation',
+            'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory',
+            'organisation_cache'         => 'Organisation\Service\CacheFactory',
         ),
-        'invokables' => array(
-            'organisation_generic_service'     => 'Organisation\Service\OrganisationService',
-            'organisation_form_service'        => 'Organisation\Service\FormService',
+        'invokables'   => array(
+            'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
+            'organisation_form_service'             => 'Organisation\Service\FormService',
             'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation',
-
         )
     ),
     'doctrine'        => array(
@@ -39,7 +58,7 @@ $config = array(
                     __DIR__ . '/../src/Organisation/Entity/'
                 )
             ),
-            'orm_default'               => array(
+            'orm_default'                    => array(
                 'drivers' => array(
                     'Organisation\Entity' => 'organisation_annotation_driver',
                 )
@@ -55,15 +74,13 @@ $config = array(
         ),
     )
 );
-
 $configFiles = array(
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
+    __DIR__ . '/module.config.organisation.php',
 );
-
 foreach ($configFiles as $configFile) {
     $config = Zend\Stdlib\ArrayUtils::merge($config, include $configFile);
 }
-
 return $config;

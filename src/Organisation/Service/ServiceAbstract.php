@@ -1,22 +1,20 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     Service
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 namespace Organisation\Service;
 
+use Organisation\Entity\EntityAbstract;
+use Organisation\Entity\Organisation;
+use Organisation\Entity\Type;
+use Zend\Authentication\AuthenticationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Authentication\AuthenticationService;
-
-use Doctrine\ORM\EntityManager;
-
-use Organisation\Service\ServiceInterface;
-use Organisation\Entity\EntityAbstract;
 
 /**
  * ServiceAbstract
@@ -50,18 +48,14 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     /**
      * Find 1 entity based on the id
      *
-     * @param      $entity
-     * @param      $id
-     * @param bool $populate
+     * @param   $entity
+     * @param   $id
      *
-     * @return object
+     * @return Type|Organisation
      */
-    public function findEntityById($entity, $id, $populate = false)
+    public function findEntityById($entity, $id)
     {
-        $entity = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
-        if ($entity) {
-            return $entity;
-        }
+        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
     }
 
     /**
@@ -71,15 +65,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function newEntity(EntityAbstract $entity)
     {
-        if (method_exists($entity, 'getLastUpdateBy')) {
-            $authService = $this->getServiceLocator()->get('zfcuser_auth_service');
-            if ($authService->hasIdentity()) {
-                $entity->setLastUpdateBy($authService->getIdentity()->getDisplayName());
-            } else {
-                $entity->setLastUpdateBy('guest');
-            }
-        }
-
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 
@@ -93,15 +78,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function updateEntity(EntityAbstract $entity)
     {
-        if (method_exists($entity, 'getLastUpdateBy')) {
-            $authService = $this->getServiceLocator()->get('zfcuser_auth_service');
-            if ($authService->hasIdentity()) {
-                $entity->setLastUpdateBy($authService->getIdentity()->getDisplayName());
-            } else {
-                $entity->setLastUpdateBy('guest');
-            }
-        }
-
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 

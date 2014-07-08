@@ -1,0 +1,11 @@
+<?php
+_('txt-vat-status-undefined');
+_('txt-vat-status-valid');
+_('txt-vat-status-invalid');
+_('txt-vat-status-unchecked');
+_('txt-no-vat-shift');
+_('txt-vat-shift');
+_('txt-no-omit-contact');
+_('txt-omit-contact');
+_('txt-delivery-by-postal-mail');
+_('txt-delivery-by-email');

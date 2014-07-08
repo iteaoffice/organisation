@@ -1,4 +1,7 @@
-organisation
-===========
+debranova/organisation
+======================
 
-Module for the management of affiliates
+master branch: 1.1-dev
+develop branch: 1.2-dev
+
+Module for the management of organisations

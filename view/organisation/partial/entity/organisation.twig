@@ -1,0 +1,17 @@
+<div class="pull-right">
+    {{ organisationLogo(organisationService) }}
+</div>
+
+<h1>{{ organisationService.organisation }}</h1>
+
+{% if organisationService.organisation.description %}
+    <h3>{{ translate("txt-description") }}</h3>
+    {{ organisationService.organisation.description|raw }}
+{% endif %}
+
+{% if organisationService.organisation.clusterMember.count > 0 %}
+    <h3>{{ translate("txt-cluster-membership") }}</h3>
+    {% for cluster in organisationService.organisation.clusterMember %}
+        {{ cluster.organisation }}
+    {% endfor %}
+{% endif %}

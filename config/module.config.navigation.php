@@ -1,36 +1,28 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     Config
- * @author      Johan van der Heide <info@japaveh.nl>
- * @copyright   Copyright (c) 2004-2013 Japaveh Webdesign (http://japaveh.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-return array(
-    'navigation' => array(
-        'default' => array(
-            'organisation' => array(
-                'label' => _("txt-organisation"),
-                'route' => 'organisation',
-                'pages' => array(
-                    'organisations' => array(
-                        'label'     => _("txt-list-organisations"),
-                        'route'     => 'organisation/organisations',
-                        'resource'  => 'organisation',
-                        'privilege' => 'listings',
-                    ),
-
-                ),
-            ),
-            'admin'       => array(
-                'pages' => array(
-                    'messages' => array(
-                        'label' => _('txt-messages'),
-                        'route' => 'zfcadmin/organisation-manager/messages',
-                    ),
-                ),
-            ),
-        ),
-    ),
-);
+return [
+    'navigation' => [
+        'community' => [],
+        'admin'     => [
+            // And finally, here is where we define our page hierarchy
+            'organisation' => [
+                'label'    => _("txt-organisation-admin"),
+                'route'    => 'zfcadmin/organisation-manager/list',
+                'resource' => 'zfcadmin',
+                'pages'    => [
+                    'organisations' => [
+                        'label' => "txt-organisations",
+                        'route' => 'zfcadmin/organisation-manager/list',
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

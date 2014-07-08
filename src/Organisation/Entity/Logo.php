@@ -1,63 +1,183 @@
 <?php
-
-
+/**
+ * Debranova copyright message placeholder
+ *
+ * @category    Organisation
+ * @package     Entity
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 Debranova
+ */
+namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Zend\Form\Annotation;
 
 /**
  * OrganisationLogo
  *
  * @ORM\Table(name="organisation_logo")
  * @ORM\Entity
+ * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Name("organisation_logo")
  */
-class OrganisationLogo
+class Logo
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="logo_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+    @var integer
      */
-    private $logoId;
-
+    private $id;
     /**
-     * @var string
-     *
      * @ORM\Column(name="organisation_logo", type="blob", nullable=false)
+     * @var string
      */
     private $organisationLogo;
-
     /**
-     * @var string
-     *
      * @ORM\Column(name="logo_extension", type="string", length=20, nullable=false)
+     * @var string
      */
     private $logoExtension;
-
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="contenttype_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="organisationLogo")
+     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\File")
+     * @Annotation\Options({"label":"txt-logo"})
+     * @var \General\Entity\ContentType
      */
-    private $contenttypeId;
-
+    private $contentType;
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_updated", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="update")
+     * @var \DateTime
      */
     private $dateUpdated;
-
     /**
-     * @var \Organisation
-     *
-     * @ORM\ManyToOne(targetEntity="Organisation")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="logo", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
+     * @var \Organisation\Entity\Organisation
      */
     private $organisation;
 
+    /**
+     * Although an alternative does not have a clear hash, we can create one based on the id;
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return sha1($this->id . $this->getOrganisation()->getOrganisation());
+    }
 
+    /**
+     * @return string
+     * @todo: make the location of the logo dynamic
+     */
+    public function getCacheFileName()
+    {
+        $cacheDir = __DIR__ . '/../../../../../../public' . DIRECTORY_SEPARATOR . 'assets' .
+            DIRECTORY_SEPARATOR . DEBRANOVA_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
+
+        return $cacheDir . DIRECTORY_SEPARATOR . $this->getId() . '.' . $this->getContentType()->getExtension();
+    }
+
+    /**
+     * @param \General\Entity\ContentType $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * @return \General\Entity\ContentType
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param \DateTime $dateUpdated
+     */
+    public function setDateUpdated($dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $logoExtension
+     */
+    public function setLogoExtension($logoExtension)
+    {
+        $this->logoExtension = $logoExtension;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogoExtension()
+    {
+        return $this->logoExtension;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+    }
+
+    /**
+     * @return \Organisation\Entity\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param string $organisationLogo
+     */
+    public function setOrganisationLogo($organisationLogo)
+    {
+        $this->organisationLogo = $organisationLogo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganisationLogo()
+    {
+        return $this->organisationLogo;
+    }
 }
