@@ -285,13 +285,13 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     public function parseOrganisationProjectList(OrganisationService $organisationService)
     {
         $success = false;
-        $config  = $this->getConfig();
-        $key     = $config['cache_key'] . '-organisation-project-list-html-organisation-' .
+        $config = $this->getConfig();
+        $key = $config['cache_key'] . '-organisation-project-list-html-organisation-' .
             $organisationService->getOrganisation()->getId();
-        $html    = $this->getCache()->getItem($key, $success);
+        $html = $this->getCache()->getItem($key, $success);
         if (!$success) {
             $projects = $this->getProjectService()->findProjectByOrganisation($organisationService->getOrganisation());
-            $html     = $this->getRenderer()->render(
+            $html = $this->getRenderer()->render(
                 'organisation/partial/list/project',
                 array('projects' => $projects)
             );
@@ -369,7 +369,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function getArticleService()
     {
-        return $this->getServiceLocator()->get('content_article_service');
+        return $this->getServiceLocator()->get(ArticleService::class);
     }
 
     /**
