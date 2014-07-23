@@ -3,6 +3,7 @@
 return array(
   'Organisation\View\Helper\OrganisationHandler'                  => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
   'parseOrganisationMetadata'                                     => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
+  'getLimit'                                                      => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
   'Organisation\View\Helper\LinkAbstract'                         => __DIR__ . '/src/Organisation/View/Helper/LinkAbstract.php',
   'Organisation\View\Helper\OrganisationLink'                     => __DIR__ . '/src/Organisation/View/Helper/OrganisationLink.php',
   'Organisation\View\Helper\OrganisationLogo'                     => __DIR__ . '/src/Organisation/View/Helper/OrganisationLogo.php',
