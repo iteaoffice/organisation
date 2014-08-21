@@ -16,6 +16,7 @@ use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Organisation
@@ -25,7 +26,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  */
-class Organisation extends EntityAbstract
+class Organisation extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="organisation_id", type="integer", nullable=false)
@@ -72,7 +73,7 @@ class Organisation extends EntityAbstract
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Affiliation\Entity\Affiliation[]
+     * @var \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
      */
     private $affiliation;
     /**
@@ -128,7 +129,7 @@ class Organisation extends EntityAbstract
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist"}, mappedBy="organisation")
      * @ORM\OrderBy({"main"="DESC"})
-     * @var \Organisation\Entity\Web[]
+     * @var \Organisation\Entity\Web[]|Collections\ArrayCollection
      */
     private $web;
     /**
@@ -140,7 +141,7 @@ class Organisation extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
      * @Annotation\Options({"target_class":"Program\Entity\Domain"})
      * @Annotation\Attributes({"label":"txt-domain"})
-     * @var \Program\Entity\Domain[]
+     * @var \Program\Entity\Domain[]|Collections\ArrayCollection
      */
     private $domain;
     /**
@@ -152,13 +153,13 @@ class Organisation extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
      * @Annotation\Options({"target_class":"Program\Entity\Technology"})
      * @Annotation\Attributes({"label":"txt-technology"})
-     * @var \Program\Entity\Technology[]
+     * @var \Program\Entity\Technology[]|Collections\ArrayCollection
      */
     private $technology;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Cluster", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\Cluster[]
+     * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
      */
     private $cluster;
     /**
@@ -170,13 +171,13 @@ class Organisation extends EntityAbstract
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
      * @Annotation\Options({"target_class":"Organisation\Entity\Cluster"})
      * @Annotation\Attributes({"label":"txt-cluster-membership"})
-     * @var \Organisation\Entity\Cluster[]
+     * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
      */
     private $clusterMember;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\Log[]
+     * @var \Organisation\Entity\Log[]|Collections\ArrayCollection
      */
     private $log;
     /**
@@ -188,13 +189,13 @@ class Organisation extends EntityAbstract
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Logo", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\Logo[]
+     * @var \Organisation\Entity\Logo[]|Collections\ArrayCollection
      */
     private $logo;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Note", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\Note[]
+     * @var \Organisation\Entity\Note[]|Collections\ArrayCollection
      */
     private $note;
     /**
@@ -206,31 +207,31 @@ class Organisation extends EntityAbstract
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="debtor")
      * @Annotation\Exclude()
-     * @var \Organisation\Entity\Financial[]
+     * @var \Organisation\Entity\Financial[]|Collections\ArrayCollection
      */
     private $financialDebtor;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Program\Entity\Doa[]
+     * @var \Program\Entity\Doa[]|Collections\ArrayCollection
      */
     private $programDoa;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Invoice", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Invoice\Entity\Invoice[]
+     * @var \Invoice\Entity\Invoice[]|Collections\ArrayCollection
      */
     private $invoice;
     /**
      * @ORM\OneToMany(targetEntity="Event\Entity\Booth\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Event\Entity\Booth\Financial[]
+     * @var \Event\Entity\Booth\Financial[]|Collections\ArrayCollection
      */
     private $boothFinancial;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * @var \Program\Entity\Call\Doa[]
+     * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
      */
     private $doa;
 
@@ -239,21 +240,31 @@ class Organisation extends EntityAbstract
      */
     public function __construct()
     {
-        $this->organisation         = new Collections\ArrayCollection();
-        $this->affiliation          = new Collections\ArrayCollection();
+        $this->organisation = new Collections\ArrayCollection();
+        $this->affiliation = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
-        $this->domain               = new Collections\ArrayCollection();
-        $this->technology           = new Collections\ArrayCollection();
-        $this->cluster              = new Collections\ArrayCollection();
-        $this->clusterMember        = new Collections\ArrayCollection();
-        $this->financialDebtor      = new Collections\ArrayCollection();
-        $this->log                  = new Collections\ArrayCollection();
-        $this->logo                 = new Collections\ArrayCollection();
-        $this->note                 = new Collections\ArrayCollection();
-        $this->programDoa           = new Collections\ArrayCollection();
-        $this->invoice              = new Collections\ArrayCollection();
-        $this->boothFinancial       = new Collections\ArrayCollection();
-        $this->doa                  = new Collections\ArrayCollection();
+        $this->domain = new Collections\ArrayCollection();
+        $this->technology = new Collections\ArrayCollection();
+        $this->cluster = new Collections\ArrayCollection();
+        $this->clusterMember = new Collections\ArrayCollection();
+        $this->financialDebtor = new Collections\ArrayCollection();
+        $this->log = new Collections\ArrayCollection();
+        $this->logo = new Collections\ArrayCollection();
+        $this->note = new Collections\ArrayCollection();
+        $this->programDoa = new Collections\ArrayCollection();
+        $this->invoice = new Collections\ArrayCollection();
+        $this->boothFinancial = new Collections\ArrayCollection();
+        $this->doa = new Collections\ArrayCollection();
+    }
+
+    /**
+     * Returns the string identifier of the Resource
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
     /**
@@ -305,43 +316,43 @@ class Organisation extends EntityAbstract
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'organisation',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name'    => 'StringLength',
-                                'options' => array(
+                                'options' => [
                                     'encoding' => 'UTF-8',
                                     'min'      => 1,
                                     'max'      => 255,
-                                ),
-                            ),
-                        ),
-                    )
+                                ],
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'country',
                         'required' => true,
-                    )
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'     => 'type',
                         'required' => true,
-                    )
+                    ]
                 )
             );
         }
@@ -355,15 +366,15 @@ class Organisation extends EntityAbstract
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'organisation' => $this->organisation,
             'country'      => $this->country,
             'type'         => $this->type,
-        );
+        ];
     }
 
     /**
-     * @param \Affiliation\Entity\Affiliation[] $affiliation
+     * @param \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection $affiliation
      */
     public function setAffiliation($affiliation)
     {
@@ -371,7 +382,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Affiliation\Entity\Affiliation[]
+     * @return \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
      */
     public function getAffiliation()
     {
@@ -379,7 +390,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Cluster[] $cluster
+     * @param \Organisation\Entity\Cluster[]|Collections\ArrayCollection $cluster
      */
     public function setCluster($cluster)
     {
@@ -387,7 +398,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Cluster[]
+     * @return \Organisation\Entity\Cluster[]|Collections\ArrayCollection
      */
     public function getCluster()
     {
@@ -395,7 +406,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Cluster[] $clusterMember
+     * @param \Organisation\Entity\Cluster[]|Collections\ArrayCollection $clusterMember
      */
     public function setClusterMember($clusterMember)
     {
@@ -403,7 +414,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Cluster[]
+     * @return \Organisation\Entity\Cluster[]|Collections\ArrayCollection
      */
     public function getClusterMember()
     {
@@ -507,7 +518,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Domain[] $domain
+     * @param \Program\Entity\Domain[]|Collections\ArrayCollection $domain
      */
     public function setDomain($domain)
     {
@@ -515,7 +526,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Domain[]
+     * @return \Program\Entity\Domain[]|Collections\ArrayCollection
      */
     public function getDomain()
     {
@@ -539,7 +550,7 @@ class Organisation extends EntityAbstract
     }
 
     //    /**
-    //     * @param \Organisation\Entity\Financial[] $financialDebtor
+    //     * @param \Organisation\Entity\Financial[]|Collections\ArrayCollection $financialDebtor
     //     */
     //    public function setFinancialDebtor($financialDebtor)
     //    {
@@ -547,7 +558,7 @@ class Organisation extends EntityAbstract
     //    }
     //
     //    /**
-    //     * @return \Organisation\Entity\Financial[]
+    //     * @return \Organisation\Entity\Financial[]|Collections\ArrayCollection
     //     */
     //    public function getFinancialDebtor()
     //    {
@@ -570,7 +581,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Log[] $log
+     * @param \Organisation\Entity\Log[]|Collections\ArrayCollection $log
      */
     public function setLog($log)
     {
@@ -578,7 +589,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Log[]
+     * @return \Organisation\Entity\Log[]|Collections\ArrayCollection
      */
     public function getLog()
     {
@@ -586,7 +597,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Logo[] $logo
+     * @param \Organisation\Entity\Logo[]|Collections\ArrayCollection $logo
      */
     public function setLogo($logo)
     {
@@ -594,7 +605,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Logo[]
+     * @return \Organisation\Entity\Logo[]|Collections\ArrayCollection|
      */
     public function getLogo()
     {
@@ -602,7 +613,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Note[] $note
+     * @param \Organisation\Entity\Note[]|Collections\ArrayCollection $note
      */
     public function setNote($note)
     {
@@ -610,7 +621,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Note[]
+     * @return \Organisation\Entity\Note[]|Collections\ArrayCollection
      */
     public function getNote()
     {
@@ -634,7 +645,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Doa[] $programDoa
+     * @param \Program\Entity\Doa[]|Collections\ArrayCollection $programDoa
      */
     public function setProgramDoa($programDoa)
     {
@@ -642,7 +653,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Doa[]
+     * @return \Program\Entity\Doa[]|Collections\ArrayCollection
      */
     public function getProgramDoa()
     {
@@ -650,7 +661,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Technology[] $technology
+     * @param \Program\Entity\Technology[]|Collections\ArrayCollection $technology
      */
     public function setTechnology($technology)
     {
@@ -658,7 +669,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Technology[]
+     * @return \Program\Entity\Technology[]|Collections\ArrayCollection
      */
     public function getTechnology()
     {
@@ -682,7 +693,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Invoice\Entity\Invoice[] $invoice
+     * @param \Invoice\Entity\Invoice[]|Collections\ArrayCollection $invoice
      */
     public function setInvoice($invoice)
     {
@@ -690,7 +701,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Invoice\Entity\Invoice[]
+     * @return \Invoice\Entity\Invoice[]|Collections\ArrayCollection
      */
     public function getInvoice()
     {
@@ -698,7 +709,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Web[] $web
+     * @param \Organisation\Entity\Web[]|Collections\ArrayCollection $web
      */
     public function setWeb($web)
     {
@@ -706,7 +717,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Web[]
+     * @return \Organisation\Entity\Web[]|Collections\ArrayCollection
      */
     public function getWeb()
     {
@@ -714,7 +725,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Event\Entity\Booth\Financial[] $boothFinancial
+     * @param \Event\Entity\Booth\Financial[]|Collections\ArrayCollection $boothFinancial
      */
     public function setBoothFinancial($boothFinancial)
     {
@@ -722,7 +733,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Event\Entity\Booth\Financial[]
+     * @return \Event\Entity\Booth\Financial[]|Collections\ArrayCollection
      */
     public function getBoothFinancial()
     {
@@ -730,7 +741,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Program\Entity\Call\Doa[] $doa
+     * @param \Program\Entity\Call\Doa[]|Collections\ArrayCollection $doa
      */
     public function setDoa($doa)
     {
@@ -738,7 +749,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Program\Entity\Call\Doa[]
+     * @return \Program\Entity\Call\Doa[]|Collections\ArrayCollection
      */
     public function getDoa()
     {
@@ -746,7 +757,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Financial[] $financialDebtor
+     * @param \Organisation\Entity\Financial[]|Collections\ArrayCollection $financialDebtor
      */
     public function setFinancialDebtor($financialDebtor)
     {
@@ -754,7 +765,7 @@ class Organisation extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Financial[]
+     * @return \Organisation\Entity\Financial[]|Collections\ArrayCollection
      */
     public function getFinancialDebtor()
     {

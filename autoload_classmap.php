@@ -3,8 +3,10 @@
 return array(
   'Organisation\View\Helper\OrganisationHandler'                  => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
   'parseOrganisationMetadata'                                     => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
+  'getLimit'                                                      => __DIR__ . '/src/Organisation/View/Helper/OrganisationHandler.php',
   'Organisation\View\Helper\LinkAbstract'                         => __DIR__ . '/src/Organisation/View/Helper/LinkAbstract.php',
   'Organisation\View\Helper\OrganisationLink'                     => __DIR__ . '/src/Organisation/View/Helper/OrganisationLink.php',
+  'Organisation\View\Helper\ImageAbstract'                        => __DIR__ . '/src/Organisation/View/Helper/ImageAbstract.php',
   'Organisation\View\Helper\OrganisationLogo'                     => __DIR__ . '/src/Organisation/View/Helper/OrganisationLogo.php',
   'Organisation\View\Helper\ViewHelperInitializer'                => __DIR__ . '/src/Organisation/View/Helper/ViewHelperInitializer.php',
   'getServiceLocator'                                             => __DIR__ . '/src/Organisation/Controller/ControllerInitializer.php',
@@ -44,4 +46,6 @@ return array(
   'Organisation\Entity\Log'                                       => __DIR__ . '/src/Organisation/Entity/Log.php',
   'Organisation\Repository\Organisation'                          => __DIR__ . '/src/Organisation/Repository/Organisation.php',
   'Organisation\Navigation\Service\OrganisationNavigationFactory' => __DIR__ . '/src/Organisation/Navigation/Service/OrganisationNavigationFactory.php',
+  'Organisation\Acl\Assertion\AssertionAbstract'                  => __DIR__ . '/src/Organisation/Acl/Assertion/AssertionAbstract.php',
+  'Organisation\Acl\Assertion\Organisation'                       => __DIR__ . '/src/Organisation/Acl/Assertion/Organisation.php',
 );

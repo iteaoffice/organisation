@@ -11,8 +11,8 @@
  */
 namespace Organisation\View\Helper;
 
+use Organisation\Entity\Logo;
 use Organisation\Service;
-use Zend\View\Helper\AbstractHelper;
 
 /**
  * Create a link to an organisation
@@ -21,7 +21,7 @@ use Zend\View\Helper\AbstractHelper;
  * @package     View
  * @subpackage  Helper
  */
-class OrganisationLogo extends AbstractHelper
+class OrganisationLogo extends ImageAbstract
 {
     /**
      * @param Service\OrganisationService $organisationService
@@ -31,30 +31,33 @@ class OrganisationLogo extends AbstractHelper
      */
     public function __invoke(Service\OrganisationService $organisationService = null, $class = null)
     {
-        $url  = $this->getView()->plugin('url');
+
         $logo = $organisationService->getOrganisation()->getLogo();
         if ($logo->count() === 0) {
-            return 'no logo';
+            return '';
         }
+
         /**
          * The company can have multiple logo's. We now take just the first one
+         * @var $logo Logo
          */
         $logo = $organisationService->getOrganisation()->getLogo()->first();
-        $router = 'assets/organisation-logo';
-        $classes   = ['img-responsive'];
-        $classes[] = $class;
-        $imageUrl = '<img src="%s" id="%s" class="%s">';
-        $params = array(
-            'ext' => $logo->getContentType()->getExtension(),
-            'id'  => $logo->getId()
-        );
-        $image = sprintf(
-            $imageUrl,
-            $url($router, $params),
-            'organisation_logo_' . $organisationService->getOrganisation()->getId(),
-            implode(' ', $classes)
-        );
 
-        return $image;
+        /**
+         * Reset the classes
+         */
+        $this->setClasses([]);
+
+
+        $this->setRouter('assets/organisation-logo');
+        $this->addClasses('img-responsive');
+
+        $this->setImageId('organisation_logo_' . $logo->getId());
+        $this->addRouterParam('hash', $logo->getHash());
+        $this->addRouterParam('ext', $logo->getContentType()->getExtension());
+        $this->addRouterParam('id', $logo->getId());
+
+        return $this->createImageUrl();
+
     }
 }

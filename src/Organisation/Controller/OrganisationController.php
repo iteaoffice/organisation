@@ -9,7 +9,7 @@
  */
 namespace Organisation\Controller;
 
-use Organisation\Form\Search;
+use Organisation\Entity\Logo;
 use Organisation\Service\FormService;
 use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\OrganisationService;
@@ -53,7 +53,7 @@ class OrganisationController extends AbstractActionController implements
     {
         $organisations = $this->getOrganisationService()->findAll('organisation');
 
-        return new ViewModel(array('organisations' => $organisations));
+        return new ViewModel(['organisations' => $organisations]);
     }
 
     /**
@@ -68,7 +68,7 @@ class OrganisationController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
 
-        return new ViewModel(array('organisation' => $organisation));
+        return new ViewModel(['organisation' => $organisation]);
     }
 
     /**
@@ -78,37 +78,42 @@ class OrganisationController extends AbstractActionController implements
      */
     public function logoAction()
     {
-        $response = $this->getResponse();
+
         /**
-         * Return null when no id can be found
+         * @var $logo Logo
          */
-        if (is_null($this->getEvent()->getRouteMatch()->getParam('id', null))) {
-            return $response;
-        }
         $logo = $this->getOrganisationService()->findEntityById(
             'logo',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
+
         /**
-         * Return null when no image can be found
+         * Do a check if the given has is correct to avoid guessing the image
          */
-        if (is_null($logo)) {
-            return $response;
+        if (is_null($logo) || $this->getEvent()->getRouteMatch()->getParam('hash') !== $logo->getHash()) {
+            return $this->notFoundAction();
         }
+
         $file = stream_get_contents($logo->getOrganisationLogo());
+
         /**
-         * Create a cache-version of the file
+         * Check if the file is cached and if not, create it
          */
         if (!file_exists($logo->getCacheFileName())) {
-            //Save a copy of the file in the caching-folder
+            /**
+             * The file exists, but is it not updated?
+             */
             file_put_contents($logo->getCacheFileName(), $file);
+
         }
+
+        $response = $this->getResponse();
         $response->getHeaders()
-                 ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-                 ->addHeaderLine("Pragma: public")
-                 ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-                 ->addHeaderLine('Content-Length: ' . (string) strlen($file));
+            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
+            ->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
         $response->setContent($file);
 
         return $response;
@@ -121,7 +126,7 @@ class OrganisationController extends AbstractActionController implements
     {
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
         $maxResults = $this->getRequest()->getQuery()->get('max_rows');
-        $countryId  = $this->getRequest()->getQuery()->get('country');
+        $countryId = $this->getRequest()->getQuery()->get('country');
         $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
         /**
          * Include a paginator to be able to have later paginated search results in pages
@@ -130,7 +135,7 @@ class OrganisationController extends AbstractActionController implements
         $paginator->setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
-        $viewModel = new ViewModel(array('paginator' => $paginator));
+        $viewModel = new ViewModel(['paginator' => $paginator]);
         $viewModel->setTerminal(true);
         $viewModel->setTemplate('organisation/partial/list/organisation-search');
 
