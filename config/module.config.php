@@ -10,7 +10,10 @@
 use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
 use Organisation\Controller\ControllerInitializer;
 use Organisation\Service\ServiceInitializer;
+use Organisation\View\Helper\CreateLogoFromArray;
+use Organisation\View\Helper\CreateOrganisationFromArray;
 use Organisation\View\Helper\ViewHelperInitializer;
+
 
 $config = [
     'controllers'     => [
@@ -30,10 +33,12 @@ $config = [
             ViewHelperInitializer::class
         ],
         'invokables'   => [
-            'organisationHandler'      => 'Organisation\View\Helper\OrganisationHandler',
-            'organisationServiceProxy' => 'Organisation\View\Helper\OrganisationServiceProxy',
-            'organisationLink'         => 'Organisation\View\Helper\OrganisationLink',
-            'organisationLogo'         => 'Organisation\View\Helper\OrganisationLogo',
+            'createLogoFromArray'         => CreateLogoFromArray::class,
+            'createOrganisationFromArray' => CreateOrganisationFromArray::class,
+            'organisationHandler'         => 'Organisation\View\Helper\OrganisationHandler',
+            'organisationServiceProxy'    => 'Organisation\View\Helper\OrganisationServiceProxy',
+            'organisationLink'            => 'Organisation\View\Helper\OrganisationLink',
+            'organisationLogo'            => 'Organisation\View\Helper\OrganisationLogo',
         ]
     ],
     'service_manager' => [

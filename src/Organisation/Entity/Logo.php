@@ -64,6 +64,32 @@ class Logo
      */
     private $organisation;
 
+
+    /**
+     * Magic Getter
+     *
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * Magic Setter
+     *
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
+
     /**
      * @return string
      * @todo: make the location of the logo dynamic
