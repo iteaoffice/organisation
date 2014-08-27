@@ -242,7 +242,6 @@ class Organisation extends EntityRepository
         $subSelect->andWhere('r.hideInList = ?2');
         $subSelect->andWhere('r.overbooked = ?3');
 
-
         $queryBuilder->andWhere($queryBuilder->expr()->in('co.contact', $subSelect->getDQL()));
         $queryBuilder->setParameter(1, $meeting->getId());
         $queryBuilder->setParameter(2, Registration::NOT_HIDE_IN_LIST);

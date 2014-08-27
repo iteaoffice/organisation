@@ -14,7 +14,6 @@ use Organisation\View\Helper\CreateLogoFromArray;
 use Organisation\View\Helper\CreateOrganisationFromArray;
 use Organisation\View\Helper\ViewHelperInitializer;
 
-
 $config = [
     'controllers'     => [
         'initializers' => [

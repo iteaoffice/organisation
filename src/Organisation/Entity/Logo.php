@@ -64,7 +64,6 @@ class Logo
      */
     private $organisation;
 
-
     /**
      * Magic Getter
      *
