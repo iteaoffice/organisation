@@ -234,6 +234,12 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
      */
     private $doa;
+    /**
+     * @ORM\OneToOne(targetEntity="Member\Entity\Member", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     * @var \Member\Entity\Member
+     */
+    private $member;
 
     /**
      * Class constructor
@@ -786,5 +792,21 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function getAffiliationFinancial()
     {
         return $this->affiliationFinancial;
+    }
+
+    /**
+     * @return \Member\Entity\Member
+     */
+    public function getMember()
+    {
+        return $this->member;
+    }
+
+    /**
+     * @param \Member\Entity\Member $member
+     */
+    public function setMember($member)
+    {
+        $this->member = $member;
     }
 }
