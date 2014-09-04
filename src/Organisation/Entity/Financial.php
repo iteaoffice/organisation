@@ -257,6 +257,7 @@ class Financial extends EntityAbstract
                 )
             );
         }
+
         return $this->inputFilter;
     }
 

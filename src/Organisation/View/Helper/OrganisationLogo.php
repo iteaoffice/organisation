@@ -48,7 +48,6 @@ class OrganisationLogo extends ImageAbstract
          */
         $this->setClasses([]);
 
-
         $this->setRouter('assets/organisation-logo');
         $this->addClasses('img-responsive');
 
