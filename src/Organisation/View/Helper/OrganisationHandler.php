@@ -88,9 +88,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 return $this->parseOrganisationList($page);
             case 'organisation_project':
                 if ($this->getOrganisationService()->isEmpty()) {
-                    return ("The selected organisation cannot be found");
+                      return ("The selected organisation cannot be found");
                 }
-
                 return $this->parseOrganisationProjectList($this->getOrganisationService());
                 break;
             case 'organisation_metadata':
@@ -286,11 +285,16 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         $success = false;
         $config = $this->getConfig();
+
         $key = $config['cache_key'] . '-organisation-project-list-html-organisation-' .
             $organisationService->getOrganisation()->getId();
         $html = $this->getCache()->getItem($key, $success);
+
         if (!$success) {
-            $projects = $this->getProjectService()->findProjectByOrganisation($organisationService->getOrganisation());
+
+            $which_projects = ( $this->getProjectService()->getOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE :  ProjectService::WHICH_ALL) ;
+            $projects = $this->getProjectService()->findProjectByOrganisation($organisationService->getOrganisation(),$which_projects);
+
             $html = $this->getRenderer()->render(
                 'organisation/partial/list/project',
                 array('projects' => $projects)

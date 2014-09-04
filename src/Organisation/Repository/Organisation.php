@@ -70,7 +70,6 @@ class Organisation extends EntityRepository
         $qb->andWhere('o.country = ?8');
         $qb->setParameter(8, $country);
         $qb->orderBy('o.organisation', 'ASC');
-
         return $qb->getQuery();
     }
 
@@ -171,7 +170,6 @@ class Organisation extends EntityRepository
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
         $qb->setParameter('searchItem', "%" . $name . "%");
-
         return $qb->getQuery()->getOneOrNullResult();
     }
 
