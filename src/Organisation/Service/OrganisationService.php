@@ -12,6 +12,7 @@ namespace Organisation\Service;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
+use Organisation\Entity\Type;
 use Project\Entity\Project;
 use Zend\Stdlib\Parameters;
 
@@ -64,7 +65,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByDocRef($docRef)
     {
         $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
-            array('docRef' => $docRef)
+            ['docRef' => $docRef]
         );
         /**
          * Return null when no project can be found
@@ -84,7 +85,7 @@ class OrganisationService extends ServiceAbstract
      */
     private function createServiceElement(Organisation $organisation)
     {
-        $organisationService               = clone $this;
+        $organisationService = clone $this;
         $organisationService->organisation = $organisation;
 
         return $organisationService;
@@ -123,6 +124,17 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @return Type[]
+     */
+    public function findOrganisationTypes()
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('type'))->findBy(
+            [],
+            ['type' => 'ASC']
+        );
+    }
+
+    /**
      * Give a list of organisations. A flag can be triggered to toggle only active projects
      *
      * @param bool $onlyActive
@@ -147,7 +159,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByCountry(Country $country, $onlyActive = true)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-                    ->findOrganisationByCountry($country, $onlyActive);
+            ->findOrganisationByCountry($country, $onlyActive);
     }
 
     /**
@@ -162,7 +174,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
-                    ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
+            ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
     }
 
     /**
@@ -176,7 +188,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByNameCountry($name, Country $country)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
-                    ->findOrganisationByNameCountry($name, $country);
+            ->findOrganisationByNameCountry($name, $country);
     }
 
     /**
@@ -188,7 +200,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
-                    ->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
+            ->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
     }
 
     /**
@@ -229,6 +241,6 @@ class OrganisationService extends ServiceAbstract
     public function searchOrganisation($searchItem, $maxResults, $countryId = null, $onlyActive = true)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-                    ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActive);
+            ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActive);
     }
 }

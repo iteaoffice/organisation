@@ -46,7 +46,7 @@ class OrganisationManagerController extends AbstractActionController implements
     {
         $messages = $this->getOrganisationService()->findAll('message');
 
-        return new ViewModel(array('messages' => $messages));
+        return new ViewModel(['messages' => $messages]);
     }
 
     /**
@@ -103,7 +103,7 @@ class OrganisationManagerController extends AbstractActionController implements
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
 
-        return new ViewModel(array('message' => $message));
+        return new ViewModel(['message' => $message]);
     }
 
     /**
@@ -114,17 +114,18 @@ class OrganisationManagerController extends AbstractActionController implements
     public function newAction()
     {
         $entity = $this->getEvent()->getRouteMatch()->getParam('entity');
-        $form   = $this->getFormService()->prepare($this->params('entity'), null, $_POST);
+        $form = $this->getFormService()->prepare($this->params('entity'), null, $_POST);
         $form->setAttribute('class', 'form-horizontal');
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getOrganisationService()->newEntity($form->getData());
-            $this->redirect()->toRoute(
+
+            return $this->redirect()->toRoute(
                 'zfcadmin/organisation-manager/' . strtolower($this->params('entity')),
-                array('id' => $result->getId())
+                ['id' => $result->getId()]
             );
         }
 
-        return new ViewModel(array('form' => $form, 'entity' => $entity, 'fullVersion' => true));
+        return new ViewModel(['form' => $form, 'entity' => $entity, 'fullVersion' => true]);
     }
 
     /**
@@ -163,13 +164,14 @@ class OrganisationManagerController extends AbstractActionController implements
         $form->setAttribute('id', 'organisation-organisation-' . $entity->getId());
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getOrganisationService()->updateEntity($form->getData());
-            $this->redirect()->toRoute(
+
+            return $this->redirect()->toRoute(
                 'zfcadmin/organisation/' . strtolower($entity->get('dashed_entity_name')),
-                array('id' => $result->getId())
+                ['id' => $result->getId()]
             );
         }
 
-        return new ViewModel(array('form' => $form, 'entity' => $entity, 'fullVersion' => true));
+        return new ViewModel(['form' => $form, 'entity' => $entity, 'fullVersion' => true]);
     }
 
     /**

@@ -121,11 +121,19 @@ class Organisation extends EntityRepository
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
         //Select projects based on a type
+
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('wo');
         $subSelect->from('Organisation\Entity\Web', 'w');
         $subSelect->join('w.organisation', 'wo');
         $subSelect->andWhere('w.web LIKE :domain');
+
+        //Make a second sub-select to cancel out organisations without a domain
+        $subSelect2 = $this->_em->createQueryBuilder();
+        $subSelect2->select('wo2');
+        $subSelect2->from('Organisation\Entity\Web', 'web2');
+        $subSelect2->join('web2.organisation', 'wo2');
+
         /**
          * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
          */
@@ -133,7 +141,13 @@ class Organisation extends EntityRepository
         $validateEmail->isValid($emailAddress);
         $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
         //We want a match on the email address
-        $qb->andWhere($qb->expr()->in('o.id', $subSelect->getDQL()));
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->in('o.id', $subSelect->getDQL()),
+                $qb->expr()->notIn('o.id', $subSelect2->getDQL())
+            )
+        );
+
         /**
          * Limit on the country
          */
@@ -184,11 +198,15 @@ class Organisation extends EntityRepository
     public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('o');
+        $queryBuilder->select('o', 'partial l.{id}', 'partial ct.{id,extension}');
+
         $queryBuilder->distinct('o.id');
         $queryBuilder->from('Organisation\Entity\Organisation', 'o');
         $queryBuilder->join('o.contactOrganisation', 'co');
         $queryBuilder->join('o.description', 'd');
+        $queryBuilder->join('o.logo', 'l');
+        $queryBuilder->join('l.contentType', 'ct');
+
         /**
          * The search can be refined on country and type, include the results here
          */
@@ -221,6 +239,7 @@ class Organisation extends EntityRepository
         $subSelect->andWhere($subSelect->expr()->isNull('r.dateEnd'));
         $subSelect->andWhere('r.hideInList = ?2');
         $subSelect->andWhere('r.overbooked = ?3');
+
         $queryBuilder->andWhere($queryBuilder->expr()->in('co.contact', $subSelect->getDQL()));
         $queryBuilder->setParameter(1, $meeting->getId());
         $queryBuilder->setParameter(2, Registration::NOT_HIDE_IN_LIST);
@@ -228,6 +247,6 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
         $queryBuilder->addOrderBy('o.organisation', 'ASC');
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
     }
 }

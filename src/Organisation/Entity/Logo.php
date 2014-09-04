@@ -23,6 +23,7 @@ use Zend\Form\Annotation;
  */
 class Logo
 {
+    const HASH_KEY = '49fksdr80sdf83409jsadvkljasruwasef';
     /**
      * @ORM\Column(name="logo_id", type="integer", nullable=false)
      * @ORM\Id
@@ -64,13 +65,28 @@ class Logo
     private $organisation;
 
     /**
-     * Although an alternative does not have a clear hash, we can create one based on the id;
+     * Magic Getter
      *
-     * @return string
+     * @param $property
+     *
+     * @return mixed
      */
-    public function getHash()
+    public function __get($property)
     {
-        return sha1($this->id . $this->getOrganisation()->getOrganisation());
+        return $this->$property;
+    }
+
+    /**
+     * Magic Setter
+     *
+     * @param $property
+     * @param $value
+     *
+     * @return void
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
     }
 
     /**
@@ -82,7 +98,25 @@ class Logo
         $cacheDir = __DIR__ . '/../../../../../../public' . DIRECTORY_SEPARATOR . 'assets' .
             DIRECTORY_SEPARATOR . DEBRANOVA_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
 
-        return $cacheDir . DIRECTORY_SEPARATOR . $this->getId() . '.' . $this->getContentType()->getExtension();
+        return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        return sprintf("%s-%s.%s", $this->getId(), $this->getHash(), $this->getContentType()->getExtension());
+    }
+
+    /**
+     * Although an alternative does not have a clear hash, we can create one based on the id;
+     *
+     * @return string
+     */
+    public function getHash()
+    {
+        return hash('sha512', $this->id . self::HASH_KEY);
     }
 
     /**

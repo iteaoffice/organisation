@@ -24,7 +24,7 @@ return array(
                     'organisation-logo' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => "/organisation-logo/[:id].[:ext]",
+                            'route'    => "/organisation-logo/[:id]-[:hash].[:ext]",
                             'defaults' => array(
                                 //Explicitly add the controller here as the assets are collected
                                 'controller' => 'organisation-index',
