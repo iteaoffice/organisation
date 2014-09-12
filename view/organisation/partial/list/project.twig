@@ -20,7 +20,6 @@
                     {{ projectLogo(projectService, 'img-rounded') }}
                 </div>
 
-
                 <dl>
                     <dt>{{ translate("txt-program-call") }}</dt>
                     <dd>{{ callLink(projectService.project.call,'view-list') }}</dd>
@@ -30,7 +29,6 @@
                     {% set contactService = contactServiceProxy(projectService.project.contact) %}
                     <dd>{{ contactService.parseFullname() }}</dd>
                 </dl>
-
             </div>
         </div>
         {% if loop.index is divisibleby(4) %}
