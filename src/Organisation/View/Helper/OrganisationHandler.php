@@ -88,7 +88,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 return $this->parseOrganisationList($page);
             case 'organisation_project':
                 if ($this->getOrganisationService()->isEmpty()) {
-                      return ("The selected organisation cannot be found");
+                    return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationProjectList($this->getOrganisationService());
@@ -103,6 +103,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
             case 'organisation_article':
                 return $this->parseOrganisationArticleList($this->getOrganisationService());
                 break;
+
             case 'organisation_title':
                 return $this->parseOrganisationTitle($this->getOrganisationService());
                 break;
@@ -110,9 +111,11 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
             case 'organisation_info':
                 return $this->parseOrganisationInfo($this->getOrganisationService());
                 break;
+
             case 'organisation_map':
                 return $this->parseOrganisationMap($this->getOrganisationService());
                 break;
+
             default:
                 return sprintf(
                     "No handler available for <code>%s</code> in class <code>%s</code>",
@@ -237,7 +240,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation',
-            array('organisationService' => $organisationService)
+            ['organisationService' => $organisationService]
         );
     }
 
@@ -308,9 +311,9 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
 
         return $this->getRenderer()->render(
             'organisation/partial/list/organisation',
-            array(
+            [
                 'paginator' => $paginator,
-            )
+            ]
         );
     }
 
@@ -337,13 +340,16 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
 
         if (!$success) {
 
-            $whichProjects = ( $this->getProjectService()->getOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE :  ProjectService::WHICH_ALL) ;
-            $template = ( $this->getProjectService()->getOptions()->getProjectHasVersions() ? 'organisation/partial/list/project' :  'organisation/partial/list/project_eu') ;
-            $projects = $this->getProjectService()->findProjectByOrganisation($organisationService->getOrganisation(),$whichProjects);
+            $which_projects = $this->getProjectService()->getOptions()->getProjectHasVersions(
+            ) ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+            $projects = $this->getProjectService()->findProjectByOrganisation(
+                $organisationService->getOrganisation(),
+                $which_projects
+            );
 
             $html = $this->getRenderer()->render(
-                $template,
-                array('projects' => $projects)
+                'organisation/partial/list/project',
+                ['projects' => $projects]
             );
             $this->getCache()->setItem($key, $html);
         }
@@ -384,7 +390,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation-metadata',
-            array('organisationService' => $organisationService)
+            ['organisationService' => $organisationService]
         );
     }
 
@@ -406,11 +412,11 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
 
         return $this->getRenderer()->render(
             'organisation/partial/list/article',
-            array(
+            [
                 'organisationService' => $organisationService,
                 'articles'            => $articles,
                 'limit'               => $this->getLimit(),
-            )
+            ]
         );
     }
 
