@@ -23,6 +23,7 @@ return array(
   'class_implements'                                              => __DIR__ . '/src/Organisation/Service/ServiceInitializer.php',
   'Organisation\Service\CacheFactory'                             => __DIR__ . '/src/Organisation/Service/CacheFactory.php',
   'Organisation\Service\ServiceInterface'                         => __DIR__ . '/src/Organisation/Service/ServiceInterface.php',
+  'Organisation\Service\OptionServiceFactory'                     => __DIR__ . '/src/Organisation/Service/OptionServiceFactory.php',
   'Organisation\Service\OrganisationService'                      => __DIR__ . '/src/Organisation/Service/OrganisationService.php',
   'Organisation\Service\FormService'                              => __DIR__ . '/src/Organisation/Service/FormService.php',
   'Organisation\Service\ConfigServiceFactory'                     => __DIR__ . '/src/Organisation/Service/ConfigServiceFactory.php',
