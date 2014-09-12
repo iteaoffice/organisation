@@ -25,61 +25,7 @@ $config = [
         ],
     ],
     'view_manager'    => [
-        'template_map' => include __DIR__ . '/../template_map.php',
-    ],
-    'view_helpers'    => [
-        'initializers' => [
-            ViewHelperInitializer::class
-        ],
-        'invokables'   => [
-            'createLogoFromArray'         => CreateLogoFromArray::class,
-            'createOrganisationFromArray' => CreateOrganisationFromArray::class,
-            'organisationHandler'         => 'Organisation\View\Helper\OrganisationHandler',
-            'organisationServiceProxy'    => 'Organisation\View\Helper\OrganisationServiceProxy',
-            'organisationLink'            => 'Organisation\View\Helper\OrganisationLink',
-            'organisationLogo'            => 'Organisation\View\Helper\OrganisationLogo',
-        ]
-    ],
-    'service_manager' => [
-        'initializers' => [
-            ServiceInitializer::class
-        ],
-        'factories'    => [
-
-            'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory',
-            'organisation_cache'         => 'Organisation\Service\CacheFactory',
-        ],
-        'invokables'   => [
-            OrganisationAssertion::class            => OrganisationAssertion::class,
-            'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
-            'organisation_form_service'             => 'Organisation\Service\FormService',
-            'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation',
-        ]
-    ],
-    'doctrine'        => [
-        'driver'       => [
-            'organisation_annotation_driver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => [
-                    __DIR__ . '/../src/Organisation/Entity/'
-                ]
-            ],
-            'orm_default'                    => [
-                'drivers' => [
-                    'Organisation\Entity' => 'organisation_annotation_driver',
-                ]
-            ]
-        ],
-        'eventmanager' => [
-            'orm_default' => [
-                'subscribers' => [
-                    'Gedmo\Timestampable\TimestampableListener',
-                    'Gedmo\Sluggable\SluggableListener',
-                ]
-            ],
-        ],
-    ]
-];
+        'template_map' => include __DIR__ . '/../template_map.php', ], 'view_helpers' => [ 'initializers' => [ ViewHelperInitializer::class ], 'invokables' => [ 'createLogoFromArray' => CreateLogoFromArray::class, 'createOrganisationFromArray' => CreateOrganisationFromArray::class, 'organisationHandler' => 'Organisation\View\Helper\OrganisationHandler', 'organisationServiceProxy' => 'Organisation\View\Helper\OrganisationServiceProxy', 'organisationLink' => 'Organisation\View\Helper\OrganisationLink', 'organisationLogo' => 'Organisation\View\Helper\OrganisationLogo', ] ], 'service_manager' => [ 'initializers' => [ ServiceInitializer::class ], 'factories' => [ 'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory', 'organisation_cache' => 'Organisation\Service\CacheFactory', ], 'invokables' => [ OrganisationAssertion::class => OrganisationAssertion::class, 'organisation_organisation_service' => 'Organisation\Service\OrganisationService', 'organisation_form_service' => 'Organisation\Service\FormService', 'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation', ] ], 'doctrine' => [ 'driver' => [ 'organisation_annotation_driver' => [ 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver', 'paths' => [ __DIR__ . '/../src/Organisation/Entity/' ] ], 'orm_default' => [ 'drivers' => [ 'Organisation\Entity' => 'organisation_annotation_driver', ] ] ], 'eventmanager' => [ 'orm_default' => [ 'subscribers' => [ 'Gedmo\Timestampable\TimestampableListener', 'Gedmo\Sluggable\SluggableListener', ] ], ], ] ];
 $configFiles = [
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
