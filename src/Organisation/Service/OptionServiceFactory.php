@@ -30,6 +30,7 @@ class OptionServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
+
         return new ModuleOptions($config['organisation-option']);
     }
 }

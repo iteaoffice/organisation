@@ -38,7 +38,8 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
     /**
      * @return bool
      */
-    public function getUseOrganisationMap(){
+    public function getUseOrganisationMap()
+    {
         return $this->useOrganisationMap;
     }
 
@@ -46,10 +47,11 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
      * @param $useOrganisationMap
      * @return OrganisationOptionsInterface
      */
-    public function setUseOrganisationMap($useOrganisationMap){
+    public function setUseOrganisationMap($useOrganisationMap)
+    {
         $this->useOrganisationMap =  $useOrganisationMap;
+
         return $this;
     }
-
 
 }

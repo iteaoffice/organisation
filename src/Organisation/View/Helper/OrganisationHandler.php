@@ -244,8 +244,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         );
     }
 
-
-
     /**
      * @param OrganisationService $organisationService
      *
@@ -261,7 +259,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
             $countries[] = $cluster->getOrganisation()->getCountry();
         }
 
-        if(DEBRANOVA_HOST == 'artemisia'){
+        if (DEBRANOVA_HOST == 'artemisia') {
             return $this->getRenderer()->render(
                 'organisation/partial/entity/organisation-map',
                 array('countries' => $countries)
@@ -271,6 +269,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
          * @var $countryMap CountryMap
           */
         $countryMap = $this->serviceLocator->get('countryMap');
+
         return $countryMap($countries);
     }
 
@@ -279,7 +278,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      *
      * @return string
      */
-    public function parseOrganisationInfo(OrganisationService $organisationService){
+    public function parseOrganisationInfo(OrganisationService $organisationService)
+    {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation-info',
             array('organisationService' => $organisationService)
@@ -317,7 +317,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         );
     }
 
-    public function parseOrganisationTitle(){
+    public function parseOrganisationTitle()
+    {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation-title',
             [ 'organisationService' => $this->getOrganisationService()]
@@ -340,15 +341,19 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
 
         if (!$success) {
 
-            $which_projects = $this->getProjectService()->getOptions()->getProjectHasVersions(
+            $whichProjects = $this->getProjectService()->getOptions()->getProjectHasVersions(
             ) ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+
+            $whichTemplate = $this->getProjectService()->getOptions()->getProjectHasVersions(
+            ) ? 'organisation/partial/list/project' : 'organisation/partial/list/project_eu';
+
             $projects = $this->getProjectService()->findProjectByOrganisation(
                 $organisationService->getOrganisation(),
-                $which_projects
+                $whichProjects
             );
 
             $html = $this->getRenderer()->render(
-                'organisation/partial/list/project',
+                $whichTemplate,
                 ['projects' => $projects]
             );
             $this->getCache()->setItem($key, $html);
