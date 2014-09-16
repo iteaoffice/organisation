@@ -254,7 +254,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         /**
          * Collect the list of countries from the organisation and cluster
          */
-        $countries = array($this->getOrganisationService()->getOrganisation()->getCountry());
+        $countries = [$this->getOrganisationService()->getOrganisation()->getCountry()];
         foreach ($this->getOrganisationService()->getOrganisation()->getClusterMember() as $cluster) {
             $countries[] = $cluster->getOrganisation()->getCountry();
         }
@@ -262,12 +262,12 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         if (DEBRANOVA_HOST == 'artemisia') {
             return $this->getRenderer()->render(
                 'organisation/partial/entity/organisation-map',
-                array('countries' => $countries)
+                ['countries' => $countries]
             );
         }
         /**
          * @var $countryMap CountryMap
-          */
+         */
         $countryMap = $this->serviceLocator->get('countryMap');
 
         return $countryMap($countries);
@@ -282,7 +282,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation-info',
-            array('organisationService' => $organisationService)
+            ['organisationService' => $organisationService]
         );
     }
 
@@ -321,7 +321,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation-title',
-            [ 'organisationService' => $this->getOrganisationService()]
+            ['organisationService' => $this->getOrganisationService()]
         );
     }
 
@@ -340,7 +340,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         $html = $this->getCache()->getItem($key, $success);
 
         if (!$success) {
-
             $whichProjects = $this->getProjectService()->getOptions()->getProjectHasVersions(
             ) ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
 

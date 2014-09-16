@@ -9,7 +9,7 @@
  * @license    http://debranova.org/license.txt proprietary
  * @link       http://debranova.org
  */
-namespace Program\Options;
+namespace Organisation\Options;
 
 /**
  * ARTEMIS-IA Office copyright message placeholder
@@ -34,5 +34,4 @@ interface OrganisationOptionsInterface
      * @return OrganisationOptionsInterface
      */
     public function setUseOrganisationMap($useOrganisationMap);
-
 }
