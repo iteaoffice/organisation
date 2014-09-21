@@ -205,8 +205,8 @@ class Organisation extends EntityRepository
         $queryBuilder->distinct('o.id');
         $queryBuilder->from('Organisation\Entity\Organisation', 'o');
         $queryBuilder->join('o.contactOrganisation', 'co');
-        $queryBuilder->join('o.description', 'd');
-        $queryBuilder->join('o.logo', 'l');
+        $queryBuilder->leftJoin('o.description', 'd');
+        $queryBuilder->leftJoin('o.logo', 'l');
         $queryBuilder->join('l.contentType', 'ct');
 
         /**
