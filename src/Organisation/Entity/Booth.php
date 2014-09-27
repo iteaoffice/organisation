@@ -9,10 +9,7 @@
  */
 namespace Organisation\Entity;
 
-use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
@@ -57,7 +54,6 @@ class Booth extends EntityAbstract
      */
     private $contact;
 
-
     /**
      * Class constructor
      */
@@ -65,7 +61,6 @@ class Booth extends EntityAbstract
     {
 
     }
-
 
     /**
      * Magic Getter
@@ -189,6 +184,4 @@ class Booth extends EntityAbstract
     {
         $this->contact = $contact;
     }
-
-
 }

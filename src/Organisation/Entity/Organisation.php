@@ -308,7 +308,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        return (string)$this->organisation;
+        return (string) $this->organisation;
     }
 
     /**
