@@ -240,6 +240,12 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Member\Entity\Member
      */
     private $member;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     * @var \Organisation\Entity\Booth[]|Collections\ArrayCollection()
+     */
+    private $organisationBooth;
 
     /**
      * Class constructor
@@ -261,6 +267,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->invoice = new Collections\ArrayCollection();
         $this->boothFinancial = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
+        $this->organisationBooth = new Collections\ArrayCollection();
     }
 
     /**
@@ -301,7 +308,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        return (string) $this->organisation;
+        return (string)$this->organisation;
     }
 
     /**
@@ -808,5 +815,21 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setMember($member)
     {
         $this->member = $member;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Booth[]
+     */
+    public function getOrganisationBooth()
+    {
+        return $this->organisationBooth;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Booth[] $organisationBooth
+     */
+    public function setOrganisationBooth($organisationBooth)
+    {
+        $this->organisationBooth = $organisationBooth;
     }
 }
