@@ -186,6 +186,8 @@ class Organisation extends EntityRepository
         $qb->andWhere('o.organisation LIKE :searchItem');
         $qb->setParameter('searchItem', "%" . $name . "%");
 
+        $qb->setMaxResults(1);
+
         return $qb->getQuery()->getOneOrNullResult();
     }
 
