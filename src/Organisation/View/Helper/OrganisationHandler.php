@@ -101,18 +101,30 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 return $this->parseOrganisationMetadata($this->getOrganisationService());
                 break;
             case 'organisation_article':
+                if ($this->getOrganisationService()->isEmpty()) {
+                    return ("The selected organisation cannot be found");
+                }
                 return $this->parseOrganisationArticleList($this->getOrganisationService());
                 break;
 
             case 'organisation_title':
+                if ($this->getOrganisationService()->isEmpty()) {
+                    return ("The selected organisation cannot be found");
+                }
                 return $this->parseOrganisationTitle($this->getOrganisationService());
                 break;
 
             case 'organisation_info':
+                if ($this->getOrganisationService()->isEmpty()) {
+                    return ("The selected organisation cannot be found");
+                }
                 return $this->parseOrganisationInfo($this->getOrganisationService());
                 break;
 
             case 'organisation_map':
+                if ($this->getOrganisationService()->isEmpty()) {
+                    return ("The selected organisation cannot be found");
+                }
                 return $this->parseOrganisationMap($this->getOrganisationService());
                 break;
 
