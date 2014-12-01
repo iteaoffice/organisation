@@ -104,6 +104,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
+
                 return $this->parseOrganisationArticleList($this->getOrganisationService());
                 break;
 
@@ -111,6 +112,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
+
                 return $this->parseOrganisationTitle($this->getOrganisationService());
                 break;
 
@@ -118,6 +120,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
+
                 return $this->parseOrganisationInfo($this->getOrganisationService());
                 break;
 
@@ -125,6 +128,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
+
                 return $this->parseOrganisationMap($this->getOrganisationService());
                 break;
 

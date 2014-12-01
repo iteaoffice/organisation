@@ -9,6 +9,7 @@
  */
 namespace Organisation\Repository;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
@@ -251,6 +252,6 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
         $queryBuilder->addOrderBy('o.organisation', 'ASC');
 
-        return $queryBuilder->getQuery()->getResult(\Doctrine\ORM\AbstractQuery::HYDRATE_ARRAY);
+        return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
 }

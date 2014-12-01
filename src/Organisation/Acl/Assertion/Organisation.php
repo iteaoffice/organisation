@@ -47,6 +47,7 @@ class Organisation extends AssertionAbstract
         if (!$resource instanceof OrganisationEntity && !is_null($id)) {
             $resource = $this->getOrganisationService()->setOrganisationId($id)->getOrganisation();
         }
+
         switch ($privilege) {
             case 'view-community':
                 if ($this->getContactService()->hasPermit('view', $resource)) {

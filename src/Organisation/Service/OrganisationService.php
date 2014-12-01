@@ -64,6 +64,9 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationByDocRef($docRef)
     {
+        /**
+         * @var $organisation Organisation
+         */
         $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
             ['docRef' => $docRef]
         );
