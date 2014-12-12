@@ -104,7 +104,6 @@ class OrganisationController extends AbstractActionController implements
              * The file exists, but is it not updated?
              */
             file_put_contents($logo->getCacheFileName(), $file);
-
         }
 
         $response = $this->getResponse();
