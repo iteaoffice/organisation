@@ -181,7 +181,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $log;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      * @var \Organisation\Entity\Description
      */
@@ -199,7 +199,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $note;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      * @var \Organisation\Entity\Financial
      */
@@ -223,7 +223,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $invoice;
     /**
-     * @ORM\OneToMany(targetEntity="Event\Entity\Booth\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Event\Entity\Booth\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      * @var \Event\Entity\Booth\Financial[]|Collections\ArrayCollection
      */
@@ -235,7 +235,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $doa;
     /**
-     * @ORM\OneToOne(targetEntity="Member\Entity\Member", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToOne(targetEntity="Member\Entity\Member", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      * @var \Member\Entity\Member
      */

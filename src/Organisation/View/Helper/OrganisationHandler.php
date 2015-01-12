@@ -49,15 +49,30 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     public function __invoke(Content $content)
     {
         $this->extractContentParam($content);
+
         switch ($content->getHandler()->getHandler()) {
             case 'organisation':
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
+
                 $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation"));
                 $this->serviceLocator->get('headtitle')->append(
                     $this->getOrganisationService()->getOrganisation()->getOrganisation()
                 );
+
+                //Do now show the organisation when we don't have projects
+                if (sizeof(
+                        $this->getProjectService()->findProjectByOrganisation(
+                            $this->getOrganisationService()->getOrganisation()
+                        )
+                    ) === 0
+                ) {
+                    $this->getServiceLocator()->get("response")->setStatusCode(404);
+
+                    throw new \Exception("The selected organisation has no projects in our database");
+                }
+
                 /**
                  * @var $organisationLink OrganisationLink
                  */
