@@ -108,11 +108,11 @@ class OrganisationController extends AbstractActionController implements
 
         $response = $this->getResponse();
         $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
+            ->addHeaderLine('Content-Type: '.$logo->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: '.(string) strlen($file));
         $response->setContent($file);
 
         return $response;

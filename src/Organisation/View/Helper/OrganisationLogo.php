@@ -31,7 +31,6 @@ class OrganisationLogo extends ImageAbstract
      */
     public function __invoke(Service\OrganisationService $organisationService = null, $class = null)
     {
-
         $logo = $organisationService->getOrganisation()->getLogo();
         if ($logo->count() === 0) {
             return '';
@@ -51,12 +50,11 @@ class OrganisationLogo extends ImageAbstract
         $this->setRouter('assets/organisation-logo');
         $this->addClasses('img-responsive');
 
-        $this->setImageId('organisation_logo_' . $logo->getId());
+        $this->setImageId('organisation_logo_'.$logo->getId());
         $this->addRouterParam('hash', $logo->getHash());
         $this->addRouterParam('ext', $logo->getContentType()->getExtension());
         $this->addRouterParam('id', $logo->getId());
 
         return $this->createImageUrl();
-
     }
 }

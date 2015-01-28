@@ -91,9 +91,8 @@ abstract class ImageAbstract extends AbstractHelper implements ServiceLocatorAwa
         if (!$this->lightBox) {
             return $image;
         } else {
-            return '<a href="' . $url($this->router, $this->routerParams) . '" data-lightbox="itea">' . $image . '</a>';
+            return '<a href="'.$url($this->router, $this->routerParams).'" data-lightbox="itea">'.$image.'</a>';
         }
-
     }
 
     /**

@@ -120,7 +120,7 @@ class OrganisationManagerController extends AbstractActionController implements
             $result = $this->getOrganisationService()->newEntity($form->getData());
 
             return $this->redirect()->toRoute(
-                'zfcadmin/organisation-manager/' . strtolower($this->params('entity')),
+                'zfcadmin/organisation-manager/'.strtolower($this->params('entity')),
                 ['id' => $result->getId()]
             );
         }
@@ -161,12 +161,12 @@ class OrganisationManagerController extends AbstractActionController implements
         );
         $form = $this->getFormService()->prepare($entity->get('entity_name'), $entity, $_POST);
         $form->setAttribute('class', 'form-horizontal live-form');
-        $form->setAttribute('id', 'organisation-organisation-' . $entity->getId());
+        $form->setAttribute('id', 'organisation-organisation-'.$entity->getId());
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $result = $this->getOrganisationService()->updateEntity($form->getData());
 
             return $this->redirect()->toRoute(
-                'zfcadmin/organisation/' . strtolower($entity->get('dashed_entity_name')),
+                'zfcadmin/organisation/'.strtolower($entity->get('dashed_entity_name')),
                 ['id' => $result->getId()]
             );
         }
@@ -188,7 +188,7 @@ class OrganisationManagerController extends AbstractActionController implements
         $this->getOrganisationService()->removeEntity($entity);
 
         return $this->redirect()->toRoute(
-            'zfcadmin/organisation-manager/' . $entity->get('dashed_entity_name') . 's'
+            'zfcadmin/organisation-manager/'.$entity->get('dashed_entity_name').'s'
         );
     }
 }

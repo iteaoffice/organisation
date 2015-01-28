@@ -92,7 +92,7 @@ class Organisation extends EntityRepository
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%" . $searchItem . "%");
+        $qb->setParameter('searchItem', "%".$searchItem."%");
         if (!is_null($countryId)) {
             $qb->andWhere('o.country = ?3');
             $qb->setParameter(3, $countryId);
@@ -141,7 +141,7 @@ class Organisation extends EntityRepository
          */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($emailAddress);
-        $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
+        $qb->setParameter('domain', "%".$validateEmail->hostname."%");
         //We want a match on the email address
         $qb->andWhere(
             $qb->expr()->orX(
@@ -159,7 +159,7 @@ class Organisation extends EntityRepository
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%" . $name . "%");
+        $qb->setParameter('searchItem', "%".$name."%");
 
         return $qb->getQuery()->getResult();
     }
@@ -185,7 +185,7 @@ class Organisation extends EntityRepository
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%" . $name . "%");
+        $qb->setParameter('searchItem', "%".$name."%");
 
         $qb->setMaxResults(1);
 
@@ -249,7 +249,7 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter(1, $meeting->getId());
         $queryBuilder->setParameter(2, Registration::NOT_HIDE_IN_LIST);
         $queryBuilder->setParameter(3, Registration::NOT_OVERBOOKED);
-        $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
+        $queryBuilder->setParameter(4, '%'.$search->get('search').'%');
         $queryBuilder->addOrderBy('o.organisation', 'ASC');
 
         return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);

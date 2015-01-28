@@ -42,9 +42,9 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     protected $limit = 5;
 
     /**
-     * @param Content $content
-     *
+     * @param  Content    $content
      * @return string
+     * @throws \Exception
      */
     public function __invoke(Content $content)
     {
@@ -62,7 +62,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 );
 
                 //Do now show the organisation when we don't have projects
-                if (sizeof(
+                if (
+                    sizeof(
                         $this->getProjectService()->findProjectByOrganisation(
                             $this->getOrganisationService()->getOrganisation()
                         )
@@ -366,7 +367,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         $success = false;
         $config = $this->getConfig();
 
-        $key = $config['cache_key'] . '-organisation-project-list-html-organisation-' .
+        $key = $config['cache_key'].'-organisation-project-list-html-organisation-'.
             $organisationService->getOrganisation()->getId();
         $html = $this->getCache()->getItem($key, $success);
 
@@ -444,7 +445,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         /**
          * Parse the organisationService in to have the these functions available in the view
          */
-
         return $this->getRenderer()->render(
             'organisation/partial/list/article',
             [

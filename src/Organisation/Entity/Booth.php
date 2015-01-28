@@ -59,7 +59,6 @@ class Booth extends EntityAbstract
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -118,7 +117,6 @@ class Booth extends EntityAbstract
         }
 
         return $this->inputFilter;
-
     }
 
     /**

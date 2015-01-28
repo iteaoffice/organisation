@@ -74,7 +74,7 @@ class OrganisationService extends ServiceAbstract
          * Return null when no project can be found
          */
         if (is_null($organisation)) {
-            return null;
+            return;
         }
         $this->setOrganisation($organisation);
 
@@ -102,7 +102,7 @@ class OrganisationService extends ServiceAbstract
     public function parseOrganisationWithBranch($branch)
     {
         return trim(
-            preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $this->getOrganisation() . ' ${3}', $branch)
+            preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}'.$this->getOrganisation().' ${3}', $branch)
         );
     }
 

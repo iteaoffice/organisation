@@ -34,6 +34,16 @@ class Type extends EntityAbstract
      * Constant for a type with a invoice
      */
     const INVOICE = 1;
+
+    const TYPE_UNKNOWN = 0;
+    const TYPE_IFC = 1;
+    const TYPE_LARGE_INDUSTRY = 2;
+    const TYPE_SME = 3;
+    const TYPE_RESEARCH = 4;
+    const TYPE_UNIVERSITY = 5;
+    const TYPE_GOVERNMENT = 6;
+    const TYPE_OTHER = 7;
+
     /**
      * Textual versions of the invoice
      *
@@ -171,10 +181,10 @@ class Type extends EntityAbstract
                             array(
                                 'name'    => 'InArray',
                                 'options' => array(
-                                    'haystack' => array_keys($this->getInvoiceTemplates())
-                                )
-                            )
-                        )
+                                    'haystack' => array_keys($this->getInvoiceTemplates()),
+                                ),
+                            ),
+                        ),
                     )
                 )
             );

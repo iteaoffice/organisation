@@ -31,11 +31,11 @@ class ControllerInitializer implements InitializerInterface
 {
     /**
      * @param                                           $instance
-     * @param ServiceLocatorInterface|ControllerManager $serviceLocator
+     * @param ServiceLocatorInterface|ControllerManager $controllerManager
      *
-     * @return $this
+     * @return void
      */
-    public function initialize($instance, ServiceLocatorInterface $serviceLocator)
+    public function initialize($instance, ServiceLocatorInterface $controllerManager)
     {
         if (!is_object($instance)) {
             return;
@@ -45,9 +45,9 @@ class ControllerInitializer implements InitializerInterface
             OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
         ];
         /**
-         * @var $sm ServiceLocatorInterface
+         * @var $controllerManager ControllerManager
          */
-        $sm = $serviceLocator->getServiceLocator();
+        $sm = $controllerManager->getServiceLocator();
         /**
          * Go over each interface to see if we should add an interface
          */

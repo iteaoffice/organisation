@@ -75,7 +75,7 @@ class OrganisationLink extends LinkAbstract
                     'more' => $this->translate("txt-read-more"),
                     'name' => $this->getOrganisationService()->parseOrganisationWithBranch(
                         $this->getBranch()
-                    )
+                    ),
                 ]
             );
             $this->addRouterParam('id', $this->getOrganisationService()->getOrganisation()->getId());
@@ -138,7 +138,7 @@ class OrganisationLink extends LinkAbstract
             case 'view':
                 $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
                 $this->setRouter(
-                    'route-' . $this->getOrganisationService()->getOrganisation()->get("underscore_full_entity_name")
+                    'route-'.$this->getOrganisationService()->getOrganisation()->get("underscore_full_entity_name")
                 );
                 $this->setText(
                     sprintf(
@@ -151,9 +151,9 @@ class OrganisationLink extends LinkAbstract
                 break;
             case 'view-article':
                 $this->setRouter(
-                    'route-' . $this->getOrganisationService()->getOrganisation()->get(
+                    'route-'.$this->getOrganisationService()->getOrganisation()->get(
                         "underscore_full_entity_name"
-                    ) . '-article'
+                    ).'-article'
                 );
                 $this->setText(
                     sprintf(

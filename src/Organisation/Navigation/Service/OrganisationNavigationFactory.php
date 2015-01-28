@@ -64,8 +64,8 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
                 'router'     => $router,
                 'active'     => true,
                 'params'     => array(
-                    'id' => $this->routeMatch->getParam('id')
-                )
+                    'id' => $this->routeMatch->getParam('id'),
+                ),
             );
         }
         if ($this->routeMatch->getMatchedRouteName() === 'zfcadmin/organisation-manager/edit') {
@@ -83,8 +83,8 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
                 'router'     => $router,
                 'active'     => true,
                 'params'     => array(
-                    'id' => $this->routeMatch->getParam('id')
-                )
+                    'id' => $this->routeMatch->getParam('id'),
+                ),
             );
         }
 

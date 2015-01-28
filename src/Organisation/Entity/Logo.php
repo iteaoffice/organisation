@@ -28,7 +28,7 @@ class Logo
      * @ORM\Column(name="logo_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-    @var integer
+     @var integer
      */
     private $id;
     /**
@@ -91,14 +91,13 @@ class Logo
 
     /**
      * @return string
-     * @todo: make the location of the logo dynamic
      */
     public function getCacheFileName()
     {
-        $cacheDir = __DIR__ . '/../../../../../../public' . DIRECTORY_SEPARATOR . 'assets' .
-            DIRECTORY_SEPARATOR . DEBRANOVA_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
+        $cacheDir = __DIR__.'/../../../../../../public'.DIRECTORY_SEPARATOR.'assets'.
+            DIRECTORY_SEPARATOR.DEBRANOVA_HOST.DIRECTORY_SEPARATOR.'organisation-logo';
 
-        return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName();
+        return $cacheDir.DIRECTORY_SEPARATOR.$this->getFileName();
     }
 
     /**
@@ -116,7 +115,7 @@ class Logo
      */
     public function getHash()
     {
-        return hash('sha512', $this->id . self::HASH_KEY);
+        return hash('sha512', $this->id.self::HASH_KEY);
     }
 
     /**
