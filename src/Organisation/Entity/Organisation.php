@@ -1,12 +1,13 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * Debranova copyright message placeholder.
  *
  * @category    Organisation
- * @package     Entity
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
+
 namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
@@ -19,7 +20,7 @@ use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
- * Organisation
+ * Organisation.
  *
  * @ORM\Table(name="organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
@@ -33,6 +34,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
+     *
      * @var integer
      */
     private $id;
@@ -40,12 +42,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="organisation", type="string", length=60, nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation"})
+     *
      * @var string
      */
     private $organisation;
     /**
      * @ORM\OneToOne(targetEntity="\Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Contact\Entity\ContactOrganisation
      */
     private $contactOrganisation;
@@ -53,6 +57,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="date_created", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      * @Annotation\Exclude()
+     *
      * @var \DateTime
      */
     private $dateCreated;
@@ -60,6 +65,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="docref", type="string", length=255, nullable=false, unique=true)
      * @Gedmo\Slug(fields={"id","organisation"})
      * @Annotation\Exclude()
+     *
      * @var string
      */
     private $docRef;
@@ -67,18 +73,21 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
      * @Annotation\Exclude()
+     *
      * @var \DateTime
      */
     private $dateUpdated;
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
      */
     private $affiliation;
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Affiliation\Entity\Financial
      */
     private $affiliationFinancial;
@@ -101,6 +110,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      *      }
      * )
      * @Annotation\Attributes({"label":"txt-country"})
+     *
      * @var \General\Entity\Country
      */
     private $country;
@@ -123,12 +133,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
      *      }
      * )
      * @Annotation\Attributes({"label":"txt-organisation-type"})
+     *
      * @var \Organisation\Entity\Type
      */
     private $type;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist"}, mappedBy="organisation")
      * @ORM\OrderBy({"main"="DESC"})
+     *
      * @var \Organisation\Entity\Web[]|Collections\ArrayCollection
      */
     private $web;
@@ -141,6 +153,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
      * @Annotation\Options({"target_class":"Program\Entity\Domain"})
      * @Annotation\Attributes({"label":"txt-domain"})
+     *
      * @var \Program\Entity\Domain[]|Collections\ArrayCollection
      */
     private $domain;
@@ -153,12 +166,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
      * @Annotation\Options({"target_class":"Program\Entity\Technology"})
      * @Annotation\Attributes({"label":"txt-technology"})
+     *
      * @var \Program\Entity\Technology[]|Collections\ArrayCollection
      */
     private $technology;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Cluster", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
      */
     private $cluster;
@@ -171,84 +186,97 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
      * @Annotation\Options({"target_class":"Organisation\Entity\Cluster"})
      * @Annotation\Attributes({"label":"txt-cluster-membership"})
+     *
      * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
      */
     private $clusterMember;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Log[]|Collections\ArrayCollection
      */
     private $log;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Description
      */
     private $description;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Logo", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Logo[]|Collections\ArrayCollection
      */
     private $logo;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Note", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Note[]|Collections\ArrayCollection
      */
     private $note;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Financial
      */
     private $financial;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="debtor")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Financial[]|Collections\ArrayCollection
      */
     private $financialDebtor;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Doa[]|Collections\ArrayCollection
      */
     private $programDoa;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Invoice", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Invoice\Entity\Invoice[]|Collections\ArrayCollection
      */
     private $invoice;
     /**
      * @ORM\OneToMany(targetEntity="Event\Entity\Booth\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
+     *
      * @var \Event\Entity\Booth\Financial[]|Collections\ArrayCollection
      */
     private $boothFinancial;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
      */
     private $doa;
     /**
      * @ORM\OneToOne(targetEntity="Member\Entity\Member", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
+     *
      * @var \Member\Entity\Member
      */
     private $member;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Booth[]|Collections\ArrayCollection()
      */
     private $organisationBooth;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -271,7 +299,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource
+     * Returns the string identifier of the Resource.
      *
      * @return string
      */
@@ -293,8 +321,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
     /**
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -303,7 +329,8 @@ class Organisation extends EntityAbstract implements ResourceInterface
 
     /**
      * ToString
-     * Return the id here for form population
+     * Return the id here for form population.
+     *
      * @return string
      */
     public function __toString()
@@ -314,7 +341,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
     /**
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -374,7 +400,8 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Needed for the hydration of form elements
+     * Needed for the hydration of form elements.
+     *
      * @return array
      */
     public function getArrayCopy()

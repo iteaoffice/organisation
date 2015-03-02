@@ -5,7 +5,7 @@ namespace Organisation\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OrganisationLink
+ * OrganisationLink.
  *
  * @ORM\Table(name="organisation_link")
  * @ORM\Entity

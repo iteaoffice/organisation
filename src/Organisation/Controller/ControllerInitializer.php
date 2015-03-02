@@ -1,14 +1,16 @@
 <?php
 /**
- * Japaveh Webdesign copyright message placeholder
+ * Japaveh Webdesign copyright message placeholder.
  *
  * @category    Controller
- * @package     Service
+ *
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   2004-2014 Japaveh Webdesign
  * @license     http://solodb.net/license.txt proprietary
+ *
  * @link        http://solodb.net
  */
+
 namespace Organisation\Controller;
 
 use Organisation\Service\FormServiceAwareInterface;
@@ -18,13 +20,14 @@ use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Japaveh Webdesign copyright message placeholder
+ * Japaveh Webdesign copyright message placeholder.
  *
  * @category    Controller
- * @package     Service
+ *
  * @author      Johan van der Heide <info@japaveh.nl>
  * @copyright   2004-2014 Japaveh Webdesign
  * @license     http://solodb.net/license.txt proprietary
+ *
  * @link        http://solodb.net
  */
 class ControllerInitializer implements InitializerInterface
@@ -32,8 +35,6 @@ class ControllerInitializer implements InitializerInterface
     /**
      * @param                                           $instance
      * @param ServiceLocatorInterface|ControllerManager $controllerManager
-     *
-     * @return void
      */
     public function initialize($instance, ServiceLocatorInterface $controllerManager)
     {
@@ -44,11 +45,11 @@ class ControllerInitializer implements InitializerInterface
             FormServiceAwareInterface::class         => 'organisation_form_service',
             OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
         ];
-        /**
+        /*
          * @var $controllerManager ControllerManager
          */
         $sm = $controllerManager->getServiceLocator();
-        /**
+        /*
          * Go over each interface to see if we should add an interface
          */
         foreach (class_implements($instance) as $interface) {

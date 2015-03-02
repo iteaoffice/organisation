@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     Controller
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\Controller;
 
 use Organisation\Service\FormService;
@@ -38,7 +39,7 @@ class OrganisationManagerController extends AbstractActionController implements
     protected $serviceLocator;
 
     /**
-     * Give a list of messages
+     * Give a list of messages.
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -50,7 +51,7 @@ class OrganisationManagerController extends AbstractActionController implements
     }
 
     /**
-     * Gateway to the Organisation Service
+     * Gateway to the Organisation Service.
      *
      * @return OrganisationService
      */
@@ -92,7 +93,7 @@ class OrganisationManagerController extends AbstractActionController implements
     }
 
     /**
-     * Show the details of 1 message
+     * Show the details of 1 message.
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -107,7 +108,7 @@ class OrganisationManagerController extends AbstractActionController implements
     }
 
     /**
-     * Create a new entity
+     * Create a new entity.
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -149,7 +150,7 @@ class OrganisationManagerController extends AbstractActionController implements
     }
 
     /**
-     * Edit an entity by finding it and call the corresponding form
+     * Edit an entity by finding it and call the corresponding form.
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -175,7 +176,7 @@ class OrganisationManagerController extends AbstractActionController implements
     }
 
     /**
-     * (soft-delete) an entity
+     * (soft-delete) an entity.
      *
      * @return \Zend\View\Model\ViewModel
      */

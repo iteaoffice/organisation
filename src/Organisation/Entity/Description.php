@@ -1,19 +1,20 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * Debranova copyright message placeholder.
  *
  * @category    Organisation
- * @package     Entity
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
+
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 
 /**
- * IctOrganisation
+ * IctOrganisation.
  *
  * @ORM\Table(name="organisation_description")
  * @ORM\Entity
@@ -26,11 +27,13 @@ class Description
      * @ORM\Column(name="description_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
     /**
      * @ORM\Column(name="description", type="text", nullable=false)
+     *
      * @var string
      */
     private $description;
@@ -39,6 +42,7 @@ class Description
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false, unique=true)
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;

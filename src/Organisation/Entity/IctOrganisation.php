@@ -1,19 +1,20 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * Debranova copyright message placeholder.
  *
  * @category    Organisation
- * @package     Entity
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
+
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 
 /**
- * IctOrganisation
+ * IctOrganisation.
  *
  * @ORM\Table(name="ict_organisation")
  * @ORM\Entity
@@ -26,6 +27,7 @@ class IctOrganisation //extends EntityAbstract
      * @ORM\Column(name="ict_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
@@ -34,6 +36,7 @@ class IctOrganisation //extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=false)
      * })
+     *
      * @var \General\Entity\Country
      */
     private $country;
@@ -42,12 +45,14 @@ class IctOrganisation //extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
     /**
      * @ORM\ManyToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="ictOrganisation")
      * @Annotation\Exclude()
+     *
      * @var \Affiliation\Entity\Affiliation[]
      */
     private $affiliation;

@@ -1,12 +1,13 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * Debranova copyright message placeholder.
  *
  * @category    Organisation
- * @package     Entity
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
+
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
 
 /**
- * OrganisationLogo
+ * OrganisationLogo.
  *
  * @ORM\Table(name="organisation_logo")
  * @ORM\Entity
@@ -28,16 +29,17 @@ class Logo
      * @ORM\Column(name="logo_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     @var integer
      */
     private $id;
     /**
      * @ORM\Column(name="organisation_logo", type="blob", nullable=false)
+     *
      * @var string
      */
     private $organisationLogo;
     /**
      * @ORM\Column(name="logo_extension", type="string", length=20, nullable=false)
+     *
      * @var string
      */
     private $logoExtension;
@@ -46,12 +48,14 @@ class Logo
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\File")
      * @Annotation\Options({"label":"txt-logo"})
+     *
      * @var \General\Entity\ContentType
      */
     private $contentType;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="update")
+     *
      * @var \DateTime
      */
     private $dateUpdated;
@@ -60,12 +64,13 @@ class Logo
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -77,12 +82,10 @@ class Logo
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -109,7 +112,7 @@ class Logo
     }
 
     /**
-     * Although an alternative does not have a clear hash, we can create one based on the id;
+     * Although an alternative does not have a clear hash, we can create one based on the id;.
      *
      * @return string
      */

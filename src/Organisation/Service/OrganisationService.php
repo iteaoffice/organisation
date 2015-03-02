@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     Service
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\Service;
 
 use Event\Entity\Meeting\Meeting;
@@ -17,14 +18,13 @@ use Project\Entity\Project;
 use Zend\Stdlib\Parameters;
 
 /**
- * OrganisationService
+ * OrganisationService.
  *
  * this is a generic wrapper service for all the other services
  *
  * First parameter of all methods (lowercase, underscore_separated)
  * will be used to fetch the correct model service, one exception is the 'linkModel'
  * method.
- *
  */
 class OrganisationService extends ServiceAbstract
 {
@@ -64,13 +64,13 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationByDocRef($docRef)
     {
-        /**
-         * @var $organisation Organisation
+        /*
+         * @var Organisation
          */
         $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
             ['docRef' => $docRef]
         );
-        /**
+        /*
          * Return null when no project can be found
          */
         if (is_null($organisation)) {
@@ -138,7 +138,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * Give a list of organisations. A flag can be triggered to toggle only active projects
+     * Give a list of organisations. A flag can be triggered to toggle only active projects.
      *
      * @param bool $onlyActive
      *
@@ -152,7 +152,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * Give a list of organisations per country. A flag can be triggered to toggle only active projects
+     * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
      *
      * @param Country $country
      * @param bool    $onlyActive
@@ -166,7 +166,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * Find a country based on three criteria: Name, CountryObject and the email address
+     * Find a country based on three criteria: Name, CountryObject and the email address.
      *
      * @param string  $name
      * @param Country $country
@@ -181,7 +181,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * Find a country based on three criteria: Name, CountryObject
+     * Find a country based on three criteria: Name, CountryObject.
      *
      * @param string  $name
      * @param Country $country
@@ -207,7 +207,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * Produce a list of organisations for a project (only active)
+     * Produce a list of organisations for a project (only active).
      *
      * @param Project $project
      * @param bool    $onlyActive
@@ -232,7 +232,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * Search for organisations based on a search-item
+     * Search for organisations based on a search-item.
      *
      * @param      $searchItem
      * @param      $maxResults

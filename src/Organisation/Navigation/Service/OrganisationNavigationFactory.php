@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     Navigation
- * @subpackage  Service
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\Navigation\Service;
 
 use Organisation\Service\OrganisationService;
@@ -16,10 +16,7 @@ use Zend\Navigation\Service\DefaultNavigationFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Factory for the Project admin navigation
- *
- * @package    Calendar
- * @subpackage Navigation\Service
+ * Factory for the Project admin navigation.
  */
 class OrganisationNavigationFactory extends DefaultNavigationFactory
 {
@@ -54,7 +51,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
         )
         ) {
             $this->organisationService->setOrganisationId($this->routeMatch->getParam('id'));
-            /**
+            /*
              * Go over both arrays and check if the new entities can be added
              */
             $pages['organisation']['pages']['view'] = array(
@@ -70,7 +67,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
         }
         if ($this->routeMatch->getMatchedRouteName() === 'zfcadmin/organisation-manager/edit') {
             $this->organisationService->setOrganisationId($this->routeMatch->getParam('id'));
-            /**
+            /*
              * Go over both arrays and check if the new entities can be added
              */
             $pages['organisation']['pages']['organisation']['pages']['edit'] = array(

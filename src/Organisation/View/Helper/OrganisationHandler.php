@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     View
- * @subpackage  Helper
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\View\Helper;
 
 use Content\Entity\Content;
@@ -27,8 +27,7 @@ use Zend\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
 
 /**
- * Class OrganisationHandler
- * @package Organisation\View\Helper
+ * Class OrganisationHandler.
  */
 class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareInterface
 {
@@ -42,8 +41,10 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     protected $limit = 5;
 
     /**
-     * @param  Content    $content
+     * @param Content $content
+     *
      * @return string
+     *
      * @throws \Exception
      */
     public function __invoke(Content $content)
@@ -71,11 +72,11 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 ) {
                     $this->getServiceLocator()->get("response")->setStatusCode(404);
 
-                    throw new \Exception("The selected organisation has no projects in our database");
+                    return;
                 }
 
-                /**
-                 * @var $organisationLink OrganisationLink
+                /*
+                 * @var OrganisationLink
                  */
                 $organisationLink = $this->serviceLocator->get('organisationLink');
                 $this->serviceLocator->get('headmeta')->setProperty(
@@ -167,7 +168,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
             $this->setDocRef($this->getRouteMatch()->getParam('docRef'));
         }
         foreach ($content->getContentParam() as $param) {
-            /**
+            /*
              * When the parameterId is 0 (so we want to get the article from the URL
              */
             switch ($param->getParameter()->getParam()) {
@@ -283,7 +284,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationMap(OrganisationService $organisationService)
     {
-        /**
+        /*
          * Collect the list of countries from the organisation and cluster
          */
         $countries = [$this->getOrganisationService()->getOrganisation()->getCountry()];
@@ -297,8 +298,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 ['countries' => $countries]
             );
         }
-        /**
-         * @var $countryMap CountryMap
+        /*
+         * @var CountryMap
          */
         $countryMap = $this->serviceLocator->get('countryMap');
 
@@ -327,7 +328,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     }
 
     /**
-     * Produce a list of organisation
+     * Produce a list of organisation.
      *
      * @param $page
      *
@@ -442,7 +443,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
             $this->getLimit()
         );
 
-        /**
+        /*
          * Parse the organisationService in to have the these functions available in the view
          */
         return $this->getRenderer()->render(

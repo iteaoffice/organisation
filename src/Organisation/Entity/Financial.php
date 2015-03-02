@@ -1,12 +1,13 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * Debranova copyright message placeholder.
  *
  * @category    Organisation
- * @package     Entity
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
+
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +17,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
- * OrganisationFinancial
+ * OrganisationFinancial.
  *
  * @ORM\Table(name="organisation_financial")
  * @ORM\Entity
@@ -36,7 +37,7 @@ class Financial extends EntityAbstract
     const NO_EMAIL_DELIVERY          = 0;
     const EMAIL_DELIVERY             = 1;
     /**
-     * Textual versions of the vat status
+     * Textual versions of the vat status.
      *
      * @var array
      */
@@ -47,7 +48,7 @@ class Financial extends EntityAbstract
         self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
     );
     /**
-     * Textual versions of the vat shift
+     * Textual versions of the vat shift.
      *
      * @var array
      */
@@ -56,7 +57,7 @@ class Financial extends EntityAbstract
         self::VAT_SHIFT     => 'txt-vat-shift',
     );
     /**
-     * Textual versions of the vat shift
+     * Textual versions of the vat shift.
      *
      * @var array
      */
@@ -65,7 +66,7 @@ class Financial extends EntityAbstract
         self::OMIT_CONTACT    => 'txt-omit-contact',
     );
     /**
-     * Textual versions of the email templates
+     * Textual versions of the email templates.
      *
      * @var array
      */
@@ -74,7 +75,7 @@ class Financial extends EntityAbstract
         self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
     );
     /**
-     * Textual versions of the vat shift
+     * Textual versions of the vat shift.
      *
      * @var array
      */
@@ -86,16 +87,19 @@ class Financial extends EntityAbstract
      * @ORM\Column(name="financial_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
     /**
      * @ORM\Column(name="vat", type="string", length=40, nullable=true)
+     *
      * @var string
      */
     private $vat;
     /**
      * @ORM\Column(name="date_vat", type="datetime", nullable=true)
+     *
      * @var \DateTime
      */
     private $dateVat;
@@ -104,6 +108,7 @@ class Financial extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"vatStatusTemplates"})
      * @Annotation\Attributes({"label":"txt-vat-status"})
+     *
      * @var int
      */
     private $vatStatus;
@@ -112,6 +117,7 @@ class Financial extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="debtor", referencedColumnName="organisation_id", nullable=true)
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $debtor;
@@ -120,7 +126,9 @@ class Financial extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"shiftVatTemplates"})
      * @Annotation\Attributes({"label":"txt-shift-vat"})
+     *
      * @deprecated
+     *
      * @var int
      */
     private $shiftVat;
@@ -129,16 +137,19 @@ class Financial extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"omitContactTemplates"})
      * @Annotation\Attributes({"label":"txt-omit-contact"})
+     *
      * @var int
      */
     private $omitContact;
     /**
      * @ORM\Column(name="iban", type="string", length=40, nullable=true)
+     *
      * @var string
      */
     private $iban;
     /**
      * @ORM\Column(name="bic", type="string", length=40, nullable=true)
+     *
      * @var string
      */
     private $bic;
@@ -147,6 +158,7 @@ class Financial extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"requiredPurchaseOrderTemplates"})
      * @Annotation\Attributes({"label":"txt-required-purchase-order"})
+     *
      * @var int
      */
     private $requiredPurchaseOrder;
@@ -155,6 +167,7 @@ class Financial extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"emailTemplates"})
      * @Annotation\Attributes({"label":"txt-delivery-by-email-order"})
+     *
      * @var int
      */
     private $email;
@@ -163,12 +176,14 @@ class Financial extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
     /**
      * @ORM\OneToMany(targetEntity="\Invoice\Entity\FinancialRow", cascade={"persist"}, mappedBy="financial")
      * @Annotation\Exclude()
+     *
      * @var \Invoice\Entity\FinancialRow[]
      */
     private $financialRow;
@@ -197,8 +212,6 @@ class Financial extends EntityAbstract
     /**
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -207,7 +220,8 @@ class Financial extends EntityAbstract
 
     /**
      * ToString
-     * Return the id here for form population
+     * Return the id here for form population.
+     *
      * @return string
      */
     public function __toString()
@@ -218,7 +232,6 @@ class Financial extends EntityAbstract
     /**
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -262,7 +275,8 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * Needed for the hydration of form elements
+     * Needed for the hydration of form elements.
+     *
      * @return array
      */
     public function getArrayCopy()

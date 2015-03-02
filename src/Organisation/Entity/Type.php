@@ -1,12 +1,13 @@
 <?php
 /**
- * Debranova copyright message placeholder
+ * Debranova copyright message placeholder.
  *
  * @category    Organisation
- * @package     Entity
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 Debranova
  */
+
 namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
@@ -17,7 +18,7 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
- * Type
+ * Type.
  *
  * @ORM\Table(name="organisation_type")
  * @ORM\Entity
@@ -27,11 +28,11 @@ use Zend\InputFilter\InputFilterInterface;
 class Type extends EntityAbstract
 {
     /**
-     * Constant for a type without invoice
+     * Constant for a type without invoice.
      */
     const NO_INVOICE = 0;
     /**
-     * Constant for a type with a invoice
+     * Constant for a type with a invoice.
      */
     const INVOICE = 1;
 
@@ -45,7 +46,7 @@ class Type extends EntityAbstract
     const TYPE_OTHER = 7;
 
     /**
-     * Textual versions of the invoice
+     * Textual versions of the invoice.
      *
      * @var array
      */
@@ -58,6 +59,7 @@ class Type extends EntityAbstract
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
+     *
      * @var integer
      */
     private $id;
@@ -66,6 +68,7 @@ class Type extends EntityAbstract
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)
+     *
      * @var string
      */
     private $type;
@@ -74,6 +77,7 @@ class Type extends EntityAbstract
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)
+     *
      * @var string
      */
     private $description;
@@ -82,18 +86,20 @@ class Type extends EntityAbstract
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"invoiceTemplates"})
      * @Annotation\Attributes({"label":"txt-invoice"})
+     *
      * @var \int
      */
     private $invoice;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
+     *
      * @var \Organisation\Entity\Organisation[]
      */
     private $organisation;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
@@ -113,8 +119,6 @@ class Type extends EntityAbstract
     /**
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -123,7 +127,8 @@ class Type extends EntityAbstract
 
     /**
      * ToString
-     * Return the id here for form population
+     * Return the id here for form population.
+     *
      * @return string
      */
     public function __toString()
@@ -134,7 +139,6 @@ class Type extends EntityAbstract
     /**
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -195,7 +199,8 @@ class Type extends EntityAbstract
     }
 
     /**
-     * Needed for the hydration of form elements
+     * Needed for the hydration of form elements.
+     *
      * @return array
      */
     public function getArrayCopy()

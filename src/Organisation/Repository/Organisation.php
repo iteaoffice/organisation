@@ -1,12 +1,13 @@
 <?php
 /**
- * DebraNova copyright message placeholder
+ * DebraNova copyright message placeholder.
  *
  * @category    Organisation
- * @package     Repository
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\Repository;
 
 use Doctrine\ORM\AbstractQuery;
@@ -20,12 +21,11 @@ use Zend\Validator\EmailAddress;
 
 /**
  * @category    Organisation
- * @package     Repository
  */
 class Organisation extends EntityRepository
 {
     /**
-     * Give a list of organisations
+     * Give a list of organisations.
      *
      * @param   $onlyActive
      *
@@ -49,7 +49,7 @@ class Organisation extends EntityRepository
     }
 
     /**
-     * Give a list of organisations by country
+     * Give a list of organisations by country.
      *
      * @param Country $country
      * @param         $onlyActive
@@ -76,7 +76,7 @@ class Organisation extends EntityRepository
     }
 
     /**
-     * This is basic search for organisations (based on the name, number and description
+     * This is basic search for organisations (based on the name, number and description.
      *
      * @param string $searchItem
      * @param int    $maxResults
@@ -136,7 +136,7 @@ class Organisation extends EntityRepository
         $subSelect2->from('Organisation\Entity\Web', 'web2');
         $subSelect2->join('web2.organisation', 'wo2');
 
-        /**
+        /*
          * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
          */
         $validateEmail = new EmailAddress();
@@ -150,12 +150,12 @@ class Organisation extends EntityRepository
             )
         );
 
-        /**
+        /*
          * Limit on the country
          */
         $qb->andWhere('o.country = ?3');
         $qb->setParameter(3, $country->getId());
-        /**
+        /*
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
@@ -176,12 +176,12 @@ class Organisation extends EntityRepository
         $qb->select('o');
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
-        /**
+        /*
          * Limit on the country
          */
         $qb->andWhere('o.country = ?3');
         $qb->setParameter(3, $country->getId());
-        /**
+        /*
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
@@ -193,7 +193,7 @@ class Organisation extends EntityRepository
     }
 
     /**
-     * Find participants based on the given criteria
+     * Find participants based on the given criteria.
      *
      * @param Meeting    $meeting
      * @param Parameters $search
@@ -212,7 +212,7 @@ class Organisation extends EntityRepository
         $queryBuilder->leftJoin('o.logo', 'l');
         $queryBuilder->join('l.contentType', 'ct');
 
-        /**
+        /*
          * The search can be refined on country and type, include the results here
          */
         if ($search->get('country') && $search->get('country') !== '0') {
@@ -220,7 +220,7 @@ class Organisation extends EntityRepository
             $queryBuilder->andWhere('country.id = ?7');
             $queryBuilder->setParameter(7, $search->get('country'));
         }
-        /**
+        /*
          * The search can be refined on country and type, include the results here
          */
         if ($search->get('organisationType')) {
@@ -233,7 +233,7 @@ class Organisation extends EntityRepository
                 $queryBuilder->expr()->like('o.organisation', '?4')
             )
         );
-        /**
+        /*
          * Limit the results to the registered users
          */
         $subSelect = $this->_em->createQueryBuilder();

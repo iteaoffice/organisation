@@ -1,25 +1,23 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     View
- * @subpackage  Helper
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\Organisation;
 use Organisation\Service\OrganisationService;
 
 /**
- * Create a link to an organisation
+ * Create a link to an organisation.
  *
  * @category    Organisation
- * @package     View
- * @subpackage  Helper
  */
 class OrganisationLink extends LinkAbstract
 {
@@ -28,7 +26,7 @@ class OrganisationLink extends LinkAbstract
      */
     protected $organisationService;
     /**
-     * The branch of the organisation
+     * The branch of the organisation.
      *
      * @var string
      */
@@ -43,6 +41,7 @@ class OrganisationLink extends LinkAbstract
      * @param null                $alternativeShow
      *
      * @return string
+     *
      * @throws \RuntimeException
      * @throws \Exception
      */
@@ -57,7 +56,7 @@ class OrganisationLink extends LinkAbstract
         $this->setOrganisationService($organisationService);
         $this->setAction($action);
         $this->setShow($show);
-        /**
+        /*
          * If the alternativeShow is not null, use it an otherwise take the page
          */
         if (!is_null($alternativeShow)) {
@@ -67,7 +66,7 @@ class OrganisationLink extends LinkAbstract
         }
         $this->addRouterParam('entity', 'organisation');
         if (!$this->getOrganisationService()->isEmpty()) {
-            /**
+            /*
              * Set the non-standard options needed to give an other link value
              */
             $this->setShowOptions(
@@ -125,11 +124,11 @@ class OrganisationLink extends LinkAbstract
                 );
                 break;
             case 'list':
-                /**
+                /*
                  * For a list in the front-end simply use the MatchedRouteName
                  */
                 $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
-                /**
+                /*
                  * Push the docRef in the params array
                  */
                 $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));

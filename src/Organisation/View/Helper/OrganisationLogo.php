@@ -1,25 +1,23 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     View
- * @subpackage  Helper
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\Logo;
 use Organisation\Service;
 
 /**
- * Create a link to an organisation
+ * Create a link to an organisation.
  *
  * @category    Organisation
- * @package     View
- * @subpackage  Helper
  */
 class OrganisationLogo extends ImageAbstract
 {
@@ -36,13 +34,14 @@ class OrganisationLogo extends ImageAbstract
             return '';
         }
 
-        /**
-         * The company can have multiple logo's. We now take just the first one
-         * @var $logo Logo
+        /*
+         * The company can have multiple logo's. We now take just the first one.
+         *
+         * @var Logo
          */
         $logo = $organisationService->getOrganisation()->getLogo()->first();
 
-        /**
+        /*
          * Reset the classes
          */
         $this->setClasses([]);

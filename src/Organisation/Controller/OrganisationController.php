@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     Controller
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\Controller;
 
 use Organisation\Entity\Logo;
@@ -21,7 +22,6 @@ use Zend\View\Model\ViewModel;
 
 /**
  * @category    Organisation
- * @package     Controller
  */
 class OrganisationController extends AbstractActionController implements
     FormServiceAwareInterface,
@@ -37,7 +37,8 @@ class OrganisationController extends AbstractActionController implements
     protected $formService;
 
     /**
-     * Message container
+     * Message container.
+     *
      * @return array|void
      */
     public function indexAction()
@@ -45,7 +46,7 @@ class OrganisationController extends AbstractActionController implements
     }
 
     /**
-     * Give a list of organisations
+     * Give a list of organisations.
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -57,7 +58,7 @@ class OrganisationController extends AbstractActionController implements
     }
 
     /**
-     * Show the details of 1 organisation
+     * Show the details of 1 organisation.
      *
      * @return \Zend\View\Model\ViewModel
      */
@@ -72,22 +73,22 @@ class OrganisationController extends AbstractActionController implements
     }
 
     /**
-     * Show the details of 1 organisation
+     * Show the details of 1 organisation.
      *
      * @return \Zend\View\Model\ViewModel
      */
     public function logoAction()
     {
 
-        /**
-         * @var $logo Logo
+        /*
+         * @var Logo
          */
         $logo = $this->getOrganisationService()->findEntityById(
             'logo',
             $this->getEvent()->getRouteMatch()->getParam('id')
         );
 
-        /**
+        /*
          * Do a check if the given has is correct to avoid guessing the image
          */
         if (is_null($logo) || $this->getEvent()->getRouteMatch()->getParam('hash') !== $logo->getHash()) {
@@ -96,11 +97,11 @@ class OrganisationController extends AbstractActionController implements
 
         $file = stream_get_contents($logo->getOrganisationLogo());
 
-        /**
+        /*
          * Check if the file is cached and if not, create it
          */
         if (!file_exists($logo->getCacheFileName())) {
-            /**
+            /*
              * The file exists, but is it not updated?
              */
             file_put_contents($logo->getCacheFileName(), $file);
@@ -127,7 +128,7 @@ class OrganisationController extends AbstractActionController implements
         $maxResults = $this->getRequest()->getQuery()->get('max_rows');
         $countryId = $this->getRequest()->getQuery()->get('country');
         $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
-        /**
+        /*
          * Include a paginator to be able to have later paginated search results in pages
          */
         $paginator = new Paginator(new ArrayAdapter($searchResult));
@@ -162,7 +163,7 @@ class OrganisationController extends AbstractActionController implements
     }
 
     /**
-     * Gateway to the Organisation Service
+     * Gateway to the Organisation Service.
      *
      * @return OrganisationService
      */

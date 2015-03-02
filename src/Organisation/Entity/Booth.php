@@ -1,12 +1,13 @@
 <?php
 /**
- * ITEA copyright message placeholder
+ * ITEA copyright message placeholder.
  *
  * @category    Organisation
- * @package     Entity
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -14,18 +15,18 @@ use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
 
 /**
- * OrganisationBooth
+ * OrganisationBooth.
  *
  * @ORM\Table(name="organisation_booth")
  * @ORM\Entity
  */
 class Booth extends EntityAbstract
 {
-
     /**
      * @ORM\Column(name="organisation_booth_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
      * @var integer
      */
     private $id;
@@ -34,6 +35,7 @@ class Booth extends EntityAbstract
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="booth_id", referencedColumnName="booth_id", nullable=false)
      * })
+     *
      * @var \Event\Entity\Booth\Booth
      */
     private $booth;
@@ -42,6 +44,7 @@ class Booth extends EntityAbstract
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      * })
+     *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
@@ -50,19 +53,20 @@ class Booth extends EntityAbstract
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      * })
+     *
      * @var \Contact\Entity\Contact
      */
     private $contact;
 
     /**
-     * Class constructor
+     * Class constructor.
      */
     public function __construct()
     {
     }
 
     /**
-     * Magic Getter
+     * Magic Getter.
      *
      * @param $property
      *
@@ -74,12 +78,10 @@ class Booth extends EntityAbstract
     }
 
     /**
-     * Magic Setter
+     * Magic Setter.
      *
      * @param $property
      * @param $value
-     *
-     * @return void
      */
     public function __set($property, $value)
     {
@@ -95,11 +97,10 @@ class Booth extends EntityAbstract
     }
 
     /**
-     * Set input filter
+     * Set input filter.
      *
      * @param InputFilterInterface $inputFilter
      *
-     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
