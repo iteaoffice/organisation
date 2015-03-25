@@ -27,11 +27,12 @@ class Organisation extends EntityRepository
     /**
      * Give a list of organisations.
      *
-     * @param   $onlyActive
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
-    public function findOrganisations($onlyActive)
+    public function findOrganisations($onlyActiveProject, $onlyActivePartner)
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o');
@@ -40,8 +41,11 @@ class Organisation extends EntityRepository
         $qb->join('o.affiliation', 'a');
         $qb->join('a.project', 'p');
         //Limit to only the active projects
-        if ($onlyActive) {
+        if ($onlyActiveProject) {
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+        }
+        if ($onlyActivePartner) {
+            $qb->andWhere($qb->expr()->isNotNull('a.dateEnd'));
         }
         $qb->orderBy('o.organisation', 'ASC');
 
@@ -52,11 +56,12 @@ class Organisation extends EntityRepository
      * Give a list of organisations by country.
      *
      * @param Country $country
-     * @param         $onlyActive
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
-    public function findOrganisationByCountry(Country $country, $onlyActive)
+    public function findOrganisationByCountry(Country $country, $onlyActiveProject, $onlyActivePartner)
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o');
@@ -65,8 +70,11 @@ class Organisation extends EntityRepository
         $qb->join('o.affiliation', 'a');
         $qb->join('a.project', 'p');
         //Limit to only the active projects
-        if ($onlyActive) {
+        if ($onlyActiveProject) {
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+        }
+        if ($onlyActivePartner) {
+            $qb->andWhere($qb->expr()->isNotNull('a.dateEnd'));
         }
         $qb->andWhere('o.country = ?8');
         $qb->setParameter(8, $country);
@@ -81,27 +89,36 @@ class Organisation extends EntityRepository
      * @param string $searchItem
      * @param int    $maxResults
      * @param null   $countryId
-     * @param bool   $onlyActive
+     * @param bool   $onlyActiveProject
+     * @param bool   $onlyActivePartner
      *
      * @return Entity\Organisation[]
      */
-    public function searchOrganisations($searchItem, $maxResults = 12, $countryId = null, $onlyActive = true)
-    {
+    public function searchOrganisations(
+        $searchItem,
+        $maxResults = 12,
+        $countryId = null,
+        $onlyActiveProject = true,
+        $onlyActivePartner = true
+    ) {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o');
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
         $qb->andWhere('o.organisation LIKE :searchItem');
+        $qb->join('o.affiliation', 'a');
+        $qb->join('a.project', 'p');
         $qb->setParameter('searchItem', "%".$searchItem."%");
         if (!is_null($countryId)) {
             $qb->andWhere('o.country = ?3');
             $qb->setParameter(3, $countryId);
         }
         //Limit to only the active projects
-        if ($onlyActive) {
-            $qb->join('o.affiliation', 'a');
-            $qb->join('a.project', 'p');
+        if ($onlyActiveProject) {
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+        }
+        if ($onlyActivePartner) {
+            $qb->andWhere($qb->expr()->isNotNull('a.dateEnd'));
         }
         $qb->setMaxResults($maxResults);
         $qb->orderBy('o.organisation', 'ASC');

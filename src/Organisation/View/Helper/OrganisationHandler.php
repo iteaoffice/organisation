@@ -43,7 +43,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     /**
      * @param Content $content
      *
-     * @return string
+     * @return string|void
      *
      * @throws \Exception
      */
@@ -87,10 +87,9 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                     'og:title',
                     $this->getOrganisationService()->getOrganisation()->getOrganisation()
                 );
-                //$this->getView()->headMeta()->setProperty('og:description', $this->getOrganisationService()->getOrganisation()->getDescription());
                 $this->serviceLocator->get('headmeta')->setProperty(
                     'og:url',
-                    $organisationLink(
+                    $organisationLink->__invoke(
                         $this->getOrganisationService(),
                         'view',
                         'social'
@@ -303,7 +302,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
          */
         $countryMap = $this->serviceLocator->get('countryMap');
 
-        return $countryMap($countries);
+        return $countryMap->__invoke($countries);
     }
 
     /**
@@ -372,7 +371,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
             $organisationService->getOrganisation()->getId();
         $html = $this->getCache()->getItem($key, $success);
 
-        if (!$success) {
+        if (true || !$success) {
             $whichProjects = $this->getProjectService()->getOptions()->getProjectHasVersions(
             ) ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
 
@@ -381,7 +380,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
 
             $projects = $this->getProjectService()->findProjectByOrganisation(
                 $organisationService->getOrganisation(),
-                $whichProjects
+                $whichProjects,
+                true
             );
 
             $html = $this->getRenderer()->render(

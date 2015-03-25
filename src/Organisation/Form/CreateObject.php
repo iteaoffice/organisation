@@ -44,6 +44,7 @@ class CreateObject extends Form
         $objectFieldset->setUseAsBaseFieldset(true);
         $this->add($objectFieldset);
         $this->setAttribute('method', 'post');
+        $this->setAttribute('action', '');
 
         $this->add(
             [

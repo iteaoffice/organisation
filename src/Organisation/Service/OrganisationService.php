@@ -65,7 +65,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationByDocRef($docRef)
     {
         /*
-         * @var Organisation
+         * @var $organisation Organisation
          */
         $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
             ['docRef' => $docRef]
@@ -140,29 +140,31 @@ class OrganisationService extends ServiceAbstract
     /**
      * Give a list of organisations. A flag can be triggered to toggle only active projects.
      *
-     * @param bool $onlyActive
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
-    public function findOrganisations($onlyActive = true)
+    public function findOrganisations($onlyActiveProject = true, $onlyActivePartner = true)
     {
         return $this->getEntityManager()->getRepository(
             $this->getFullEntityName('organisation')
-        )->findOrganisations($onlyActive);
+        )->findOrganisations($onlyActiveProject, $onlyActivePartner);
     }
 
     /**
      * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
      *
      * @param Country $country
-     * @param bool    $onlyActive
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
-    public function findOrganisationByCountry(Country $country, $onlyActive = true)
+    public function findOrganisationByCountry(Country $country, $onlyActiveProject = true, $onlyActivePartner = true)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-            ->findOrganisationByCountry($country, $onlyActive);
+            ->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
     }
 
     /**
@@ -210,15 +212,15 @@ class OrganisationService extends ServiceAbstract
      * Produce a list of organisations for a project (only active).
      *
      * @param Project $project
-     * @param bool    $onlyActive
+     * @param bool    $onlyActiveProject
      *
      * @return OrganisationService[]
      */
-    public function findOrganisationByProject(Project $project, $onlyActive = true)
+    public function findOrganisationByProject(Project $project, $onlyActiveProject = true)
     {
         $organisations = [];
         foreach ($project->getAffiliation() as $affiliation) {
-            if ($onlyActive && is_null($affiliation->getDateEnd())) {
+            if ($onlyActiveProject && is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
                 $organisations[$affiliation->getOrganisation()->getOrganisation()] = $this->createServiceElement(
                     $affiliation->getOrganisation()
@@ -237,13 +239,13 @@ class OrganisationService extends ServiceAbstract
      * @param      $searchItem
      * @param      $maxResults
      * @param null $countryId
-     * @param bool $onlyActive
+     * @param bool $onlyActiveProject
      *
      * @return Organisation[]
      */
-    public function searchOrganisation($searchItem, $maxResults, $countryId = null, $onlyActive = true)
+    public function searchOrganisation($searchItem, $maxResults, $countryId = null, $onlyActiveProject = true)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-            ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActive);
+            ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActiveProject);
     }
 }
