@@ -47,10 +47,10 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $organisation;
     /**
-     * @ORM\OneToOne(targetEntity="\Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Contact\Entity\ContactOrganisation
+     * @var \Contact\Entity\ContactOrganisation[]
      */
     private $contactOrganisation;
     /**
@@ -274,6 +274,20 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Organisation\Entity\Booth[]|Collections\ArrayCollection()
      */
     private $organisationBooth;
+    /**
+     * @ORM\OneToMany(targetEntity="Invoice\Entity\Journal", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Invoice\Entity\Journal[]|Collections\ArrayCollection()
+     */
+    private $journal;
+    /**
+     * @ORM\OneToMany(targetEntity="Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Invoice\Entity\Reminder[]|Collections\ArrayCollection()
+     */
+    private $reminder;
 
     /**
      * Class constructor.
@@ -296,6 +310,8 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->boothFinancial = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
         $this->organisationBooth = new Collections\ArrayCollection();
+        $this->journal = new Collections\ArrayCollection();
+        $this->organisation = new Collections\ArrayCollection();
     }
 
     /**
@@ -335,7 +351,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        return (string) $this->organisation;
+        return (string)$this->organisation;
     }
 
     /**
@@ -462,7 +478,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Contact\Entity\ContactOrganisation $contactOrganisation
+     * @param \Contact\Entity\ContactOrganisation[] $contactOrganisation
      */
     public function setContactOrganisation($contactOrganisation)
     {
@@ -470,7 +486,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Contact\Entity\ContactOrganisation
+     * @return \Contact\Entity\ContactOrganisation[]
      */
     public function getContactOrganisation()
     {
@@ -858,5 +874,37 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setOrganisationBooth($organisationBooth)
     {
         $this->organisationBooth = $organisationBooth;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Journal[]
+     */
+    public function getJournal()
+    {
+        return $this->journal;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Journal[] $journal
+     */
+    public function setJournal($journal)
+    {
+        $this->journal = $journal;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Reminder[]
+     */
+    public function getReminder()
+    {
+        return $this->reminder;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Reminder[] $reminder
+     */
+    public function setReminder($reminder)
+    {
+        $this->reminder = $reminder;
     }
 }

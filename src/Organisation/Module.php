@@ -12,7 +12,6 @@
 
 namespace Organisation;
 
-use Organisation\Service\FormServiceAwareInterface;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
 
@@ -28,16 +27,16 @@ class Module implements
 {
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__.'/../../autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__.'/../../src/'.__NAMESPACE__,
-                ),
-            ),
-        );
+        return [
+            'Zend\Loader\ClassMapAutoloader' => [
+                __DIR__ . '/../../autoload_classmap.php',
+            ],
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
+                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
+                ],
+            ],
+        ];
     }
 
     /**
@@ -45,7 +44,7 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__.'/../../config/module.config.php';
+        return include __DIR__ . '/../../config/module.config.php';
     }
 
     /**
@@ -55,7 +54,7 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        return include __DIR__.'/../../config/services.config.php';
+        return include __DIR__ . '/../../config/services.config.php';
     }
 
     /**
@@ -65,7 +64,7 @@ class Module implements
      */
     public function getViewHelperConfig()
     {
-        return include __DIR__.'/../../config/viewhelpers.config.php';
+        return include __DIR__ . '/../../config/viewhelpers.config.php';
     }
 
     /**
@@ -73,17 +72,6 @@ class Module implements
      */
     public function getControllerConfig()
     {
-        return array(
-            'initializers' => array(
-                function ($instance, $sm) {
-                    if ($instance instanceof FormServiceAwareInterface) {
-                        $sm          = $sm->getServiceLocator();
-                        $formService = $sm->get('organisation_form_service');
-                        $instance->setFormService($formService);
-                    }
-                },
-            ),
-        );
     }
 
     /**

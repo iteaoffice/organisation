@@ -56,8 +56,8 @@ class Organisation extends EntityRepository
      * Give a list of organisations by country.
      *
      * @param Country $country
-     * @param bool    $onlyActiveProject
-     * @param bool    $onlyActivePartner
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -74,7 +74,7 @@ class Organisation extends EntityRepository
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
         }
         if ($onlyActivePartner) {
-            $qb->andWhere($qb->expr()->isNotNull('a.dateEnd'));
+            $qb->andWhere($qb->expr()->isNull('a.dateEnd'));
         }
         $qb->andWhere('o.country = ?8');
         $qb->setParameter(8, $country);
@@ -87,10 +87,10 @@ class Organisation extends EntityRepository
      * This is basic search for organisations (based on the name, number and description.
      *
      * @param string $searchItem
-     * @param int    $maxResults
-     * @param null   $countryId
-     * @param bool   $onlyActiveProject
-     * @param bool   $onlyActivePartner
+     * @param int $maxResults
+     * @param null $countryId
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return Entity\Organisation[]
      */
@@ -108,7 +108,7 @@ class Organisation extends EntityRepository
         $qb->andWhere('o.organisation LIKE :searchItem');
         $qb->join('o.affiliation', 'a');
         $qb->join('a.project', 'p');
-        $qb->setParameter('searchItem', "%".$searchItem."%");
+        $qb->setParameter('searchItem', "%" . $searchItem . "%");
         if (!is_null($countryId)) {
             $qb->andWhere('o.country = ?3');
             $qb->setParameter(3, $countryId);
@@ -158,7 +158,7 @@ class Organisation extends EntityRepository
          */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($emailAddress);
-        $qb->setParameter('domain', "%".$validateEmail->hostname."%");
+        $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
         //We want a match on the email address
         $qb->andWhere(
             $qb->expr()->orX(
@@ -176,7 +176,43 @@ class Organisation extends EntityRepository
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%".$name."%");
+        $qb->setParameter('searchItem', "%" . $name . "%");
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param         $emailAddress
+     *
+     * @return Entity\Organisation[]|null
+     */
+    public function findOrganisationByEmailAddress($emailAddress)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('o');
+        $qb->distinct('o.id');
+        $qb->from('Organisation\Entity\Organisation', 'o');
+        $qb->join('o.country', 'c');
+
+
+        $subSelect = $this->_em->createQueryBuilder();
+        $subSelect->select('wo');
+        $subSelect->from('Organisation\Entity\Web', 'w');
+        $subSelect->join('w.organisation', 'wo');
+        $subSelect->andWhere('w.web LIKE :domain');
+
+        /**
+         * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
+         */
+        $validateEmail = new EmailAddress();
+        $validateEmail->isValid($emailAddress);
+        $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
+        //We want a match on the email address
+        $qb->andWhere($qb->expr()->in('o.id', $subSelect->getDQL()));
+
+        $qb->addOrderBy('c.country', 'ASC');
+        $qb->addOrderBy('o.organisation', 'ASC');
+
 
         return $qb->getQuery()->getResult();
     }
@@ -202,7 +238,7 @@ class Organisation extends EntityRepository
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%".$name."%");
+        $qb->setParameter('searchItem', "%" . $name . "%");
 
         $qb->setMaxResults(1);
 
@@ -212,7 +248,7 @@ class Organisation extends EntityRepository
     /**
      * Find participants based on the given criteria.
      *
-     * @param Meeting    $meeting
+     * @param Meeting $meeting
      * @param Parameters $search
      *
      * @return Registration[]
@@ -266,7 +302,7 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter(1, $meeting->getId());
         $queryBuilder->setParameter(2, Registration::NOT_HIDE_IN_LIST);
         $queryBuilder->setParameter(3, Registration::NOT_OVERBOOKED);
-        $queryBuilder->setParameter(4, '%'.$search->get('search').'%');
+        $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
         $queryBuilder->addOrderBy('o.organisation', 'ASC');
 
         return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);

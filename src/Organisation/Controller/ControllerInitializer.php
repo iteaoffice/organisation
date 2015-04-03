@@ -13,7 +13,9 @@
 
 namespace Organisation\Controller;
 
+use Organisation\Service\FormService;
 use Organisation\Service\FormServiceAwareInterface;
+use Organisation\Service\OrganisationService;
 use Organisation\Service\OrganisationServiceAwareInterface;
 use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\InitializerInterface;
@@ -33,8 +35,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ControllerInitializer implements InitializerInterface
 {
     /**
-     * @param                                           $instance
+     * @param string $instance
      * @param ServiceLocatorInterface|ControllerManager $controllerManager
+     *
+     * @return null
      */
     public function initialize($instance, ServiceLocatorInterface $controllerManager)
     {
@@ -42,8 +46,8 @@ class ControllerInitializer implements InitializerInterface
             return;
         }
         $arrayCheck = [
-            FormServiceAwareInterface::class         => 'organisation_form_service',
-            OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
+            OrganisationServiceAwareInterface::class => OrganisationService::class,
+            FormServiceAwareInterface::class         => FormService::class,
         ];
         /*
          * @var $controllerManager ControllerManager

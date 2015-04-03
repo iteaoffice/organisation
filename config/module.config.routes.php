@@ -7,132 +7,160 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-return array(
-    'router' => array(
-        'routes' => array(
-            'assets'       => array(
+use Organisation\Controller\JsonController;
+
+return [
+    'router' => [
+        'routes' => [
+            'assets'       => [
                 'type'          => 'Literal',
-                'options'       => array(
+                'options'       => [
                     'route'    => '/assets/' . (defined("DEBRANOVA_HOST") ? DEBRANOVA_HOST : 'test'),
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'organisation-index',
                         'action'     => 'index',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes'  => array(
-                    'organisation-logo' => array(
+                'child_routes'  => [
+                    'organisation-logo' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => "/organisation-logo/[:id]-[:hash].[:ext]",
-                            'defaults' => array(
+                            'defaults' => [
                                 //Explicitly add the controller here as the assets are collected
                                 'controller' => 'organisation-index',
                                 'action'     => 'logo',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-            'organisation' => array(
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'organisation' => [
                 'type'          => 'Literal',
                 'priority'      => 1000,
-                'options'       => array(
+                'options'       => [
                     'route'    => '/organisation',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => 'organisation-index',
                         'action'     => 'index',
-                    ),
-                ),
+                    ],
+                ],
                 'may_terminate' => true,
-                'child_routes'  => array(
-                    'search' => array(
+                'child_routes'  => [
+                    'json'   => [
+                        'type'         => 'Segment',
+                        'options'      => [
+                            'route'    => '/json',
+                            'defaults' => [
+                                'controller' => JsonController::class,
+                                'action'     => 'get-branch',
+                            ]
+                        ],
+                        'child_routes' => [
+                            'get-branches' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/get-branches.json',
+                                    'defaults' => [
+                                        'controller' => JsonController::class,
+                                        'action'     => 'get-branches',
+                                    ],
+                                    'query'    => [
+                                        'organisationId' => null
+                                    ]
+                                ]
+                            ],
+                        ]
+
+                    ],
+                    'search' => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'    => '/search',
-                            'defaults' => array(
+                            'defaults' => [
                                 'action' => 'search',
-                            ),
-                        ),
-                    ),
-                    'logo'   => array(
+                            ],
+                        ],
+                    ],
+                    'logo'   => [
                         'type'    => 'Segment',
-                        'options' => array(
+                        'options' => [
                             'route'       => '/logo/[:id].[:ext]',
-                            'constraints' => array(
+                            'constraints' => [
                                 'id' => '\d+',
-                            ),
-                            'defaults'    => array(
+                            ],
+                            'defaults'    => [
                                 'action' => 'logo',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-            'zfcadmin'     => array(
-                'child_routes' => array(
-                    'organisation-manager' => array(
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'zfcadmin'     => [
+                'child_routes' => [
+                    'organisation-manager' => [
                         'type'          => 'Segment',
                         'priority'      => 1000,
-                        'options'       => array(
+                        'options'       => [
                             'route'    => '/organisation',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'organisation-manager',
                                 'action'     => 'index',
-                            ),
-                        ),
+                            ],
+                        ],
                         'may_terminate' => true,
-                        'child_routes'  => array(
-                            'list'   => array(
+                        'child_routes'  => [
+                            'list'   => [
                                 'type'     => 'Segment',
                                 'priority' => 1000,
-                                'options'  => array(
+                                'options'  => [
                                     'route'    => '/list[/:page].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'list',
-                                    ),
-                                ),
-                            ),
-                            'new'    => array(
+                                    ],
+                                ],
+                            ],
+                            'new'    => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/new.html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'new',
-                                    ),
-                                ),
-                            ),
-                            'view'   => array(
+                                    ],
+                                ],
+                            ],
+                            'view'   => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/view/[:id].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'view',
-                                    ),
-                                ),
-                            ),
-                            'edit'   => array(
+                                    ],
+                                ],
+                            ],
+                            'edit'   => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/edit/[:id].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'edit',
-                                    ),
-                                ),
-                            ),
-                            'delete' => array(
+                                    ],
+                                ],
+                            ],
+                            'delete' => [
                                 'type'    => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route'    => '/delete/[:id].html',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         'action' => 'delete',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-);
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

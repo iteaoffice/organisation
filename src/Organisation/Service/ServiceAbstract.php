@@ -66,10 +66,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function newEntity(EntityAbstract $entity)
     {
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
-
-        return $entity;
+        return $this->updateEntity($entity);
     }
 
     /**

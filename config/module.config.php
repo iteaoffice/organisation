@@ -9,6 +9,11 @@
  */
 use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
 use Organisation\Controller\ControllerInitializer;
+use Organisation\Controller\JsonController;
+use Organisation\Controller\OrganisationController;
+use Organisation\Controller\OrganisationManagerController;
+use Organisation\Service\FormService;
+use Organisation\Service\OrganisationService;
 use Organisation\Service\ServiceInitializer;
 use Organisation\View\Helper\CreateLogoFromArray;
 use Organisation\View\Helper\CreateOrganisationFromArray;
@@ -20,15 +25,18 @@ $config = [
             ControllerInitializer::class
         ],
         'invokables'   => [
-            'organisation-index'   => 'Organisation\Controller\OrganisationController',
-            'organisation-manager' => 'Organisation\Controller\OrganisationManagerController',
+            OrganisationController::class        => OrganisationController::class,
+            OrganisationManagerController::class => OrganisationManagerController::class,
+            JsonController::class                => JsonController::class,
         ],
     ],
     'view_manager'    => [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
     'view_helpers'    => [
-        'initializers' => [ViewHelperInitializer::class],
+        'initializers' => [
+            ViewHelperInitializer::class
+        ],
         'invokables'   => [
             'createLogoFromArray'         => CreateLogoFromArray::class,
             'createOrganisationFromArray' => CreateOrganisationFromArray::class,
@@ -39,16 +47,17 @@ $config = [
         ]
     ],
     'service_manager' => [
-        'initializers' => [ServiceInitializer::class],
+        'initializers' => [
+            ServiceInitializer::class
+        ],
         'factories'    => [
             'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory',
             'organisation_cache'         => 'Organisation\Service\CacheFactory',
         ],
         'invokables'   => [
-            OrganisationAssertion::class            => OrganisationAssertion::class,
-            'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
-            'organisation_form_service'             => 'Organisation\Service\FormService',
-            'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation',
+            OrganisationAssertion::class => OrganisationAssertion::class,
+            OrganisationService::class   => OrganisationService::class,
+            FormService::class           => FormService::class
         ]
     ],
     'doctrine'        => [
@@ -57,7 +66,11 @@ $config = [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'paths' => [__DIR__ . '/../src/Organisation/Entity/']
             ],
-            'orm_default'                    => ['drivers' => ['Organisation\Entity' => 'organisation_annotation_driver',]]
+            'orm_default'                    => [
+                'drivers' => [
+                    'Organisation\Entity' => 'organisation_annotation_driver',
+                ]
+            ]
         ],
         'eventmanager' => [
             'orm_default' => [

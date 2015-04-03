@@ -10,6 +10,7 @@
 
 namespace Organisation\Entity;
 
+use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
@@ -24,65 +25,65 @@ use Zend\InputFilter\InputFilterInterface;
  */
 class Financial extends EntityAbstract
 {
-    const VAT_STATUS_UNDEFINED       = 0;
-    const VAT_STATUS_VALID           = 1;
-    const VAT_STATUS_INVALID         = 2;
-    const VAT_STATUS_UNCHECKED       = 3;
-    const VAT_NOT_SHIFT              = 0;
-    const VAT_SHIFT                  = 1;
-    const NO_OMIT_CONTACT            = 0;
-    const OMIT_CONTACT               = 1;
+    const VAT_STATUS_UNDEFINED = 0;
+    const VAT_STATUS_VALID = 1;
+    const VAT_STATUS_INVALID = 2;
+    const VAT_STATUS_UNCHECKED = 3;
+    const VAT_NOT_SHIFT = 0;
+    const VAT_SHIFT = 1;
+    const NO_OMIT_CONTACT = 0;
+    const OMIT_CONTACT = 1;
     const NO_REQUIRED_PURCHASE_ORDER = 0;
-    const REQUIRED_PURCHASE_ORDER    = 1;
-    const NO_EMAIL_DELIVERY          = 0;
-    const EMAIL_DELIVERY             = 1;
+    const REQUIRED_PURCHASE_ORDER = 1;
+    const NO_EMAIL_DELIVERY = 0;
+    const EMAIL_DELIVERY = 1;
     /**
      * Textual versions of the vat status.
      *
      * @var array
      */
-    protected $vatStatusTemplates = array(
+    protected $vatStatusTemplates = [
         self::VAT_STATUS_UNDEFINED => 'txt-vat-status-undefined',
         self::VAT_STATUS_VALID     => 'txt-vat-status-valid',
         self::VAT_STATUS_INVALID   => 'txt-vat-status-invalid',
         self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
-    );
+    ];
     /**
      * Textual versions of the vat shift.
      *
      * @var array
      */
-    protected $vatShiftTemplates = array(
+    protected $vatShiftTemplates = [
         self::VAT_NOT_SHIFT => 'txt-no-vat-shift',
         self::VAT_SHIFT     => 'txt-vat-shift',
-    );
+    ];
     /**
      * Textual versions of the vat shift.
      *
      * @var array
      */
-    protected $omitContactTemplates = array(
+    protected $omitContactTemplates = [
         self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
         self::OMIT_CONTACT    => 'txt-omit-contact',
-    );
+    ];
     /**
      * Textual versions of the email templates.
      *
      * @var array
      */
-    protected $emailTemplates = array(
+    protected $emailTemplates = [
         self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
         self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
-    );
+    ];
     /**
      * Textual versions of the vat shift.
      *
      * @var array
      */
-    protected $requiredPurchaseOrderTemplates = array(
+    protected $requiredPurchaseOrderTemplates = [
         self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
         self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
-    );
+    ];
     /**
      * @ORM\Column(name="financial_id", type="integer", nullable=false)
      * @ORM\Id
@@ -181,22 +182,44 @@ class Financial extends EntityAbstract
      */
     private $organisation;
     /**
-     * @ORM\OneToMany(targetEntity="\Invoice\Entity\FinancialRow", cascade={"persist"}, mappedBy="financial")
+     * @ORM\OneToMany(targetEntity="\Invoice\Entity\Financial\Row", cascade={"persist"}, mappedBy="financial")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\FinancialRow[]
+     * @var \Invoice\Entity\Financial\Row[]
      */
     private $financialRow;
+    /**
+     * @ORM\ManyToMany(targetEntity="General\Entity\VatType", cascade="persist", inversedBy="organisationFinancial")
+     * @ORM\JoinTable(name="vat_type_financial",
+     *            joinColumns={@ORM\JoinColumn(name="financial_id", referencedColumnName="financial_id")},
+     *            inverseJoinColumns={@ORM\JoinColumn(name="type_id", referencedColumnName="type_id")}
+     * )
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
+     * @Annotation\Options({"target_class":"General\Entity\VatType"})
+     * @Annotation\Attributes({"label":"txt-vat-type"})
+     *
+     * @var \General\Entity\VatType[]|Collections\ArrayCollection
+     */
+    private $vatType;
+    /**
+     * @ORM\OneToMany(targetEntity="\Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="financial")
+     * @Annotation\Exclude()
+     *
+     * @var \Invoice\Entity\Reminder[]
+     */
+    private $reminder;
 
     /**
      *
      */
     public function __construct()
     {
-        $this->vatStatus             = self::VAT_STATUS_UNCHECKED;
-        $this->shiftVat              = self::VAT_NOT_SHIFT;
-        $this->omitContact           = self::NO_OMIT_CONTACT;
+        $this->vatStatus = self::VAT_STATUS_UNCHECKED;
+        $this->shiftVat = self::VAT_NOT_SHIFT;
+        $this->omitContact = self::NO_OMIT_CONTACT;
         $this->requiredPurchaseOrder = self::REQUIRED_PURCHASE_ORDER;
+        $this->vatType = new Collections\ArrayCollection();
+        $this->reminder = new Collections\ArrayCollection();
     }
 
     /**
@@ -226,12 +249,13 @@ class Financial extends EntityAbstract
      */
     public function __toString()
     {
-        return (string) $this->organisation;
+        return (string)$this->organisation;
     }
 
     /**
      * @param InputFilterInterface $inputFilter
      *
+     * @return void
      * @throws \Exception
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -246,27 +270,27 @@ class Financial extends EntityAbstract
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'vat',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name'    => 'StringLength',
-                                'options' => array(
+                                'options' => [
                                     'encoding' => 'UTF-8',
                                     'min'      => 1,
                                     'max'      => 255,
-                                ),
-                            ),
-                        ),
-                    )
+                                ],
+                            ],
+                        ],
+                    ]
                 )
             );
         }
@@ -281,9 +305,9 @@ class Financial extends EntityAbstract
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'vat' => $this->vat,
-        );
+        ];
     }
 
     /**
@@ -397,7 +421,7 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @param \Invoice\Entity\FinancialRow[] $financialRow
+     * @param \Invoice\Entity\Financial\Row[] $financialRow
      */
     public function setFinancialRow($financialRow)
     {
@@ -405,7 +429,7 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @return \Invoice\Entity\FinancialRow[]
+     * @return \Invoice\Entity\Financial\Row[]
      */
     public function getFinancialRow()
     {
@@ -538,5 +562,37 @@ class Financial extends EntityAbstract
     public function getVatStatus()
     {
         return $this->vatStatus;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\General\Entity\VatType[]
+     */
+    public function getVatType()
+    {
+        return $this->vatType;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\General\Entity\VatType[] $vatType
+     */
+    public function setVatType($vatType)
+    {
+        $this->vatType = $vatType;
+    }
+
+    /**
+     * @return \Invoice\Entity\Reminder[]
+     */
+    public function getReminder()
+    {
+        return $this->reminder;
+    }
+
+    /**
+     * @param \Invoice\Entity\Reminder[] $reminder
+     */
+    public function setReminder($reminder)
+    {
+        $this->reminder = $reminder;
     }
 }

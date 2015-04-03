@@ -29,10 +29,6 @@ use Zend\Stdlib\Parameters;
 class OrganisationService extends ServiceAbstract
 {
     /**
-     * @var OrganisationService
-     */
-    protected $organisationService;
-    /**
      * @var Organisation
      */
     protected $organisation;
@@ -96,13 +92,18 @@ class OrganisationService extends ServiceAbstract
 
     /**
      * @param $branch
+     * @param Organisation $organisation = null
      *
      * @return string
      */
-    public function parseOrganisationWithBranch($branch)
+    public function parseOrganisationWithBranch($branch, Organisation $organisation = null)
     {
+        if (is_null($organisation)) {
+            $organisation = $this->getOrganisation();
+        }
+
         return trim(
-            preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}'.$this->getOrganisation().' ${3}', $branch)
+            preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch)
         );
     }
 
@@ -156,8 +157,8 @@ class OrganisationService extends ServiceAbstract
      * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
      *
      * @param Country $country
-     * @param bool    $onlyActiveProject
-     * @param bool    $onlyActivePartner
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -168,11 +169,26 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @param Organisation $organisation
+     * @return array
+     */
+    public function findBranchesByOrganisation(Organisation $organisation)
+    {
+        $branches = [];
+
+        foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
+            $branches[$contactOrganisation->getBranch()] = $this->parseOrganisationWithBranch($contactOrganisation->getBranch());
+        }
+
+        return array_unique($branches);
+    }
+
+    /**
      * Find a country based on three criteria: Name, CountryObject and the email address.
      *
-     * @param string  $name
+     * @param string $name
      * @param Country $country
-     * @param string  $emailAddress
+     * @param string $emailAddress
      *
      * @return Organisation[]
      */
@@ -185,7 +201,7 @@ class OrganisationService extends ServiceAbstract
     /**
      * Find a country based on three criteria: Name, CountryObject.
      *
-     * @param string  $name
+     * @param string $name
      * @param Country $country
      *
      * @return Organisation
@@ -197,7 +213,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param Meeting    $meeting
+     * @param Meeting $meeting
      * @param Parameters $search
      *
      * @return Organisation[]
@@ -212,7 +228,7 @@ class OrganisationService extends ServiceAbstract
      * Produce a list of organisations for a project (only active).
      *
      * @param Project $project
-     * @param bool    $onlyActiveProject
+     * @param bool $onlyActiveProject
      *
      * @return OrganisationService[]
      */
