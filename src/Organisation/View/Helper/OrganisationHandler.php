@@ -240,7 +240,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function getOrganisationService()
     {
-        return $this->getServiceLocator()->get('organisation_organisation_service');
+        return $this->getServiceLocator()->get(OrganisationService::class);
     }
 
     /**

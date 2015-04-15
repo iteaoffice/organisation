@@ -194,6 +194,9 @@ class Organisation extends EntityRepository
         $qb->from('Organisation\Entity\Organisation', 'o');
         $qb->join('o.country', 'c');
 
+        //Inner join on contact_organisations to only have active organisations
+        $qb->join('o.contactOrganisation', 'co');
+
 
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('wo');

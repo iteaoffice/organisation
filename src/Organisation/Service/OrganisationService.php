@@ -14,6 +14,7 @@ use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
+use Program\Entity\Program;
 use Project\Entity\Project;
 use Zend\Stdlib\Parameters;
 
@@ -238,7 +239,8 @@ class OrganisationService extends ServiceAbstract
         foreach ($project->getAffiliation() as $affiliation) {
             if ($onlyActiveProject && is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
-                $organisations[$affiliation->getOrganisation()->getOrganisation()] = $this->createServiceElement(
+                $organisations[sprintf("%s-%s", $affiliation->getOrganisation()->getOrganisation(),
+                    $affiliation->getOrganisation()->getCountry()->getCountry())] = $this->createServiceElement(
                     $affiliation->getOrganisation()
                 );
             }
@@ -247,6 +249,25 @@ class OrganisationService extends ServiceAbstract
         ksort($organisations);
 
         return $organisations;
+    }
+
+    /**
+     * Checks if the affiliation has a DOA.
+     *
+     * @param Program $program
+     *
+     * @return bool
+     */
+    public function hasDoaForProgram(Program $program)
+    {
+
+        foreach ($this->organisation->getProgramDoa() as $doa) {
+            if ($doa->getProgram()->getId() === $program->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

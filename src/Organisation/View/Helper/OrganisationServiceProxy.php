@@ -34,7 +34,7 @@ class OrganisationServiceProxy extends AbstractHelper implements ServiceLocatorA
     public function __invoke(Organisation $organisation)
     {
         $organisationService = clone $this->serviceLocator->getServiceLocator()->get(
-            'organisation_organisation_service'
+            OrganisationService::class
         );
 
         return $organisationService->setOrganisation($organisation);

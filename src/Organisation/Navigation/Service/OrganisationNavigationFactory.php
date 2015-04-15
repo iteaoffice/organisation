@@ -31,46 +31,46 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @param array                   $pages
+     * @param array $pages
      *
      * @return array
      */
     public function getExtraPages(ServiceLocatorInterface $serviceLocator, array $pages)
     {
-        $application               = $serviceLocator->get('Application');
-        $this->routeMatch          = $application->getMvcEvent()->getRouteMatch();
-        $router                    = $application->getMvcEvent()->getRouter();
-        $this->organisationService = $serviceLocator->get('organisation_organisation_service');
-        $translate                 = $serviceLocator->get('viewhelpermanager')->get('translate');
+        $application = $serviceLocator->get('Application');
+        $this->routeMatch = $application->getMvcEvent()->getRouteMatch();
+        $router = $application->getMvcEvent()->getRouter();
+        $this->organisationService = $serviceLocator->get(OrganisationService::class);
+        $translate = $serviceLocator->get('viewhelpermanager')->get('translate');
         if (in_array(
             $this->routeMatch->getMatchedRouteName(),
-            array(
+            [
                 'zfcadmin/organisation-manager/view',
                 'zfcadmin/organisation-manager/edit',
-            )
+            ]
         )
         ) {
             $this->organisationService->setOrganisationId($this->routeMatch->getParam('id'));
             /*
              * Go over both arrays and check if the new entities can be added
              */
-            $pages['organisation']['pages']['view'] = array(
-                'label'      => (string) $this->organisationService->getOrganisation()->getOrganisation(),
+            $pages['organisation']['pages']['view'] = [
+                'label'      => (string)$this->organisationService->getOrganisation()->getOrganisation(),
                 'route'      => 'zfcadmin/organisation-manager/view',
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,
                 'active'     => true,
-                'params'     => array(
+                'params'     => [
                     'id' => $this->routeMatch->getParam('id'),
-                ),
-            );
+                ],
+            ];
         }
         if ($this->routeMatch->getMatchedRouteName() === 'zfcadmin/organisation-manager/edit') {
             $this->organisationService->setOrganisationId($this->routeMatch->getParam('id'));
             /*
              * Go over both arrays and check if the new entities can be added
              */
-            $pages['organisation']['pages']['organisation']['pages']['edit'] = array(
+            $pages['organisation']['pages']['organisation']['pages']['edit'] = [
                 'label'      => sprintf(
                     $translate("txt-edit-organisation-%s"),
                     $this->organisationService->getOrganisation()->getOrganisation()
@@ -79,10 +79,10 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,
                 'active'     => true,
-                'params'     => array(
+                'params'     => [
                     'id' => $this->routeMatch->getParam('id'),
-                ),
-            );
+                ],
+            ];
         }
 
         return $pages;
