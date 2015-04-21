@@ -144,6 +144,13 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 }
 
                 return $this->parseOrganisationMap($this->getOrganisationService());
+                
+            case 'organisation_logo':
+                if ($this->getOrganisationService()->isEmpty()) {
+                    return ("The selected organisation cannot be found");
+                }
+
+                return $this->parseOrganisationLogo($this->getOrganisationService());
 
             default:
                 return sprintf(
@@ -311,6 +318,19 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation-info',
+            ['organisationService' => $organisationService]
+        );
+    }
+    
+    /**
+     * @param OrganisationService $organisationService
+     *
+     * @return string
+     */
+    public function parseOrganisationLogo(OrganisationService $organisationService)
+    {
+        return $this->getRenderer()->render(
+            'organisation/partial/entity/organisation-logo',
             ['organisationService' => $organisationService]
         );
     }
