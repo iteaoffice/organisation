@@ -1,23 +1,21 @@
 {% if projects|length > 0 %}
-    <hr>
-    <h3>{{ translate("txt-organisation-project-list") }}</h3>
-    <div class="row">
-    {% for projectService in projects %}
-        <div class="col-xs-2">
-            <div class="thumbnail information-box">
-                <div class="information-box-image">
-                    <span class="information-box-helper"></span>
-                    {{ projectLogo(projectService, 'img-rounded') }}
-                </div>
-                <h3 class="information-box-title">
-                        {{ projectLink(projectService,'view','name-without-number') }}
-                </h3>
-            </div>
+<h3>{{ translate("txt-organisation-project-list") }}</h3>
+
+<div class="row">
+{% for projectService in projects %}
+     <div class="col-md-2">
+        <div class="thumbnail">
+            {% set projectImage = '<div class="information-box-image">' ~ projectLogo(projectService, 'img-responsive') ~ '</div>' %}
+            {{ projectLink(projectService,'view','alternativeShow',null,projectImage) }}
+            <p class="information-box-title text-center">
+                {{ projectLink(projectService,'view','name-without-number') }}
+            </p>
         </div>
-        {% if loop.index is divisibleby(5) %}
-            </div>
-            <div class="row">
-        {% endif %}
-    {% endfor %}
     </div>
+    {% if loop.index is divisibleby(6) %}
+</div>
+<div class="row">
+    {% endif %}
+    {% endfor %}
+</div>
 {% endif %}

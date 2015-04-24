@@ -51,8 +51,9 @@ $config = [
             ServiceInitializer::class
         ],
         'factories'    => [
-            'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory',
-            'organisation_cache'         => 'Organisation\Service\CacheFactory',
+            'organisation_module_config'    => 'Organisation\Service\ConfigServiceFactory',
+            'organisation_module_options'   => 'Organisation\Service\OptionServiceFactory',
+            'organisation_cache'            => 'Organisation\Service\CacheFactory',
         ],
         'invokables'   => [
             OrganisationAssertion::class => OrganisationAssertion::class,
@@ -87,6 +88,7 @@ $configFiles = [
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
     __DIR__ . '/module.config.organisation.php',
+    __DIR__ . '/module.option.organisation.php'
 ];
 foreach ($configFiles as $configFile) {
     $config = Zend\Stdlib\ArrayUtils::merge($config, include $configFile);

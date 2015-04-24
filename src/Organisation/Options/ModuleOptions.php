@@ -38,6 +38,20 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
      * @var bool
      */
     protected $useOrganisationMap = true;
+    
+    /**
+     * Color to use on country map.
+     *
+     * @var string
+     */
+    protected $countryColor = '#00a651';
+    
+    /**
+     * Color to use on country map for faded countries.
+     *
+     * @var string
+     */
+    protected $countryColorFaded = '#005C00';
 
     /**
      * @return bool
@@ -57,5 +71,49 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
         $this->useOrganisationMap = $useOrganisationMap;
 
         return $this;
+    }
+    
+    /**
+     * @param $countryColor
+     *
+     * @return ModuleOptions
+     */
+    public function setCountryColor($countryColor)
+    {
+        $this->countryColor = $countryColor;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryColor()
+    {
+        return $this->countryColor;
+    }
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @param string $countryColorFaded
+     *
+     * @return ModuleOptions
+     */
+    public function setCountryColorFaded($countryColorFaded)
+    {
+        $this->countryColorFaded = $countryColorFaded;
+
+        return $this;
+    }
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @return string
+     */
+    public function getCountryColorFaded()
+    {
+        return $this->countryColorFaded;
     }
 }

@@ -16,6 +16,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\View\Helper\CountryMap;
 use Organisation\Service\OrganisationService;
+use Organisation\Options\ModuleOptions;
 use Project\Service\ProjectService;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Mvc\Router\RouteMatch;
@@ -108,21 +109,20 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 }
 
                 return $this->parseOrganisationProjectList($this->getOrganisationService());
-                break;
+
             case 'organisation_metadata':
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationMetadata($this->getOrganisationService());
-                break;
+
             case 'organisation_article':
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationArticleList($this->getOrganisationService());
-                break;
 
             case 'organisation_title':
                 if ($this->getOrganisationService()->isEmpty()) {
@@ -130,7 +130,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 }
 
                 return $this->parseOrganisationTitle($this->getOrganisationService());
-                break;
 
             case 'organisation_info':
                 if ($this->getOrganisationService()->isEmpty()) {
@@ -138,7 +137,6 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 }
 
                 return $this->parseOrganisationInfo($this->getOrganisationService());
-                break;
 
             case 'organisation_map':
                 if ($this->getOrganisationService()->isEmpty()) {
@@ -146,7 +144,13 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 }
 
                 return $this->parseOrganisationMap($this->getOrganisationService());
-                break;
+                
+            case 'organisation_logo':
+                if ($this->getOrganisationService()->isEmpty()) {
+                    return ("The selected organisation cannot be found");
+                }
+
+                return $this->parseOrganisationLogo($this->getOrganisationService());
 
             default:
                 return sprintf(
@@ -286,23 +290,23 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         /*
          * Collect the list of countries from the organisation and cluster
          */
-        $countries = [$this->getOrganisationService()->getOrganisation()->getCountry()];
-        foreach ($this->getOrganisationService()->getOrganisation()->getClusterMember() as $cluster) {
+        $countries = [$organisationService->getOrganisation()->getCountry()];
+        foreach ($organisationService->getOrganisation()->getClusterMember() as $cluster) {
             $countries[] = $cluster->getOrganisation()->getCountry();
         }
-
-        if (DEBRANOVA_HOST == 'artemisia') {
-            return $this->getRenderer()->render(
-                'organisation/partial/entity/organisation-map',
-                ['countries' => $countries]
-            );
-        }
-        /*
+        $options = $this->getModuleOptions();
+        $mapOptions = [
+            'clickable' => false,
+            'colorMin' => $options->getCountryColorFaded(),
+            'colorMax' => $options->getCountryColor(),
+            'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height' => '340px'
+        ];
+        /**
          * @var CountryMap
          */
         $countryMap = $this->serviceLocator->get('countryMap');
-
-        return $countryMap->__invoke($countries);
+        return $countryMap->__invoke($countries, null, $mapOptions);
     }
 
     /**
@@ -314,6 +318,19 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         return $this->getRenderer()->render(
             'organisation/partial/entity/organisation-info',
+            ['organisationService' => $organisationService]
+        );
+    }
+    
+    /**
+     * @param OrganisationService $organisationService
+     *
+     * @return string
+     */
+    public function parseOrganisationLogo(OrganisationService $organisationService)
+    {
+        return $this->getRenderer()->render(
+            'organisation/partial/entity/organisation-logo',
             ['organisationService' => $organisationService]
         );
     }
@@ -408,6 +425,14 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     public function getCache()
     {
         return $this->getServiceLocator()->get('organisation_cache');
+    }
+    
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions()
+    {
+        return $this->getServiceLocator()->get('organisation_module_options');
     }
 
     /**
