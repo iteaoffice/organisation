@@ -84,6 +84,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
      */
     private $affiliation;
+
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -114,6 +115,13 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \General\Entity\Country
      */
     private $country;
+    /**
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Partner", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Project\Entity\Idea\Partner[]|Collections\ArrayCollection
+     */
+    private $ideaPartner;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Type", inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumns({
@@ -306,6 +314,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->logo = new Collections\ArrayCollection();
         $this->note = new Collections\ArrayCollection();
         $this->programDoa = new Collections\ArrayCollection();
+        $this->ideaPartner = new Collections\ArrayCollection();
         $this->invoice = new Collections\ArrayCollection();
         $this->boothFinancial = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
@@ -906,5 +915,24 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setReminder($reminder)
     {
         $this->reminder = $reminder;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Idea\Partner[]
+     */
+    public function getIdeaPartner()
+    {
+        return $this->ideaPartner;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
+     * @return Organisation
+     */
+    public function setIdeaPartner($ideaPartner)
+    {
+        $this->ideaPartner = $ideaPartner;
+
+        return $this;
     }
 }
