@@ -275,6 +275,13 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $member;
     /**
+     * @ORM\OneToOne(targetEntity="Member\Entity\Applicant", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @Annotation\Exclude()
+     *
+     * @var \Member\Entity\Applicant
+     */
+    private $applicant;
+    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
@@ -866,6 +873,23 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setMember($member)
     {
         $this->member = $member;
+    }
+
+
+    /**
+     * @return \Member\Entity\Applicant
+     */
+    public function getApplicant()
+    {
+        return $this->applicant;
+    }
+
+    /**
+     * @param \Member\Entity\Applicant $applicant
+     */
+    public function setApplicant($applicant)
+    {
+        $this->applicant = $applicant;
     }
 
     /**
