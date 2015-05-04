@@ -47,10 +47,10 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $organisation;
     /**
-     * @ORM\OneToOne(targetEntity="\Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Contact\Entity\ContactOrganisation
+     * @var \Contact\Entity\ContactOrganisation[]
      */
     private $contactOrganisation;
     /**
@@ -84,6 +84,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
      */
     private $affiliation;
+
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -115,6 +116,13 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $country;
     /**
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Partner", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Project\Entity\Idea\Partner[]|Collections\ArrayCollection
+     */
+    private $ideaPartner;
+    /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Type", inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="type_id", referencedColumnName="type_id", nullable=true)
@@ -133,7 +141,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      *      }
      * )
      * @Annotation\Attributes({"label":"txt-organisation-type"})
-     *
      * @var \Organisation\Entity\Type
      */
     private $type;
@@ -268,20 +275,26 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $member;
     /**
-     * @ORM\OneToOne(targetEntity="Member\Entity\Applicant", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
-     * @Annotation\Exclude()
-     *
-     * @var \Member\Entity\Applicant
-     */
-    private $applicant;
-
-    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Booth[]|Collections\ArrayCollection()
      */
     private $organisationBooth;
+    /**
+     * @ORM\OneToMany(targetEntity="Invoice\Entity\Journal", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Invoice\Entity\Journal[]|Collections\ArrayCollection()
+     */
+    private $journal;
+    /**
+     * @ORM\OneToMany(targetEntity="Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Invoice\Entity\Reminder[]|Collections\ArrayCollection()
+     */
+    private $reminder;
 
     /**
      * Class constructor.
@@ -300,10 +313,13 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->logo = new Collections\ArrayCollection();
         $this->note = new Collections\ArrayCollection();
         $this->programDoa = new Collections\ArrayCollection();
+        $this->ideaPartner = new Collections\ArrayCollection();
         $this->invoice = new Collections\ArrayCollection();
         $this->boothFinancial = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
         $this->organisationBooth = new Collections\ArrayCollection();
+        $this->journal = new Collections\ArrayCollection();
+        $this->organisation = new Collections\ArrayCollection();
     }
 
     /**
@@ -343,7 +359,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        return (string) $this->organisation;
+        return (string)$this->organisation;
     }
 
     /**
@@ -470,7 +486,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Contact\Entity\ContactOrganisation $contactOrganisation
+     * @param \Contact\Entity\ContactOrganisation[] $contactOrganisation
      */
     public function setContactOrganisation($contactOrganisation)
     {
@@ -478,7 +494,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Contact\Entity\ContactOrganisation
+     * @return \Contact\Entity\ContactOrganisation[]
      */
     public function getContactOrganisation()
     {
@@ -850,27 +866,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setMember($member)
     {
         $this->member = $member;
-        return $this;
-    }
-
-
-
-    /**
-     * @return \Member\Entity\Applicant
-     */
-    public function getApplicant()
-    {
-        return $this->applicant;
-    }
-
-    /**
-     * @param \Member\Entity\Applicant $applicant
-     * @return \Organisation\Entity\Organisation
-     */
-    public function setApplicant($applicant)
-    {
-        $this->applicant = $applicant;
-        return $this;
     }
 
     /**
@@ -887,5 +882,56 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setOrganisationBooth($organisationBooth)
     {
         $this->organisationBooth = $organisationBooth;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Journal[]
+     */
+    public function getJournal()
+    {
+        return $this->journal;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Journal[] $journal
+     */
+    public function setJournal($journal)
+    {
+        $this->journal = $journal;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Reminder[]
+     */
+    public function getReminder()
+    {
+        return $this->reminder;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Reminder[] $reminder
+     */
+    public function setReminder($reminder)
+    {
+        $this->reminder = $reminder;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Idea\Partner[]
+     */
+    public function getIdeaPartner()
+    {
+        return $this->ideaPartner;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
+     * @return Organisation
+     */
+    public function setIdeaPartner($ideaPartner)
+    {
+        $this->ideaPartner = $ideaPartner;
+
+        return $this;
     }
 }
