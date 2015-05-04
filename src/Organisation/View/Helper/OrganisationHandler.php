@@ -73,7 +73,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 ) {
                     $this->getServiceLocator()->get("response")->setStatusCode(404);
 
-                    return;
+                    return null;
                 }
 
                 /*
@@ -352,7 +352,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationList($page)
     {
-        $organisationQuery = $this->getOrganisationService()->findOrganisations(true);
+        $organisationQuery = $this->getOrganisationService()->findOrganisations(true, true);
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
         $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
         $paginator->setCurrentPageNumber($page);

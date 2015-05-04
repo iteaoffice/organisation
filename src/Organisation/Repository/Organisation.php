@@ -45,7 +45,7 @@ class Organisation extends EntityRepository
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
         }
         if ($onlyActivePartner) {
-            $qb->andWhere($qb->expr()->isNotNull('a.dateEnd'));
+            $qb->andWhere($qb->expr()->isNull('a.dateEnd'));
         }
         $qb->orderBy('o.organisation', 'ASC');
 
@@ -203,6 +203,7 @@ class Organisation extends EntityRepository
         $subSelect->from('Organisation\Entity\Web', 'w');
         $subSelect->join('w.organisation', 'wo');
         $subSelect->andWhere('w.web LIKE :domain');
+        $subSelect->andWhere($qb->expr()->notIn('w.web', ['gmail.com', 'hotmail.com', 'yahoo.com']));
 
         /**
          * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress

@@ -177,6 +177,8 @@ class OrganisationService extends ServiceAbstract
     {
         $branches = [];
 
+        $this->setOrganisation($organisation);
+
         foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
             $branches[$contactOrganisation->getBranch()] = $this->parseOrganisationWithBranch($contactOrganisation->getBranch());
         }
