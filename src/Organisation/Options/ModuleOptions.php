@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ARTEMIS-IA Office copyright message placeholder.
  *
@@ -10,7 +11,6 @@
  *
  * @link       http://debranova.org
  */
-
 namespace Organisation\Options;
 
 use Zend\Stdlib\AbstractOptions;
@@ -38,14 +38,14 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
      * @var bool
      */
     protected $useOrganisationMap = true;
-    
+
     /**
      * Color to use on country map.
      *
      * @var string
      */
     protected $countryColor = '#00a651';
-    
+
     /**
      * Color to use on country map for faded countries.
      *
@@ -72,7 +72,7 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
 
         return $this;
     }
-    
+
     /**
      * @param $countryColor
      *

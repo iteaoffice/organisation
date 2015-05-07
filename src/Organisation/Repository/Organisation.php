@@ -10,6 +10,7 @@
 
 namespace Organisation\Repository;
 
+use Contact\Entity\Contact;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Event\Entity\Meeting\Meeting;
@@ -219,6 +220,34 @@ class Organisation extends EntityRepository
 
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param Contact $contact
+     * @return array
+     */
+    public function findOrganisationForProfileEditByContact(Contact $contact)
+    {
+        $organisations = [];
+        //Start with your own organisation
+
+        if (!is_null($contact->getContactOrganisation())) {
+            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()] = $contact->getContactOrganisation()->getOrganisation();
+        }
+
+        foreach ($this->findOrganisationByEmailAddress($contact->getEmail()) as $organisation) {
+            $organisations[$organisation->getId()] = $organisation;
+        }
+
+        asort($organisations);
+
+        //Add an empty value
+        $emptyOrganisation = new Entity\Organisation();
+        $emptyOrganisation->setId(0);
+        $emptyOrganisation->setOrganisation('&mdash; None of the above');
+        $organisations[$emptyOrganisation->getId()] = $emptyOrganisation;
+
+        return $organisations;
     }
 
     /**
