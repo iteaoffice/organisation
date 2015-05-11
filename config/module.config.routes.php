@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 use Organisation\Controller\JsonController;
+use Organisation\Controller\OrganisationController;
+use Organisation\Controller\OrganisationManagerController;
 
 return [
     'router' => [
@@ -17,7 +19,7 @@ return [
                 'options'       => [
                     'route'    => '/assets/' . (defined("DEBRANOVA_HOST") ? DEBRANOVA_HOST : 'test'),
                     'defaults' => [
-                        'controller' => 'organisation-index',
+                        'controller' => OrganisationController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -29,7 +31,7 @@ return [
                             'route'    => "/organisation-logo/[:id]-[:hash].[:ext]",
                             'defaults' => [
                                 //Explicitly add the controller here as the assets are collected
-                                'controller' => 'organisation-index',
+                                'controller' => OrganisationController::class,
                                 'action'     => 'logo',
                             ],
                         ],
@@ -105,7 +107,7 @@ return [
                         'options'       => [
                             'route'    => '/organisation',
                             'defaults' => [
-                                'controller' => 'organisation-manager',
+                                'controller' => OrganisationManagerController::class,
                                 'action'     => 'index',
                             ],
                         ],
