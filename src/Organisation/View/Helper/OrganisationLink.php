@@ -72,9 +72,8 @@ class OrganisationLink extends LinkAbstract
             $this->setShowOptions(
                 [
                     'more' => $this->translate("txt-read-more"),
-                    'name' => $this->getOrganisationService()->parseOrganisationWithBranch(
-                        $this->getBranch()
-                    ),
+                    'name' => $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch()),
+                    'alternativeShow' => $this->getAlternativeShow()
                 ]
             );
             $this->addRouterParam('id', $this->getOrganisationService()->getOrganisation()->getId());
