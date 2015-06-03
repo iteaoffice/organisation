@@ -296,7 +296,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         }
         $options = $this->getModuleOptions();
         $mapOptions = [
-            'clickable' => false,
+            'clickable' => true,
             'colorMin' => $options->getCountryColorFaded(),
             'colorMax' => $options->getCountryColor(),
             'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
