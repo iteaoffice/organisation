@@ -15,5 +15,4 @@ namespace Organisation\Controller;
  */
 class OrganisationManagerController extends OrganisationAbstractController
 {
-
 }

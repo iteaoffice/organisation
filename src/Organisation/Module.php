@@ -12,8 +12,10 @@
 
 namespace Organisation;
 
+use Organisation\Controller\Plugin\GetFilter;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
+use Zend\Mvc\Controller\PluginManager;
 
 /**
  *
@@ -36,6 +38,21 @@ class Module implements
                     __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
                 ],
             ],
+        ];
+    }
+
+    /**
+     * Move this to here to have config cache working
+     * @return array
+     */
+    public function getControllerPluginConfig()
+    {
+        return [
+            'factories' => [
+                'getOrganisationFilter' => function (PluginManager $sm) {
+                    return new GetFilter();
+                },
+            ]
         ];
     }
 

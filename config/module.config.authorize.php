@@ -15,7 +15,7 @@ return [
     'bjyauthorize' => [
         /* Currently, only controller and route guards exist
          */
-        'guards'             => [
+        'guards' => [
             /* If this guard is specified here (i.e. it is enabled], it will block
              * access to all routes unless they are specified here.
              */
@@ -24,9 +24,13 @@ return [
                 ['route' => 'organisation/logo', 'roles' => []],
                 ['route' => 'organisation/search', 'roles' => []],
                 ['route' => 'organisation/json/get-branches', 'roles' => []],
-                ['route' => 'organisation-manager/list', 'roles' => ['office']],
-                ['route' => 'organisation-manager/edit', 'roles' => ['office']],
-                ['route' => 'organisation-manager/new', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/list', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/edit', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/view', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation-manager/list', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation-manager/edit', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation-manager/new', 'roles' => ['office']],
             ],
         ],
     ],

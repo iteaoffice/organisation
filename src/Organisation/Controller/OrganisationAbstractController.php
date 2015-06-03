@@ -9,12 +9,17 @@
  */
 namespace Organisation\Controller;
 
+use Affiliation\Service\AffiliationService;
+use Affiliation\Service\DoaService;
+use Affiliation\Service\LoiService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use General\Service\GeneralService;
+use Invoice\Service\InvoiceService;
 use Organisation\Service\FormService;
 use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\OrganisationServiceAwareInterface;
+use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
@@ -35,6 +40,26 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      * @var OrganisationService
      */
     protected $organisationService;
+    /**
+     * @var DoaService
+     */
+    protected $doaService;
+    /**
+     * @var LoiService
+     */
+    protected $loiService;
+    /**
+     * @var AffiliationService;
+     */
+    protected $affiliationService;
+    /**
+     * @var InvoiceService;
+     */
+    protected $invoiceService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
     /**
      * @var GeneralService
      */
@@ -120,5 +145,100 @@ abstract class OrganisationAbstractController extends AbstractActionController i
         $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
 
         return $translate($string);
+    }
+
+    /**
+     * @return InvoiceService
+     */
+    public function getInvoiceService()
+    {
+        return $this->invoiceService;
+    }
+
+    /**
+     * @param InvoiceService $invoiceService
+     * @return OrganisationAbstractController
+     */
+    public function setInvoiceService(InvoiceService $invoiceService)
+    {
+        $this->invoiceService = $invoiceService;
+
+        return $this;
+    }
+
+    /**
+     * @return ProjectService
+     */
+    public function getProjectService()
+    {
+        return $this->projectService;
+    }
+
+    /**
+     * @param ProjectService $projectService
+     * @return OrganisationAbstractController
+     */
+    public function setProjectService(ProjectService $projectService)
+    {
+        $this->projectService = $projectService;
+
+        return $this;
+    }
+
+    /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService()
+    {
+        return $this->affiliationService;
+    }
+
+    /**
+     * @param AffiliationService $affiliationService
+     * @return OrganisationAbstractController
+     */
+    public function setAffiliationService(AffiliationService $affiliationService)
+    {
+        $this->affiliationService = $affiliationService;
+
+        return $this;
+    }
+
+    /**
+     * @return DoaService
+     */
+    public function getDoaService()
+    {
+        return $this->doaService;
+    }
+
+    /**
+     * @param DoaService $doaService
+     * @return OrganisationAbstractController
+     */
+    public function setDoaService(DoaService $doaService)
+    {
+        $this->doaService = $doaService;
+
+        return $this;
+    }
+
+    /**
+     * @return LoiService
+     */
+    public function getLoiService()
+    {
+        return $this->loiService;
+    }
+
+    /**
+     * @param LoiService $loiService
+     * @return OrganisationAbstractController
+     */
+    public function setLoiService(LoiService $loiService)
+    {
+        $this->loiService = $loiService;
+
+        return $this;
     }
 }

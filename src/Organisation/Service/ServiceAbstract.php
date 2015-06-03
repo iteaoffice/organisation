@@ -10,6 +10,8 @@
 
 namespace Organisation\Service;
 
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query;
 use Organisation\Entity\EntityAbstract;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
@@ -22,6 +24,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceInterface
 {
+    /**
+     * @var Organisation
+     */
+    protected $organisation;
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -44,6 +50,23 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     public function findAll($entity, $toArray = false)
     {
         return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findAll();
+    }
+
+    /**
+     * @param string $entity
+     * @param  $filter
+     *
+     * @return Query
+     */
+    public function findEntitiesFiltered($entity, $filter)
+    {
+        $equipmentList = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findFiltered(
+            $filter,
+            AbstractQuery::HYDRATE_SIMPLEOBJECT
+        );
+
+
+        return $equipmentList;
     }
 
     /**
@@ -123,10 +146,10 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
          */
         if (strpos($entity, '-') !== false) {
             $entity = explode('-', $entity);
-            $entity = $entity[0].ucfirst($entity[1]);
+            $entity = $entity[0] . ucfirst($entity[1]);
         }
 
-        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))).'\\'.'Entity'.'\\'.ucfirst(
+        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))) . '\\' . 'Entity' . '\\' . ucfirst(
             $entity
         );
     }
@@ -165,7 +188,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     public function getEntityManager()
     {
         if (null === $this->entityManager) {
-            $this->entityManager = $this->getServiceLocator()->get('doctrine.entitymanager.orm_default');
+            $this->entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
         }
 
         return $this->entityManager;
@@ -181,5 +204,24 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
         }
 
         return $this->authenticationService;
+    }
+
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     * @return ServiceAbstract
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
     }
 }

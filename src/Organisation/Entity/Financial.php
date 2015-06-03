@@ -477,10 +477,15 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @param bool $textual
+     * @return int|text
      */
-    public function getOmitContact()
+    public function getOmitContact($textual = false)
     {
+        if ($textual) {
+            return $this->omitContactTemplates[$this->omitContact];
+        }
+
         return $this->omitContact;
     }
 
@@ -509,10 +514,15 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @param bool $textual
+     * @return int|string
      */
-    public function getRequiredPurchaseOrder()
+    public function getRequiredPurchaseOrder($textual = false)
     {
+        if ($textual) {
+            return $this->requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder];
+        }
+
         return $this->requiredPurchaseOrder;
     }
 
@@ -557,10 +567,15 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @return int
+     * @param bool $textual
+     * @return int|string
      */
-    public function getVatStatus()
+    public function getVatStatus($textual = false)
     {
+        if ($textual) {
+            return $this->vatStatusTemplates[$this->vatStatus];
+        }
+
         return $this->vatStatus;
     }
 

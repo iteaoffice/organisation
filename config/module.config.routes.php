@@ -8,6 +8,7 @@
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
 use Organisation\Controller\JsonController;
+use Organisation\Controller\OrganisationAdminController;
 use Organisation\Controller\OrganisationController;
 use Organisation\Controller\OrganisationManagerController;
 
@@ -19,7 +20,7 @@ return [
                 'options'       => [
                     'route'    => '/assets/' . (defined("DEBRANOVA_HOST") ? DEBRANOVA_HOST : 'test'),
                     'defaults' => [
-                        'controller' => OrganisationController::class,
+                        'controller' => organisationController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -31,7 +32,7 @@ return [
                             'route'    => "/organisation-logo/[:id]-[:hash].[:ext]",
                             'defaults' => [
                                 //Explicitly add the controller here as the assets are collected
-                                'controller' => OrganisationController::class,
+                                'controller' => organisationController::class,
                                 'action'     => 'logo',
                             ],
                         ],
@@ -44,7 +45,7 @@ return [
                 'options'       => [
                     'route'    => '/organisation',
                     'defaults' => [
-                        'controller' => 'organisation-index',
+                        'controller' => organisationController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -101,19 +102,70 @@ return [
             ],
             'zfcadmin'     => [
                 'child_routes' => [
-                    'organisation-manager' => [
+                    'organisation'         => [
                         'type'          => 'Segment',
                         'priority'      => 1000,
                         'options'       => [
                             'route'    => '/organisation',
                             'defaults' => [
-                                'controller' => OrganisationManagerController::class,
+                                'controller' => OrganisationAdminController::class,
                                 'action'     => 'index',
                             ],
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list'   => [
+                            'list' => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list',
+                                    ],
+                                ],
+                            ],
+                            'new'  => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/new.html',
+                                    'defaults' => [
+                                        'action' => 'new',
+                                    ],
+                                ],
+                            ],
+                            'view' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/view/[:id][/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'view',
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/edit/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'organisation-manager' => [
+                        'type'          => 'Segment',
+                        'priority'      => 1000,
+                        'options'       => [
+                            'route'    => '/organisation-manager',
+                            'defaults' => [
+                                'controller' => organisationManagerController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'may_terminate' => true,
+                        'child_routes'  => [
+                            'list' => [
                                 'type'     => 'Segment',
                                 'priority' => 1000,
                                 'options'  => [
@@ -123,7 +175,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'    => [
+                            'new'  => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/new.html',
@@ -132,7 +184,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'view'   => [
+                            'view' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/[:id].html',
@@ -141,7 +193,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit'   => [
+                            'edit' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/edit/[:id].html',
@@ -150,19 +202,10 @@ return [
                                     ],
                                 ],
                             ],
-                            'delete' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/delete/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'delete',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
 ];

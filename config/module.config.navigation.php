@@ -14,12 +14,12 @@ return [
             // And finally, here is where we define our page hierarchy
             'organisation' => [
                 'label'    => _("txt-organisation-admin"),
-                'route'    => 'zfcadmin/organisation-manager/list',
+                'route'    => 'zfcadmin/organisation/list',
                 'resource' => 'zfcadmin',
                 'pages'    => [
                     'organisations' => [
-                        'label' => "txt-organisations",
-                        'route' => 'zfcadmin/organisation-manager/list',
+                        'label' => "txt-organisation-list",
+                        'route' => 'zfcadmin/organisation/list',
                     ],
                 ],
             ],

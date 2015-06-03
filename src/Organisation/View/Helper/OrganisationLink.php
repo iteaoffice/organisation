@@ -34,11 +34,11 @@ class OrganisationLink extends LinkAbstract
 
     /**
      * @param OrganisationService $organisationService
-     * @param string              $action
-     * @param string              $show
-     * @param null                $branch
-     * @param null                $page
-     * @param null                $alternativeShow
+     * @param string $action
+     * @param string $show
+     * @param null $branch
+     * @param null $page
+     * @param null $alternativeShow
      *
      * @return string
      *
@@ -56,14 +56,11 @@ class OrganisationLink extends LinkAbstract
         $this->setOrganisationService($organisationService);
         $this->setAction($action);
         $this->setShow($show);
+        $this->setBranch($branch);
         /*
          * If the alternativeShow is not null, use it an otherwise take the page
          */
-        if (!is_null($alternativeShow)) {
-            $this->setAlternativeShow($alternativeShow);
-        } else {
-            $this->setAlternativeShow($page);
-        }
+        $this->setAlternativeShow($alternativeShow);
         $this->addRouterParam('entity', 'organisation');
         if (!$this->getOrganisationService()->isEmpty()) {
             /*
@@ -71,8 +68,8 @@ class OrganisationLink extends LinkAbstract
              */
             $this->setShowOptions(
                 [
-                    'more' => $this->translate("txt-read-more"),
-                    'name' => $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch()),
+                    'more'            => $this->translate("txt-read-more"),
+                    'name'            => $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch()),
                     'alternativeShow' => $this->getAlternativeShow()
                 ]
             );
@@ -111,8 +108,13 @@ class OrganisationLink extends LinkAbstract
                 $this->setRouter('zfcadmin/organisation-manager/new');
                 $this->setText($this->translate("txt-new-organisation"));
                 break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/organisation/view');
+                $this->setText(sprintf($this->translate("txt-view-organisation-%s"),
+                    $this->getOrganisationService()->getOrganisation()));
+                break;
             case 'edit':
-                $this->setRouter('zfcadmin/organisation-manager/edit');
+                $this->setRouter('zfcadmin/organisation/edit');
                 $this->setText(
                     sprintf(
                         $this->translate("txt-edit-organisation-%s"),
@@ -136,7 +138,7 @@ class OrganisationLink extends LinkAbstract
             case 'view':
                 $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
                 $this->setRouter(
-                    'route-'.$this->getOrganisationService()->getOrganisation()->get("underscore_full_entity_name")
+                    'route-' . $this->getOrganisationService()->getOrganisation()->get("underscore_full_entity_name")
                 );
                 $this->setText(
                     sprintf(
@@ -149,9 +151,9 @@ class OrganisationLink extends LinkAbstract
                 break;
             case 'view-article':
                 $this->setRouter(
-                    'route-'.$this->getOrganisationService()->getOrganisation()->get(
+                    'route-' . $this->getOrganisationService()->getOrganisation()->get(
                         "underscore_full_entity_name"
-                    ).'-article'
+                    ) . '-article'
                 );
                 $this->setText(
                     sprintf(
@@ -175,7 +177,7 @@ class OrganisationLink extends LinkAbstract
     {
         if (is_null($this->organisationService)) {
             $this->organisationService = new OrganisationService();
-            $organisation              = new Organisation();
+            $organisation = new Organisation();
             $this->organisationService->setOrganisation($organisation);
         }
 

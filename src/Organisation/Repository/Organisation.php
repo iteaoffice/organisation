@@ -13,6 +13,7 @@ namespace Organisation\Repository;
 use Contact\Entity\Contact;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
 use General\Entity\Country;
@@ -25,6 +26,46 @@ use Zend\Validator\EmailAddress;
  */
 class Organisation extends EntityRepository
 {
+    /**
+     * @param array $filter
+     * @return Query
+     */
+    public function findFiltered(array $filter)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('o');
+        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
+
+
+        if (array_key_exists('search', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
+            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+        }
+
+        if (array_key_exists('type', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->in('o.type', implode($filter['type'], ', ')));
+        }
+
+        $direction = 'ASC';
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
+            $direction = strtoupper($filter['direction']);
+        }
+
+        switch ($filter['order']) {
+            case 'lastUpdate':
+                $queryBuilder->addOrderBy('o.lastUpdate', $direction);
+                break;
+            case 'name':
+                $queryBuilder->addOrderBy('o.organisation', $direction);
+                break;
+            default:
+                $queryBuilder->addOrderBy('o.id', $direction);
+
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
     /**
      * Give a list of organisations.
      *
@@ -217,6 +258,7 @@ class Organisation extends EntityRepository
 
         $qb->addOrderBy('c.country', 'ASC');
         $qb->addOrderBy('o.organisation', 'ASC');
+
 
 
         return $qb->getQuery()->getResult();

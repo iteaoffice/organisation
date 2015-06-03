@@ -308,7 +308,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
-        $this->organisation = new Collections\ArrayCollection();
         $this->affiliation = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
         $this->domain = new Collections\ArrayCollection();
@@ -326,7 +325,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->doa = new Collections\ArrayCollection();
         $this->organisationBooth = new Collections\ArrayCollection();
         $this->journal = new Collections\ArrayCollection();
-        $this->organisation = new Collections\ArrayCollection();
     }
 
     /**
@@ -501,7 +499,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Contact\Entity\ContactOrganisation[]
+     * @return \Contact\Entity\ContactOrganisation[]|Collections\ArrayCollection
      */
     public function getContactOrganisation()
     {

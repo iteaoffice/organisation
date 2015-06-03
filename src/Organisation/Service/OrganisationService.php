@@ -10,6 +10,11 @@
 
 namespace Organisation\Service;
 
+use Affiliation\Entity\Affiliation;
+use Affiliation\Service\AffiliationService;
+use Contact\Entity\Contact;
+use Contact\Entity\ContactOrganisation;
+use Contact\Service\ContactService;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity\Organisation;
@@ -29,10 +34,7 @@ use Zend\Stdlib\Parameters;
  */
 class OrganisationService extends ServiceAbstract
 {
-    /**
-     * @var Organisation
-     */
-    protected $organisation;
+
 
     /**
      * @param int $id
@@ -52,6 +54,74 @@ class OrganisationService extends ServiceAbstract
     public function isEmpty()
     {
         return is_null($this->organisation) || is_null($this->organisation->getId());
+    }
+
+    /**
+     * @return string
+     */
+    public function parseDebtorNumber()
+    {
+        return sprintf("%'.06d\n", 100000 + $this->getOrganisation()->getId());
+    }
+
+
+    /**
+     * @return string
+     */
+    public function parseCreditNumber()
+    {
+        return sprintf("%'.06d\n", 200000 + $this->getOrganisation()->getId());
+    }
+
+    /**
+     * @param Contact $contact
+     * @return Organisation[];
+     */
+    public function findOrganisationForProfileEditByContact(Contact $contact)
+    {
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOrganisationForProfileEditByContact($contact);
+    }
+
+    /**
+     * @param int $which
+     * @return int
+     */
+    public function getAffiliationCount($which = AffiliationService::WHICH_ALL)
+    {
+        return ($this->getOrganisation()->getAffiliation()->filter(
+            function (Affiliation $affiliation) use ($which) {
+                switch ($which) {
+                    case AffiliationService::WHICH_ONLY_ACTIVE:
+                        return is_null($affiliation->getDateEnd());
+                    case AffiliationService::WHICH_ONLY_INACTIVE:
+                        return !is_null($affiliation->getDateEnd());
+                    default:
+                        return true;
+                }
+
+            }
+        )->count());
+    }
+
+    /**
+     * @param int $which
+     * @return int
+     */
+    public function getContactCount($which = ContactService::WHICH_ONLY_ACTIVE)
+    {
+        return ($this->getOrganisation()->getContactOrganisation()->filter(
+            function (ContactOrganisation $contactOrganisation) use ($which) {
+                switch ($which) {
+                    case ContactService::WHICH_ONLY_ACTIVE:
+                        return is_null($contactOrganisation->getContact()->getDateEnd());
+                    case ContactService::WHICH_ONLY_EXPIRED:
+                        return !is_null($contactOrganisation->getContact()->getDateEnd());
+                    default:
+                        return true;
+                }
+
+            }
+        )->count());
     }
 
     /**
@@ -106,26 +176,6 @@ class OrganisationService extends ServiceAbstract
         return trim(
             preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch)
         );
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     *
-     * @return OrganisationService
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
     }
 
     /**
@@ -262,7 +312,6 @@ class OrganisationService extends ServiceAbstract
      */
     public function hasDoaForProgram(Program $program)
     {
-
         foreach ($this->organisation->getProgramDoa() as $doa) {
             if ($doa->getProgram()->getId() === $program->getId()) {
                 return true;

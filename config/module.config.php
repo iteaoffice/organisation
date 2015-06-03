@@ -10,6 +10,7 @@
 use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
 use Organisation\Controller\ControllerInitializer;
 use Organisation\Controller\JsonController;
+use Organisation\Controller\OrganisationAdminController;
 use Organisation\Controller\OrganisationController;
 use Organisation\Controller\OrganisationManagerController;
 use Organisation\Service\FormService;
@@ -27,6 +28,7 @@ $config = [
         'invokables'   => [
             OrganisationController::class        => OrganisationController::class,
             OrganisationManagerController::class => OrganisationManagerController::class,
+            OrganisationAdminController::class   => OrganisationAdminController::class,
             JsonController::class                => JsonController::class,
         ],
     ],
@@ -51,9 +53,9 @@ $config = [
             ServiceInitializer::class
         ],
         'factories'    => [
-            'organisation_module_config'    => 'Organisation\Service\ConfigServiceFactory',
-            'organisation_module_options'   => 'Organisation\Service\OptionServiceFactory',
-            'organisation_cache'            => 'Organisation\Service\CacheFactory',
+            'organisation_module_config'  => 'Organisation\Service\ConfigServiceFactory',
+            'organisation_module_options' => 'Organisation\Service\OptionServiceFactory',
+            'organisation_cache'          => 'Organisation\Service\CacheFactory',
         ],
         'invokables'   => [
             OrganisationAssertion::class => OrganisationAssertion::class,
