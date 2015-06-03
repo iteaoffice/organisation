@@ -1,0 +1,27 @@
+<h2>{{ translate("txt-project") }}</h2>
+
+<table class="table table-hover table-striped">
+    <thead>
+    <tr>
+        <th>{{ translate("txt-project") }}</th>
+        <th>{{ translate("txt-branch") }}</th>
+        <th>{{ translate("txt-project-status") }}</th>
+        <th>{{ translate("txt-active") }}</th>
+        <th>{{ translate("txt-technical-contact") }}</th>
+    </tr>
+    </thead>
+    {% for affiliation in organisationService.organisation.affiliation %}
+        {% set projectService = projectServiceProxy(affiliation.project) %}
+        <tr {% if projectService.project.contact.id == affiliation.contact.id %}class="success"
+            {% endif %}{% if affiliation.dateEnd %}class="danger"{% endif %}>
+            <td>{{ projectLink(projectService,'view-admin','name') }}
+                <div class="pull-right">{{ projectLink(projectService,'view-community','icon') }}</div>
+            </td>
+            <td>{{ affiliation.branch }}</td>
+            <td>{{ projectService.parseStatus() }}</td>
+            <td>{% if affiliation.dateEnd %}{{ translate("txt-deactivated-on-%s")|format(affiliation.dateEnd|date('d-m-Y')) }}{% endif %}</td>
+            <td>{{ contactLink(affiliation.contact,'view-admin') }} {% if projectService.project.contact.id == affiliation.contact.id %}({{ translate("txt-pl") }}){% endif %}</td>
+        </tr>
+
+    {% endfor %}
+</table>

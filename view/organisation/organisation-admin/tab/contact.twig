@@ -1,0 +1,41 @@
+<h2>{{ translate("txt-contact-list") }}</h2>
+
+<p class="lead">{{ translate("txt-contact-list-explanation") }}</p>
+
+{% if organisationService.getContactCount() > 0 %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ translate('txt-name') }}</th>
+            <th>{{ translate('txt-email') }}</th>
+            <th>{{ translate('txt-organisation') }}</th>
+            <th>{{ translate('txt-country') }}</th>
+            <th>{{ translate("txt-projects") }}</th>
+            <th>{{ translate("txt-actions") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+        {% for contactOrganisation in organisationService.organisation.contactOrganisation %}
+            {% set contact = contactOrganisation.contact %}
+            {% set contactService = contactServiceProxy(contact) %}
+            {% if contact.contactOrganisation.organisation %}
+                {% set organisationService = organisationServiceProxy(contact.contactOrganisation.organisation) %}
+            {% endif %}
+            <tr {% if contact.dateEnd %}class="danger"{% endif %}>
+                <td>{{ contactLink(contact, 'view-admin', 'name') }} {% if contact.dateEnd %}({{ translate("txt-expired-on-%s")|format(contact.dateEnd|date("d-m-Y")) }}){% endif %}</td>
+                <td>{{ contact.email }}</td>
+                <td>{% if organisationService and not organisationService.isEmpty() %}{{ organisationLink(organisationService,'view-admin','name') }}
+                        <div class="pull-right">{{ organisationLink(organisationService,'view','icon') }}</div>{% endif %}
+                </td>
+                <td>{{ contact.contactOrganisation.organisation.country }}</td>
+                <td>{{ contactService.getAffiliationCount(constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
+                <td>{{ contactLink(contact, 'edit-admin', 'icon') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-contact-found"))|raw }}
+{% endif %}
