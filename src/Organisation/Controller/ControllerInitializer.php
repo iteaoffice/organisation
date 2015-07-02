@@ -35,7 +35,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ControllerInitializer implements InitializerInterface
 {
     /**
-     * @param string $instance
+     * @param string                                    $instance
      * @param ServiceLocatorInterface|ControllerManager $controllerManager
      *
      * @return null

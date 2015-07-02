@@ -364,7 +364,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        return (string)$this->organisation;
+        return (string) $this->organisation;
     }
 
     /**
@@ -873,7 +873,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->member = $member;
     }
 
-
     /**
      * @return \Member\Entity\Applicant
      */
@@ -947,7 +946,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
+     * @param  Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
      * @return Organisation
      */
     public function setIdeaPartner($ideaPartner)

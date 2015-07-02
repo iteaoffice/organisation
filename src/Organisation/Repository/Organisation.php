@@ -27,7 +27,7 @@ use Zend\Validator\EmailAddress;
 class Organisation extends EntityRepository
 {
     /**
-     * @param array $filter
+     * @param  array $filter
      * @return Query
      */
     public function findFiltered(array $filter)
@@ -35,7 +35,6 @@ class Organisation extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('o');
         $queryBuilder->from('Organisation\Entity\Organisation', 'o');
-
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
@@ -98,8 +97,8 @@ class Organisation extends EntityRepository
      * Give a list of organisations by country.
      *
      * @param Country $country
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -129,10 +128,10 @@ class Organisation extends EntityRepository
      * This is basic search for organisations (based on the name, number and description.
      *
      * @param string $searchItem
-     * @param int $maxResults
-     * @param null $countryId
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param int    $maxResults
+     * @param null   $countryId
+     * @param bool   $onlyActiveProject
+     * @param bool   $onlyActivePartner
      *
      * @return Entity\Organisation[]
      */
@@ -224,7 +223,7 @@ class Organisation extends EntityRepository
     }
 
     /**
-     * @param         $emailAddress
+     * @param   $emailAddress
      *
      * @return Entity\Organisation[]|null
      */
@@ -238,7 +237,6 @@ class Organisation extends EntityRepository
 
         //Inner join on contact_organisations to only have active organisations
         $qb->join('o.contactOrganisation', 'co');
-
 
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('wo');
@@ -259,13 +257,11 @@ class Organisation extends EntityRepository
         $qb->addOrderBy('c.country', 'ASC');
         $qb->addOrderBy('o.organisation', 'ASC');
 
-
-
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * @param Contact $contact
+     * @param  Contact $contact
      * @return array
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
@@ -323,7 +319,7 @@ class Organisation extends EntityRepository
     /**
      * Find participants based on the given criteria.
      *
-     * @param Meeting $meeting
+     * @param Meeting    $meeting
      * @param Parameters $search
      *
      * @return Registration[]

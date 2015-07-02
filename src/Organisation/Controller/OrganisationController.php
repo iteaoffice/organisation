@@ -60,7 +60,7 @@ class OrganisationController extends OrganisationAbstractController
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
             ->addHeaderLine("Pragma: public")
             ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string)strlen($file));
+            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
         $response->setContent($file);
 
         return $response;

@@ -31,7 +31,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @param array $pages
+     * @param array                   $pages
      *
      * @return array
      */
@@ -55,7 +55,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
              * Go over both arrays and check if the new entities can be added
              */
             $pages['organisation']['pages']['view'] = [
-                'label'      => (string)$this->organisationService->getOrganisation()->getOrganisation(),
+                'label'      => (string) $this->organisationService->getOrganisation()->getOrganisation(),
                 'route'      => 'zfcadmin/organisation-manager/view',
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,

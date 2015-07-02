@@ -249,7 +249,7 @@ class Financial extends EntityAbstract
      */
     public function __toString()
     {
-        return (string)$this->organisation;
+        return (string) $this->organisation;
     }
 
     /**
@@ -477,7 +477,7 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @param bool $textual
+     * @param  bool     $textual
      * @return int|text
      */
     public function getOmitContact($textual = false)
@@ -514,7 +514,7 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @param bool $textual
+     * @param  bool       $textual
      * @return int|string
      */
     public function getRequiredPurchaseOrder($textual = false)
@@ -567,7 +567,7 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @param bool $textual
+     * @param  bool       $textual
      * @return int|string
      */
     public function getVatStatus($textual = false)

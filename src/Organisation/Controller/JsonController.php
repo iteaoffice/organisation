@@ -22,7 +22,7 @@ class JsonController extends OrganisationAbstractController
      */
     public function getBranchesAction()
     {
-        $organisationId = (int)$this->getEvent()->getRequest()->getPost()->get('organisationId');
+        $organisationId = (int) $this->getEvent()->getRequest()->getPost()->get('organisationId');
 
         $this->getOrganisationService()->setOrganisationId($organisationId);
 

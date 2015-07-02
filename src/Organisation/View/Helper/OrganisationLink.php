@@ -34,11 +34,11 @@ class OrganisationLink extends LinkAbstract
 
     /**
      * @param OrganisationService $organisationService
-     * @param string $action
-     * @param string $show
-     * @param null $branch
-     * @param null $page
-     * @param null $alternativeShow
+     * @param string              $action
+     * @param string              $show
+     * @param null                $branch
+     * @param null                $page
+     * @param null                $alternativeShow
      *
      * @return string
      *
