@@ -65,7 +65,6 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
             AbstractQuery::HYDRATE_SIMPLEOBJECT
         );
 
-
         return $equipmentList;
     }
 
@@ -215,7 +214,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     }
 
     /**
-     * @param Organisation $organisation
+     * @param  Organisation    $organisation
      * @return ServiceAbstract
      */
     public function setOrganisation($organisation)

@@ -96,8 +96,10 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
         $form = new InvoiceFilter($this->getInvoiceService());
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        $projects = $this->getProjectService()->findProjectByOrganisation($organisationService->getOrganisation(),
-            ProjectService::WHICH_ALL);
+        $projects = $this->getProjectService()->findProjectByOrganisation(
+            $organisationService->getOrganisation(),
+            ProjectService::WHICH_ALL
+        );
 
         return new ViewModel([
             'paginator'           => $paginator,

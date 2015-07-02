@@ -34,8 +34,6 @@ use Zend\Stdlib\Parameters;
  */
 class OrganisationService extends ServiceAbstract
 {
-
-
     /**
      * @param int $id
      *
@@ -64,7 +62,6 @@ class OrganisationService extends ServiceAbstract
         return sprintf("%'.06d\n", 100000 + $this->getOrganisation()->getId());
     }
 
-
     /**
      * @return string
      */
@@ -74,7 +71,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param Contact $contact
+     * @param  Contact         $contact
      * @return Organisation[];
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
@@ -83,7 +80,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param int $which
+     * @param  int $which
      * @return int
      */
     public function getAffiliationCount($which = AffiliationService::WHICH_ALL)
@@ -104,7 +101,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param int $which
+     * @param  int $which
      * @return int
      */
     public function getContactCount($which = ContactService::WHICH_ONLY_ACTIVE)
@@ -208,8 +205,8 @@ class OrganisationService extends ServiceAbstract
      * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
      *
      * @param Country $country
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -220,7 +217,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param Organisation $organisation
+     * @param  Organisation $organisation
      * @return array
      */
     public function findBranchesByOrganisation(Organisation $organisation)
@@ -239,9 +236,9 @@ class OrganisationService extends ServiceAbstract
     /**
      * Find a country based on three criteria: Name, CountryObject and the email address.
      *
-     * @param string $name
+     * @param string  $name
      * @param Country $country
-     * @param string $emailAddress
+     * @param string  $emailAddress
      *
      * @return Organisation[]
      */
@@ -254,7 +251,7 @@ class OrganisationService extends ServiceAbstract
     /**
      * Find a country based on three criteria: Name, CountryObject.
      *
-     * @param string $name
+     * @param string  $name
      * @param Country $country
      *
      * @return Organisation
@@ -266,7 +263,7 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param Meeting $meeting
+     * @param Meeting    $meeting
      * @param Parameters $search
      *
      * @return Organisation[]
@@ -281,7 +278,7 @@ class OrganisationService extends ServiceAbstract
      * Produce a list of organisations for a project (only active).
      *
      * @param Project $project
-     * @param bool $onlyActiveProject
+     * @param bool    $onlyActiveProject
      *
      * @return OrganisationService[]
      */
@@ -291,8 +288,11 @@ class OrganisationService extends ServiceAbstract
         foreach ($project->getAffiliation() as $affiliation) {
             if ($onlyActiveProject && is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
-                $organisations[sprintf("%s-%s", $affiliation->getOrganisation()->getOrganisation(),
-                    $affiliation->getOrganisation()->getCountry()->getCountry())] = $this->createServiceElement(
+                $organisations[sprintf(
+                    "%s-%s",
+                    $affiliation->getOrganisation()->getOrganisation(),
+                    $affiliation->getOrganisation()->getCountry()->getCountry()
+                )] = $this->createServiceElement(
                     $affiliation->getOrganisation()
                 );
             }

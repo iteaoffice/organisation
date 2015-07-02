@@ -156,7 +156,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param InvoiceService $invoiceService
+     * @param  InvoiceService                 $invoiceService
      * @return OrganisationAbstractController
      */
     public function setInvoiceService(InvoiceService $invoiceService)
@@ -175,7 +175,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param ProjectService $projectService
+     * @param  ProjectService                 $projectService
      * @return OrganisationAbstractController
      */
     public function setProjectService(ProjectService $projectService)
@@ -194,7 +194,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param AffiliationService $affiliationService
+     * @param  AffiliationService             $affiliationService
      * @return OrganisationAbstractController
      */
     public function setAffiliationService(AffiliationService $affiliationService)
@@ -213,7 +213,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param DoaService $doaService
+     * @param  DoaService                     $doaService
      * @return OrganisationAbstractController
      */
     public function setDoaService(DoaService $doaService)
@@ -232,7 +232,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param LoiService $loiService
+     * @param  LoiService                     $loiService
      * @return OrganisationAbstractController
      */
     public function setLoiService(LoiService $loiService)

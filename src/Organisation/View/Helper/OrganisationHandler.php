@@ -64,12 +64,11 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 );
 
                 //Do now show the organisation when we don't have projects
-                if (
-                    sizeof(
-                        $this->getProjectService()->findProjectByOrganisation(
-                            $this->getOrganisationService()->getOrganisation()
-                        )
-                    ) === 0
+                if (sizeof(
+                    $this->getProjectService()->findProjectByOrganisation(
+                        $this->getOrganisationService()->getOrganisation()
+                    )
+                ) === 0
                 ) {
                     $this->getServiceLocator()->get("response")->setStatusCode(404);
 
@@ -144,7 +143,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 }
 
                 return $this->parseOrganisationMap($this->getOrganisationService());
-                
+
             case 'organisation_logo':
                 if ($this->getOrganisationService()->isEmpty()) {
                     return ("The selected organisation cannot be found");
@@ -306,6 +305,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
          * @var CountryMap
          */
         $countryMap = $this->serviceLocator->get('countryMap');
+
         return $countryMap->__invoke($countries, null, $mapOptions);
     }
 
@@ -321,7 +321,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
             ['organisationService' => $organisationService]
         );
     }
-    
+
     /**
      * @param OrganisationService $organisationService
      *
@@ -426,7 +426,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     {
         return $this->getServiceLocator()->get('organisation_cache');
     }
-    
+
     /**
      * @return ModuleOptions
      */
@@ -471,6 +471,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         /*
          * Parse the organisationService in to have the these functions available in the view
          */
+
         return $this->getRenderer()->render(
             'organisation/partial/list/article',
             [

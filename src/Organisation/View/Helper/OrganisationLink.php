@@ -34,11 +34,11 @@ class OrganisationLink extends LinkAbstract
 
     /**
      * @param OrganisationService $organisationService
-     * @param string $action
-     * @param string $show
-     * @param null $branch
-     * @param null $page
-     * @param null $alternativeShow
+     * @param string              $action
+     * @param string              $show
+     * @param null                $branch
+     * @param null                $page
+     * @param null                $alternativeShow
      *
      * @return string
      *
@@ -110,8 +110,10 @@ class OrganisationLink extends LinkAbstract
                 break;
             case 'view-admin':
                 $this->setRouter('zfcadmin/organisation/view');
-                $this->setText(sprintf($this->translate("txt-view-organisation-%s"),
-                    $this->getOrganisationService()->getOrganisation()));
+                $this->setText(sprintf(
+                    $this->translate("txt-view-organisation-%s"),
+                    $this->getOrganisationService()->getOrganisation()
+                ));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/organisation/edit');

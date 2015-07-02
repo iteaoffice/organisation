@@ -102,8 +102,10 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
             $serverUrl() . $url($this->router, $this->routerParams),
             htmlentities($this->text),
             implode(' ', $this->classes),
-            in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode('',
-                $this->linkContent) : htmlentities(implode('', $this->linkContent))
+            in_array($this->getShow(), ['icon', 'button', 'alternativeShow']) ? implode(
+                '',
+                $this->linkContent
+            ) : htmlentities(implode('', $this->linkContent))
         );
     }
 
@@ -150,6 +152,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
                 /*
                  * Social is treated in the createLink function, no content needs to be created
                  */
+
                 return;
             default:
                 if (!array_key_exists($this->getShow(), $this->showOptions)) {
@@ -282,8 +285,8 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * @param EntityAbstract $entity
-     * @param string $assertion
-     * @param string $action
+     * @param string         $assertion
+     * @param string         $action
      *
      * @return bool
      */
@@ -345,7 +348,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
 
     /**
      * @param null|EntityAbstract $resource
-     * @param string $privilege
+     * @param string              $privilege
      *
      * @return bool
      */
@@ -364,7 +367,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
      *
      * @param string $key
      * @param        $value
-     * @param bool $allowNull
+     * @param bool   $allowNull
      */
     public function addRouterParam($key, $value, $allowNull = true)
     {
