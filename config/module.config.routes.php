@@ -114,7 +114,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list' => [
+                            'list'        => [
                                 'type'     => 'Segment',
                                 'priority' => 1000,
                                 'options'  => [
@@ -124,7 +124,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'  => [
+                            'new'         => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/new.html',
@@ -133,7 +133,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'view' => [
+                            'view'        => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/[:id][/f-:encodedFilter][/page-:page].html',
@@ -142,12 +142,21 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit' => [
+                            'edit'        => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/edit/[:id].html',
                                     'defaults' => [
                                         'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                            'search-form' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/search-form.html',
+                                    'defaults' => [
+                                        'action' => 'search-form',
                                     ],
                                 ],
                             ],

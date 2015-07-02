@@ -328,12 +328,18 @@ class OrganisationService extends ServiceAbstract
      * @param      $maxResults
      * @param null $countryId
      * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return Organisation[]
      */
-    public function searchOrganisation($searchItem, $maxResults, $countryId = null, $onlyActiveProject = true)
-    {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
-            ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActiveProject);
+    public function searchOrganisation(
+        $searchItem,
+        $maxResults,
+        $countryId = null,
+        $onlyActiveProject = true,
+        $onlyActivePartner = true
+    ) {
+        return $this->getEntityManager()->getRepository(Organisation::class)
+            ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActiveProject, $onlyActivePartner);
     }
 }

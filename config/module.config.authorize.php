@@ -28,6 +28,7 @@ return [
                 ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/view', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/search-form', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation-manager/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation-manager/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation-manager/new', 'roles' => ['office']],

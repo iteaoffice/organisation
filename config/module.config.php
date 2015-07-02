@@ -13,6 +13,7 @@ use Organisation\Controller\JsonController;
 use Organisation\Controller\OrganisationAdminController;
 use Organisation\Controller\OrganisationController;
 use Organisation\Controller\OrganisationManagerController;
+use Organisation\Form\View\Helper\OrganisationFormElement;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ServiceInitializer;
@@ -40,6 +41,7 @@ $config = [
             ViewHelperInitializer::class
         ],
         'invokables'   => [
+            'organisationformelement'     => OrganisationFormElement::class,
             'createLogoFromArray'         => CreateLogoFromArray::class,
             'createOrganisationFromArray' => CreateOrganisationFromArray::class,
             'organisationHandler'         => 'Organisation\View\Helper\OrganisationHandler',

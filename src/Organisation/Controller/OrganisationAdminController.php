@@ -23,6 +23,7 @@ use Organisation\Form\OrganisationFilter;
 use Project\Service\ProjectService;
 use Project\Service\ProjectServiceAwareInterface;
 use Zend\Paginator\Paginator;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -92,7 +93,7 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        $form = new InvoiceFilter();
+        $form = new InvoiceFilter($this->getInvoiceService());
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         $projects = $this->getProjectService()->findProjectByOrganisation($organisationService->getOrganisation(),
@@ -110,5 +111,33 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
             'projects'            => $projects,
 
         ]);
+    }
+
+    /**
+     * @return JsonModel
+     */
+    public function searchFormAction()
+    {
+        $search = $this->getRequest()->getPost()->get('search');
+
+        $search = 'itea';
+
+        $results = [];
+        foreach ($this->getOrganisationService()->searchOrganisation($search, 1000, null, false, false) as $result) {
+            $text = trim(
+                sprintf(
+                    "%s (%s)",
+                    $result['organisation'],
+                    $result['iso3']
+                )
+            );
+
+            $results[] = [
+                'value' => $result['id'],
+                'text'  => $text,
+            ];
+        }
+
+        return new JsonModel($results);
     }
 }

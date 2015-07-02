@@ -144,10 +144,11 @@ class Organisation extends EntityRepository
         $onlyActivePartner = true
     ) {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('o');
+        $qb->select(['o.id', 'o.organisation', 'c.iso3']);
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
         $qb->andWhere('o.organisation LIKE :searchItem');
+        $qb->join('o.country', 'c');
         $qb->join('o.affiliation', 'a');
         $qb->join('a.project', 'p');
         $qb->setParameter('searchItem', "%" . $searchItem . "%");
@@ -165,7 +166,7 @@ class Organisation extends EntityRepository
         $qb->setMaxResults($maxResults);
         $qb->orderBy('o.organisation', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getArrayResult();
     }
 
     /**
@@ -258,7 +259,6 @@ class Organisation extends EntityRepository
 
         $qb->addOrderBy('c.country', 'ASC');
         $qb->addOrderBy('o.organisation', 'ASC');
-
 
 
         return $qb->getQuery()->getResult();

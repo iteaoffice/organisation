@@ -14,6 +14,7 @@ use Organisation\Entity\Logo;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
+use ZendTest\View\Renderer\TestAsset\JsonModel;
 
 /**
  * @category    Organisation
@@ -72,7 +73,7 @@ class OrganisationController extends OrganisationAbstractController
     public function searchAction()
     {
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
-        $maxResults = $this->getRequest()->getQuery()->get('max_rows');
+        $maxResults = $this->getRequest()->getQuery()->get('max_rows', 12);
         $countryId = $this->getRequest()->getQuery()->get('country');
         $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
         /*
@@ -82,10 +83,12 @@ class OrganisationController extends OrganisationAbstractController
         $paginator->setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
-        $viewModel = new ViewModel(['paginator' => $paginator]);
+        $viewModel = new ViewModel(['paginator' => $paginator, 'organisationService' => $this->getOrganisationService()]);
         $viewModel->setTerminal(true);
         $viewModel->setTemplate('organisation/partial/list/organisation-search');
 
         return $viewModel;
     }
+
+
 }
