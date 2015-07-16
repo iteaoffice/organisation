@@ -21,7 +21,7 @@ use Zend\InputFilter\InputFilterInterface;
  * OrganisationFinancial.
  *
  * @ORM\Table(name="organisation_financial")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Organisation\Repository\Financial")
  */
 class Financial extends EntityAbstract
 {
@@ -42,7 +42,7 @@ class Financial extends EntityAbstract
      *
      * @var array
      */
-    protected $vatStatusTemplates = [
+    protected static $vatStatusTemplates = [
         self::VAT_STATUS_UNDEFINED => 'txt-vat-status-undefined',
         self::VAT_STATUS_VALID     => 'txt-vat-status-valid',
         self::VAT_STATUS_INVALID   => 'txt-vat-status-invalid',
@@ -62,7 +62,7 @@ class Financial extends EntityAbstract
      *
      * @var array
      */
-    protected $omitContactTemplates = [
+    protected static $omitContactTemplates = [
         self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
         self::OMIT_CONTACT    => 'txt-omit-contact',
     ];
@@ -71,7 +71,7 @@ class Financial extends EntityAbstract
      *
      * @var array
      */
-    protected $emailTemplates = [
+    protected static $emailTemplates = [
         self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
         self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
     ];
@@ -80,7 +80,7 @@ class Financial extends EntityAbstract
      *
      * @var array
      */
-    protected $requiredPurchaseOrderTemplates = [
+    protected static $requiredPurchaseOrderTemplates = [
         self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
         self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
     ];
@@ -249,7 +249,7 @@ class Financial extends EntityAbstract
      */
     public function __toString()
     {
-        return (string) $this->organisation;
+        return (string)$this->organisation;
     }
 
     /**
@@ -313,30 +313,6 @@ class Financial extends EntityAbstract
     /**
      * @return array
      */
-    public function getEmailTemplates()
-    {
-        return $this->emailTemplates;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOmitContactTemplates()
-    {
-        return $this->omitContactTemplates;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRequiredPurchaseOrderTemplates()
-    {
-        return $this->requiredPurchaseOrderTemplates;
-    }
-
-    /**
-     * @return array
-     */
     public function getVatShiftTemplates()
     {
         return $this->vatShiftTemplates;
@@ -345,10 +321,35 @@ class Financial extends EntityAbstract
     /**
      * @return array
      */
-    public function getVatStatusTemplates()
+    public static function getVatStatusTemplates()
     {
-        return $this->vatStatusTemplates;
+        return self::$vatStatusTemplates;
     }
+
+    /**
+     * @return array
+     */
+    public static function getOmitContactTemplates()
+    {
+        return self::$omitContactTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getEmailTemplates()
+    {
+        return self::$emailTemplates;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRequiredPurchaseOrderTemplates()
+    {
+        return self::$requiredPurchaseOrderTemplates;
+    }
+
 
     /**
      * @param string $bic
@@ -414,7 +415,7 @@ class Financial extends EntityAbstract
     public function getEmail($textual = false)
     {
         if ($textual) {
-            return $this->emailTemplates[$this->email];
+            return self::$emailTemplates[$this->email];
         }
 
         return $this->email;
@@ -477,13 +478,13 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @param  bool     $textual
-     * @return int|text
+     * @param  bool $textual
+     * @return int|string
      */
     public function getOmitContact($textual = false)
     {
         if ($textual) {
-            return $this->omitContactTemplates[$this->omitContact];
+            return self::$omitContactTemplates[$this->omitContact];
         }
 
         return $this->omitContact;
@@ -514,13 +515,13 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @param  bool       $textual
+     * @param  bool $textual
      * @return int|string
      */
     public function getRequiredPurchaseOrder($textual = false)
     {
         if ($textual) {
-            return $this->requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder];
+            return self::$requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder];
         }
 
         return $this->requiredPurchaseOrder;
@@ -567,13 +568,13 @@ class Financial extends EntityAbstract
     }
 
     /**
-     * @param  bool       $textual
+     * @param  bool $textual
      * @return int|string
      */
     public function getVatStatus($textual = false)
     {
         if ($textual) {
-            return $this->vatStatusTemplates[$this->vatStatus];
+            return self::$vatStatusTemplates[$this->vatStatus];
         }
 
         return $this->vatStatus;

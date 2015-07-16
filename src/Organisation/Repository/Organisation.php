@@ -380,6 +380,6 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
         $queryBuilder->addOrderBy('o.organisation', 'ASC');
 
-        return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
 }

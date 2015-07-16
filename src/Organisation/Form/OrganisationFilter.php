@@ -11,6 +11,7 @@
 
 namespace Organisation\Form;
 
+use Organisation\Entity\Financial;
 use Organisation\Service\OrganisationService;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
@@ -62,6 +63,62 @@ class OrganisationFilter extends Form
                 ],
                 'attributes' => [
                     'label' => _("txt-organisation-type"),
+                ],
+            ]
+        );
+
+        $filterFieldset->add(
+            [
+                'type'       => 'Zend\Form\Element\MultiCheckbox',
+                'name'       => 'vatStatus',
+                'options'    => [
+                    'inline'        => true,
+                    'value_options' => Financial::getVatStatusTemplates()
+                ],
+                'attributes' => [
+                    'label' => _("txt-vat-status"),
+                ],
+            ]
+        );
+
+        $filterFieldset->add(
+            [
+                'type'       => 'Zend\Form\Element\MultiCheckbox',
+                'name'       => 'omitContact',
+                'options'    => [
+                    'inline'        => true,
+                    'value_options' => Financial::getOmitContactTemplates()
+                ],
+                'attributes' => [
+                    'label' => _("txt-omit-contact"),
+                ],
+            ]
+        );
+
+        $filterFieldset->add(
+            [
+                'type'       => 'Zend\Form\Element\MultiCheckbox',
+                'name'       => 'requiredPurchaseOrder',
+                'options'    => [
+                    'inline'        => true,
+                    'value_options' => Financial::getRequiredPurchaseOrderTemplates()
+                ],
+                'attributes' => [
+                    'label' => _("txt-required-purchase-order"),
+                ],
+            ]
+        );
+
+        $filterFieldset->add(
+            [
+                'type'       => 'Zend\Form\Element\MultiCheckbox',
+                'name'       => 'email',
+                'options'    => [
+                    'inline'        => true,
+                    'value_options' => Financial::getEmailTemplates()
+                ],
+                'attributes' => [
+                    'label' => _("txt-email"),
                 ],
             ]
         );

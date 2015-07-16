@@ -15,8 +15,10 @@ use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Contact\Service\ContactService;
+use Doctrine\ORM\Query;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
+use Organisation\Entity\Financial;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
 use Program\Entity\Program;
@@ -71,12 +73,12 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param  Contact         $contact
+     * @param  Contact $contact
      * @return Organisation[];
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOrganisationForProfileEditByContact($contact);
+        return $this->getEntityManager()->getRepository(Organisation::class)->findOrganisationForProfileEditByContact($contact);
     }
 
     /**
@@ -122,16 +124,24 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @return Query
+     */
+    public function findOrganisationFinancialList($filter)
+    {
+        return $this->getEntityManager()->getRepository(Financial::class)->findOrganisationFinancialList($filter);
+    }
+
+    /**
      * @param $docRef
      *
      * @return null|OrganisationService
      */
     public function findOrganisationByDocRef($docRef)
     {
-        /*
+        /**
          * @var $organisation Organisation
          */
-        $organisation = $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))->findOneBy(
+        $organisation = $this->getEntityManager()->getRepository(Organisation::class)->findOneBy(
             ['docRef' => $docRef]
         );
         /*
@@ -197,7 +207,7 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisations($onlyActiveProject = true, $onlyActivePartner = true)
     {
         return $this->getEntityManager()->getRepository(
-            $this->getFullEntityName('organisation')
+            Organisation::class
         )->findOrganisations($onlyActiveProject, $onlyActivePartner);
     }
 
@@ -205,14 +215,14 @@ class OrganisationService extends ServiceAbstract
      * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
      *
      * @param Country $country
-     * @param bool    $onlyActiveProject
-     * @param bool    $onlyActivePartner
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
     public function findOrganisationByCountry(Country $country, $onlyActiveProject = true, $onlyActivePartner = true)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('organisation'))
+        return $this->getEntityManager()->getRepository(Organisation::class)
             ->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
     }
 
@@ -236,41 +246,41 @@ class OrganisationService extends ServiceAbstract
     /**
      * Find a country based on three criteria: Name, CountryObject and the email address.
      *
-     * @param string  $name
+     * @param string $name
      * @param Country $country
-     * @param string  $emailAddress
+     * @param string $emailAddress
      *
      * @return Organisation[]
      */
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
+        return $this->getEntityManager()->getRepository(Organisation::class)
             ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
     }
 
     /**
      * Find a country based on three criteria: Name, CountryObject.
      *
-     * @param string  $name
+     * @param string $name
      * @param Country $country
      *
      * @return Organisation
      */
     public function findOrganisationByNameCountry($name, Country $country)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
+        return $this->getEntityManager()->getRepository(Organisation::class)
             ->findOrganisationByNameCountry($name, $country);
     }
 
     /**
-     * @param Meeting    $meeting
+     * @param Meeting $meeting
      * @param Parameters $search
      *
      * @return Organisation[]
      */
     public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('Organisation'))
+        return $this->getEntityManager()->getRepository(Organisation::class)
             ->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
     }
 
@@ -278,7 +288,7 @@ class OrganisationService extends ServiceAbstract
      * Produce a list of organisations for a project (only active).
      *
      * @param Project $project
-     * @param bool    $onlyActiveProject
+     * @param bool $onlyActiveProject
      *
      * @return OrganisationService[]
      */

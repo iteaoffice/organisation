@@ -7,30 +7,23 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
-use Organisation\Controller\ControllerInitializer;
-use Organisation\Controller\JsonController;
-use Organisation\Controller\OrganisationAdminController;
-use Organisation\Controller\OrganisationController;
-use Organisation\Controller\OrganisationManagerController;
+use Organisation\Acl\Assertion;
+use Organisation\Controller;
 use Organisation\Form\View\Helper\OrganisationFormElement;
-use Organisation\Service\FormService;
-use Organisation\Service\OrganisationService;
-use Organisation\Service\ServiceInitializer;
-use Organisation\View\Helper\CreateLogoFromArray;
-use Organisation\View\Helper\CreateOrganisationFromArray;
-use Organisation\View\Helper\ViewHelperInitializer;
+use Organisation\Service;
+use Organisation\View\Helper;
 
 $config = [
     'controllers'     => [
         'initializers' => [
-            ControllerInitializer::class
+            Controller\ControllerInitializer::class
         ],
         'invokables'   => [
-            OrganisationController::class        => OrganisationController::class,
-            OrganisationManagerController::class => OrganisationManagerController::class,
-            OrganisationAdminController::class   => OrganisationAdminController::class,
-            JsonController::class                => JsonController::class,
+            Controller\OrganisationController::class        => Controller\OrganisationController::class,
+            Controller\OrganisationManagerController::class => Controller\OrganisationManagerController::class,
+            Controller\OrganisationAdminController::class   => Controller\OrganisationAdminController::class,
+            Controller\OrganisationVatController::class     => Controller\OrganisationVatController::class,
+            Controller\JsonController::class                => Controller\JsonController::class,
         ],
     ],
     'view_manager'    => [
@@ -38,31 +31,31 @@ $config = [
     ],
     'view_helpers'    => [
         'initializers' => [
-            ViewHelperInitializer::class
+            Helper\ViewHelperInitializer::class
         ],
         'invokables'   => [
             'organisationformelement'     => OrganisationFormElement::class,
-            'createLogoFromArray'         => CreateLogoFromArray::class,
-            'createOrganisationFromArray' => CreateOrganisationFromArray::class,
-            'organisationHandler'         => 'Organisation\View\Helper\OrganisationHandler',
-            'organisationServiceProxy'    => 'Organisation\View\Helper\OrganisationServiceProxy',
-            'organisationLink'            => 'Organisation\View\Helper\OrganisationLink',
-            'organisationLogo'            => 'Organisation\View\Helper\OrganisationLogo',
+            'createLogoFromArray'         => Helper\CreateLogoFromArray::class,
+            'createOrganisationFromArray' => Helper\CreateOrganisationFromArray::class,
+            'organisationHandler'         => Helper\OrganisationHandler::class,
+            'organisationServiceProxy'    => Helper\OrganisationServiceProxy::class,
+            'organisationLink'            => Helper\OrganisationLink::class,
+            'organisationLogo'            => Helper\OrganisationLogo::class,
         ]
     ],
     'service_manager' => [
         'initializers' => [
-            ServiceInitializer::class
+            Service\ServiceInitializer::class
         ],
         'factories'    => [
-            'organisation_module_config'  => 'Organisation\Service\ConfigServiceFactory',
-            'organisation_module_options' => 'Organisation\Service\OptionServiceFactory',
-            'organisation_cache'          => 'Organisation\Service\CacheFactory',
+            'organisation_module_config'  => Service\ConfigServiceFactory::class,
+            'organisation_module_options' => Service\OptionServiceFactory::class,
+            'organisation_cache'          => Service\CacheFactory::class,
         ],
         'invokables'   => [
-            OrganisationAssertion::class => OrganisationAssertion::class,
-            OrganisationService::class   => OrganisationService::class,
-            FormService::class           => FormService::class
+            Assertion\Organisation::class      => Assertion\Organisation::class,
+            Service\OrganisationService::class => Service\OrganisationService::class,
+            Service\FormService::class         => Service\FormService::class
         ]
     ],
     'doctrine'        => [

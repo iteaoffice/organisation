@@ -1,0 +1,122 @@
+{% do headTitle().append(translate("txt-organisation-list")) %}
+
+{{ form().closeTag()|raw }}
+
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+{% set filter = form.get('filter') %}
+
+
+<input type="hidden" name="filter[order]" value="{{ order }}">
+<input type="hidden" name="filter[direction]" value="{{ direction }}">
+
+<div class="row">
+
+    <div class="col-md-10">
+
+        <h1>{{ translate("txt-organisation-list") }}</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p class="lead">{{ translate("txt-organisation-list-explanation") }}</p>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    {{ formelement(filter.get('search')) }}
+                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+            </div>
+        </div>
+
+        {% if paginator.pageRange > 0 %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th colspan="2">{{ translate("txt-vat-status") }}</th>
+                    {#<th>{{ translate("txt-vat-type") }}</th>#}
+                    <th>{{ translate("txt-omit-contact") }}</th>
+                    <th>{{ translate("txt-email") }}</th>
+                    <th>{{ translate("txt-require-purchase-order") }}</th>
+                </tr>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tbody>
+                {% for financial in paginator.getCurrentItems() %}
+                    {% set organisationService = organisationServiceProxy(financial.organisation) %}
+                    <tr>
+                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }}</td>
+                        <td>{{ organisationService.organisation.country }}</td>
+                        <td>{{ organisationService.organisation.getType().type }}</td>
+                        <td id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
+                            ({{ financial.dateVat|time_diff }})
+                        <td><i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i></td>
+                        {#<td>{% for type in financial.vatType %}{{ type }}{% endfor %}</td>#}
+                        <td>{{ translate(financial.getOmitContact(true)) }}</td>
+                        <td>{{ translate(financial.getEmail(true)) }}</td>
+                        <td>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% include 'organisation/partial/pagination-control' %}
+        {% else %}
+            {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
+        {% endif %}
+    </div>
+    <div class="col-md-2">
+        <div class="well well-sm">
+            <fieldset>
+                {{ ztbformelement(filter.get('type')) }}
+                {{ ztbformelement(filter.get('vatStatus')) }}
+                {{ ztbformelement(filter.get('omitContact')) }}
+                {{ ztbformelement(filter.get('requiredPurchaseOrder')) }}
+                {{ ztbformelement(filter.get('email')) }}
+
+                <div class="form-group">
+                    {{ ztbformelement(form.get('submit')) }}
+                    {{ ztbformelement(form.get('clear')) }}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+
+<script type="text/javascript">
+    $(document).on('click', '.checkVat', function (e) {
+        var $this = $(this);
+
+        var $financialId = $this.attr('rel');
+
+        $this.addClass('fa-spin');
+
+        $.ajax({
+            url: '{{ serverUrl() }}{{ url('organisation/json/check-vat') }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'financialId': $financialId,
+            },
+            success: function (response) {
+                $("#vatStatus_" + $financialId).html(response.result);
+                $this.removeClass('fa-spin');
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+            }
+        });
+
+
+    });
+
+</script>
+
+

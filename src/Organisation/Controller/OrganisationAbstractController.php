@@ -14,7 +14,9 @@ use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use General\Service\GeneralService;
+use Invoice\Controller\Plugin\GetFilter as InvoiceFilterPlugin;
 use Invoice\Service\InvoiceService;
+use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Service\FormService;
 use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\OrganisationService;
@@ -31,6 +33,8 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
+ * @method InvoiceFilterPlugin getInvoiceFilter
+ * @method OrganisationFilterPlugin getOrganisationFilter
  */
 abstract class OrganisationAbstractController extends AbstractActionController implements
     FormServiceAwareInterface,
@@ -156,7 +160,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param  InvoiceService                 $invoiceService
+     * @param  InvoiceService $invoiceService
      * @return OrganisationAbstractController
      */
     public function setInvoiceService(InvoiceService $invoiceService)
@@ -175,7 +179,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param  ProjectService                 $projectService
+     * @param  ProjectService $projectService
      * @return OrganisationAbstractController
      */
     public function setProjectService(ProjectService $projectService)
@@ -194,7 +198,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param  AffiliationService             $affiliationService
+     * @param  AffiliationService $affiliationService
      * @return OrganisationAbstractController
      */
     public function setAffiliationService(AffiliationService $affiliationService)
@@ -213,7 +217,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param  DoaService                     $doaService
+     * @param  DoaService $doaService
      * @return OrganisationAbstractController
      */
     public function setDoaService(DoaService $doaService)
@@ -232,7 +236,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     }
 
     /**
-     * @param  LoiService                     $loiService
+     * @param  LoiService $loiService
      * @return OrganisationAbstractController
      */
     public function setLoiService(LoiService $loiService)

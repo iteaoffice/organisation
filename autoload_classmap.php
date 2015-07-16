@@ -50,6 +50,7 @@ return array(
     'Organisation\Controller\JsonController'                        => __DIR__ . '/src/Organisation/Controller/JsonController.php',
     'Organisation\Version\Version'                                  => __DIR__ . '/src/Organisation/Version/Version.php',
     'Organisation\Form\CreateObject'                                => __DIR__ . '/src/Organisation/Form/CreateObject.php',
+    'Organisation\Form\View\Helper\OrganisationFormElement'         => __DIR__ . '/src/Organisation/Form/View/Helper/OrganisationFormElement.php',
     'Organisation\Form\ObjectFieldset'                              => __DIR__ . '/src/Organisation/Form/ObjectFieldset.php',
     'Organisation\Form\OrganisationFilter'                          => __DIR__ . '/src/Organisation/Form/OrganisationFilter.php',
     'Organisation\Form\FilterCreateObject'                          => __DIR__ . '/src/Organisation/Form/FilterCreateObject.php',

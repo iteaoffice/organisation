@@ -15,11 +15,15 @@
         <tr {% if projectService.project.contact.id == affiliation.contact.id %}class="success"
             {% endif %}{% if affiliation.dateEnd %}class="danger"{% endif %}>
             <td>{{ projectLink(projectService,'view-admin','name') }}
-                <div class="pull-right">{{ projectLink(projectService,'view-community','icon') }}</div>
+                <div class="pull-right">
+                    {{ affiliationLink(affiliation,'view-community','icon') }}
+                    {{ affiliationLink(affiliation,'view-admin','icon') }}
+                    {{ projectLink(projectService,'view-community','icon') }}
+                </div>
             </td>
             <td>{{ affiliation.branch }}</td>
             <td>{{ projectService.parseStatus() }}</td>
-            <td>{% if affiliation.dateEnd %}{{ translate("txt-deactivated-on-%s")|format(affiliation.dateEnd|date('d-m-Y')) }}{% endif %}</td>
+            <td>{% if affiliation.dateEnd %}{{ translate("txt-deactivated-on-%s")|format(affiliation.dateEnd|date('d-m-Y')) }}{% else %}{{ translate("txt-yes") }}{% endif %}</td>
             <td>{{ contactLink(affiliation.contact,'view-admin') }} {% if projectService.project.contact.id == affiliation.contact.id %}({{ translate("txt-pl") }}){% endif %}</td>
         </tr>
 

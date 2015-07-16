@@ -21,6 +21,10 @@ return [
                         'label' => "txt-organisation-list",
                         'route' => 'zfcadmin/organisation/list',
                     ],
+                    'vat-check'     => [
+                        'label' => "txt-vat-check",
+                        'route' => 'zfcadmin/organisation/vat/list',
+                    ],
                 ],
             ],
         ],
