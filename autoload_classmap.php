@@ -43,6 +43,7 @@ return array(
     'Organisation\Acl\Assertion\AssertionAbstract'                  => __DIR__ . '/src/Organisation/Acl/Assertion/AssertionAbstract.php',
     'Organisation\Controller\OrganisationAbstractController'        => __DIR__ . '/src/Organisation/Controller/OrganisationAbstractController.php',
     'Organisation\Controller\OrganisationManagerController'         => __DIR__ . '/src/Organisation/Controller/OrganisationManagerController.php',
+    'Organisation\Controller\OrganisationVatController'             => __DIR__ . '/src/Organisation/Controller/OrganisationVatController.php',
     'Organisation\Controller\ControllerInitializer'                 => __DIR__ . '/src/Organisation/Controller/ControllerInitializer.php',
     'Organisation\Controller\OrganisationAdminController'           => __DIR__ . '/src/Organisation/Controller/OrganisationAdminController.php',
     'Organisation\Controller\OrganisationController'                => __DIR__ . '/src/Organisation/Controller/OrganisationController.php',
@@ -54,5 +55,6 @@ return array(
     'Organisation\Form\ObjectFieldset'                              => __DIR__ . '/src/Organisation/Form/ObjectFieldset.php',
     'Organisation\Form\OrganisationFilter'                          => __DIR__ . '/src/Organisation/Form/OrganisationFilter.php',
     'Organisation\Form\FilterCreateObject'                          => __DIR__ . '/src/Organisation/Form/FilterCreateObject.php',
+    'Organisation\Repository\Financial'                             => __DIR__ . '/src/Organisation/Repository/Financial.php',
     'Organisation\Repository\Organisation'                          => __DIR__ . '/src/Organisation/Repository/Organisation.php',
 );
