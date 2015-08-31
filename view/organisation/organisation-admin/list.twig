@@ -49,7 +49,7 @@
                     <tr>
                         <td>{{ organisationLink(organisationService, 'view-admin', 'name') }}</td>
                         <td>{{ organisation.country }}</td>
-                        <td>{{ organisation.getContactCount(constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
+                        <td>{{ organisationService.getContactCount(constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
                         <td>{{ organisationService.getAffiliationCount(constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
                         <td>{{ organisation.getType().type }}</td>
                         <td>{{ organisationLink(organisationService, 'edit', 'icon') }}</td>
