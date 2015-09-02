@@ -93,7 +93,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $affiliationFinancial;
 
-
     /**
      * @ORM\OneToMany(targetEntity="Member\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -292,6 +291,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Member\Entity\Applicant
      */
     private $applicant;
+
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -383,6 +383,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @param InputFilterInterface $inputFilter
      *
      * @throws \Exception
+     * @return void
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
@@ -979,10 +980,10 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param mixed $memberFinancial
+     * @param Collections\ArrayCollection|\Member\Entity\Financial[] $memberFinancial
      * @return Organisation
      */
-    public function setMemberFinancial($memberFinancial)
+    public function setMemberFinancial(\Member\Entity\Financial $memberFinancial)
     {
         $this->memberFinancial = $memberFinancial;
         return $this;
