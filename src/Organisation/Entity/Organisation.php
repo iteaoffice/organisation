@@ -92,6 +92,16 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Affiliation\Entity\Financial
      */
     private $affiliationFinancial;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Member\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Member\Entity\Financial[]
+     */
+    private $memberFinancial;
+
+
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country",inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumns({
@@ -281,6 +291,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Member\Entity\Applicant
      */
     private $applicant;
+
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -310,6 +321,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     {
         $this->affiliation = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
+        $this->memberFinancial = new Collections\ArrayCollection();
         $this->domain = new Collections\ArrayCollection();
         $this->technology = new Collections\ArrayCollection();
         $this->cluster = new Collections\ArrayCollection();
@@ -371,11 +383,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @param InputFilterInterface $inputFilter
      *
      * @throws \Exception
+     * @return void
      */
     public function setInputFilter(InputFilterInterface $inputFilter)
     {
         throw new \Exception(sprintf("This class %s is unused", __CLASS__));
     }
+
+
 
     /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
@@ -955,4 +970,24 @@ class Organisation extends EntityAbstract implements ResourceInterface
 
         return $this;
     }
+
+    /**
+     * @return Collections\ArrayCollection|\Member\Entity\Financial[] $memberFinancial
+     */
+    public function getMemberFinancial()
+    {
+        return $this->memberFinancial;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Member\Entity\Financial[] $memberFinancial
+     * @return Organisation
+     */
+    public function setMemberFinancial(\Member\Entity\Financial $memberFinancial)
+    {
+        $this->memberFinancial = $memberFinancial;
+        return $this;
+    }
+
+
 }

@@ -106,6 +106,15 @@ class Type extends EntityAbstract
     private $organisation;
 
     /**
+     * @ORM\OneToMany(targetEntity="Member\Entity\Applicant", cascade={"persist","remove"}, mappedBy="organisationType")
+     * @Annotation\Exclude()
+     *
+     * @var \Member\Entity\Applicant[]|Collections\ArrayCollection
+     */
+    private $applicant;
+
+
+    /**
      * Class constructor.
      */
     public function __construct()
