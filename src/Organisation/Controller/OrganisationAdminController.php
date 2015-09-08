@@ -119,8 +119,6 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
     {
         $search = $this->getRequest()->getPost()->get('search');
 
-        $search = 'itea';
-
         $results = [];
         foreach ($this->getOrganisationService()->searchOrganisation($search, 1000, null, false, false) as $result) {
             $text = trim(

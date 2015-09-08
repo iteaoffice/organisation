@@ -50,10 +50,10 @@ class Type extends EntityAbstract
      *
      * @var array
      */
-    protected $invoiceTemplates = array(
+    protected $invoiceTemplates = [
         self::NO_INVOICE => 'txt-invoice',
         self::INVOICE    => 'txt-no-invoice',
-    );
+    ];
     /**
      * @ORM\Column(name="type_id", type="integer", nullable=false)
      * @ORM\Id
@@ -91,6 +91,13 @@ class Type extends EntityAbstract
      */
     private $invoice;
     /**
+     * @ORM\OneToMany(targetEntity="Event\Entity\Meeting\Cost", cascade={"persist"}, mappedBy="type")
+     * @Annotation\Exclude()
+     *
+     * @var \Event\Entity\Meeting\Cost[]|Collections\ArrayCollection()
+     */
+    private $meetingCost;
+    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
      *
@@ -104,6 +111,7 @@ class Type extends EntityAbstract
     public function __construct()
     {
         $this->organisation = new Collections\ArrayCollection();
+        $this->meetingCost = new Collections\ArrayCollection();
     }
 
     /**
@@ -133,7 +141,7 @@ class Type extends EntityAbstract
      */
     public function __toString()
     {
-        return (string) $this->description;
+        return (string)$this->description;
     }
 
     /**
@@ -153,43 +161,43 @@ class Type extends EntityAbstract
     {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
+            $factory = new InputFactory();
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'type',
                         'required'   => true,
-                        'filters'    => array(
-                            array('name' => 'StripTags'),
-                            array('name' => 'StringTrim'),
-                        ),
-                        'validators' => array(
-                            array(
+                        'filters'    => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                        'validators' => [
+                            [
                                 'name'    => 'StringLength',
-                                'options' => array(
+                                'options' => [
                                     'encoding' => 'UTF-8',
                                     'min'      => 1,
                                     'max'      => 255,
-                                ),
-                            ),
-                        ),
-                    )
+                                ],
+                            ],
+                        ],
+                    ]
                 )
             );
             $inputFilter->add(
                 $factory->createInput(
-                    array(
+                    [
                         'name'       => 'invoice',
                         'required'   => true,
-                        'validators' => array(
-                            array(
+                        'validators' => [
+                            [
                                 'name'    => 'InArray',
-                                'options' => array(
+                                'options' => [
                                     'haystack' => array_keys($this->getInvoiceTemplates()),
-                                ),
-                            ),
-                        ),
-                    )
+                                ],
+                            ],
+                        ],
+                    ]
                 )
             );
             $this->inputFilter = $inputFilter;
@@ -205,11 +213,11 @@ class Type extends EntityAbstract
      */
     public function getArrayCopy()
     {
-        return array(
+        return [
             'type'        => $this->type,
             'description' => $this->description,
             'invoice'     => $this->invoice,
-        );
+        ];
     }
 
     /**
@@ -306,5 +314,24 @@ class Type extends EntityAbstract
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Event\Entity\Meeting\Cost[]
+     */
+    public function getMeetingCost()
+    {
+        return $this->meetingCost;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Event\Entity\Meeting\Cost[] $meetingCost
+     * @return Type
+     */
+    public function setMeetingCost($meetingCost)
+    {
+        $this->meetingCost = $meetingCost;
+
+        return $this;
     }
 }
