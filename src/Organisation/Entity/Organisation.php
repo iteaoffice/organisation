@@ -988,6 +988,4 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->memberFinancial = $memberFinancial;
         return $this;
     }
-
-
 }
