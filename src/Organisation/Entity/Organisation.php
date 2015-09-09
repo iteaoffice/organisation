@@ -303,6 +303,8 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $reminder;
 
+    
+
     /**
      * Class constructor.
      */

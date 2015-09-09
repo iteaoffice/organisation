@@ -76,7 +76,7 @@ class OrganisationController extends OrganisationAbstractController
         $maxResults = $this->getRequest()->getQuery()->get('max_rows', 12);
         $countryId = $this->getRequest()->getQuery()->get('country');
         $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
-        /*
+        /**
          * Include a paginator to be able to have later paginated search results in pages
          */
         $paginator = new Paginator(new ArrayAdapter($searchResult));
