@@ -109,7 +109,7 @@ class OrganisationLink extends LinkAbstract
                 $this->setText($this->translate("txt-new-organisation"));
                 break;
             case 'view-admin':
-                $this->setRouter('zfcadmin/organisation/view');
+                $this->setRouter('zfcadmin/organisation-manager/view');
                 $this->setText(sprintf(
                     $this->translate("txt-view-organisation-%s"),
                     $this->getOrganisationService()->getOrganisation()
