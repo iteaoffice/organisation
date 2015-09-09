@@ -31,7 +31,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
-     * @param array                   $pages
+     * @param array $pages
      *
      * @return array
      */
@@ -45,8 +45,8 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
         if (in_array(
             $this->routeMatch->getMatchedRouteName(),
             [
-                'zfcadmin/organisation-manager/view',
-                'zfcadmin/organisation-manager/edit',
+                'zfcadmin/organisation/view',
+                'zfcadmin/organisation/edit',
             ]
         )
         ) {
@@ -55,8 +55,8 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
              * Go over both arrays and check if the new entities can be added
              */
             $pages['organisation']['pages']['view'] = [
-                'label'      => (string) $this->organisationService->getOrganisation()->getOrganisation(),
-                'route'      => 'zfcadmin/organisation-manager/view',
+                'label'      => (string)$this->organisationService->getOrganisation()->getOrganisation(),
+                'route'      => 'zfcadmin/organisation/view',
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,
                 'active'     => true,
@@ -65,7 +65,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
                 ],
             ];
         }
-        if ($this->routeMatch->getMatchedRouteName() === 'zfcadmin/organisation-manager/edit') {
+        if ($this->routeMatch->getMatchedRouteName() === 'zfcadmin/organisation/edit') {
             $this->organisationService->setOrganisationId($this->routeMatch->getParam('id'));
             /*
              * Go over both arrays and check if the new entities can be added
@@ -75,7 +75,7 @@ class OrganisationNavigationFactory extends DefaultNavigationFactory
                     $translate("txt-edit-organisation-%s"),
                     $this->organisationService->getOrganisation()->getOrganisation()
                 ),
-                'route'      => 'zfcadmin/organisation-manager/edit',
+                'route'      => 'zfcadmin/organisation/edit',
                 'routeMatch' => $this->routeMatch,
                 'router'     => $router,
                 'active'     => true,
