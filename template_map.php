@@ -24,5 +24,6 @@ return array(
     'organisation/organisation-admin/tab/invoices'      => __DIR__ . '//view/organisation/organisation-admin/tab/invoices.twig',
     'organisation/organisation-admin/tab/cluster'       => __DIR__ . '//view/organisation/organisation-admin/tab/cluster.twig',
     'organisation/organisation-admin/tab/doa'           => __DIR__ . '//view/organisation/organisation-admin/tab/doa.twig',
+    'organisation/organisation-admin/edit'              => __DIR__ . '//view/organisation/organisation-admin/edit.twig',
     'organisation/organisation-admin/view'              => __DIR__ . '//view/organisation/organisation-admin/view.twig',
 );

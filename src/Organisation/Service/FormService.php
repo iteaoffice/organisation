@@ -1,60 +1,54 @@
 <?php
+
 /**
- * Jield copyright message placeholder
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
- * @package     Service
- * @author      Johan van der Heide <info@jield.nl>
- * @copyright   Copyright (c) 2004-2015 Jield (http://jield.nl)
+ *
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
+
 namespace Organisation\Service;
 
-use Organisation\Form\CreateObject;
-use Organisation\Form\FilterCreateObject;
 use Zend\Form\Form;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
-class FormService extends ServiceAbstract
+class FormService implements ServiceLocatorAwareInterface
 {
     /**
      * @var Form
      */
     protected $form;
+    /**
+     * @var \Organisation\Service\OrganisationService
+     */
+    protected $organisationService;
+    /**
+     * @var ServiceLocatorInterface
+     */
+    protected $serviceLocator;
 
     /**
      * @param null $className
      * @param null $entity
      * @param bool $bind
      *
-     * @return Form
+     * @return array|object
      */
     public function getForm($className = null, $entity = null, $bind = true)
     {
         if (!is_null($className) && is_null($entity)) {
-            $entity = $this->getEntity($className);
+            $entity = $this->getOrganisationService()->getEntity($className);
         }
-
         if (!is_object($entity)) {
             throw new \InvalidArgumentException("No entity created given");
         }
-
-        $formName = 'Organisation\\' . $entity->get('entity_name') . '\\Form';
-        $filterName = 'Organisation\\InputFilter\\' . $entity->get('entity_name');
-
-        /**
-         * The filter and the form can dynamically be created by pulling the form from the serviceManager
-         * if the form or filter is not give in the serviceManager we will create it by default
-         */
-        if (!$this->getServiceLocator()->has($formName)) {
-            $form = new CreateObject($this->getServiceLocator(), new $entity());
-        } else {
-            $form = $this->getServiceLocator()->get($formName);
-        }
-
-        if (!$this->getServiceLocator()->has($filterName)) {
-            $filter = new FilterCreateObject();
-        } else {
-            $filter = $this->getServiceLocator()->get($filterName);
-        }
+        $formName = 'organisation_' . $entity->get('underscore_entity_name') . '_form';
+        $form = $this->getServiceLocator()->get($formName);
+        $filterName = 'organisation_' . $entity->get('underscore_entity_name') . '_form_filter';
+        $filter = $this->getServiceLocator()->get($filterName);
 
         $form->setInputFilter($filter);
         if ($bind) {
@@ -77,5 +71,47 @@ class FormService extends ServiceAbstract
         $form->setData($data);
 
         return $form;
+    }
+
+    /**
+     * @param OrganisationService $organisationService
+     */
+    public function setOrganisationService($organisationService)
+    {
+        $this->organisationService = $organisationService;
+    }
+
+    /**
+     * Get organisationService.
+     *
+     * @return OrganisationService.
+     */
+    public function getOrganisationService()
+    {
+        if (null === $this->organisationService) {
+            $this->organisationService = $this->getServiceLocator()->get(OrganisationService::class);
+        }
+
+        return $this->organisationService;
+    }
+
+    /**
+     * Set the service locator.
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * Get the service locator.
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
     }
 }

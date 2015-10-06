@@ -13,6 +13,7 @@ namespace Organisation\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * OrganisationWeb.
@@ -20,10 +21,10 @@ use Zend\InputFilter\InputFilterInterface;
  * @ORM\Table(name="organisation_web")
  * @ORM\Entity
  */
-class Web extends EntityAbstract
+class Web extends EntityAbstract implements ResourceInterface
 {
     const NOT_MAIN = 0;
-    const MAIN     = 1;
+    const MAIN = 1;
     /**
      * @ORM\Column(name="web_id", type="integer", nullable=false)
      * @ORM\Id
@@ -62,6 +63,16 @@ class Web extends EntityAbstract
         $url = '<a href="http://%s">%s</a>';
 
         return sprintf($url, $this->web, $this->web);
+    }
+
+    /**
+     * Returns the string identifier of the Resource.
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
     /**

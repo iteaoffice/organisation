@@ -41,7 +41,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\Column(name="organisation", type="string", length=60, nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-organisation"})
+     * @Annotation\Options({"label":"txt-organisation-name","help-block":"txt-organisation-name-help-block"})
      *
      * @var string
      */
@@ -100,8 +100,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Member\Entity\Financial[]
      */
     private $memberFinancial;
-
-
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country",inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumns({
@@ -120,7 +118,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      *          }
      *      }
      * )
-     * @Annotation\Attributes({"label":"txt-country"})
+     * @Annotation\Attributes({"label":"txt-country","help-block":"txt-organisation-country-help-block"})
      *
      * @var \General\Entity\Country
      */
@@ -291,7 +289,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Member\Entity\Applicant
      */
     private $applicant;
-
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -440,6 +437,8 @@ class Organisation extends EntityAbstract implements ResourceInterface
                     ]
                 )
             );
+
+            $this->inputFilter = $inputFilter;
         }
 
         return $this->inputFilter;

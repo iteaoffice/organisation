@@ -17,6 +17,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Invoice\Form\InvoiceFilter;
 use Invoice\Service\InvoiceServiceAwareInterface;
+use Organisation\Entity\Organisation;
 use Organisation\Form\OrganisationFilter;
 use Project\Service\ProjectService;
 use Project\Service\ProjectServiceAwareInterface;
@@ -80,7 +81,7 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
             array_merge(
                 $filterPlugin->getFilter(),
                 [
-                    'organisation' => [$organisationService->getOrganisation()->getId()]
+                    'organisation' => [$organisationService->getOrganisation()->getId()],
                 ]
             )
         );
@@ -110,6 +111,52 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
             'projects'            => $projects,
 
         ]);
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function editAction()
+    {
+        $organisationService = $this->getOrganisationService()->setOrganisationId($this->params('id'));
+
+        $data = array_merge(
+            $this->getRequest()->getPost()->toArray()
+        );
+        $form = $this->getFormService()->prepare(
+            $organisationService->getOrganisation(),
+            $organisationService->getOrganisation(),
+            $data
+        );
+
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/view',
+                    ['id' => $organisationService->getOrganisation()->getId()]
+                );
+            }
+
+            if ($form->isValid()) {
+                /**
+                 * @var $organisation Organisation
+                 */
+                $organisation = $form->getData();
+                $this->getOrganisationService()->updateEntity($organisation);
+
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/view',
+                    ['id' => $organisationService->getOrganisation()->getId()]
+                );
+            }
+        }
+
+        return new ViewModel(
+            [
+                'organisationService' => $organisationService,
+                'form'                => $form,
+            ]
+        );
     }
 
     /**

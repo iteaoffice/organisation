@@ -15,6 +15,7 @@
             <dd>{{ financial.vat }}
                 ({{ translate(financial.vatStatus(true)) }}
                 - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }})
+                <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i>
             </dd>
             <dt>{{ translate("txt-omit-contact-on-invoice") }}</dt>
             <dd>{{ translate(financial.getOmitContact(true)) }}</dd>
@@ -31,3 +32,33 @@
         {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisationService.organisation))|raw }}
     {% endif %}
 
+
+<script type="text/javascript">
+    $(document).on('click', '.checkVat', function (e) {
+        var $this = $(this);
+
+        var $financialId = $this.attr('rel');
+
+        $this.addClass('fa-spin');
+
+        $.ajax({
+            url: '{{ serverUrl() }}{{ url('organisation/json/check-vat') }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'financialId': $financialId,
+            },
+            success: function (response) {
+                $("#vatStatus_" + $financialId).html(response.result);
+                $this.removeClass('fa-spin');
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+            }
+        });
+
+
+    });
+
+</script>

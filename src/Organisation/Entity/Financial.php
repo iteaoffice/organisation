@@ -16,6 +16,7 @@ use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * OrganisationFinancial.
@@ -23,7 +24,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @ORM\Table(name="organisation_financial")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Financial")
  */
-class Financial extends EntityAbstract
+class Financial extends EntityAbstract implements ResourceInterface
 {
     const VAT_STATUS_UNDEFINED = 0;
     const VAT_STATUS_VALID = 1;
@@ -220,6 +221,16 @@ class Financial extends EntityAbstract
         $this->requiredPurchaseOrder = self::REQUIRED_PURCHASE_ORDER;
         $this->vatType = new Collections\ArrayCollection();
         $this->reminder = new Collections\ArrayCollection();
+    }
+
+    /**
+     * Returns the string identifier of the Resource.
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
     /**

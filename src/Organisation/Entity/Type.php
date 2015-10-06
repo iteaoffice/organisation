@@ -16,6 +16,7 @@ use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Type.
@@ -25,7 +26,7 @@ use Zend\InputFilter\InputFilterInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_type")
  */
-class Type extends EntityAbstract
+class Type extends EntityAbstract implements ResourceInterface
 {
     /**
      * Constant for a type without invoice.
@@ -113,6 +114,15 @@ class Type extends EntityAbstract
      */
     private $applicant;
 
+    /**
+     * Returns the string identifier of the Resource.
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", __CLASS__, $this->id);
+    }
 
     /**
      * Class constructor.
@@ -216,57 +226,11 @@ class Type extends EntityAbstract
     }
 
     /**
-     * Needed for the hydration of form elements.
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'type'        => $this->type,
-            'description' => $this->description,
-            'invoice'     => $this->invoice,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function populate()
-    {
-        return $this->getArrayCopy();
-    }
-
-    /**
      * @return array
      */
     public function getInvoiceTemplates()
     {
         return $this->invoiceTemplates;
-    }
-
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**
@@ -278,11 +242,49 @@ class Type extends EntityAbstract
     }
 
     /**
-     * @param int $invoice
+     * @param int $id
+     * @return Type
      */
-    public function setInvoice($invoice)
+    public function setId($id)
     {
-        $this->invoice = $invoice;
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return Type
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
     }
 
     /**
@@ -294,35 +296,13 @@ class Type extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Organisation[] $organisation
+     * @param int $invoice
+     * @return Type
      */
-    public function setOrganisation($organisation)
+    public function setInvoice($invoice)
     {
-        $this->organisation = $organisation;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation[]
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
+        $this->invoice = $invoice;
+        return $this;
     }
 
     /**
@@ -340,7 +320,42 @@ class Type extends EntityAbstract
     public function setMeetingCost($meetingCost)
     {
         $this->meetingCost = $meetingCost;
+        return $this;
+    }
 
+    /**
+     * @return Collections\ArrayCollection|Organisation[]
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Organisation[] $organisation
+     * @return Type
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Member\Entity\Applicant[]
+     */
+    public function getApplicant()
+    {
+        return $this->applicant;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Member\Entity\Applicant[] $applicant
+     * @return Type
+     */
+    public function setApplicant($applicant)
+    {
+        $this->applicant = $applicant;
         return $this;
     }
 }

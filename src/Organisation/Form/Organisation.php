@@ -2,7 +2,7 @@
 /**
  * ITEA Office copyright message placeholder.
  *
- * @category    Organisation
+ * @category    Content
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
@@ -10,14 +10,14 @@
 
 namespace Organisation\Form;
 
-use Organisation\Entity\EntityAbstract;
+use Organisation\Entity;
 use Zend\Form\Form;
 use Zend\ServiceManager\ServiceManager;
 
 /**
  *
  */
-class CreateObject extends Form
+class Organisation extends Form
 {
     /**
      * @var ServiceManager
@@ -25,26 +25,43 @@ class CreateObject extends Form
     protected $serviceManager;
 
     /**
-     * Class constructor.
+     * @param ServiceManager $serviceManager
      */
-    public function __construct(ServiceManager $serviceManager, EntityAbstract $object)
+    public function __construct(ServiceManager $serviceManager)
     {
-        parent::__construct($object->get('underscore_entity_name'));
-        $this->serviceManager = $serviceManager;
-        $entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
-        $objectSpecificFieldset = '\Content\Form\\' . ucfirst($object->get('entity_name')) . 'Fieldset';
-        /*
-         * Load a specific fieldSet when present
-         */
-        if (class_exists($objectSpecificFieldset)) {
-            $objectFieldset = new $objectSpecificFieldset($entityManager, $object);
-        } else {
-            $objectFieldset = new ObjectFieldset($entityManager, $object);
-        }
-        $objectFieldset->setUseAsBaseFieldset(true);
-        $this->add($objectFieldset);
+        $organisation = new Entity\Organisation();
+        parent::__construct($organisation->get('underscore_entity_name'));
+
         $this->setAttribute('method', 'post');
         $this->setAttribute('action', '');
+
+        $this->serviceManager = $serviceManager;
+        $entityManager = $this->serviceManager->get('Doctrine\ORM\EntityManager');
+        $organisationFieldset = new ObjectFieldset($entityManager, $organisation);
+        $organisationFieldset->setUseAsBaseFieldset(true);
+        $this->add($organisationFieldset);
+
+        $this->add(
+            [
+                'type'    => '\Zend\Form\Element\Textarea',
+                'name'    => 'description',
+                'options' => [
+                    "label"      => "txt-description",
+                    "help-block" => _("txt-organisation-description-help-block"),
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'type'    => '\Zend\Form\Element\File',
+                'name'    => 'file',
+                'options' => [
+                    "label"      => "txt-logo",
+                    "help-block" => _("txt-organisation-logo-requirements"),
+                ],
+            ]
+        );
 
         $this->add(
             [
