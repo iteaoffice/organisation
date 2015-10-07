@@ -1,13 +1,39 @@
 {% do form.prepare() %}
+{% do form.setAttribute('class','form-horizontal') %}
 
 {{ form().openTag(form)|raw }}
 
-{% set area = form.get('area') %}
+{% set organisation = form.get('organisation') %}
 
-{{ ztbformelement(area.get('name')) }}
-{{ ztbformelement(area.get('label')) }}
+<fieldset>
+    <legend>{{ translate("txt-organisation-information") }}</legend>
+    {{ ztbformelement(organisation.get('organisation')) }}
+    {{ ztbformelement(form.get('description')) }}
+    {{ ztbformelement(organisation.get('type')) }}
+    {{ ztbformelement(organisation.get('country')) }}
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{ translate("txt-current-logo") }}</label>
+
+        <div class="col-sm-9">
+            <p class="form-control-static">{{ organisationLogo(organisationService) }}</p>
+        </div>
+    </div>
 
 
-{{ ztbformelement(form.get('submit')) }}
+    {{ ztbformelement(form.get('file')) }}
+</fieldset>
+
+
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+        {% if form.has('delete') %}
+            {{ ztbformelement(form.get('delete')) }}
+        {% endif %}
+    </div>
+</div>
 
 {{ form().closeTag()|raw }}

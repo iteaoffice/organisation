@@ -13,6 +13,7 @@
 
 namespace Organisation\View\Helper;
 
+use Organisation\Service\OrganisationService;
 use Organisation\Service\OrganisationServiceAwareInterface;
 use Zend\ServiceManager\InitializerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -44,7 +45,7 @@ class ViewHelperInitializer implements InitializerInterface
             return;
         }
         $arrayCheck = [
-            OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
+            OrganisationServiceAwareInterface::class => OrganisationService::class,
         ];
         /*
          * @var ServiceLocatorInterface

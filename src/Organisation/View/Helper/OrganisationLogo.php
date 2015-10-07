@@ -11,7 +11,6 @@
 
 namespace Organisation\View\Helper;
 
-use Organisation\Entity\Logo;
 use Organisation\Service;
 
 /**
@@ -23,12 +22,16 @@ class OrganisationLogo extends ImageAbstract
 {
     /**
      * @param Service\OrganisationService $organisationService
-     * @param null                        $class
+     * @param null $class
      *
      * @return string
      */
     public function __invoke(Service\OrganisationService $organisationService = null, $class = null)
     {
+        if (is_null($organisationService)) {
+            return '';
+        }
+
         $logo = $organisationService->getOrganisation()->getLogo();
         if ($logo->count() === 0) {
             return '';
@@ -49,7 +52,7 @@ class OrganisationLogo extends ImageAbstract
         $this->setRouter('assets/organisation-logo');
         $this->addClasses('img-responsive');
 
-        $this->setImageId('organisation_logo_'.$logo->getId());
+        $this->setImageId('organisation_logo_' . $logo->getId());
         $this->addRouterParam('hash', $logo->getHash());
         $this->addRouterParam('ext', $logo->getContentType()->getExtension());
         $this->addRouterParam('id', $logo->getId());

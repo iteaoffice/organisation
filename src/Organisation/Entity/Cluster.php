@@ -49,6 +49,14 @@ class Cluster //extends EntityAbstract
     private $member;
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return sprintf("%s cluster", $this->organisation);
+    }
+
+    /**
      * @param int $id
      */
     public function setId($id)

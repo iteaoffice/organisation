@@ -1,0 +1,64 @@
+<h2>{{ translate("txt-financial") }}</h2>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-debtor-number") }}</dt>
+    <dd>{{ organisationService.parseDebtorNumber() }}</dd>
+    <dt>{{ translate("txt-credit-number") }}</dt>
+    <dd>{{ organisationService.parseCreditNumber() }}</dd>
+</dl>
+{% set financial = organisationService.organisation.financial %}
+
+
+    {% if financial %}
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-vat-number") }}</dt>
+            <dd>{{ financial.vat }}
+                ({{ translate(financial.vatStatus(true)) }}
+                - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }})
+                <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i>
+            </dd>
+            <dt>{{ translate("txt-omit-contact-on-invoice") }}</dt>
+            <dd>{{ translate(financial.getOmitContact(true)) }}</dd>
+            <dt>{{ translate("txt-invoice-via-email") }}</dt>
+            <dd>{{ translate(financial.getEmail(true)) }}</dd>
+            <dt>{{ translate("txt-require-purchace-order") }}</dt>
+            <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
+            <dt>{{ translate("txt-amount-of-invoices") }}</dt>
+            <dd>
+                <a href="{{ url('zfcadmin/organisation/view',{'id': organisationService.organisation.id}) }}#invoices">{{ organisationService.organisation.invoice.count() }}</a>
+            </dd>
+        </dl>
+    {% else %}
+        {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisationService.organisation))|raw }}
+    {% endif %}
+
+
+<script type="text/javascript">
+    $(document).on('click', '.checkVat', function (e) {
+        var $this = $(this);
+
+        var $financialId = $this.attr('rel');
+
+        $this.addClass('fa-spin');
+
+        $.ajax({
+            url: '{{ serverUrl() }}{{ url('organisation/json/check-vat') }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'financialId': $financialId,
+            },
+            success: function (response) {
+                $("#vatStatus_" + $financialId).html(response.result);
+                $this.removeClass('fa-spin');
+            },
+            error: function (xhr) {
+                console.log(xhr);
+                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+            }
+        });
+
+
+    });
+
+</script>

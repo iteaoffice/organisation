@@ -7,73 +7,86 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
-use Organisation\Controller\ControllerInitializer;
-use Organisation\Service\ServiceInitializer;
-use Organisation\View\Helper\CreateLogoFromArray;
-use Organisation\View\Helper\CreateOrganisationFromArray;
-use Organisation\View\Helper\ViewHelperInitializer;
+use Organisation\Acl\Assertion;
+use Organisation\Controller;
+use Organisation\Form\View\Helper\OrganisationFormElement;
+use Organisation\Service;
+use Organisation\View\Helper;
 
 $config = [
     'controllers'     => [
         'initializers' => [
-            ControllerInitializer::class
+            Controller\ControllerInitializer::class,
         ],
         'invokables'   => [
-            'organisation-index'   => 'Organisation\Controller\OrganisationController',
-            'organisation-manager' => 'Organisation\Controller\OrganisationManagerController',
+            Controller\OrganisationController::class        => Controller\OrganisationController::class,
+            Controller\OrganisationManagerController::class => Controller\OrganisationManagerController::class,
+            Controller\OrganisationAdminController::class   => Controller\OrganisationAdminController::class,
+            Controller\OrganisationVatController::class     => Controller\OrganisationVatController::class,
+            Controller\JsonController::class                => Controller\JsonController::class,
         ],
     ],
     'view_manager'    => [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
     'view_helpers'    => [
-        'initializers' => [ViewHelperInitializer::class],
-        'invokables'   => [
-            'createLogoFromArray'         => CreateLogoFromArray::class,
-            'createOrganisationFromArray' => CreateOrganisationFromArray::class,
-            'organisationHandler'         => 'Organisation\View\Helper\OrganisationHandler',
-            'organisationServiceProxy'    => 'Organisation\View\Helper\OrganisationServiceProxy',
-            'organisationLink'            => 'Organisation\View\Helper\OrganisationLink',
-            'organisationLogo'            => 'Organisation\View\Helper\OrganisationLogo',
-        ]
-    ],
-    'service_manager' => [
-        'initializers' => [ServiceInitializer::class],
-        'factories'    => [
-            'organisation_module_config' => 'Organisation\Service\ConfigServiceFactory',
-            'organisation_cache'         => 'Organisation\Service\CacheFactory',
+        'initializers' => [
+            Helper\ViewHelperInitializer::class,
         ],
         'invokables'   => [
-            OrganisationAssertion::class            => OrganisationAssertion::class,
-            'organisation_organisation_service'     => 'Organisation\Service\OrganisationService',
-            'organisation_form_service'             => 'Organisation\Service\FormService',
-            'organisation_organisation_form_filter' => 'Organisation\Form\FilterCreateOrganisation',
-        ]
+            'organisationformelement'     => OrganisationFormElement::class,
+            'createLogoFromArray'         => Helper\CreateLogoFromArray::class,
+            'createOrganisationFromArray' => Helper\CreateOrganisationFromArray::class,
+            'organisationHandler'         => Helper\OrganisationHandler::class,
+            'organisationServiceProxy'    => Helper\OrganisationServiceProxy::class,
+            'organisationLink'            => Helper\OrganisationLink::class,
+            'organisationLogo'            => Helper\OrganisationLogo::class,
+        ],
+    ],
+    'service_manager' => [
+        'initializers' => [
+            Service\ServiceInitializer::class,
+        ],
+        'factories'    => [
+            'organisation_module_config'  => Service\ConfigServiceFactory::class,
+            'organisation_module_options' => Service\OptionServiceFactory::class,
+            'organisation_cache'          => Service\CacheFactory::class,
+        ],
+        'invokables'   => [
+            Assertion\Organisation::class           => Assertion\Organisation::class,
+            Service\OrganisationService::class      => Service\OrganisationService::class,
+            Service\FormService::class              => Service\FormService::class,
+            'organisation_organisation_form_filter' => 'Organisation\Form\FilterOrganisation',
+        ],
     ],
     'doctrine'        => [
         'driver'       => [
             'organisation_annotation_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => [__DIR__ . '/../src/Organisation/Entity/']
+                'paths' => [__DIR__ . '/../src/Organisation/Entity/'],
             ],
-            'orm_default'                    => ['drivers' => ['Organisation\Entity' => 'organisation_annotation_driver',]]
+            'orm_default'                    => [
+                'drivers' => [
+                    'Organisation\Entity' => 'organisation_annotation_driver',
+                ],
+            ],
         ],
         'eventmanager' => [
             'orm_default' => [
                 'subscribers' => [
                     'Gedmo\Timestampable\TimestampableListener',
                     'Gedmo\Sluggable\SluggableListener',
-                ]
+                ],
             ],
         ],
-    ]
+    ],
 ];
 $configFiles = [
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
     __DIR__ . '/module.config.organisation.php',
+    __DIR__ . '/module.option.organisation.php',
 ];
 foreach ($configFiles as $configFile) {
     $config = Zend\Stdlib\ArrayUtils::merge($config, include $configFile);

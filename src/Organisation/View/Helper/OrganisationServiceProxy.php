@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office copyright message placeholder.
  *
@@ -7,7 +8,6 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
  */
-
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\Organisation;
@@ -34,7 +34,7 @@ class OrganisationServiceProxy extends AbstractHelper implements ServiceLocatorA
     public function __invoke(Organisation $organisation)
     {
         $organisationService = clone $this->serviceLocator->getServiceLocator()->get(
-            'organisation_organisation_service'
+            OrganisationService::class
         );
 
         return $organisationService->setOrganisation($organisation);
