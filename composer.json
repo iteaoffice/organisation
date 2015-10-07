@@ -1,26 +1,22 @@
 {
-  "name": "debranova/organisation",
+  "name": "iteaoffice/organisation",
   "type": "library",
   "license": "proprietary",
-  "description": "General code for Debranova Organisations",
+  "description": "General code for  Organisations",
   "keywords": [
     "organisation"
   ],
-  "homepage": "http://debranova.org",
+  "homepage": "https://itea3.org",
   "repositories": [
     {
       "type": "composer",
-      "url": "http://packages.debranova.org"
+      "url": "http://packages.itea3.eu"
     }
   ],
   "authors": [
     {
       "name": "Johan van der Heide",
       "email": "johan.van.der.heide@itea3.org"
-    },
-    {
-      "name": "Andre Hebben",
-      "email": "andre.hebben@artemis-ia.eu"
     }
   ],
   "minimum-stability": "dev",
