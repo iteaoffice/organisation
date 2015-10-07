@@ -11,14 +11,14 @@
 
 namespace Organisation\Service;
 
-use Zend\Form;
+use Zend\Form\Form;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class FormService implements ServiceLocatorAwareInterface
 {
     /**
-     * @var \Zend\Form\Form
+     * @var Form
      */
     protected $form;
     /**
@@ -39,13 +39,17 @@ class FormService implements ServiceLocatorAwareInterface
      */
     public function getForm($className = null, $entity = null, $bind = true)
     {
-        if (!$entity) {
+        if (!is_null($className) && is_null($entity)) {
             $entity = $this->getOrganisationService()->getEntity($className);
         }
-        $formName = 'organisation_'.$entity->get('underscore_entity_name').'_form';
-        $form     = $this->getServiceLocator()->get($formName);
-        $filterName = 'organisation_'.$entity->get('underscore_entity_name').'_form_filter';
-        $filter     = $this->getServiceLocator()->get($filterName);
+        if (!is_object($entity)) {
+            throw new \InvalidArgumentException("No entity created given");
+        }
+        $formName = 'organisation_' . $entity->get('underscore_entity_name') . '_form';
+        $form = $this->getServiceLocator()->get($formName);
+        $filterName = 'organisation_' . $entity->get('underscore_entity_name') . '_form_filter';
+        $filter = $this->getServiceLocator()->get($filterName);
+
         $form->setInputFilter($filter);
         if ($bind) {
             $form->bind($entity);
@@ -55,11 +59,11 @@ class FormService implements ServiceLocatorAwareInterface
     }
 
     /**
-     * @param       $className
-     * @param null  $entity
-     * @param array $data
+     * @param      $className
+     * @param null $entity
+     * @param      $data
      *
-     * @return array|object
+     * @return Form
      */
     public function prepare($className, $entity = null, $data = [])
     {
@@ -85,7 +89,7 @@ class FormService implements ServiceLocatorAwareInterface
     public function getOrganisationService()
     {
         if (null === $this->organisationService) {
-            $this->organisationService = $this->getServiceLocator()->get('organisation_generic_service');
+            $this->organisationService = $this->getServiceLocator()->get(OrganisationService::class);
         }
 
         return $this->organisationService;

@@ -21,7 +21,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 /**
  * Create a link to an project.
  *
- * @category   Project
+ * @category   Organisation
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
  * @license    http://debranova.org/licence.txt proprietary
@@ -31,8 +31,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class ServiceInitializer implements InitializerInterface
 {
     /**
-     * @param                         $instance
+     * @param string                  $instance
      * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return null
      */
     public function initialize($instance, ServiceLocatorInterface $serviceLocator)
     {
@@ -40,7 +42,8 @@ class ServiceInitializer implements InitializerInterface
             return;
         }
         $arrayCheck = [
-            OrganisationServiceAwareInterface::class => 'organisation_organisation_service',
+            OrganisationServiceAwareInterface::class => OrganisationService::class,
+            FormServiceAwareInterface::class         => FormService::class,
         ];
         /*
          * Go over each interface to see if we should add an interface

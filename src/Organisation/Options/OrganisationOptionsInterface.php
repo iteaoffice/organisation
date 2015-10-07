@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ARTEMIS-IA Office copyright message placeholder.
  *
@@ -10,7 +11,6 @@
  *
  * @link       http://debranova.org
  */
-
 namespace Organisation\Options;
 
 /**
@@ -37,4 +37,32 @@ interface OrganisationOptionsInterface
      * @return OrganisationOptionsInterface
      */
     public function setUseOrganisationMap($useOrganisationMap);
+
+    /**
+     * @param $countryColor
+     *
+     * @return ModuleOptions
+     */
+    public function setCountryColor($countryColor);
+
+    /**
+     * @return string
+     */
+    public function getCountryColor();
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @param string $countryColorFaded
+     *
+     * @return ModuleOptions
+     */
+    public function setCountryColorFaded($countryColorFaded);
+
+    /**
+     * Returns the assigned hex color of the country map.
+     *
+     * @return string
+     */
+    public function getCountryColorFaded();
 }

@@ -10,8 +10,10 @@
 
 namespace Organisation\Repository;
 
+use Contact\Entity\Contact;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
 use General\Entity\Country;
@@ -25,13 +27,54 @@ use Zend\Validator\EmailAddress;
 class Organisation extends EntityRepository
 {
     /**
+     * @param array $filter
+     * @return Query
+     */
+    public function findFiltered(array $filter)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('o');
+        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
+
+
+        if (array_key_exists('search', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
+            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+        }
+
+        if (array_key_exists('type', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->in('o.type', implode($filter['type'], ', ')));
+        }
+
+        $direction = 'ASC';
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
+            $direction = strtoupper($filter['direction']);
+        }
+
+        switch ($filter['order']) {
+            case 'lastUpdate':
+                $queryBuilder->addOrderBy('o.lastUpdate', $direction);
+                break;
+            case 'name':
+                $queryBuilder->addOrderBy('o.organisation', $direction);
+                break;
+            default:
+                $queryBuilder->addOrderBy('o.id', $direction);
+
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+    /**
      * Give a list of organisations.
      *
-     * @param   $onlyActive
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
-    public function findOrganisations($onlyActive)
+    public function findOrganisations($onlyActiveProject, $onlyActivePartner)
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o');
@@ -40,8 +83,11 @@ class Organisation extends EntityRepository
         $qb->join('o.affiliation', 'a');
         $qb->join('a.project', 'p');
         //Limit to only the active projects
-        if ($onlyActive) {
+        if ($onlyActiveProject) {
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+        }
+        if ($onlyActivePartner) {
+            $qb->andWhere($qb->expr()->isNull('a.dateEnd'));
         }
         $qb->orderBy('o.organisation', 'ASC');
 
@@ -52,11 +98,12 @@ class Organisation extends EntityRepository
      * Give a list of organisations by country.
      *
      * @param Country $country
-     * @param         $onlyActive
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
-    public function findOrganisationByCountry(Country $country, $onlyActive)
+    public function findOrganisationByCountry(Country $country, $onlyActiveProject, $onlyActivePartner)
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('o');
@@ -65,8 +112,11 @@ class Organisation extends EntityRepository
         $qb->join('o.affiliation', 'a');
         $qb->join('a.project', 'p');
         //Limit to only the active projects
-        if ($onlyActive) {
+        if ($onlyActiveProject) {
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+        }
+        if ($onlyActivePartner) {
+            $qb->andWhere($qb->expr()->isNull('a.dateEnd'));
         }
         $qb->andWhere('o.country = ?8');
         $qb->setParameter(8, $country);
@@ -79,34 +129,44 @@ class Organisation extends EntityRepository
      * This is basic search for organisations (based on the name, number and description.
      *
      * @param string $searchItem
-     * @param int    $maxResults
-     * @param null   $countryId
-     * @param bool   $onlyActive
+     * @param int $maxResults
+     * @param null $countryId
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return Entity\Organisation[]
      */
-    public function searchOrganisations($searchItem, $maxResults = 12, $countryId = null, $onlyActive = true)
-    {
+    public function searchOrganisations(
+        $searchItem,
+        $maxResults = 12,
+        $countryId = null,
+        $onlyActiveProject = true,
+        $onlyActivePartner = true
+    ) {
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('o');
+        $qb->select(['o.id', 'o.organisation', 'c.iso3']);
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%".$searchItem."%");
+        $qb->join('o.country', 'c');
+        $qb->join('o.affiliation', 'a');
+        $qb->join('a.project', 'p');
+        $qb->setParameter('searchItem', "%" . $searchItem . "%");
         if (!is_null($countryId)) {
             $qb->andWhere('o.country = ?3');
             $qb->setParameter(3, $countryId);
         }
         //Limit to only the active projects
-        if ($onlyActive) {
-            $qb->join('o.affiliation', 'a');
-            $qb->join('a.project', 'p');
+        if ($onlyActiveProject) {
             $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+        }
+        if ($onlyActivePartner) {
+            $qb->andWhere($qb->expr()->isNotNull('a.dateEnd'));
         }
         $qb->setMaxResults($maxResults);
         $qb->orderBy('o.organisation', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getArrayResult();
     }
 
     /**
@@ -141,7 +201,7 @@ class Organisation extends EntityRepository
          */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($emailAddress);
-        $qb->setParameter('domain', "%".$validateEmail->hostname."%");
+        $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
         //We want a match on the email address
         $qb->andWhere(
             $qb->expr()->orX(
@@ -159,9 +219,77 @@ class Organisation extends EntityRepository
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%".$name."%");
+        $qb->setParameter('searchItem', "%" . $name . "%");
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param         $emailAddress
+     *
+     * @return Entity\Organisation[]|null
+     */
+    public function findOrganisationByEmailAddress($emailAddress)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('o');
+        $qb->distinct('o.id');
+        $qb->from('Organisation\Entity\Organisation', 'o');
+        $qb->join('o.country', 'c');
+
+        //Inner join on contact_organisations to only have active organisations
+        $qb->join('o.contactOrganisation', 'co');
+
+
+        $subSelect = $this->_em->createQueryBuilder();
+        $subSelect->select('wo');
+        $subSelect->from('Organisation\Entity\Web', 'w');
+        $subSelect->join('w.organisation', 'wo');
+        $subSelect->andWhere('w.web LIKE :domain');
+        $subSelect->andWhere($qb->expr()->notIn('w.web', ['gmail.com', 'hotmail.com', 'yahoo.com']));
+
+        /**
+         * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
+         */
+        $validateEmail = new EmailAddress();
+        $validateEmail->isValid($emailAddress);
+        $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
+        //We want a match on the email address
+        $qb->andWhere($qb->expr()->in('o.id', $subSelect->getDQL()));
+
+        $qb->addOrderBy('c.country', 'ASC');
+        $qb->addOrderBy('o.organisation', 'ASC');
+
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param Contact $contact
+     * @return array
+     */
+    public function findOrganisationForProfileEditByContact(Contact $contact)
+    {
+        $organisations = [];
+        //Start with your own organisation
+
+        if (!is_null($contact->getContactOrganisation())) {
+            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()] = $contact->getContactOrganisation()->getOrganisation();
+        }
+
+        foreach ($this->findOrganisationByEmailAddress($contact->getEmail()) as $organisation) {
+            $organisations[$organisation->getId()] = $organisation;
+        }
+
+        asort($organisations);
+
+        //Add an empty value
+        $emptyOrganisation = new Entity\Organisation();
+        $emptyOrganisation->setId(0);
+        $emptyOrganisation->setOrganisation('&mdash; None of the above');
+        $organisations[$emptyOrganisation->getId()] = $emptyOrganisation;
+
+        return $organisations;
     }
 
     /**
@@ -185,7 +313,7 @@ class Organisation extends EntityRepository
          * Do a filter based on the organisation name
          */
         $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%".$name."%");
+        $qb->setParameter('searchItem', "%" . $name . "%");
 
         $qb->setMaxResults(1);
 
@@ -195,7 +323,7 @@ class Organisation extends EntityRepository
     /**
      * Find participants based on the given criteria.
      *
-     * @param Meeting    $meeting
+     * @param Meeting $meeting
      * @param Parameters $search
      *
      * @return Registration[]
@@ -249,9 +377,9 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter(1, $meeting->getId());
         $queryBuilder->setParameter(2, Registration::NOT_HIDE_IN_LIST);
         $queryBuilder->setParameter(3, Registration::NOT_OVERBOOKED);
-        $queryBuilder->setParameter(4, '%'.$search->get('search').'%');
+        $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
         $queryBuilder->addOrderBy('o.organisation', 'ASC');
 
-        return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
 }
