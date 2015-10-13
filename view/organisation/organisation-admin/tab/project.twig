@@ -17,9 +17,11 @@
                 {% endif %}{% if affiliation.dateEnd %}class="danger"{% endif %}>
                 <td>{{ projectLink(projectService,'view-admin','name') }}
 
-                    {{ affiliationLink(affiliation,'view-community','icon') }}
-                    {{ affiliationLink(affiliation,'view-admin','icon') }}
-                    {{ projectLink(projectService,'view-community','icon') }}
+                    <div class="pull-right">
+                        {{ projectLink(projectService,'view-community','icon') }}
+                        {{ affiliationLink(affiliation,'view-community','icon') }}
+                        {{ affiliationLink(affiliation,'view-admin','icon') }}
+                    </div>
                 </td>
                 <td>{{ affiliation.branch }}</td>
                 <td>{{ projectService.parseStatus() }}</td>
@@ -32,3 +34,5 @@
 {% else %}
     {{ ztbalert().info(translate("txt-%s-is-not-active-in-a-project"))|format(organisationService.organisation)|raw }}
 {% endif %}
+
+{{ organisationLink(organisationService,'add-affiliation','button') }}

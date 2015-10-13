@@ -14,7 +14,6 @@ use Organisation\Entity\Logo;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
-use ZendTest\View\Renderer\TestAsset\JsonModel;
 
 /**
  * @category    Organisation
@@ -39,7 +38,10 @@ class OrganisationController extends OrganisationAbstractController
         /**
          * Do a check if the given has is correct to avoid guessing the image
          */
-        if (is_null($logo) || $this->getEvent()->getRouteMatch()->getParam('hash') !== $logo->getHash()) {
+        if (is_null($logo)
+            || $this->getEvent()->getRouteMatch()->getParam('hash')
+            !== $logo->getHash()
+        ) {
             return $this->notFoundAction();
         }
 
@@ -56,12 +58,12 @@ class OrganisationController extends OrganisationAbstractController
         }
 
         $response = $this->getResponse();
-        $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+        $response->getHeaders()->addHeaderLine('Expires: '
+            . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")
-            ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
+            ->addHeaderLine("Pragma: public")->addHeaderLine('Content-Type: '
+                . $logo->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: ' . (string)strlen($file));
         $response->setContent($file);
 
         return $response;
@@ -75,7 +77,8 @@ class OrganisationController extends OrganisationAbstractController
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
         $maxResults = $this->getRequest()->getQuery()->get('max_rows', 12);
         $countryId = $this->getRequest()->getQuery()->get('country');
-        $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
+        $searchResult = $this->getOrganisationService()
+            ->searchOrganisation($searchItem, $maxResults, $countryId);
         /**
          * Include a paginator to be able to have later paginated search results in pages
          */
@@ -83,7 +86,10 @@ class OrganisationController extends OrganisationAbstractController
         $paginator->setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
-        $viewModel = new ViewModel(['paginator' => $paginator, 'organisationService' => $this->getOrganisationService()]);
+        $viewModel = new ViewModel([
+            'paginator'           => $paginator,
+            'organisationService' => $this->getOrganisationService()
+        ]);
         $viewModel->setTerminal(true);
         $viewModel->setTemplate('organisation/partial/list/organisation-search');
 

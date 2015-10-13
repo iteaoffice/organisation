@@ -11,8 +11,7 @@
     <dd>{{ organisationService.organisation.country }}</dd>
     <dt>{{ translate("txt-contacts") }}</dt>
     <dd>{{ organisationService.getContactCount(constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
-        (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
-        )
+        (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
     </dd>
     <dt>{{ translate("txt-projects") }}</dt>
     <dd>{{ organisationService.getAffiliationCount(constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
@@ -26,11 +25,11 @@
     <dd>{{ organisationLogo(organisationService,'view') }}</dd>
     {% if organisationService.organisation.getDateCreated() %}
         <dt>{{ translate("txt-date-created") }}</dt>
-        <dd>{{ organisationService.organisation.getDateCreated()|string_date }}</dd>
+        <dd>{{ organisationService.organisation.getDateCreated()|time_diff }}</dd>
     {% endif %}
     {% if organisationService.organisation.getDateUpdated() %}
         <dt>{{ translate("txt-last-update") }}</dt>
-        <dd>{{ organisationService.organisation.getDateUpdated()|string_date }}</dd>
+        <dd>{{ organisationService.organisation.getDateUpdated()|time_diff }}</dd>
     {% endif %}
 </dl>
 

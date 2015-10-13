@@ -42,6 +42,7 @@ class FormService implements ServiceLocatorAwareInterface
         if (!is_null($className) && is_null($entity)) {
             $entity = $this->getOrganisationService()->getEntity($className);
         }
+
         if (!is_object($entity)) {
             throw new \InvalidArgumentException("No entity created given");
         }

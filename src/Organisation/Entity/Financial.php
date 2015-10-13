@@ -43,48 +43,53 @@ class Financial extends EntityAbstract implements ResourceInterface
      *
      * @var array
      */
-    protected static $vatStatusTemplates = [
-        self::VAT_STATUS_UNDEFINED => 'txt-vat-status-undefined',
-        self::VAT_STATUS_VALID     => 'txt-vat-status-valid',
-        self::VAT_STATUS_INVALID   => 'txt-vat-status-invalid',
-        self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
-    ];
+    protected static $vatStatusTemplates
+        = [
+            self::VAT_STATUS_UNDEFINED => 'txt-vat-status-undefined',
+            self::VAT_STATUS_VALID     => 'txt-vat-status-valid',
+            self::VAT_STATUS_INVALID   => 'txt-vat-status-invalid',
+            self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
+        ];
     /**
      * Textual versions of the vat shift.
      *
      * @var array
      */
-    protected $vatShiftTemplates = [
-        self::VAT_NOT_SHIFT => 'txt-no-vat-shift',
-        self::VAT_SHIFT     => 'txt-vat-shift',
-    ];
+    protected $vatShiftTemplates
+        = [
+            self::VAT_NOT_SHIFT => 'txt-no-vat-shift',
+            self::VAT_SHIFT     => 'txt-vat-shift',
+        ];
     /**
      * Textual versions of the vat shift.
      *
      * @var array
      */
-    protected static $omitContactTemplates = [
-        self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
-        self::OMIT_CONTACT    => 'txt-omit-contact',
-    ];
+    protected static $omitContactTemplates
+        = [
+            self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
+            self::OMIT_CONTACT    => 'txt-omit-contact',
+        ];
     /**
      * Textual versions of the email templates.
      *
      * @var array
      */
-    protected static $emailTemplates = [
-        self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
-        self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
-    ];
+    protected static $emailTemplates
+        = [
+            self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
+            self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
+        ];
     /**
      * Textual versions of the vat shift.
      *
      * @var array
      */
-    protected static $requiredPurchaseOrderTemplates = [
-        self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
-        self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
-    ];
+    protected static $requiredPurchaseOrderTemplates
+        = [
+            self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
+            self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
+        ];
     /**
      * @ORM\Column(name="financial_id", type="integer", nullable=false)
      * @ORM\Id
@@ -95,13 +100,14 @@ class Financial extends EntityAbstract implements ResourceInterface
     private $id;
     /**
      * @ORM\Column(name="vat", type="string", length=40, nullable=true)
-     *
+     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Attributes({"label":"txt-vat-number"})
      * @var string
      */
     private $vat;
     /**
      * @ORM\Column(name="date_vat", type="datetime", nullable=true)
-     *
+     * @Annotation\Exclude
      * @var \DateTime
      */
     private $dateVat;
@@ -125,9 +131,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     private $debtor;
     /**
      * @ORM\Column(name="shiftvat", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
-     * @Annotation\Attributes({"array":"shiftVatTemplates"})
-     * @Annotation\Attributes({"label":"txt-shift-vat"})
+     * @Annotation\Exclude
      *
      * @deprecated
      *
@@ -145,12 +149,15 @@ class Financial extends EntityAbstract implements ResourceInterface
     private $omitContact;
     /**
      * @ORM\Column(name="iban", type="string", length=40, nullable=true)
-     *
+     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Attributes({"label":"txt-iban"})
      * @var string
      */
     private $iban;
     /**
      * @ORM\Column(name="bic", type="string", length=40, nullable=true)
+     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Attributes({"label":"txt-bic"})
      *
      * @var string
      */
@@ -195,9 +202,7 @@ class Financial extends EntityAbstract implements ResourceInterface
      *            joinColumns={@ORM\JoinColumn(name="financial_id", referencedColumnName="financial_id")},
      *            inverseJoinColumns={@ORM\JoinColumn(name="type_id", referencedColumnName="type_id")}
      * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"General\Entity\VatType"})
-     * @Annotation\Attributes({"label":"txt-vat-type"})
+     * @Annotation\Exclude()
      *
      * @var \General\Entity\VatType[]|Collections\ArrayCollection
      */
@@ -282,28 +287,26 @@ class Financial extends EntityAbstract implements ResourceInterface
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'vat',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 255,
-                                ],
+            $inputFilter->add($factory->createInput([
+                    'name'       => 'vat',
+                    'required'   => true,
+                    'filters'    => [
+                        ['name' => 'StripTags'],
+                        ['name' => 'StringTrim'],
+                    ],
+                    'validators' => [
+                        [
+                            'name'    => 'StringLength',
+                            'options' => [
+                                'encoding' => 'UTF-8',
+                                'min'      => 1,
+                                'max'      => 255,
                             ],
                         ],
-                    ]
-                )
-            );
+                    ],
+                ]));
+
+            $this->inputFilter = $inputFilter;
         }
 
         return $this->inputFilter;
@@ -490,6 +493,7 @@ class Financial extends EntityAbstract implements ResourceInterface
 
     /**
      * @param  bool $textual
+     *
      * @return int|string
      */
     public function getOmitContact($textual = false)
@@ -527,6 +531,7 @@ class Financial extends EntityAbstract implements ResourceInterface
 
     /**
      * @param  bool $textual
+     *
      * @return int|string
      */
     public function getRequiredPurchaseOrder($textual = false)
@@ -580,6 +585,7 @@ class Financial extends EntityAbstract implements ResourceInterface
 
     /**
      * @param  bool $textual
+     *
      * @return int|string
      */
     public function getVatStatus($textual = false)

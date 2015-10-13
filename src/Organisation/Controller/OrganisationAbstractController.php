@@ -13,6 +13,7 @@ use Affiliation\Service\AffiliationService;
 use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
+use Contact\Service\ContactService;
 use General\Service\GeneralService;
 use Invoice\Controller\Plugin\GetFilter as InvoiceFilterPlugin;
 use Invoice\Service\InvoiceService;
@@ -36,9 +37,7 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method InvoiceFilterPlugin getInvoiceFilter
  * @method OrganisationFilterPlugin getOrganisationFilter
  */
-abstract class OrganisationAbstractController extends AbstractActionController implements
-    FormServiceAwareInterface,
-    OrganisationServiceAwareInterface
+abstract class OrganisationAbstractController extends AbstractActionController implements FormServiceAwareInterface, OrganisationServiceAwareInterface
 {
     /**
      * @var OrganisationService
@@ -72,6 +71,10 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      * @var FormService
      */
     protected $formService;
+    /**
+     * @var ContactService
+     */
+    protected $contactService;
 
     /**
      * Gateway to the Organisation Service
@@ -88,8 +91,9 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      *
      * @return OrganisationAbstractController
      */
-    public function setOrganisationService(OrganisationService $organisationService)
-    {
+    public function setOrganisationService(
+        OrganisationService $organisationService
+    ) {
         $this->organisationService = $organisationService;
 
         return $this;
@@ -139,6 +143,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      * Proxy for the flash messenger helper to have the string translated earlier
      *
      * @param $string
+     *
      * @return string
      */
     protected function translate($string)
@@ -146,7 +151,8 @@ abstract class OrganisationAbstractController extends AbstractActionController i
         /**
          * @var $translate Translate
          */
-        $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
+        $translate = $this->getServiceLocator()->get('ViewHelperManager')
+            ->get('translate');
 
         return $translate($string);
     }
@@ -161,6 +167,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  InvoiceService $invoiceService
+     *
      * @return OrganisationAbstractController
      */
     public function setInvoiceService(InvoiceService $invoiceService)
@@ -180,6 +187,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  ProjectService $projectService
+     *
      * @return OrganisationAbstractController
      */
     public function setProjectService(ProjectService $projectService)
@@ -199,10 +207,12 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  AffiliationService $affiliationService
+     *
      * @return OrganisationAbstractController
      */
-    public function setAffiliationService(AffiliationService $affiliationService)
-    {
+    public function setAffiliationService(
+        AffiliationService $affiliationService
+    ) {
         $this->affiliationService = $affiliationService;
 
         return $this;
@@ -218,6 +228,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  DoaService $doaService
+     *
      * @return OrganisationAbstractController
      */
     public function setDoaService(DoaService $doaService)
@@ -237,11 +248,32 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  LoiService $loiService
+     *
      * @return OrganisationAbstractController
      */
     public function setLoiService(LoiService $loiService)
     {
         $this->loiService = $loiService;
+
+        return $this;
+    }
+
+    /**
+     * @return ContactService
+     */
+    public function getContactService()
+    {
+        return $this->contactService;
+    }
+
+    /**
+     * @param  ContactService $contactService
+     *
+     * @return OrganisationAbstractController
+     */
+    public function setContactService(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
 
         return $this;
     }

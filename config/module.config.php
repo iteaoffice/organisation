@@ -57,6 +57,7 @@ $config = [
             Service\OrganisationService::class      => Service\OrganisationService::class,
             Service\FormService::class              => Service\FormService::class,
             'organisation_organisation_form_filter' => 'Organisation\Form\FilterOrganisation',
+            'organisation_financial_form_filter'    => 'Organisation\Form\FilterOrganisation',
         ],
     ],
     'doctrine'        => [

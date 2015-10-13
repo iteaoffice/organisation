@@ -225,6 +225,4 @@ class Log extends EntityAbstract implements ResourceInterface
         $this->organisation = $organisation;
         return $this;
     }
-
-
 }
