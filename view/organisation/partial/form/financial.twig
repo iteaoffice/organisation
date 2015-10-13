@@ -1,0 +1,46 @@
+{% do form.prepare() %}
+{% do form.setAttribute('class','form-horizontal') %}
+
+{{ form().openTag(form)|raw }}
+
+{% set financial = form.get('financial') %}
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-debtor-number") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ organisationService.parseDebtorNumber() }}</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-credit-number") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ organisationService.parseCreditNumber() }}</p>
+    </div>
+</div>
+
+
+{{ ztbformelement(financial.get('vat')) }}
+{{ ztbformelement(financial.get('vatStatus')) }}
+{{ ztbformelement(form.get('vatType')) }}
+{{ ztbformelement(financial.get('omitContact')) }}
+{{ ztbformelement(financial.get('iban')) }}
+{{ ztbformelement(financial.get('bic')) }}
+{{ ztbformelement(financial.get('requiredPurchaseOrder')) }}
+{{ ztbformelement(financial.get('email')) }}
+
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+        {% if form.has('delete') %}
+            {{ ztbformelement(form.get('delete')) }}
+        {% endif %}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
