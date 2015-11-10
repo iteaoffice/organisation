@@ -5,11 +5,12 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Service;
 
+use Contact\Service\ContactService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Organisation\Entity\EntityAbstract;
@@ -40,6 +41,10 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
+    /**
+     * @var ContactService;
+     */
+    protected $contactService;
 
     /**
      * @param      $entity
@@ -49,21 +54,21 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function findAll($entity, $toArray = false)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findAll();
+        return $this->getEntityManager()
+            ->getRepository($this->getFullEntityName($entity))->findAll();
     }
 
     /**
      * @param string $entity
-     * @param  $filter
+     * @param        $filter
      *
      * @return Query
      */
     public function findEntitiesFiltered($entity, $filter)
     {
-        $equipmentList = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findFiltered(
-            $filter,
-            AbstractQuery::HYDRATE_SIMPLEOBJECT
-        );
+        $equipmentList = $this->getEntityManager()
+            ->getRepository($this->getFullEntityName($entity))
+            ->findFiltered($filter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
 
         return $equipmentList;
     }
@@ -78,7 +83,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
      */
     public function findEntityById($entity, $id)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
+        return $this->getEntityManager()
+            ->getRepository($this->getFullEntityName($entity))->find($id);
     }
 
     /**
@@ -148,9 +154,11 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
             $entity = $entity[0] . ucfirst($entity[1]);
         }
 
-        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))) . '\\' . 'Entity' . '\\' . ucfirst(
-            $entity
-        );
+        return ucfirst(implode(
+            '',
+            array_slice(explode('\\', __NAMESPACE__), 0, 1)
+        )) . '\\' . 'Entity'
+        . '\\' . ucfirst($entity);
     }
 
     /**
@@ -187,7 +195,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     public function getEntityManager()
     {
         if (null === $this->entityManager) {
-            $this->entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+            $this->entityManager = $this->getServiceLocator()
+                ->get('Doctrine\ORM\EntityManager');
         }
 
         return $this->entityManager;
@@ -199,7 +208,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     public function getAuthenticationService()
     {
         if (null === $this->authenticationService) {
-            $this->authenticationService = $this->getServiceLocator()->get('zfcuser_auth_service');
+            $this->authenticationService = $this->getServiceLocator()
+                ->get('zfcuser_auth_service');
         }
 
         return $this->authenticationService;
@@ -214,7 +224,8 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     }
 
     /**
-     * @param  Organisation    $organisation
+     * @param  Organisation $organisation
+     *
      * @return ServiceAbstract
      */
     public function setOrganisation($organisation)

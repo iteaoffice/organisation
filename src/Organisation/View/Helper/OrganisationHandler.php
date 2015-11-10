@@ -5,7 +5,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\View\Helper;
@@ -15,8 +15,8 @@ use Content\Service\ArticleService;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\View\Helper\CountryMap;
-use Organisation\Service\OrganisationService;
 use Organisation\Options\ModuleOptions;
+use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Mvc\Router\RouteMatch;
@@ -128,7 +128,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationTitle($this->getOrganisationService());
+                return $this->parseOrganisationTitle();
 
             case 'organisation_info':
                 if ($this->getOrganisationService()->isEmpty()) {
@@ -296,10 +296,10 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         $options = $this->getModuleOptions();
         $mapOptions = [
             'clickable' => true,
-            'colorMin' => $options->getCountryColorFaded(),
-            'colorMax' => $options->getCountryColor(),
-            'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height' => '340px'
+            'colorMin'  => $options->getCountryColorFaded(),
+            'colorMax'  => $options->getCountryColor(),
+            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height'    => '340px',
         ];
         /**
          * @var CountryMap
@@ -381,38 +381,24 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationProjectList(OrganisationService $organisationService)
     {
-        $success = false;
-        $config = $this->getConfig();
+        $whichProjects = $this->getProjectService()->getOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
 
-        $key = $config['cache_key'].'-organisation-project-list-html-organisation-'.
-            $organisationService->getOrganisation()->getId();
-        $html = $this->getCache()->getItem($key, $success);
+        $whichTemplate = $this->getProjectService()->getOptions()->getProjectHasVersions() ? 'organisation/partial/list/project' : 'organisation/partial/list/project_eu';
 
-        if (true || !$success) {
-            $whichProjects = $this->getProjectService()->getOptions()->getProjectHasVersions(
-            ) ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+        $projects = $this->getProjectService()->findProjectByOrganisation(
+            $organisationService->getOrganisation(),
+            $whichProjects,
+            true
+        );
 
-            $whichTemplate = $this->getProjectService()->getOptions()->getProjectHasVersions(
-            ) ? 'organisation/partial/list/project' : 'organisation/partial/list/project_eu';
-
-            $projects = $this->getProjectService()->findProjectByOrganisation(
-                $organisationService->getOrganisation(),
-                $whichProjects,
-                true
-            );
-
-            $html = $this->getRenderer()->render(
-                $whichTemplate,
-                ['projects' => $projects]
-            );
-            $this->getCache()->setItem($key, $html);
-        }
-
-        return $html;
+        return $this->getRenderer()->render(
+            $whichTemplate,
+            ['projects' => $projects]
+        );
     }
 
     /**
-     * @return []
+     * @return array
      */
     public function getConfig()
     {

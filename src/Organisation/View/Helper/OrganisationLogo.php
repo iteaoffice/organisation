@@ -6,7 +6,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\View\Helper;
@@ -22,12 +22,14 @@ class OrganisationLogo extends ImageAbstract
 {
     /**
      * @param Service\OrganisationService $organisationService
-     * @param null $class
+     * @param null                        $class
      *
      * @return string
      */
-    public function __invoke(Service\OrganisationService $organisationService = null, $class = null)
-    {
+    public function __invoke(
+        Service\OrganisationService $organisationService = null,
+        $class = null
+    ) {
         if (is_null($organisationService)) {
             return '';
         }

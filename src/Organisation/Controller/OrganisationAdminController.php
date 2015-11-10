@@ -5,7 +5,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Controller;
@@ -22,12 +22,14 @@ use General\Service\GeneralServiceAwareInterface;
 use Invoice\Form\InvoiceFilter;
 use Invoice\Service\InvoiceServiceAwareInterface;
 use Organisation\Entity\Financial;
+use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Form\AddAffiliation;
 use Organisation\Form\OrganisationFilter;
 use Project\Service\ProjectService;
 use Project\Service\ProjectServiceAwareInterface;
 use Zend\Paginator\Paginator;
+use Zend\Validator\File\ImageSize;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
@@ -172,6 +174,34 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
                  * @var $organisation Organisation
                  */
                 $organisation = $form->getData();
+
+
+                $fileData = $this->params()->fromFiles();
+                if (!empty($fileData['file']['name'])) {
+                    $logo = $organisationService->getOrganisation()->getLogo()
+                        ->first();
+                    if (!$logo) {
+                        //Create a logo element
+                        $logo = new Logo();
+                        $logo->setOrganisation($organisationService->getOrganisation());
+                    }
+                    $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));
+                    $imageSizeValidator = new ImageSize();
+                    $imageSizeValidator->isValid($fileData['file']);
+                    $logo->setContentType($this->getGeneralService()
+                        ->findContentTypeByContentTypeName($fileData['file']['type']));
+                    $logo->setLogoExtension($logo->getContentType()->getExtension());
+
+                    $organisation->getLogo()->add($logo);
+
+                    /**
+                     * Remove the cached file
+                     */
+                    if (file_exists($logo->getCacheFileName())) {
+                        unlink($logo->getCacheFileName());
+                    }
+                }
+
                 $this->getOrganisationService()->updateEntity($organisation);
 
                 return $this->redirect()->toRoute(

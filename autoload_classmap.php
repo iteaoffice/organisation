@@ -52,6 +52,8 @@ return array(
     'Organisation\Controller\ControllerInitializer'                 => __DIR__ . '/src/Organisation/Controller/ControllerInitializer.php',
     'Organisation\Controller\OrganisationAdminController'           => __DIR__ . '/src/Organisation/Controller/OrganisationAdminController.php',
     'Organisation\Navigation\Service\OrganisationNavigationFactory' => __DIR__ . '/src/Organisation/Navigation/Service/OrganisationNavigationFactory.php',
+    'Organisation\Form\Financial'                                   => __DIR__ . '/src/Organisation/Form/Financial.php',
+    'Organisation\Form\AddAffiliation'                              => __DIR__ . '/src/Organisation/Form/AddAffiliation.php',
     'Organisation\Form\FilterCreateObject'                          => __DIR__ . '/src/Organisation/Form/FilterCreateObject.php',
     'Organisation\Form\Organisation'                                => __DIR__ . '/src/Organisation/Form/Organisation.php',
     'Organisation\Form\ObjectFieldset'                              => __DIR__ . '/src/Organisation/Form/ObjectFieldset.php',
