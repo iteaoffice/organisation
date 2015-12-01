@@ -32,14 +32,14 @@ class OrganisationController extends OrganisationAbstractController
          */
         $logo = $this->getOrganisationService()->findEntityById(
             'logo',
-            $this->getEvent()->getRouteMatch()->getParam('id')
+            $this->params('id')
         );
 
         /**
          * Do a check if the given has is correct to avoid guessing the image
          */
         if (is_null($logo)
-            || $this->getEvent()->getRouteMatch()->getParam('hash')
+            || $this->params('hash')
             !== $logo->getHash()
         ) {
             return $this->notFoundAction();

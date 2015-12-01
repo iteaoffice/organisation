@@ -28,6 +28,7 @@ class Organisation extends EntityRepository
 {
     /**
      * @param array $filter
+     *
      * @return Query
      */
     public function findFiltered(array $filter)
@@ -98,8 +99,8 @@ class Organisation extends EntityRepository
      * Give a list of organisations by country.
      *
      * @param Country $country
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -129,10 +130,10 @@ class Organisation extends EntityRepository
      * This is basic search for organisations (based on the name, number and description.
      *
      * @param string $searchItem
-     * @param int $maxResults
-     * @param null $countryId
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param int    $maxResults
+     * @param null   $countryId
+     * @param bool   $onlyActiveProject
+     * @param bool   $onlyActivePartner
      *
      * @return Entity\Organisation[]
      */
@@ -203,12 +204,13 @@ class Organisation extends EntityRepository
         $validateEmail->isValid($emailAddress);
         $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
         //We want a match on the email address
-        $qb->andWhere(
-            $qb->expr()->orX(
-                $qb->expr()->in('o.id', $subSelect->getDQL()),
-                $qb->expr()->notIn('o.id', $subSelect2->getDQL())
-            )
-        );
+        $qb->andWhere($qb->expr()->orX(
+            $qb->expr()->in(
+                'o.id',
+                $subSelect->getDQL()
+            ),
+            $qb->expr()->notIn('o.id', $subSelect2->getDQL())
+        ));
 
         /*
          * Limit on the country
@@ -266,6 +268,7 @@ class Organisation extends EntityRepository
 
     /**
      * @param Contact $contact
+     *
      * @return array
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
@@ -274,7 +277,8 @@ class Organisation extends EntityRepository
         //Start with your own organisation
 
         if (!is_null($contact->getContactOrganisation())) {
-            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()] = $contact->getContactOrganisation()->getOrganisation();
+            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()]
+                = $contact->getContactOrganisation()->getOrganisation();
         }
 
         foreach ($this->findOrganisationByEmailAddress($contact->getEmail()) as $organisation) {
@@ -355,12 +359,13 @@ class Organisation extends EntityRepository
             $queryBuilder->join('o.type', 'type');
             $queryBuilder->andWhere($queryBuilder->expr()->in('type.id', $search->get('organisationType')));
         }
-        $queryBuilder->andWhere(
-            $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->like('d.description', '?4'),
-                $queryBuilder->expr()->like('o.organisation', '?4')
-            )
-        );
+        $queryBuilder->andWhere($queryBuilder->expr()->orX(
+            $queryBuilder->expr()->like(
+                'd.description',
+                '?4'
+            ),
+            $queryBuilder->expr()->like('o.organisation', '?4')
+        ));
         /*
          * Limit the results to the registered users
          */
