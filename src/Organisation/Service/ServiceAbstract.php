@@ -226,7 +226,7 @@ abstract class ServiceAbstract implements ServiceLocatorAwareInterface, ServiceI
     /**
      * @param  Organisation $organisation
      *
-     * @return ServiceAbstract
+     * @return ServiceAbstract|OrganisationService
      */
     public function setOrganisation($organisation)
     {

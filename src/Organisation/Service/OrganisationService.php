@@ -62,10 +62,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function parseDebtorNumber()
     {
-        return trim(sprintf(
-            "%'.06d\n",
-            100000 + $this->getOrganisation()->getId()
-        ));
+        return trim(sprintf("%'.06d\n", 100000 + $this->getOrganisation()->getId()));
     }
 
     /**
@@ -73,10 +70,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function parseCreditNumber()
     {
-        return trim(sprintf(
-            "%'.06d\n",
-            200000 + $this->getOrganisation()->getId()
-        ));
+        return trim(sprintf("%'.06d\n", 200000 + $this->getOrganisation()->getId()));
     }
 
     /**
@@ -119,22 +113,21 @@ class OrganisationService extends ServiceAbstract
      */
     public function getContactCount($which = ContactService::WHICH_ONLY_ACTIVE)
     {
-        return ($this->getOrganisation()->getContactOrganisation()
-            ->filter(function (ContactOrganisation $contactOrganisation) use (
-                $which
-            ) {
-                switch ($which) {
-                    case ContactService::WHICH_ONLY_ACTIVE:
-                        return is_null($contactOrganisation->getContact()
-                            ->getDateEnd());
-                    case ContactService::WHICH_ONLY_EXPIRED:
-                        return !is_null($contactOrganisation->getContact()
-                            ->getDateEnd());
-                    default:
-                        return true;
-                }
+        return ($this->getOrganisation()->getContactOrganisation()->filter(function (
+            ContactOrganisation $contactOrganisation
+        ) use (
+            $which
+        ) {
+            switch ($which) {
+                case ContactService::WHICH_ONLY_ACTIVE:
+                    return is_null($contactOrganisation->getContact()->getDateEnd());
+                case ContactService::WHICH_ONLY_EXPIRED:
+                    return !is_null($contactOrganisation->getContact()->getDateEnd());
+                default:
+                    return true;
+            }
 
-            })->count());
+        })->count());
     }
 
     /**
@@ -142,8 +135,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationFinancialList($filter)
     {
-        return $this->getEntityManager()->getRepository(Financial::class)
-            ->findOrganisationFinancialList($filter);
+        return $this->getEntityManager()->getRepository(Financial::class)->findOrganisationFinancialList($filter);
     }
 
     /**
@@ -183,9 +175,7 @@ class OrganisationService extends ServiceAbstract
         /**
          * @var $organisation Organisation
          */
-        $organisation = $this->getEntityManager()
-            ->getRepository(Organisation::class)
-            ->findOneBy(['docRef' => $docRef]);
+        $organisation = $this->getEntityManager()->getRepository(Organisation::class)->findOneBy(['docRef' => $docRef]);
         /*
          * Return null when no project can be found
          */
@@ -224,11 +214,7 @@ class OrganisationService extends ServiceAbstract
             $organisation = $this->getOrganisation();
         }
 
-        return trim(preg_replace(
-            '/^(([^\~]*)\~\s?)?\s?(.*)$/',
-            '${2}' . $organisation . ' ${3}',
-            $branch
-        ));
+        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
     }
 
     /**
@@ -236,8 +222,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationTypes()
     {
-        return $this->getEntityManager()
-            ->getRepository($this->getFullEntityName('type'))
+        return $this->getEntityManager()->getRepository($this->getFullEntityName('type'))
             ->findBy([], ['type' => 'ASC']);
     }
 
@@ -272,11 +257,7 @@ class OrganisationService extends ServiceAbstract
         $onlyActivePartner = true
     ) {
         return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisationByCountry(
-                $country,
-                $onlyActiveProject,
-                $onlyActivePartner
-            );
+            ->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
     }
 
     /**
@@ -313,11 +294,7 @@ class OrganisationService extends ServiceAbstract
         $emailAddress
     ) {
         return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisationByNameCountryAndEmailAddress(
-                $name,
-                $country,
-                $emailAddress
-            );
+            ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
     }
 
     /**
@@ -367,8 +344,7 @@ class OrganisationService extends ServiceAbstract
                 $organisations[sprintf(
                     "%s-%s",
                     $affiliation->getOrganisation()->getOrganisation(),
-                    $affiliation->getOrganisation()->getCountry()
-                        ->getCountry()
+                    $affiliation->getOrganisation()->getCountry()->getCountry()
                 )]
                     = $this->createServiceElement($affiliation->getOrganisation());
             }
@@ -416,12 +392,6 @@ class OrganisationService extends ServiceAbstract
         $onlyActivePartner = true
     ) {
         return $this->getEntityManager()->getRepository(Organisation::class)
-            ->searchOrganisations(
-                $searchItem,
-                $maxResults,
-                $countryId,
-                $onlyActiveProject,
-                $onlyActivePartner
-            );
+            ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActiveProject, $onlyActivePartner);
     }
 }

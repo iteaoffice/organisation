@@ -101,27 +101,27 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
                 ])
             );
 
-                $paginator
+        $paginator
                 = new Paginator(new PaginatorAdapter(new ORMPaginator(
                     $invoiceQuery,
                     false
                 )));
-                $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX
                 : 15);
-                $paginator->setCurrentPageNumber($page);
-                $paginator->setPageRange(ceil($paginator->getTotalItemCount()
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount()
                 / $paginator->getDefaultItemCountPerPage()));
 
-                $form = new InvoiceFilter($this->getInvoiceService());
-                $form->setData(['filter' => $filterPlugin->getFilter()]);
+        $form = new InvoiceFilter($this->getInvoiceService());
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-                $projects = $this->getProjectService()
+        $projects = $this->getProjectService()
                 ->findProjectByOrganisation(
                     $organisationService->getOrganisation(),
                     ProjectService::WHICH_ALL
                 );
 
-                return new ViewModel([
+        return new ViewModel([
                 'paginator'           => $paginator,
                 'form'                => $form,
                 'encodedFilter'       => urlencode($filterPlugin->getHash()),
