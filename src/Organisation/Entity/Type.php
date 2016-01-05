@@ -51,10 +51,11 @@ class Type extends EntityAbstract implements ResourceInterface
      *
      * @var array
      */
-    protected $invoiceTemplates = [
-        self::NO_INVOICE => 'txt-invoice',
-        self::INVOICE    => 'txt-no-invoice',
-    ];
+    protected $invoiceTemplates
+        = [
+            self::NO_INVOICE => 'txt-invoice',
+            self::INVOICE    => 'txt-no-invoice',
+        ];
     /**
      * @ORM\Column(name="type_id", type="integer", nullable=false)
      * @ORM\Id
@@ -105,14 +106,6 @@ class Type extends EntityAbstract implements ResourceInterface
      * @var \Organisation\Entity\Organisation[]
      */
     private $organisation;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Member\Entity\Applicant", cascade={"persist","remove"}, mappedBy="organisationType")
-     * @Annotation\Exclude()
-     *
-     * @var \Member\Entity\Applicant[]|Collections\ArrayCollection
-     */
-    private $applicant;
 
     /**
      * Returns the string identifier of the Resource.
@@ -181,44 +174,36 @@ class Type extends EntityAbstract implements ResourceInterface
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'type',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 255,
-                                ],
+            $inputFilter->add($factory->createInput([
+                    'name'       => 'type',
+                    'required'   => true,
+                    'filters'    => [
+                        ['name' => 'StripTags'],
+                        ['name' => 'StringTrim'],
+                    ],
+                    'validators' => [
+                        [
+                            'name'    => 'StringLength',
+                            'options' => [
+                                'encoding' => 'UTF-8',
+                                'min'      => 1,
+                                'max'      => 255,
                             ],
                         ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'       => 'invoice',
-                        'required'   => true,
-                        'validators' => [
-                            [
-                                'name'    => 'InArray',
-                                'options' => [
-                                    'haystack' => array_keys($this->getInvoiceTemplates()),
-                                ],
+                    ],
+                ]));
+            $inputFilter->add($factory->createInput([
+                    'name'       => 'invoice',
+                    'required'   => true,
+                    'validators' => [
+                        [
+                            'name'    => 'InArray',
+                            'options' => [
+                                'haystack' => array_keys($this->getInvoiceTemplates()),
                             ],
                         ],
-                    ]
-                )
-            );
+                    ],
+                ]));
             $this->inputFilter = $inputFilter;
         }
 
@@ -243,11 +228,13 @@ class Type extends EntityAbstract implements ResourceInterface
 
     /**
      * @param int $id
+     *
      * @return Type
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -261,11 +248,13 @@ class Type extends EntityAbstract implements ResourceInterface
 
     /**
      * @param string $type
+     *
      * @return Type
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -279,11 +268,13 @@ class Type extends EntityAbstract implements ResourceInterface
 
     /**
      * @param string $description
+     *
      * @return Type
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -297,11 +288,13 @@ class Type extends EntityAbstract implements ResourceInterface
 
     /**
      * @param int $invoice
+     *
      * @return Type
      */
     public function setInvoice($invoice)
     {
         $this->invoice = $invoice;
+
         return $this;
     }
 
@@ -315,11 +308,13 @@ class Type extends EntityAbstract implements ResourceInterface
 
     /**
      * @param Collections\ArrayCollection|\Event\Entity\Meeting\Cost[] $meetingCost
+     *
      * @return Type
      */
     public function setMeetingCost($meetingCost)
     {
         $this->meetingCost = $meetingCost;
+
         return $this;
     }
 
@@ -333,29 +328,13 @@ class Type extends EntityAbstract implements ResourceInterface
 
     /**
      * @param Collections\ArrayCollection|Organisation[] $organisation
+     *
      * @return Type
      */
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
-        return $this;
-    }
 
-    /**
-     * @return Collections\ArrayCollection|\Member\Entity\Applicant[]
-     */
-    public function getApplicant()
-    {
-        return $this->applicant;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Member\Entity\Applicant[] $applicant
-     * @return Type
-     */
-    public function setApplicant($applicant)
-    {
-        $this->applicant = $applicant;
         return $this;
     }
 }

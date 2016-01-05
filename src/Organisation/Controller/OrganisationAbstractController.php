@@ -34,8 +34,8 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
- * @method InvoiceFilterPlugin getInvoiceFilter
- * @method OrganisationFilterPlugin getOrganisationFilter
+ * @method      InvoiceFilterPlugin getInvoiceFilter
+ * @method      OrganisationFilterPlugin getOrganisationFilter
  */
 abstract class OrganisationAbstractController extends AbstractActionController implements FormServiceAwareInterface, OrganisationServiceAwareInterface
 {
@@ -151,8 +151,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
         /**
          * @var $translate Translate
          */
-        $translate = $this->getServiceLocator()->get('ViewHelperManager')
-            ->get('translate');
+        $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
 
         return $translate($string);
     }
