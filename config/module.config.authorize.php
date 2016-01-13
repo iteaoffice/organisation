@@ -32,15 +32,13 @@ return [
                     'route' => 'zfcadmin/organisation/list',
                     'roles' => ['office']
                 ],
+
                 ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
                 [
                     'route' => 'zfcadmin/organisation/edit',
                     'roles' => ['office']
                 ],
-                [
-                    'route' => 'zfcadmin/organisation/edit-financial',
-                    'roles' => ['office']
-                ],
+
                 [
                     'route' => 'zfcadmin/organisation/add-affiliation',
                     'roles' => ['office']
@@ -54,11 +52,15 @@ return [
                     'roles' => ['office']
                 ],
                 [
-                    'route' => 'zfcadmin/organisation/vat/check',
+                    'route' => 'zfcadmin/organisation/financial/list',
                     'roles' => ['office']
                 ],
                 [
-                    'route' => 'zfcadmin/organisation/vat/list',
+                    'route' => 'zfcadmin/organisation/financial/edit',
+                    'roles' => ['office']
+                ],
+                [
+                    'route' => 'zfcadmin/organisation/financial/no-financial',
                     'roles' => ['office']
                 ],
             ],

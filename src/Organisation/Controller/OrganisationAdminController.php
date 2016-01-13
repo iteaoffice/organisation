@@ -80,6 +80,8 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
         ]);
     }
 
+
+
     /**
      * @return ViewModel
      */
@@ -218,92 +220,6 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
         ]);
     }
 
-    /**
-     * @return ViewModel
-     */
-    public function editFinancialAction()
-    {
-        $organisationService = $this->getOrganisationService()
-            ->setOrganisationId($this->params('id'));
-
-        if (is_null($financial = $organisationService->getOrganisation()
-            ->getFinancial())) {
-            $financial = new Financial();
-            $financial->setOrganisation($organisationService->getOrganisation());
-        }
-
-        $data = array_merge([
-            'vatType' => ($financial->getVatType()->count() == 0 ? 0
-                : $financial->getVatType()->first()->getId())
-        ], $this->getRequest()->getPost()->toArray());
-
-        $form = $this->getFormService()->prepare($financial, $financial, $data);
-
-        if ($this->getRequest()->isPost()) {
-            if (isset($data['delete'])) {
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-financial-organisation-of-%s-has-successfully-been-removed"),
-                        $organisationService->getOrganisation()
-                    ));
-
-                $this->getOrganisationService()->removeEntity($financial);
-
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisationService->getOrganisation()->getId()],
-                    ['fragment' => 'financial']
-                );
-            }
-
-            if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisationService->getOrganisation()->getId()],
-                    ['fragment' => 'financial']
-                );
-            }
-
-            if ($form->isValid()) {
-                /**
-                 * @var $financial Financial
-                 */
-                $financial = $form->getData();
-
-                if ($data['vatType'] == 0) {
-                    $financial->setVatType(null);
-                } else {
-                    $vatType = $this->getGeneralService()
-                        ->findEntityById('vatType', $data['vatType']);
-                    $arrayCollection = new ArrayCollection();
-                    $arrayCollection->add($vatType);
-                    $financial->setVatType($arrayCollection);
-                }
-
-
-                $this->getOrganisationService()->updateEntity($financial);
-
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-financial-organisation-%s-has-successfully-been-updated"),
-                        $organisationService->getOrganisation()
-                    ));
-
-
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisationService->getOrganisation()->getId()],
-                    ['fragment' => 'financial']
-                );
-            }
-        }
-
-
-        return new ViewModel([
-            'organisationService' => $organisationService,
-            'form'                => $form,
-        ]);
-    }
 
     /**
      * @return ViewModel

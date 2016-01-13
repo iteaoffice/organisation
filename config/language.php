@@ -10,3 +10,9 @@ _("txt-omit-contact");
 _("txt-delivery-by-postal-mail");
 _("txt-delivery-by-email");
 _("txt-no-vat-enforcement");
+
+_("txt-no-purchase-order-required");
+_("txt-purchase-order-required");
+
+_("txt-iban");
+_("txt-bic");

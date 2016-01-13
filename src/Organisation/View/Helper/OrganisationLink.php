@@ -68,14 +68,10 @@ class OrganisationLink extends LinkAbstract
              */
             $this->setShowOptions([
                 'more'            => $this->translate("txt-read-more"),
-                'name'            => $this->getOrganisationService()
-                    ->parseOrganisationWithBranch($this->getBranch()),
+                'name'            => $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch()),
                 'alternativeShow' => $this->getAlternativeShow()
             ]);
-            $this->addRouterParam(
-                'id',
-                $this->getOrganisationService()->getOrganisation()->getId()
-            );
+            $this->addRouterParam('id', $this->getOrganisationService()->getOrganisation()->getId());
         }
         $this->addRouterParam('page', $page);
 
@@ -97,11 +93,7 @@ class OrganisationLink extends LinkAbstract
                     $this->getAction()
                 ));
             }
-            $this->addRouterParam(
-                'docRef',
-                $this->getOrganisationService()->getOrganisation()
-                    ->getDocRef()
-            );
+            $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
         }
         switch ($this->getAction()) {
             case 'new':
@@ -119,24 +111,25 @@ class OrganisationLink extends LinkAbstract
                 $this->setRouter('zfcadmin/organisation/edit');
                 $this->setText(sprintf(
                     $this->translate("txt-edit-organisation-%s"),
-                    $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch())
+                    $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch())
                 ));
                 break;
             case 'edit-financial':
-                $this->setRouter('zfcadmin/organisation/edit-financial');
+                $this->setRouter('zfcadmin/organisation/financial/edit');
                 $this->setText(sprintf(
                     $this->translate("txt-edit-financial-organisation-%s"),
-                    $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch())
+                    $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch())
                 ));
+                break;
+            case 'list-financial':
+                $this->setRouter('zfcadmin/organisation/financial/list');
+                $this->setText(sprintf($this->translate("txt-list-financial-organisations")));
                 break;
             case 'add-affiliation':
                 $this->setRouter('zfcadmin/organisation/add-affiliation');
                 $this->setText(sprintf(
                     $this->translate("txt-add-organisation-%s-to-project"),
-                    $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch())
+                    $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch())
                 ));
                 break;
             case 'list':
@@ -147,48 +140,29 @@ class OrganisationLink extends LinkAbstract
                 /*
                  * Push the docRef in the params array
                  */
-                $this->addRouterParam(
-                    'docRef',
-                    $this->getRouteMatch()->getParam('docRef')
-                );
+                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
                 $this->setText($this->translate("txt-list-organisations"));
                 break;
             case 'view':
-                $this->addRouterParam(
-                    'docRef',
-                    $this->getOrganisationService()->getOrganisation()
-                        ->getDocRef()
-                );
-                $this->setRouter('route-' . $this->getOrganisationService()
-                        ->getOrganisation()
+                $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
+                $this->setRouter('route-' . $this->getOrganisationService()->getOrganisation()
                         ->get("underscore_full_entity_name"));
                 $this->setText(sprintf(
                     $this->translate("txt-view-organisation-%s"),
-                    $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch())
+                    $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch())
                 ));
                 break;
             case 'view-article':
-                $this->setRouter('route-' . $this->getOrganisationService()
-                        ->getOrganisation()->get("underscore_full_entity_name")
-                    . '-article');
+                $this->setRouter('route-' . $this->getOrganisationService()->getOrganisation()
+                        ->get("underscore_full_entity_name") . '-article');
                 $this->setText(sprintf(
                     $this->translate("txt-view-article-for-organisation-%s"),
-                    $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch())
+                    $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch())
                 ));
-                $this->addRouterParam(
-                    'docRef',
-                    $this->getOrganisationService()->getOrganisation()
-                        ->getDocRef()
-                );
+                $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
                 break;
             default:
-                throw new \Exception(sprintf(
-                    "%s is an incorrect action for %s",
-                    $this->getAction(),
-                    __CLASS__
-                ));
+                throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
         }
     }
 

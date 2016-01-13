@@ -21,9 +21,13 @@ return [
                         'label' => "txt-organisation-list",
                         'route' => 'zfcadmin/organisation/list',
                     ],
+                    'financial-check'     => [
+                        'label' => _("txt-financial-check"),
+                        'route' => 'zfcadmin/organisation/financial/no-financial',
+                    ],
                     'vat-check'     => [
-                        'label' => "txt-vat-check",
-                        'route' => 'zfcadmin/organisation/vat/list',
+                        'label' => _("txt-financial-organisations"),
+                        'route' => 'zfcadmin/organisation/financial/list',
                     ],
                 ],
             ],

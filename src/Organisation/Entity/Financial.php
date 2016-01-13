@@ -101,7 +101,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\Column(name="vat", type="string", length=40, nullable=true)
      * @Annotation\Type("Zend\Form\Element\Text")
-     * @Annotation\Attributes({"label":"txt-vat-number"})
+     * @Annotation\Attributes({"label":"txt-vat-number", "help-block":"txt-vat-number-help-block"})
      * @var string
      */
     private $vat;
@@ -288,23 +288,23 @@ class Financial extends EntityAbstract implements ResourceInterface
             $inputFilter = new InputFilter();
             $factory = new InputFactory();
             $inputFilter->add($factory->createInput([
-                    'name'       => 'vat',
-                    'required'   => true,
-                    'filters'    => [
-                        ['name' => 'StripTags'],
-                        ['name' => 'StringTrim'],
-                    ],
-                    'validators' => [
-                        [
-                            'name'    => 'StringLength',
-                            'options' => [
-                                'encoding' => 'UTF-8',
-                                'min'      => 1,
-                                'max'      => 255,
-                            ],
+                'name'       => 'vat',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
                         ],
                     ],
-                ]));
+                ],
+            ]));
 
             $this->inputFilter = $inputFilter;
         }

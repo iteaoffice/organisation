@@ -19,11 +19,11 @@ $config = [
             Controller\ControllerInitializer::class,
         ],
         'invokables'   => [
-            Controller\OrganisationController::class        => Controller\OrganisationController::class,
-            Controller\OrganisationManagerController::class => Controller\OrganisationManagerController::class,
-            Controller\OrganisationAdminController::class   => Controller\OrganisationAdminController::class,
-            Controller\OrganisationVatController::class     => Controller\OrganisationVatController::class,
-            Controller\JsonController::class                => Controller\JsonController::class,
+            Controller\OrganisationController::class          => Controller\OrganisationController::class,
+            Controller\OrganisationManagerController::class   => Controller\OrganisationManagerController::class,
+            Controller\OrganisationAdminController::class     => Controller\OrganisationAdminController::class,
+            Controller\OrganisationFinancialController::class => Controller\OrganisationFinancialController::class,
+            Controller\JsonController::class                  => Controller\JsonController::class,
         ],
     ],
     'view_manager'    => [

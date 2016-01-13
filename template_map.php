@@ -15,7 +15,6 @@ return array(
     'organisation/partial/pagination-control'           => __DIR__ . '//view/organisation/partial/pagination-control.twig',
     'organisation/partial/form/financial'               => __DIR__ . '//view/organisation/partial/form/financial.twig',
     'organisation/partial/form/organisation'            => __DIR__ . '//view/organisation/partial/form/organisation.twig',
-    'organisation/organisation-admin/edit-financial'    => __DIR__ . '//view/organisation/organisation-admin/edit-financial.twig',
     'organisation/organisation-admin/add-affiliation'   => __DIR__ . '//view/organisation/organisation-admin/add-affiliation.twig',
     'organisation/organisation-admin/list'              => __DIR__ . '//view/organisation/organisation-admin/list.twig',
     'organisation/organisation-admin/view'              => __DIR__ . '//view/organisation/organisation-admin/view.twig',
@@ -28,5 +27,7 @@ return array(
     'organisation/organisation-admin/tab/financial'     => __DIR__ . '//view/organisation/organisation-admin/tab/financial.twig',
     'organisation/organisation-admin/tab/cluster'       => __DIR__ . '//view/organisation/organisation-admin/tab/cluster.twig',
     'organisation/organisation-admin/tab/project'       => __DIR__ . '//view/organisation/organisation-admin/tab/project.twig',
-    'organisation/organisation-vat/list'                => __DIR__ . '//view/organisation/organisation-vat/list.twig',
+    'organisation/organisation-financial/list'          => __DIR__ . '//view/organisation/organisation-financial/list.twig',
+    'organisation/organisation-financial/no-financial'  => __DIR__ . '//view/organisation/organisation-financial/no-financial.twig',
+    'organisation/organisation-financial/edit'          => __DIR__ . '//view/organisation/organisation-financial/edit.twig',
 );

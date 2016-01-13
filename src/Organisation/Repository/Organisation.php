@@ -14,6 +14,7 @@ use Contact\Entity\Contact;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
 use General\Entity\Country;
@@ -37,6 +38,74 @@ class Organisation extends EntityRepository
         $queryBuilder->select('o');
         $queryBuilder->from('Organisation\Entity\Organisation', 'o');
 
+
+        if (array_key_exists('search', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
+            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+        }
+
+        if (array_key_exists('type', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->in('o.type', implode($filter['type'], ', ')));
+        }
+
+        $direction = 'ASC';
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
+            $direction = strtoupper($filter['direction']);
+        }
+
+        switch ($filter['order']) {
+            case 'lastUpdate':
+                $queryBuilder->addOrderBy('o.lastUpdate', $direction);
+                break;
+            case 'name':
+                $queryBuilder->addOrderBy('o.organisation', $direction);
+                break;
+            default:
+                $queryBuilder->addOrderBy('o.id', $direction);
+
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+
+    /**
+     * @param array $filter
+     *
+     * @return Query
+     */
+    public function findActiveOrganisationWithoutFinancial(array $filter)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('o');
+        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
+
+        //Make a second sub-select to cancel out organisations which have a financial organisation
+        $subSelect2 = $this->_em->createQueryBuilder();
+        $subSelect2->select('financialOrganisation');
+        $subSelect2->from('Organisation\Entity\Financial', 'financial');
+        $subSelect2->join('financial.organisation', 'financialOrganisation');
+
+        $queryBuilder->andWhere($queryBuilder->expr()->notIn('o', $subSelect2->getDQL()));
+
+        $queryBuilder->join('o.affiliation', 'a');
+        $queryBuilder->join('a.project', 'p');
+
+        //Limit to only the active projects
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->getEntityManager()->getRepository('Project\Entity\Project')
+            ->onlyActiveProject($queryBuilder);
+
+        //Limit to projects which are not recently completed
+        $queryBuilder->andWhere('p.dateEndActual > :lastYear');
+
+        $nextYear = new \DateTime();
+        $nextYear->sub(new \DateInterval('P1Y'));
+
+        $queryBuilder->setParameter('lastYear', $nextYear);
+
+        //Limit to active affiliations
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('a.dateEnd'));
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
@@ -327,7 +396,7 @@ class Organisation extends EntityRepository
     /**
      * Find participants based on the given criteria.
      *
-     * @param Meeting $meeting
+     * @param Meeting    $meeting
      * @param Parameters $search
      *
      * @return Registration[]

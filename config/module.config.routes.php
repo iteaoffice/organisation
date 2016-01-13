@@ -15,8 +15,7 @@ return [
             'assets'       => [
                 'type'          => 'Literal',
                 'options'       => [
-                    'route'    => '/assets/' . (defined("DEBRANOVA_HOST")
-                            ? DEBRANOVA_HOST : 'test'),
+                    'route'    => '/assets/' . (defined("DEBRANOVA_HOST") ? DEBRANOVA_HOST : 'test'),
                     'defaults' => [
                         'controller' => Controller\OrganisationController::class,
                         'action'     => 'index',
@@ -75,7 +74,7 @@ return [
                             'check-vat'    => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/check-vat.json',
+                                    'route'    => '/check-vat[/vat-:vat].json',
                                     'defaults' => [
                                         'controller' => Controller\JsonController::class,
                                         'action'     => 'check-vat',
@@ -162,15 +161,6 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit-financial'  => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/edit-financial/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'edit-financial',
-                                    ],
-                                ],
-                            ],
                             'add-affiliation' => [
                                 'type'    => 'Segment',
                                 'options' => [
@@ -189,19 +179,19 @@ return [
                                     ],
                                 ],
                             ],
-                            'vat'             => [
+                            'financial'       => [
                                 'type'          => 'Segment',
                                 'priority'      => 1000,
                                 'options'       => [
                                     'route'    => '/vat',
                                     'defaults' => [
-                                        'controller' => Controller\OrganisationVatController::class,
+                                        'controller' => Controller\OrganisationFinancialController::class,
                                         'action'     => 'index',
                                     ],
                                 ],
                                 'may_terminate' => true,
                                 'child_routes'  => [
-                                    'list'  => [
+                                    'list' => [
                                         'type'     => 'Segment',
                                         'priority' => 1000,
                                         'options'  => [
@@ -211,12 +201,32 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'check' => [
+
+                                    'check'        => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/check/[:id].html',
                                             'defaults' => [
                                                 'action' => 'check',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit'         => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'no-financial' => [
+                                        'type'     => 'Segment',
+                                        'priority' => 1000,
+                                        'options'  => [
+                                            'route'    => '/no-financial.html',
+                                            'defaults' => [
+                                                'action' => 'no-financial',
                                             ],
                                         ],
                                     ],

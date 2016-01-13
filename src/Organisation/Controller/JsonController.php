@@ -32,7 +32,8 @@ class JsonController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $options = $this->getOrganisationService()->findBranchesByOrganisation($this->getOrganisationService()->getOrganisation());
+        $options = $this->getOrganisationService()->findBranchesByOrganisation($this->getOrganisationService()
+            ->getOrganisation());
         asort($options);
 
         $branches = [];
@@ -57,8 +58,15 @@ class JsonController extends OrganisationAbstractController
          */
         $financial = $this->getOrganisationService()->findEntityById('financial', $financialId);
 
-        if (is_null($financial->getVat())) {
+        if (is_null($financial->getVat()) && is_null($this->getEvent()->getRequest()->getPost()->get('vat'))) {
             return new JsonModel(['success' => 'error', 'result' => $this->translate("txt-vat-number-empty")]);
+        }
+
+        //Overrule the vat when a VAT number is sent via the URL
+        if (!is_null($this->getEvent()->getRequest()->getPost()->get('vat'))) {
+            $vat = $this->getEvent()->getRequest()->getPost()->get('vat');
+        } else {
+            $vat = $financial->getVat();
         }
 
         $vies = new Vies();
@@ -71,7 +79,7 @@ class JsonController extends OrganisationAbstractController
             try {
                 $result = $vies->validateVat(
                     $financial->getOrganisation()->getCountry()->getCd(),
-                    trim(str_replace($financial->getOrganisation()->getCountry()->getCd(), '', $financial->getVat()))
+                    trim(str_replace($financial->getOrganisation()->getCountry()->getCd(), '', $vat))
                 );
 
                 if ($result->isValid()) {
@@ -81,17 +89,29 @@ class JsonController extends OrganisationAbstractController
                     $this->getOrganisationService()->updateEntity($financial);
 
 
-                    return new JsonModel(['success' => 'success', 'result' => 'Valid']);
+                    return new JsonModel([
+                        'success' => 'success',
+                        'result'  => 'Valid',
+                        'status'  => Financial::VAT_STATUS_VALID
+                    ]);
                 } else {
                     //Update the financial
                     $financial->setVatStatus(Financial::VAT_STATUS_INVALID);
                     $financial->setDateVat(new \DateTime());
                     $this->getOrganisationService()->updateEntity($financial);
 
-                    return new JsonModel(['success' => 'error', 'result' => 'Invalid']);
+                    return new JsonModel([
+                        'success' => 'error',
+                        'result'  => 'Invalid',
+                        'status'  => Financial::VAT_STATUS_INVALID
+                    ]);
                 }
             } catch (\Exception $e) {
-                return new JsonModel(['success' => 'error', 'result' => $e->getMessage()]);
+                return new JsonModel([
+                    'success' => 'error',
+                    'result'  => $e->getMessage(),
+                    'status'  => Financial::VAT_STATUS_UNDEFINED
+                ]);
             }
         }
     }

@@ -126,6 +126,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
             case 'icon':
                 switch ($this->getAction()) {
                     case 'edit':
+                    case 'edit-financial':
                         $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
                         break;
                     default:

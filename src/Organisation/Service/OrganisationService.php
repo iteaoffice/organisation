@@ -73,6 +73,18 @@ class OrganisationService extends ServiceAbstract
         return trim(sprintf("%'.06d\n", 200000 + $this->getOrganisation()->getId()));
     }
 
+
+    /**
+     * @param  Contact $contact
+     *
+     * @return Organisation[];
+     */
+    public function findActiveOrganisationWithoutFinancial($filter)
+    {
+        return $this->getEntityManager()->getRepository(Organisation::class)
+            ->findActiveOrganisationWithoutFinancial($filter);
+    }
+
     /**
      * @param  Contact $contact
      *
