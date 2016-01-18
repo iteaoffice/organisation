@@ -211,7 +211,7 @@ class Financial extends EntityAbstract implements ResourceInterface
      * @ORM\OneToMany(targetEntity="\Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="financial")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Reminder[]
+     * @var \Invoice\Entity\Reminder[]|Collections\ArrayCollection
      */
     private $reminder;
 
@@ -414,7 +414,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param boolean $email
+     * @param int $email
      */
     public function setEmail($email)
     {
@@ -614,7 +614,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Invoice\Entity\Reminder[]
+     * @return \Invoice\Entity\Reminder[]|Collections\ArrayCollection
      */
     public function getReminder()
     {
@@ -622,7 +622,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Invoice\Entity\Reminder[] $reminder
+     * @param \Invoice\Entity\Reminder[]|Collections\ArrayCollection $reminder
      */
     public function setReminder($reminder)
     {

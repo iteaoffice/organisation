@@ -118,7 +118,7 @@ abstract class AssertionAbstract implements
      *
      * @param ContactService $contactService
      *
-     * @return $this;
+     * @return AssertionAbstract;
      */
     public function setContactService(ContactService $contactService)
     {

@@ -35,10 +35,14 @@ use Zend\View\Model\ViewModel;
  * @category    Organisation
  *
  */
-class OrganisationAdminController extends OrganisationAbstractController
-    implements DoaServiceAwareInterface, LoiServiceAwareInterface, AffiliationServiceAwareInterface,
-               InvoiceServiceAwareInterface, ProjectServiceAwareInterface, GeneralServiceAwareInterface,
-               ContactServiceAwareInterface
+class OrganisationAdminController extends OrganisationAbstractController implements
+    DoaServiceAwareInterface,
+    LoiServiceAwareInterface,
+    AffiliationServiceAwareInterface,
+    InvoiceServiceAwareInterface,
+    ProjectServiceAwareInterface,
+    GeneralServiceAwareInterface,
+    ContactServiceAwareInterface
 {
     /**
      * @return ViewModel
@@ -136,8 +140,10 @@ class OrganisationAdminController extends OrganisationAbstractController
 
             if ($form->isValid()) {
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translate("txt-organisation-%s-has-successfully-been-updated"),
-                        $organisationService->getOrganisation()));
+                    ->addMessage(sprintf(
+                        $this->translate("txt-organisation-%s-has-successfully-been-updated"),
+                        $organisationService->getOrganisation()
+                    ));
                 /**
                  * @var $organisation Organisation
                  */
@@ -198,8 +204,11 @@ class OrganisationAdminController extends OrganisationAbstractController
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()
-                    ->toRoute('zfcadmin/organisation/view', ['id' => $organisationService->getOrganisation()->getId()],
-                        ['fragment' => 'project']);
+                    ->toRoute(
+                        'zfcadmin/organisation/view',
+                        ['id' => $organisationService->getOrganisation()->getId()],
+                        ['fragment' => 'project']
+                    );
             }
 
             if ($form->isValid()) {
@@ -220,12 +229,18 @@ class OrganisationAdminController extends OrganisationAbstractController
                 $this->getAffiliationService()->newEntity($affiliation);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
-                        $organisationService->getOrganisation(), $project));
+                    ->addMessage(sprintf(
+                        $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
+                        $organisationService->getOrganisation(),
+                        $project
+                    ));
 
                 return $this->redirect()
-                    ->toRoute('zfcadmin/organisation/view', ['id' => $organisationService->getOrganisation()->getId()],
-                        ['fragment' => 'project']);
+                    ->toRoute(
+                        'zfcadmin/organisation/view',
+                        ['id' => $organisationService->getOrganisation()->getId()],
+                        ['fragment' => 'project']
+                    );
             }
         }
 
@@ -245,9 +260,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $search = $this->getRequest()->getPost()->get('search');
 
         $results = [];
-        foreach (
-            $this->getOrganisationService()->searchOrganisation($search, 1000, null, false, false) as $result
-        ) {
+        foreach ($this->getOrganisationService()->searchOrganisation($search, 1000, null, false, false) as $result) {
             $text = trim(sprintf("%s (%s)", $result['organisation'], $result['iso3']));
 
             $results[] = ['value' => $result['id'], 'text' => $text,];
