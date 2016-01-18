@@ -15,13 +15,11 @@ use Affiliation\Service\AffiliationServiceAwareInterface;
 use Affiliation\Service\DoaServiceAwareInterface;
 use Affiliation\Service\LoiServiceAwareInterface;
 use Contact\Service\ContactServiceAwareInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Service\GeneralServiceAwareInterface;
 use Invoice\Form\InvoiceFilter;
 use Invoice\Service\InvoiceServiceAwareInterface;
-use Organisation\Entity\Financial;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Form\AddAffiliation;
@@ -37,14 +35,10 @@ use Zend\View\Model\ViewModel;
  * @category    Organisation
  *
  */
-class OrganisationAdminController extends OrganisationAbstractController implements
-    DoaServiceAwareInterface,
-    LoiServiceAwareInterface,
-    AffiliationServiceAwareInterface,
-    InvoiceServiceAwareInterface,
-    ProjectServiceAwareInterface,
-    GeneralServiceAwareInterface,
-    ContactServiceAwareInterface
+class OrganisationAdminController extends OrganisationAbstractController
+    implements DoaServiceAwareInterface, LoiServiceAwareInterface, AffiliationServiceAwareInterface,
+               InvoiceServiceAwareInterface, ProjectServiceAwareInterface, GeneralServiceAwareInterface,
+               ContactServiceAwareInterface
 {
     /**
      * @return ViewModel
@@ -57,15 +51,10 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
             ->findEntitiesFiltered('organisation', $filterPlugin->getFilter());
 
         $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator(
-                $organisationQuery,
-                false
-            )));
-        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX
-            : 15);
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount()
-            / $paginator->getDefaultItemCountPerPage()));
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
         $form = new OrganisationFilter($this->getOrganisationService());
 
@@ -81,62 +70,49 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
     }
 
 
-
     /**
      * @return ViewModel
      */
     public function viewAction()
     {
-        $organisationService = $this->getOrganisationService()
-            ->setOrganisationId($this->params('id'));
+        $organisationService = $this->getOrganisationService()->setOrganisationId($this->params('id'));
 
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getInvoiceFilter();
 
         $invoiceQuery = $this->getInvoiceService()
-            ->findEntitiesFiltered(
-                'invoice',
-                array_merge($filterPlugin->getFilter(), [
+            ->findEntitiesFiltered('invoice', array_merge($filterPlugin->getFilter(), [
                     'organisation' => [
                         $organisationService->getOrganisation()->getId()
                     ],
-                ])
-            );
+                ]));
 
         $paginator
-                = new Paginator(new PaginatorAdapter(new ORMPaginator(
-                    $invoiceQuery,
-                    false
-                )));
-        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX
-                : 15);
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount()
-                / $paginator->getDefaultItemCountPerPage()));
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
         $form = new InvoiceFilter($this->getInvoiceService());
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         $projects = $this->getProjectService()
-                ->findProjectByOrganisation(
-                    $organisationService->getOrganisation(),
-                    ProjectService::WHICH_ALL
-                );
+            ->findProjectByOrganisation($organisationService->getOrganisation(), ProjectService::WHICH_ALL);
 
         return new ViewModel([
-                'paginator'           => $paginator,
-                'form'                => $form,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
-                'organisationService' => $organisationService,
-                'organisationDoa'     => $this->getDoaService()
+            'paginator'           => $paginator,
+            'form'                => $form,
+            'encodedFilter'       => urlencode($filterPlugin->getHash()),
+            'order'               => $filterPlugin->getOrder(),
+            'direction'           => $filterPlugin->getDirection(),
+            'organisationService' => $organisationService,
+            'organisationDoa'     => $this->getDoaService()
                 ->findDoaByOrganisation($organisationService->getOrganisation()),
-                'organisationLoi'     => $this->getLoiService()
+            'organisationLoi'     => $this->getLoiService()
                 ->findLoiByOrganisation($organisationService->getOrganisation()),
-                'projects'            => $projects,
+            'projects'            => $projects,
 
-                ]);
+        ]);
     }
 
     /**
@@ -144,34 +120,24 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
      */
     public function editAction()
     {
-        $organisationService = $this->getOrganisationService()
-            ->setOrganisationId($this->params('id'));
+        $organisationService = $this->getOrganisationService()->setOrganisationId($this->params('id'));
 
         $data = array_merge([
-            'description' => $organisationService->getOrganisation()
-                ->getDescription()
+            'description' => $organisationService->getOrganisation()->getDescription()
         ], $this->getRequest()->getPost()->toArray());
         $form = $this->getFormService()
-            ->prepare(
-                $organisationService->getOrganisation(),
-                $organisationService->getOrganisation(),
-                $data
-            );
+            ->prepare($organisationService->getOrganisation(), $organisationService->getOrganisation(), $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisationService->getOrganisation()->getId()]
-                );
+                return $this->redirect()
+                    ->toRoute('zfcadmin/organisation/view', ['id' => $organisationService->getOrganisation()->getId()]);
             }
 
             if ($form->isValid()) {
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-organisation-%s-has-successfully-been-updated"),
-                        $organisationService->getOrganisation()
-                    ));
+                    ->addMessage(sprintf($this->translate("txt-organisation-%s-has-successfully-been-updated"),
+                        $organisationService->getOrganisation()));
                 /**
                  * @var $organisation Organisation
                  */
@@ -180,8 +146,7 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
 
                 $fileData = $this->params()->fromFiles();
                 if (!empty($fileData['file']['name'])) {
-                    $logo = $organisationService->getOrganisation()->getLogo()
-                        ->first();
+                    $logo = $organisationService->getOrganisation()->getLogo()->first();
                     if (!$logo) {
                         //Create a logo element
                         $logo = new Logo();
@@ -192,8 +157,7 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
                     $imageSizeValidator->isValid($fileData['file']);
                     $logo->setContentType($this->getGeneralService()
                         ->findContentTypeByContentTypeName($fileData['file']['type']));
-                    $logo->setLogoExtension($logo->getContentType()
-                        ->getExtension());
+                    $logo->setLogoExtension($logo->getContentType()->getExtension());
 
                     $organisation->getLogo()->add($logo);
 
@@ -207,10 +171,8 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
 
                 $this->getOrganisationService()->updateEntity($organisation);
 
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisationService->getOrganisation()->getId()]
-                );
+                return $this->redirect()
+                    ->toRoute('zfcadmin/organisation/view', ['id' => $organisationService->getOrganisation()->getId()]);
             }
         }
 
@@ -226,33 +188,25 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
      */
     public function addAffiliationAction()
     {
-        $organisationService = $this->getOrganisationService()
-            ->setOrganisationId($this->params('id'));
+        $organisationService = $this->getOrganisationService()->setOrganisationId($this->params('id'));
 
         $data = array_merge($this->getRequest()->getPost()->toArray());
 
-        $form = new AddAffiliation(
-            $this->getOrganisationService(),
-            $this->getProjectService()
-        );
+        $form = new AddAffiliation($this->getOrganisationService(), $this->getProjectService());
         $form->setData($data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisationService->getOrganisation()->getId()],
-                    ['fragment' => 'project']
-                );
+                return $this->redirect()
+                    ->toRoute('zfcadmin/organisation/view', ['id' => $organisationService->getOrganisation()->getId()],
+                        ['fragment' => 'project']);
             }
 
             if ($form->isValid()) {
                 $formData = $form->getData();
 
-                $project = $this->getProjectService()
-                    ->setProjectId((int)$formData['project'])->getProject();
-                $contact = $this->getContactService()
-                    ->findEntityById('contact', (int)$formData['contact']);
+                $project = $this->getProjectService()->setProjectId((int)$formData['project'])->getProject();
+                $contact = $this->getContactService()->findEntityById('contact', (int)$formData['contact']);
                 $branch = $formData['branch'];
 
                 $affiliation = new Affiliation();
@@ -266,17 +220,12 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
                 $this->getAffiliationService()->newEntity($affiliation);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
-                        $organisationService->getOrganisation(),
-                        $project
-                    ));
+                    ->addMessage(sprintf($this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
+                        $organisationService->getOrganisation(), $project));
 
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisationService->getOrganisation()->getId()],
-                    ['fragment' => 'project']
-                );
+                return $this->redirect()
+                    ->toRoute('zfcadmin/organisation/view', ['id' => $organisationService->getOrganisation()->getId()],
+                        ['fragment' => 'project']);
             }
         }
 
@@ -296,14 +245,10 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
         $search = $this->getRequest()->getPost()->get('search');
 
         $results = [];
-        foreach ($this->getOrganisationService()
-                ->searchOrganisation($search, 1000, null, false, false) as
-            $result) {
-            $text = trim(sprintf(
-                "%s (%s)",
-                $result['organisation'],
-                $result['iso3']
-            ));
+        foreach (
+            $this->getOrganisationService()->searchOrganisation($search, 1000, null, false, false) as $result
+        ) {
+            $text = trim(sprintf("%s (%s)", $result['organisation'], $result['iso3']));
 
             $results[] = ['value' => $result['id'], 'text' => $text,];
         }

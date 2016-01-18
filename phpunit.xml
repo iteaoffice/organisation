@@ -1,0 +1,47 @@
+<!--
+  ~ ITEA Office copyright message placeholder.
+  ~
+  ~ PHP Version 5
+  ~
+  ~ @category    Project
+  ~
+  ~ @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+  ~ @copyright   2004-2016 ITEA Office
+  ~ @license     https://itea3.org/license.txt proprietary
+  ~
+  ~ @link        http://github.com/iteaoffice/project for the canonical source repository
+  -->
+
+<phpunit bootstrap="tests/OrganisationTest/Bootstrap.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         verbose="true"
+         stopOnFailure="false"
+         processIsolation="false"
+         backupGlobals="false"
+         syntaxCheck="true"
+>
+    <testsuite name="debranova/organisation Test Suite">
+        <directory>./tests/OrganisationTest</directory>
+    </testsuite>
+
+    <php>
+        <const name="DEBRANOVA_HOST" value="test"/>
+        <const name="DEBRANOVA_APP" value="test"/>
+        <const name="DEBRANOVA_APPLICATION" value="test"/>
+        <const name="DEBRANOVA_ENV" value="development"/>
+        <const name="TEST_SUITE" value="full"/>
+    </php>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-clover" target="./clover.xml"/>
+    </logging>
+</phpunit>
