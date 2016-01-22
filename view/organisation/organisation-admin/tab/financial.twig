@@ -13,8 +13,8 @@
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-vat-number") }}</dt>
             <dd>{{ financial.vat }}
-                ({{ translate(financial.vatStatus(true)) }}
-                - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }})
+                (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
+                - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
                 <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i>
             </dd>
             <dt>{{ translate("txt-vat-type") }}</dt>
@@ -57,7 +57,7 @@
                 'financialId': $financialId,
             },
             success: function (response) {
-                $("#vatStatus_" + $financialId).html(response.result);
+                $("#vatStatus").html(response.result);
                 $this.removeClass('fa-spin');
             },
             error: function (xhr) {
@@ -65,8 +65,5 @@
                 alert('Error! Did you enable adblock????? Status = ' + xhr.status);
             }
         });
-
-
     });
-
 </script>
