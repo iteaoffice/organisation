@@ -28,7 +28,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Description extends EntityAbstract implements ResourceInterface
 {
     /**
-     * @ORM\Column(name="description_id", type="integer", nullable=false)
+     * @ORM\Column(name="description_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

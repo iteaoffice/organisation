@@ -55,7 +55,7 @@
                         <td>{{ organisationService.organisation.getType().type }}</td>
                         <td>{{ financial.vat }}</td>
                         <td id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
-                            ({{ financial.dateVat|time_diff }})
+                            ({{ financial.dateVat|string_date }})
                         <td><i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i></td>
                         {#<td>{% for type in financial.vatType %}{{ type }}{% endfor %}</td>#}
                         <td>{{ translate(financial.getOmitContact(true)) }}</td>

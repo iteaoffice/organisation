@@ -26,7 +26,7 @@ class Logo
 {
     const HASH_KEY = '49fksdr80sdf83409jsadvkljasruwasef';
     /**
-     * @ORM\Column(name="logo_id", type="integer", nullable=false)
+     * @ORM\Column(name="logo_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */

@@ -86,13 +86,12 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
 
         $invoiceQuery = $this->getInvoiceService()
             ->findEntitiesFiltered('invoice', array_merge($filterPlugin->getFilter(), [
-                    'organisation' => [
-                        $organisationService->getOrganisation()->getId()
-                    ],
-                ]));
+                'organisation' => [
+                    $organisationService->getOrganisation()->getId()
+                ],
+            ]));
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
         $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
@@ -115,6 +114,7 @@ class OrganisationAdminController extends OrganisationAbstractController impleme
             'organisationLoi'     => $this->getLoiService()
                 ->findLoiByOrganisation($organisationService->getOrganisation()),
             'projects'            => $projects,
+            'projectService'      => $this->getProjectService()
 
         ]);
     }

@@ -48,6 +48,18 @@ class Organisation extends EntityRepository
             $queryBuilder->andWhere($queryBuilder->expr()->in('o.type', implode($filter['type'], ', ')));
         }
 
+        if (array_key_exists('options', $filter) && in_array(1, $filter['options'])) {
+
+            //Make a second sub-select to cancel out organisations which have a financial organisation
+            $subSelect2 = $this->_em->createQueryBuilder();
+            $subSelect2->select('organisation');
+            $subSelect2->from('Affiliation\Entity\Affiliation', 'affiliation');
+            $subSelect2->andWhere($queryBuilder->expr()->isNull('affiliation.dateEnd'));
+            $subSelect2->join('affiliation.organisation', 'organisation');
+
+            $queryBuilder->andWhere($queryBuilder->expr()->in('o', $subSelect2->getDQL()));
+        }
+
         $direction = 'ASC';
         if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
             $direction = strtoupper($filter['direction']);

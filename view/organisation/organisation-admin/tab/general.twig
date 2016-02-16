@@ -27,11 +27,11 @@
 
             {% if organisationService.organisation.getDateCreated() %}
                 <dt>{{ translate("txt-date-created") }}</dt>
-                <dd>{{ organisationService.organisation.getDateCreated()|time_diff }}</dd>
+                <dd>{{ organisationService.organisation.getDateCreated()|string_date }}</dd>
             {% endif %}
             {% if organisationService.organisation.getDateUpdated() %}
                 <dt>{{ translate("txt-last-update") }}</dt>
-                <dd>{{ organisationService.organisation.getDateUpdated()|time_diff }}</dd>
+                <dd>{{ organisationService.organisation.getDateUpdated()|string_date }}</dd>
             {% endif %}
         </dl>
 

@@ -17,7 +17,7 @@ class Link extends EntityAbstract
     /**
      * @var integer
      *
-     * @ORM\Column(name="link_id", type="integer", nullable=false)
+     * @ORM\Column(name="link_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */

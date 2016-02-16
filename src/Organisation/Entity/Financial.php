@@ -91,7 +91,7 @@ class Financial extends EntityAbstract implements ResourceInterface
             self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
         ];
     /**
-     * @ORM\Column(name="financial_id", type="integer", nullable=false)
+     * @ORM\Column(name="financial_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -223,7 +223,7 @@ class Financial extends EntityAbstract implements ResourceInterface
         $this->vatStatus = self::VAT_STATUS_UNCHECKED;
         $this->shiftVat = self::VAT_NOT_SHIFT;
         $this->omitContact = self::NO_OMIT_CONTACT;
-        $this->requiredPurchaseOrder = self::REQUIRED_PURCHASE_ORDER;
+        $this->requiredPurchaseOrder = self::NO_REQUIRED_PURCHASE_ORDER;
         $this->vatType = new Collections\ArrayCollection();
         $this->reminder = new Collections\ArrayCollection();
     }

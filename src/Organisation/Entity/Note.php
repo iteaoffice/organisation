@@ -29,7 +29,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Note extends EntityAbstract implements ResourceInterface
 {
     /**
-     * @ORM\Column(name="note_id", type="integer", nullable=false)
+     * @ORM\Column(name="note_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

@@ -24,7 +24,7 @@ use Zend\Form\Annotation;
 class Cluster //extends EntityAbstract
 {
     /**
-     * @ORM\Column(name="cluster_id", type="integer", nullable=false)
+     * @ORM\Column(name="cluster_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

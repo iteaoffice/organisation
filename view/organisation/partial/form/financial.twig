@@ -31,7 +31,7 @@
 
     <div class="col-sm-9">
         <p class="form-control-static"><span id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
-                ({{ financial.dateVat|time_diff }})</span>
+                ({{ financial.dateVat|string_date }})</span>
         <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i></p>
     </div>
 </div>

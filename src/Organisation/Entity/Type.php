@@ -57,7 +57,7 @@ class Type extends EntityAbstract implements ResourceInterface
             self::INVOICE    => 'txt-no-invoice',
         ];
     /**
-     * @ORM\Column(name="type_id", type="integer", nullable=false)
+     * @ORM\Column(name="type_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()

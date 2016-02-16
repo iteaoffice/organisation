@@ -310,6 +310,17 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @param $vat
+     *
+     * @return Financial|null
+     */
+    public function findFinancialOrganisationWithVAT($vat)
+    {
+        return $this->getEntityManager()->getRepository(Financial::class)
+            ->findOneBy(['vat' => $vat]);
+    }
+
+    /**
      * Find a country based on three criteria: Name, CountryObject.
      *
      * @param string  $name

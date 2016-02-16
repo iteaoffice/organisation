@@ -30,7 +30,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Organisation extends EntityAbstract implements ResourceInterface
 {
     /**
-     * @ORM\Column(name="organisation_id", type="integer", nullable=false)
+     * @ORM\Column(name="organisation_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()

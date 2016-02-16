@@ -26,7 +26,7 @@ class Web extends EntityAbstract implements ResourceInterface
     const NOT_MAIN = 0;
     const MAIN = 1;
     /**
-     * @ORM\Column(name="web_id", type="integer", nullable=false)
+     * @ORM\Column(name="web_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
