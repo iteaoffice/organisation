@@ -12,23 +12,14 @@
 namespace Organisation\Service;
 
 use Zend\Form\Form;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class FormService implements ServiceLocatorAwareInterface
+class FormService extends ServiceAbstract
 {
     /**
      * @var Form
      */
     protected $form;
-    /**
-     * @var \Organisation\Service\OrganisationService
-     */
-    protected $organisationService;
-    /**
-     * @var ServiceLocatorInterface
-     */
-    protected $serviceLocator;
+
 
     /**
      * @param null $className
@@ -40,7 +31,7 @@ class FormService implements ServiceLocatorAwareInterface
     public function getForm($className = null, $entity = null, $bind = true)
     {
         if (!is_null($className) && is_null($entity)) {
-            $entity = $this->getOrganisationService()->getEntity($className);
+            $entity = $this->getEntity($className);
         }
 
         if (!is_object($entity)) {
@@ -72,47 +63,5 @@ class FormService implements ServiceLocatorAwareInterface
         $form->setData($data);
 
         return $form;
-    }
-
-    /**
-     * @param OrganisationService $organisationService
-     */
-    public function setOrganisationService($organisationService)
-    {
-        $this->organisationService = $organisationService;
-    }
-
-    /**
-     * Get organisationService.
-     *
-     * @return OrganisationService.
-     */
-    public function getOrganisationService()
-    {
-        if (null === $this->organisationService) {
-            $this->organisationService = $this->getServiceLocator()->get(OrganisationService::class);
-        }
-
-        return $this->organisationService;
-    }
-
-    /**
-     * Set the service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    /**
-     * Get the service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator;
     }
 }

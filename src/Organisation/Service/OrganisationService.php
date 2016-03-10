@@ -16,6 +16,7 @@ use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Contact\Service\ContactService;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity\Financial;
@@ -75,9 +76,9 @@ class OrganisationService extends ServiceAbstract
 
 
     /**
-     * @param  Contact $contact
+     * @param $filter
      *
-     * @return Organisation[];
+     * @return QueryBuilder
      */
     public function findActiveOrganisationWithoutFinancial($filter)
     {
@@ -192,7 +193,7 @@ class OrganisationService extends ServiceAbstract
          * Return null when no project can be found
          */
         if (is_null($organisation)) {
-            return;
+            return null;
         }
         $this->setOrganisation($organisation);
 

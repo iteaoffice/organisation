@@ -30,17 +30,13 @@ class OrganisationController extends OrganisationAbstractController
         /**
          * @var $logo Logo
          */
-        $logo = $this->getOrganisationService()->findEntityById(
-            'logo',
-            $this->params('id')
-        );
+        $logo = $this->getOrganisationService()->findEntityById('logo', $this->params('id'));
 
         /**
          * Do a check if the given has is correct to avoid guessing the image
          */
         if (is_null($logo)
-            || $this->params('hash')
-            !== $logo->getHash()
+            || $this->params('hash') !== $logo->getHash()
         ) {
             return $this->notFoundAction();
         }
@@ -58,11 +54,9 @@ class OrganisationController extends OrganisationAbstractController
         }
 
         $response = $this->getResponse();
-        $response->getHeaders()->addHeaderLine('Expires: '
-            . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")->addHeaderLine('Content-Type: '
-                . $logo->getContentType()->getContentType())
+        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
             ->addHeaderLine('Content-Length: ' . (string)strlen($file));
         $response->setContent($file);
 
@@ -77,8 +71,7 @@ class OrganisationController extends OrganisationAbstractController
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
         $maxResults = $this->getRequest()->getQuery()->get('max_rows', 12);
         $countryId = $this->getRequest()->getQuery()->get('country');
-        $searchResult = $this->getOrganisationService()
-            ->searchOrganisation($searchItem, $maxResults, $countryId);
+        $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
         /**
          * Include a paginator to be able to have later paginated search results in pages
          */

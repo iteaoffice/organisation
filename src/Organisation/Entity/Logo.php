@@ -210,7 +210,7 @@ class Logo
     }
 
     /**
-     * @return string
+     * @return resource
      */
     public function getOrganisationLogo()
     {

@@ -18,7 +18,6 @@ use General\View\Helper\CountryMap;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Paginator\Paginator;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -59,16 +58,12 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                 }
 
                 $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation"));
-                $this->serviceLocator->get('headtitle')->append(
-                    $this->getOrganisationService()->getOrganisation()->getOrganisation()
-                );
+                $this->serviceLocator->get('headtitle')->append($this->getOrganisationService()->getOrganisation()
+                    ->getOrganisation());
 
                 //Do now show the organisation when we don't have projects
-                if (sizeof(
-                    $this->getProjectService()->findProjectByOrganisation(
-                        $this->getOrganisationService()->getOrganisation()
-                    )
-                ) === 0
+                if (sizeof($this->getProjectService()->findProjectByOrganisation($this->getOrganisationService()
+                        ->getOrganisation())) === 0
                 ) {
                     $this->getServiceLocator()->get("response")->setStatusCode(404);
 
@@ -79,21 +74,12 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
                  * @var OrganisationLink
                  */
                 $organisationLink = $this->serviceLocator->get('organisationLink');
-                $this->serviceLocator->get('headmeta')->setProperty(
-                    'og:type',
-                    $this->translate("txt-organisation")
-                );
-                $this->serviceLocator->get('headmeta')->setProperty(
-                    'og:title',
-                    $this->getOrganisationService()->getOrganisation()->getOrganisation()
-                );
+                $this->serviceLocator->get('headmeta')->setProperty('og:type', $this->translate("txt-organisation"));
+                $this->serviceLocator->get('headmeta')
+                    ->setProperty('og:title', $this->getOrganisationService()->getOrganisation()->getOrganisation());
                 $this->serviceLocator->get('headmeta')->setProperty(
                     'og:url',
-                    $organisationLink->__invoke(
-                        $this->getOrganisationService(),
-                        'view',
-                        'social'
-                    )
+                    $organisationLink->__invoke($this->getOrganisationService(), 'view', 'social')
                 );
 
                 return $this->parseOrganisation($this->getOrganisationService());
@@ -273,10 +259,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisation(OrganisationService $organisationService)
     {
-        return $this->getRenderer()->render(
-            'organisation/partial/entity/organisation',
-            ['organisationService' => $organisationService]
-        );
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation', ['organisationService' => $organisationService]);
     }
 
     /**
@@ -316,10 +300,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationInfo(OrganisationService $organisationService)
     {
-        return $this->getRenderer()->render(
-            'organisation/partial/entity/organisation-info',
-            ['organisationService' => $organisationService]
-        );
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation-info', ['organisationService' => $organisationService]);
     }
 
     /**
@@ -329,10 +311,8 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationLogo(OrganisationService $organisationService)
     {
-        return $this->getRenderer()->render(
-            'organisation/partial/entity/organisation-logo',
-            ['organisationService' => $organisationService]
-        );
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation-logo', ['organisationService' => $organisationService]);
     }
 
     /**
@@ -358,12 +338,9 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        return $this->getRenderer()->render(
-            'organisation/partial/list/organisation',
-            [
-                'paginator' => $paginator,
-            ]
-        );
+        return $this->getRenderer()->render('organisation/partial/list/organisation', [
+            'paginator' => $paginator,
+        ]);
     }
 
     public function parseOrganisationTitle()
@@ -381,36 +358,13 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationProjectList(OrganisationService $organisationService)
     {
-        $whichProjects = $this->getProjectService()->getOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE : ProjectService::WHICH_ALL;
+        $whichProjects = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
+            : ProjectService::WHICH_ALL;
 
-        $whichTemplate = $this->getProjectService()->getOptions()->getProjectHasVersions() ? 'organisation/partial/list/project' : 'organisation/partial/list/project_eu';
+        $projects = $this->getProjectService()
+            ->findProjectByOrganisation($organisationService->getOrganisation(), $whichProjects, true);
 
-        $projects = $this->getProjectService()->findProjectByOrganisation(
-            $organisationService->getOrganisation(),
-            $whichProjects,
-            true
-        );
-
-        return $this->getRenderer()->render(
-            $whichTemplate,
-            ['projects' => $projects]
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function getConfig()
-    {
-        return $this->getServiceLocator()->get('organisation_module_config');
-    }
-
-    /**
-     * @return AbstractAdapter
-     */
-    public function getCache()
-    {
-        return $this->getServiceLocator()->get('organisation_cache');
+        return $this->getRenderer()->render('organisation/partial/list/project', ['projects' => $projects]);
     }
 
     /**
@@ -418,7 +372,7 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function getModuleOptions()
     {
-        return $this->getServiceLocator()->get('organisation_module_options');
+        return $this->getServiceLocator()->get(ModuleOptions::class);
     }
 
     /**
@@ -427,6 +381,14 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
     public function getProjectService()
     {
         return $this->getServiceLocator()->get(ProjectService::class);
+    }
+
+    /**
+     * @return \Project\Options\ModuleOptions
+     */
+    public function getProjectModuleOptions()
+    {
+        return $this->getServiceLocator()->get(\Project\Options\ModuleOptions::class);
     }
 
     /**
@@ -449,23 +411,18 @@ class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareI
      */
     public function parseOrganisationArticleList(OrganisationService $organisationService)
     {
-        $articles = $this->getArticleService()->findArticlesByOrganisation(
-            $organisationService->getOrganisation(),
-            $this->getLimit()
-        );
+        $articles = $this->getArticleService()
+            ->findArticlesByOrganisation($organisationService->getOrganisation(), $this->getLimit());
 
         /*
          * Parse the organisationService in to have the these functions available in the view
          */
 
-        return $this->getRenderer()->render(
-            'organisation/partial/list/article',
-            [
-                'organisationService' => $organisationService,
-                'articles'            => $articles,
-                'limit'               => $this->getLimit(),
-            ]
-        );
+        return $this->getRenderer()->render('organisation/partial/list/article', [
+            'organisationService' => $organisationService,
+            'articles'            => $articles,
+            'limit'               => $this->getLimit(),
+        ]);
     }
 
     /**

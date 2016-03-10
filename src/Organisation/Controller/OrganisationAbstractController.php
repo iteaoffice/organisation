@@ -14,14 +14,13 @@ use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Invoice\Controller\Plugin\GetFilter as InvoiceFilterPlugin;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Service\FormService;
-use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\OrganisationService;
-use Organisation\Service\OrganisationServiceAwareInterface;
 use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -37,8 +36,12 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      InvoiceFilterPlugin getInvoiceFilter
  * @method      OrganisationFilterPlugin getOrganisationFilter
  */
-abstract class OrganisationAbstractController extends AbstractActionController implements FormServiceAwareInterface, OrganisationServiceAwareInterface
+abstract class OrganisationAbstractController extends AbstractActionController
 {
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
     /**
      * @var OrganisationService
      */
@@ -91,9 +94,8 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      *
      * @return OrganisationAbstractController
      */
-    public function setOrganisationService(
-        OrganisationService $organisationService
-    ) {
+    public function setOrganisationService(OrganisationService $organisationService)
+    {
         $this->organisationService = $organisationService;
 
         return $this;
@@ -209,9 +211,8 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      *
      * @return OrganisationAbstractController
      */
-    public function setAffiliationService(
-        AffiliationService $affiliationService
-    ) {
+    public function setAffiliationService(AffiliationService $affiliationService)
+    {
         $this->affiliationService = $affiliationService;
 
         return $this;
@@ -273,6 +274,26 @@ abstract class OrganisationAbstractController extends AbstractActionController i
     public function setContactService(ContactService $contactService)
     {
         $this->contactService = $contactService;
+
+        return $this;
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     *
+     * @return OrganisationAbstractController
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
 
         return $this;
     }

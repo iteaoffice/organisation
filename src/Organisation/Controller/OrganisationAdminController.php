@@ -11,21 +11,14 @@
 namespace Organisation\Controller;
 
 use Affiliation\Entity\Affiliation;
-use Affiliation\Service\AffiliationServiceAwareInterface;
-use Affiliation\Service\DoaServiceAwareInterface;
-use Affiliation\Service\LoiServiceAwareInterface;
-use Contact\Service\ContactServiceAwareInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use General\Service\GeneralServiceAwareInterface;
 use Invoice\Form\InvoiceFilter;
-use Invoice\Service\InvoiceServiceAwareInterface;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Form\AddAffiliation;
 use Organisation\Form\OrganisationFilter;
 use Project\Service\ProjectService;
-use Project\Service\ProjectServiceAwareInterface;
 use Zend\Paginator\Paginator;
 use Zend\Validator\File\ImageSize;
 use Zend\View\Model\JsonModel;
@@ -35,14 +28,7 @@ use Zend\View\Model\ViewModel;
  * @category    Organisation
  *
  */
-class OrganisationAdminController extends OrganisationAbstractController implements
-    DoaServiceAwareInterface,
-    LoiServiceAwareInterface,
-    AffiliationServiceAwareInterface,
-    InvoiceServiceAwareInterface,
-    ProjectServiceAwareInterface,
-    GeneralServiceAwareInterface,
-    ContactServiceAwareInterface
+class OrganisationAdminController extends OrganisationAbstractController
 {
     /**
      * @return ViewModel
