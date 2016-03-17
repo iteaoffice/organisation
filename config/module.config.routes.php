@@ -5,7 +5,7 @@
  * @category    Project
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 use Organisation\Controller;
 
@@ -74,7 +74,7 @@ return [
                             'check-vat'    => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/check-vat.json',
+                                    'route'    => '/check-vat[/vat-:vat].json',
                                     'defaults' => [
                                         'controller' => Controller\JsonController::class,
                                         'action'     => 'check-vat',
@@ -124,7 +124,7 @@ return [
                         ],
                         'may_terminate' => true,
                         'child_routes'  => [
-                            'list'        => [
+                            'list'            => [
                                 'type'     => 'Segment',
                                 'priority' => 1000,
                                 'options'  => [
@@ -134,7 +134,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'new'         => [
+                            'new'             => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/new.html',
@@ -143,7 +143,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'view'        => [
+                            'view'            => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/view/[:id][/f-:encodedFilter][/page-:page].html',
@@ -152,7 +152,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit'        => [
+                            'edit'            => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/edit/[:id].html',
@@ -161,7 +161,16 @@ return [
                                     ],
                                 ],
                             ],
-                            'search-form' => [
+                            'add-affiliation' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/add-affiliation/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'add-affiliation',
+                                    ],
+                                ],
+                            ],
+                            'search-form'     => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/search-form.html',
@@ -170,19 +179,19 @@ return [
                                     ],
                                 ],
                             ],
-                            'vat'         => [
+                            'financial'       => [
                                 'type'          => 'Segment',
                                 'priority'      => 1000,
                                 'options'       => [
                                     'route'    => '/vat',
                                     'defaults' => [
-                                        'controller' => Controller\OrganisationVatController::class,
+                                        'controller' => Controller\OrganisationFinancialController::class,
                                         'action'     => 'index',
                                     ],
                                 ],
                                 'may_terminate' => true,
                                 'child_routes'  => [
-                                    'list'  => [
+                                    'list' => [
                                         'type'     => 'Segment',
                                         'priority' => 1000,
                                         'options'  => [
@@ -192,12 +201,32 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'check' => [
+
+                                    'check'        => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/check/[:id].html',
                                             'defaults' => [
                                                 'action' => 'check',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit'         => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'no-financial' => [
+                                        'type'     => 'Segment',
+                                        'priority' => 1000,
+                                        'options'  => [
+                                            'route'    => '/no-financial.html',
+                                            'defaults' => [
+                                                'action' => 'no-financial',
                                             ],
                                         ],
                                     ],

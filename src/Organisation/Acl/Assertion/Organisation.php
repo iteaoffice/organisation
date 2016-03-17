@@ -1,11 +1,11 @@
 <?php
 /**
- * Debranova copyright message placeholder.
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Acl\Assertion;
@@ -27,10 +27,10 @@ class Organisation extends AssertionAbstract
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl               $acl
-     * @param RoleInterface     $role
+     * @param Acl $acl
+     * @param RoleInterface $role
      * @param ResourceInterface $resource
-     * @param string            $privilege
+     * @param string $privilege
      *
      * @return bool
      */
@@ -47,14 +47,16 @@ class Organisation extends AssertionAbstract
             $resource = $this->getOrganisationService()->setOrganisationId($id)->getOrganisation();
         }
 
+       
+
         switch ($privilege) {
             case 'view-community':
-                if ($this->getContactService()->hasPermit('view', $resource)) {
+                if ($this->getContactService()->contactHasPermit($this->getContact(), 'view', $resource)) {
                     return true;
                 }
                 break;
             case 'edit-community':
-                if ($this->getContactService()->hasPermit('edit', $resource)) {
+                if ($this->getContactService()->contactHasPermit($this->getContact(), 'edit', $resource)) {
                     return true;
                 }
                 break;

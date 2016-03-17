@@ -1,28 +1,28 @@
 <?php
 
 /**
- * ARTEMIS-IA Office copyright message placeholder.
+ * ITEA Office copyright message placeholder.
  *
  * @category   Organisation
  *
- * @author     Andre Hebben <andre.hebben@artemis-ia.eu>
- * @copyright  2004-2014 ARTEMIS-IA Office
- * @license    http://debranova.org/license.txt proprietary
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 namespace Organisation\Options;
 
 /**
- * ARTEMIS-IA Office copyright message placeholder.
+ * ITEA Office copyright message placeholder.
  *
  * @category   Organisation
  *
- * @author     Andre Hebben <andre.hebben@artemis-ia.eu>
- * @copyright  2004-2014 ARTEMIS-IA Office
- * @license    http://debranova.org/license.txt proprietary
+ * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright  2004-2015 ITEA Office
+ * @license    https://itea3.org/license.txt proprietary
  *
- * @link       http://debranova.org
+ * @link       https://itea3.org
  */
 interface OrganisationOptionsInterface
 {

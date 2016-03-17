@@ -5,7 +5,7 @@
  * @category    Organisation
  * @package     Controller
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 namespace Organisation\Controller;
 
@@ -13,14 +13,14 @@ use Affiliation\Service\AffiliationService;
 use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use BjyAuthorize\Controller\Plugin\IsAllowed;
+use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Invoice\Controller\Plugin\GetFilter as InvoiceFilterPlugin;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Service\FormService;
-use Organisation\Service\FormServiceAwareInterface;
 use Organisation\Service\OrganisationService;
-use Organisation\Service\OrganisationServiceAwareInterface;
 use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -33,13 +33,15 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
- * @method InvoiceFilterPlugin getInvoiceFilter
- * @method OrganisationFilterPlugin getOrganisationFilter
+ * @method      InvoiceFilterPlugin getInvoiceFilter
+ * @method      OrganisationFilterPlugin getOrganisationFilter
  */
-abstract class OrganisationAbstractController extends AbstractActionController implements
-    FormServiceAwareInterface,
-    OrganisationServiceAwareInterface
+abstract class OrganisationAbstractController extends AbstractActionController
 {
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
     /**
      * @var OrganisationService
      */
@@ -72,6 +74,10 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      * @var FormService
      */
     protected $formService;
+    /**
+     * @var ContactService
+     */
+    protected $contactService;
 
     /**
      * Gateway to the Organisation Service
@@ -139,6 +145,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
      * Proxy for the flash messenger helper to have the string translated earlier
      *
      * @param $string
+     *
      * @return string
      */
     protected function translate($string)
@@ -146,7 +153,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
         /**
          * @var $translate Translate
          */
-        $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
+        $translate = $this->getPluginManager()->getServiceLocator()->get('ViewHelperManager')->get('translate');
 
         return $translate($string);
     }
@@ -161,6 +168,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  InvoiceService $invoiceService
+     *
      * @return OrganisationAbstractController
      */
     public function setInvoiceService(InvoiceService $invoiceService)
@@ -180,6 +188,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  ProjectService $projectService
+     *
      * @return OrganisationAbstractController
      */
     public function setProjectService(ProjectService $projectService)
@@ -199,6 +208,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  AffiliationService $affiliationService
+     *
      * @return OrganisationAbstractController
      */
     public function setAffiliationService(AffiliationService $affiliationService)
@@ -218,6 +228,7 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  DoaService $doaService
+     *
      * @return OrganisationAbstractController
      */
     public function setDoaService(DoaService $doaService)
@@ -237,11 +248,52 @@ abstract class OrganisationAbstractController extends AbstractActionController i
 
     /**
      * @param  LoiService $loiService
+     *
      * @return OrganisationAbstractController
      */
     public function setLoiService(LoiService $loiService)
     {
         $this->loiService = $loiService;
+
+        return $this;
+    }
+
+    /**
+     * @return ContactService
+     */
+    public function getContactService()
+    {
+        return $this->contactService;
+    }
+
+    /**
+     * @param  ContactService $contactService
+     *
+     * @return OrganisationAbstractController
+     */
+    public function setContactService(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
+
+        return $this;
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     *
+     * @return OrganisationAbstractController
+     */
+    public function setEntityManager($entityManager)
+    {
+        $this->entityManager = $entityManager;
 
         return $this;
     }

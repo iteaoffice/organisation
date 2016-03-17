@@ -13,10 +13,16 @@
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-vat-number") }}</dt>
             <dd>{{ financial.vat }}
-                ({{ translate(financial.vatStatus(true)) }}
-                - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }})
+                (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
+                - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
                 <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i>
             </dd>
+            <dt>{{ translate("txt-vat-type") }}</dt>
+            {% for vatType in financial.vatType %}
+                <dd>{{ vatType.type }}</dd>
+            {% else %}
+                <dd>{{ translate("txt-no-vat-enforcement") }}</dd>
+            {% endfor %}
             <dt>{{ translate("txt-omit-contact-on-invoice") }}</dt>
             <dd>{{ translate(financial.getOmitContact(true)) }}</dd>
             <dt>{{ translate("txt-invoice-via-email") }}</dt>
@@ -31,6 +37,8 @@
     {% else %}
         {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisationService.organisation))|raw }}
     {% endif %}
+
+{{ organisationLink(organisationService,'edit-financial','button') }}
 
 
 <script type="text/javascript">
@@ -49,7 +57,7 @@
                 'financialId': $financialId,
             },
             success: function (response) {
-                $("#vatStatus_" + $financialId).html(response.result);
+                $("#vatStatus").html(response.result);
                 $this.removeClass('fa-spin');
             },
             error: function (xhr) {
@@ -57,8 +65,5 @@
                 alert('Error! Did you enable adblock????? Status = ' + xhr.status);
             }
         });
-
-
     });
-
 </script>

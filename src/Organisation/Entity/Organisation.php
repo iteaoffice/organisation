@@ -1,11 +1,11 @@
 <?php
 /**
- * Debranova copyright message placeholder.
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 Debranova
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
@@ -30,7 +30,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
 class Organisation extends EntityAbstract implements ResourceInterface
 {
     /**
-     * @ORM\Column(name="organisation_id", type="integer", nullable=false)
+     * @ORM\Column(name="organisation_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
@@ -311,7 +311,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $reminder;
 
-    
 
     /**
      * Class constructor.
@@ -375,7 +374,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __toString()
     {
-        return (string) $this->organisation;
+        return (string)$this->organisation;
     }
 
     /**
@@ -390,7 +389,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
 
-
     /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
      */
@@ -399,44 +397,45 @@ class Organisation extends EntityAbstract implements ResourceInterface
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
+            $inputFilter->add($factory->createInput([
+                'name'       => 'organisation',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
                     [
-                        'name'       => 'organisation',
-                        'required'   => true,
-                        'filters'    => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
                         ],
-                        'validators' => [
-                            [
-                                'name'    => 'StringLength',
-                                'options' => [
-                                    'encoding' => 'UTF-8',
-                                    'min'      => 1,
-                                    'max'      => 255,
-                                ],
-                            ],
-                        ],
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'country',
-                        'required' => true,
-                    ]
-                )
-            );
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'type',
-                        'required' => true,
-                    ]
-                )
-            );
+                    ],
+                ],
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'     => 'country',
+                'required' => true,
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'     => 'type',
+                'required' => true,
+            ]));
+
+            $inputFilter->add($factory->createInput([
+                'name'     => 'domain',
+                'required' => false,
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'     => 'technology',
+                'required' => false,
+            ]));
+            $inputFilter->add($factory->createInput([
+                'name'     => 'clusterMember',
+                'required' => false,
+            ]));
 
             $this->inputFilter = $inputFilter;
         }
@@ -634,21 +633,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
         return $this->financial;
     }
 
-    //    /**
-    //     * @param \Organisation\Entity\Financial[]|Collections\ArrayCollection $financialDebtor
-    //     */
-    //    public function setFinancialDebtor($financialDebtor)
-    //    {
-    //        $this->financialDebtor = $financialDebtor;
-    //    }
-    //
-    //    /**
-    //     * @return \Organisation\Entity\Financial[]|Collections\ArrayCollection
-    //     */
-    //    public function getFinancialDebtor()
-    //    {
-    //        return $this->financialDebtor;
-    //    }
     /**
      * @param int $id
      */
@@ -963,6 +947,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
 
     /**
      * @param  Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
+     *
      * @return Organisation
      */
     public function setIdeaPartner($ideaPartner)
@@ -982,11 +967,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
 
     /**
      * @param Collections\ArrayCollection|\Member\Entity\Financial[] $memberFinancial
+     *
      * @return Organisation
      */
-    public function setMemberFinancial(\Member\Entity\Financial $memberFinancial)
-    {
+    public function setMemberFinancial(
+        \Member\Entity\Financial $memberFinancial
+    ) {
         $this->memberFinancial = $memberFinancial;
+
         return $this;
     }
 }

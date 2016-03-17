@@ -5,7 +5,7 @@
  * @category    Organisation
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 return [
     'navigation' => [
@@ -20,10 +20,41 @@ return [
                     'organisations' => [
                         'label' => "txt-organisation-list",
                         'route' => 'zfcadmin/organisation/list',
+                        'pages' => [
+                            'organisation'  => [
+                                'label'   => _("txt-nav-project-partner"),
+                                'route'   => 'zfcadmin/organisation/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Organisation\Entity\Organisation::class
+                                    ],
+                                    'invokables' => [
+                                        Organisation\Navigation\Invokable\OrganisationLabel::class
+                                    ],
+                                ],
+                                'pages'   => [
+                                    'edit'  => [
+                                        'label'   => _('txt-nav-edit'),
+                                        'route'   => 'zfcadmin/organisation/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ]
+                    ],
+                    'financial-check'     => [
+                        'label' => _("txt-financial-check"),
+                        'route' => 'zfcadmin/organisation/financial/no-financial',
                     ],
                     'vat-check'     => [
-                        'label' => "txt-vat-check",
-                        'route' => 'zfcadmin/organisation/vat/list',
+                        'label' => _("txt-financial-organisations"),
+                        'route' => 'zfcadmin/organisation/financial/list',
                     ],
                 ],
             ],

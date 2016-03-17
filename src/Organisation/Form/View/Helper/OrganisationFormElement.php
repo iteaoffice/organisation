@@ -251,13 +251,16 @@ class OrganisationFormElement extends ZendFormElement
      * Render.
      *
      * @param Select|ElementInterface $element
-     * @param string $groupWrapper
-     * @param string $controlWrapper
+     * @param string                  $groupWrapper
+     * @param string                  $controlWrapper
      *
      * @return string
      */
-    public function render(ElementInterface $element, $groupWrapper = null, $controlWrapper = null)
-    {
+    public function render(
+        ElementInterface $element,
+        $groupWrapper = null,
+        $controlWrapper = null
+    ) {
         $labelHelper = $this->getLabelHelper();
         $escapeHelper = $this->getEscapeHtmlHelper();
         $elementHelper = $this->getElementHelper();
@@ -269,7 +272,7 @@ class OrganisationFormElement extends ZendFormElement
          * Disable by default the inArrayValidator
          */
         $element->setDisableInArrayValidator(true);
-        $renderer = $elementHelper->getView();
+        $elementHelper->getView();
 
         $id = $element->getAttribute('id') ?: $element->getAttribute('name');
         $element->setAttribute('class', 'form-control');
@@ -277,18 +280,16 @@ class OrganisationFormElement extends ZendFormElement
         $controlLabel = '';
         $label = $element->getLabel();
         if (strlen($label) === 0) {
-            $label = $element->getOption('label') ?: $element->getAttribute('label');
+            $label = $element->getOption('label')
+                ?: $element->getAttribute('label');
         }
 
         if ($label && !$element->getOption('skipLabel')) {
-            $controlLabel .= $labelHelper->openTag(
-                [
-                    'class' => 'col-lg-3 ' . (
-                        $element->getOption(
-                            'wrapCheckboxInLabel'
-                        ) ? 'checkbox' : 'control-label'),
-                ] + ($element->hasAttribute('id') ? ['for' => $id] : [])
-            );
+            $controlLabel .= $labelHelper->openTag([
+                    'class' => 'col-lg-3 '
+                        . ($element->getOption('wrapCheckboxInLabel')
+                            ? 'checkbox' : 'control-label'),
+                ] + ($element->hasAttribute('id') ? ['for' => $id] : []));
 
             if (null !== ($translator = $labelHelper->getTranslator())) {
                 $label = $translator->translate(
@@ -331,14 +332,13 @@ class OrganisationFormElement extends ZendFormElement
             );
         }
 
-        $html = $controlLabel .
-            sprintf(
-                $controlWrapper,
-                $id,
-                $controls,
-                $descriptionHelper->render($element),
-                $elementErrorHelper->render($element)
-            );
+        $html = $controlLabel . sprintf(
+            $controlWrapper,
+            $id,
+            $controls,
+            $descriptionHelper->render($element),
+            $elementErrorHelper->render($element)
+        );
         $addtClass = ($element->getMessages()) ? ' has-error' : '';
 
         return sprintf($groupWrapper, $addtClass, $id, $html);
@@ -348,15 +348,19 @@ class OrganisationFormElement extends ZendFormElement
      * Magical Invoke.
      *
      * @param \Zend\Form\ElementInterface $element
-     * @param string $groupWrapper
-     * @param string $controlWrapper
+     * @param string                      $groupWrapper
+     * @param string                      $controlWrapper
      *
      * @return string|self
      */
-    public function __invoke(ElementInterface $element = null, $groupWrapper = null, $controlWrapper = null)
-    {
+    public function __invoke(
+        ElementInterface $element = null,
+        $groupWrapper = null,
+        $controlWrapper = null
+    ) {
         //Inject the javascript in the header
-        $this->view->headLink()->appendStylesheet('/assets/css/bootstrap-select.min.css');
+        $this->view->headLink()
+            ->appendStylesheet('/assets/css/bootstrap-select.min.css');
         $this->view->headScript()
             ->appendFile(
                 '/assets/js/bootstrap-select.min.js',
@@ -368,9 +372,8 @@ class OrganisationFormElement extends ZendFormElement
                 'text/javascript'
             );
 
-        $this->view->inlineScript()
-            ->appendScript(
-                "var options = {
+        $this->view->inlineScript()->appendScript(
+            "var options = {
         ajax: {
             url: '" . $this->view->url('zfcadmin/organisation/search-form') . "',
             type: 'POST',
@@ -402,8 +405,8 @@ class OrganisationFormElement extends ZendFormElement
         }
     };
     $('.select-picker-organisation').selectpicker().ajaxSelectPicker(options);",
-                'text/javascript'
-            );
+            'text/javascript'
+        );
 
         if ($element) {
             return $this->render($element, $groupWrapper, $controlWrapper);

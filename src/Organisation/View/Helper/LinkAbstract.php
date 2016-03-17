@@ -6,7 +6,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\View\Helper;
@@ -126,6 +126,7 @@ abstract class LinkAbstract extends AbstractHelper implements ServiceLocatorAwar
             case 'icon':
                 switch ($this->getAction()) {
                     case 'edit':
+                    case 'edit-financial':
                         $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
                         break;
                     default:

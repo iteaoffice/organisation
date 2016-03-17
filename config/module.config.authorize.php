@@ -5,7 +5,7 @@
  * @category    Organisation
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c] 2004-2014 ITEA Office (http://itea3.org]
+ * @copyright   Copyright (c] 2004-2015 ITEA Office (https://itea3.org]
  */
 namespace Organisation;
 
@@ -24,14 +24,45 @@ return [
                 ['route' => 'organisation/logo', 'roles' => []],
                 ['route' => 'organisation/search', 'roles' => []],
                 ['route' => 'organisation/json/get-branches', 'roles' => []],
-                ['route' => 'organisation/json/check-vat', 'roles' => ['office']],
-                ['route' => 'zfcadmin/organisation/list', 'roles' => ['office']],
+                [
+                    'route' => 'organisation/json/check-vat',
+                    'roles' => ['office']
+                ],
+                [
+                    'route' => 'zfcadmin/organisation/list',
+                    'roles' => ['office']
+                ],
+
                 ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
-                ['route' => 'zfcadmin/organisation/edit', 'roles' => ['office']],
-                ['route' => 'zfcadmin/organisation/view', 'roles' => ['office']],
-                ['route' => 'zfcadmin/organisation/search-form', 'roles' => ['office']],
-                ['route' => 'zfcadmin/organisation/vat/check', 'roles' => ['office']],
-                ['route' => 'zfcadmin/organisation/vat/list', 'roles' => ['office']],
+                [
+                    'route' => 'zfcadmin/organisation/edit',
+                    'roles' => ['office']
+                ],
+
+                [
+                    'route' => 'zfcadmin/organisation/add-affiliation',
+                    'roles' => ['office']
+                ],
+                [
+                    'route' => 'zfcadmin/organisation/view',
+                    'roles' => ['office']
+                ],
+                [
+                    'route' => 'zfcadmin/organisation/search-form',
+                    'roles' => ['office']
+                ],
+                [
+                    'route' => 'zfcadmin/organisation/financial/list',
+                    'roles' => ['office']
+                ],
+                [
+                    'route' => 'zfcadmin/organisation/financial/edit',
+                    'roles' => ['office']
+                ],
+                [
+                    'route' => 'zfcadmin/organisation/financial/no-financial',
+                    'roles' => ['office']
+                ],
             ],
         ],
     ],

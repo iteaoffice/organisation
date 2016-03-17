@@ -5,7 +5,7 @@
  * @category    SoloDB
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  *
  * @version     4.0
  */
@@ -27,6 +27,9 @@ class Module implements
     Feature\BootstrapListenerInterface,
     Feature\ViewHelperProviderInterface
 {
+    /**
+     * @return array
+     */
     public function getAutoloaderConfig()
     {
         return [
@@ -43,6 +46,7 @@ class Module implements
 
     /**
      * Move this to here to have config cache working
+     *
      * @return array
      */
     public function getControllerPluginConfig()
@@ -100,6 +104,5 @@ class Module implements
      */
     public function onBootstrap(EventInterface $e)
     {
-        // TODO: Implement onBootstrap() method.
     }
 }

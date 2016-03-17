@@ -5,7 +5,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Controller;
@@ -14,7 +14,6 @@ use Organisation\Entity\Logo;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
-use ZendTest\View\Renderer\TestAsset\JsonModel;
 
 /**
  * @category    Organisation
@@ -31,15 +30,14 @@ class OrganisationController extends OrganisationAbstractController
         /**
          * @var $logo Logo
          */
-        $logo = $this->getOrganisationService()->findEntityById(
-            'logo',
-            $this->getEvent()->getRouteMatch()->getParam('id')
-        );
+        $logo = $this->getOrganisationService()->findEntityById('logo', $this->params('id'));
 
         /**
          * Do a check if the given has is correct to avoid guessing the image
          */
-        if (is_null($logo) || $this->getEvent()->getRouteMatch()->getParam('hash') !== $logo->getHash()) {
+        if (is_null($logo)
+            || $this->params('hash') !== $logo->getHash()
+        ) {
             return $this->notFoundAction();
         }
 
@@ -56,12 +54,10 @@ class OrganisationController extends OrganisationAbstractController
         }
 
         $response = $this->getResponse();
-        $response->getHeaders()
-            ->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")
-            ->addHeaderLine("Pragma: public")
+        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
             ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-            ->addHeaderLine('Content-Length: ' . (string) strlen($file));
+            ->addHeaderLine('Content-Length: ' . (string)strlen($file));
         $response->setContent($file);
 
         return $response;
@@ -83,7 +79,10 @@ class OrganisationController extends OrganisationAbstractController
         $paginator->setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
-        $viewModel = new ViewModel(['paginator' => $paginator, 'organisationService' => $this->getOrganisationService()]);
+        $viewModel = new ViewModel([
+            'paginator'           => $paginator,
+            'organisationService' => $this->getOrganisationService()
+        ]);
         $viewModel->setTerminal(true);
         $viewModel->setTemplate('organisation/partial/list/organisation-search');
 

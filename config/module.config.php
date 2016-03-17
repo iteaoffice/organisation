@@ -5,35 +5,34 @@
  * @category    Organisation
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
-use Organisation\Acl\Assertion;
+use Organisation\Acl;
 use Organisation\Controller;
+use Organisation\Factory;
 use Organisation\Form\View\Helper\OrganisationFormElement;
+use Organisation\Options;
 use Organisation\Service;
 use Organisation\View\Helper;
 
 $config = [
     'controllers'     => [
-        'initializers' => [
-            Controller\ControllerInitializer::class,
+        'invokables'         => [
+            //Controller\OrganisationController::class          ,
+            //Controller\OrganisationManagerController::class   ,
+            //Controller\OrganisationAdminController::class     ,
+            //Controller\OrganisationFinancialController::class ,
+            //Controller\JsonController::class                  ,
         ],
-        'invokables'   => [
-            Controller\OrganisationController::class        => Controller\OrganisationController::class,
-            Controller\OrganisationManagerController::class => Controller\OrganisationManagerController::class,
-            Controller\OrganisationAdminController::class   => Controller\OrganisationAdminController::class,
-            Controller\OrganisationVatController::class     => Controller\OrganisationVatController::class,
-            Controller\JsonController::class                => Controller\JsonController::class,
-        ],
+        'abstract_factories' => [
+            Controller\Factory\ControllerInvokableAbstractFactory::class
+        ]
     ],
     'view_manager'    => [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
     'view_helpers'    => [
-        'initializers' => [
-            Helper\ViewHelperInitializer::class,
-        ],
-        'invokables'   => [
+        'invokables' => [
             'organisationformelement'     => OrganisationFormElement::class,
             'createLogoFromArray'         => Helper\CreateLogoFromArray::class,
             'createOrganisationFromArray' => Helper\CreateOrganisationFromArray::class,
@@ -44,19 +43,18 @@ $config = [
         ],
     ],
     'service_manager' => [
-        'initializers' => [
-            Service\ServiceInitializer::class,
+        'factories'          => [
+            Options\ModuleOptions::class       => Factory\ModuleOptionsFactory::class,
+            Service\OrganisationService::class => Factory\OrganisationServiceFactory::class,
+            Service\FormService::class         => Factory\FormServiceFactory::class,
+            //Acl\Assertion\Organisation::class
         ],
-        'factories'    => [
-            'organisation_module_config'  => Service\ConfigServiceFactory::class,
-            'organisation_module_options' => Service\OptionServiceFactory::class,
-            'organisation_cache'          => Service\CacheFactory::class,
+        'abstract_factories' => [
+            Acl\Factory\AssertionInvokableAbstractFactory::class
         ],
-        'invokables'   => [
-            Assertion\Organisation::class           => Assertion\Organisation::class,
-            Service\OrganisationService::class      => Service\OrganisationService::class,
-            Service\FormService::class              => Service\FormService::class,
+        'invokables'         => [
             'organisation_organisation_form_filter' => 'Organisation\Form\FilterOrganisation',
+            'organisation_financial_form_filter'    => 'Organisation\Form\FilterOrganisation',
         ],
     ],
     'doctrine'        => [
@@ -85,7 +83,6 @@ $configFiles = [
     __DIR__ . '/module.config.routes.php',
     __DIR__ . '/module.config.navigation.php',
     __DIR__ . '/module.config.authorize.php',
-    __DIR__ . '/module.config.organisation.php',
     __DIR__ . '/module.option.organisation.php',
 ];
 foreach ($configFiles as $configFile) {

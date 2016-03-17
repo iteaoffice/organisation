@@ -1,11 +1,11 @@
 <?php
 /**
- * DebraNova copyright message placeholder.
+ * ITEA Office copyright message placeholder.
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Repository;
@@ -14,6 +14,7 @@ use Contact\Entity\Contact;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
 use General\Entity\Country;
@@ -28,6 +29,7 @@ class Organisation extends EntityRepository
 {
     /**
      * @param array $filter
+     *
      * @return Query
      */
     public function findFiltered(array $filter)
@@ -36,6 +38,86 @@ class Organisation extends EntityRepository
         $queryBuilder->select('o');
         $queryBuilder->from('Organisation\Entity\Organisation', 'o');
 
+
+        if (array_key_exists('search', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
+            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+        }
+
+        if (array_key_exists('type', $filter)) {
+            $queryBuilder->andWhere($queryBuilder->expr()->in('o.type', implode($filter['type'], ', ')));
+        }
+
+        if (array_key_exists('options', $filter) && in_array(1, $filter['options'])) {
+
+            //Make a second sub-select to cancel out organisations which have a financial organisation
+            $subSelect2 = $this->_em->createQueryBuilder();
+            $subSelect2->select('organisation');
+            $subSelect2->from('Affiliation\Entity\Affiliation', 'affiliation');
+            $subSelect2->andWhere($queryBuilder->expr()->isNull('affiliation.dateEnd'));
+            $subSelect2->join('affiliation.organisation', 'organisation');
+
+            $queryBuilder->andWhere($queryBuilder->expr()->in('o', $subSelect2->getDQL()));
+        }
+
+        $direction = 'ASC';
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
+            $direction = strtoupper($filter['direction']);
+        }
+
+        switch ($filter['order']) {
+            case 'lastUpdate':
+                $queryBuilder->addOrderBy('o.lastUpdate', $direction);
+                break;
+            case 'name':
+                $queryBuilder->addOrderBy('o.organisation', $direction);
+                break;
+            default:
+                $queryBuilder->addOrderBy('o.id', $direction);
+
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+
+    /**
+     * @param array $filter
+     *
+     * @return Query
+     */
+    public function findActiveOrganisationWithoutFinancial(array $filter)
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('o');
+        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
+
+        //Make a second sub-select to cancel out organisations which have a financial organisation
+        $subSelect2 = $this->_em->createQueryBuilder();
+        $subSelect2->select('financialOrganisation');
+        $subSelect2->from('Organisation\Entity\Financial', 'financial');
+        $subSelect2->join('financial.organisation', 'financialOrganisation');
+
+        $queryBuilder->andWhere($queryBuilder->expr()->notIn('o', $subSelect2->getDQL()));
+
+        $queryBuilder->join('o.affiliation', 'a');
+        $queryBuilder->join('a.project', 'p');
+
+        //Limit to only the active projects
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = $this->getEntityManager()->getRepository('Project\Entity\Project')
+            ->onlyActiveProject($queryBuilder);
+
+        //Limit to projects which are not recently completed
+        $queryBuilder->andWhere('p.dateEndActual > :lastYear');
+
+        $nextYear = new \DateTime();
+        $nextYear->sub(new \DateInterval('P1Y'));
+
+        $queryBuilder->setParameter('lastYear', $nextYear);
+
+        //Limit to active affiliations
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('a.dateEnd'));
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
@@ -98,8 +180,8 @@ class Organisation extends EntityRepository
      * Give a list of organisations by country.
      *
      * @param Country $country
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -129,10 +211,10 @@ class Organisation extends EntityRepository
      * This is basic search for organisations (based on the name, number and description.
      *
      * @param string $searchItem
-     * @param int $maxResults
-     * @param null $countryId
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param int    $maxResults
+     * @param null   $countryId
+     * @param bool   $onlyActiveProject
+     * @param bool   $onlyActivePartner
      *
      * @return Entity\Organisation[]
      */
@@ -148,9 +230,10 @@ class Organisation extends EntityRepository
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
         $qb->andWhere('o.organisation LIKE :searchItem');
+
         $qb->join('o.country', 'c');
-        $qb->join('o.affiliation', 'a');
-        $qb->join('a.project', 'p');
+        $qb->leftJoin('o.affiliation', 'a');
+        $qb->leftJoin('a.project', 'p');
         $qb->setParameter('searchItem', "%" . $searchItem . "%");
         if (!is_null($countryId)) {
             $qb->andWhere('o.country = ?3');
@@ -203,12 +286,13 @@ class Organisation extends EntityRepository
         $validateEmail->isValid($emailAddress);
         $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
         //We want a match on the email address
-        $qb->andWhere(
-            $qb->expr()->orX(
-                $qb->expr()->in('o.id', $subSelect->getDQL()),
-                $qb->expr()->notIn('o.id', $subSelect2->getDQL())
-            )
-        );
+        $qb->andWhere($qb->expr()->orX(
+            $qb->expr()->in(
+                'o.id',
+                $subSelect->getDQL()
+            ),
+            $qb->expr()->notIn('o.id', $subSelect2->getDQL())
+        ));
 
         /*
          * Limit on the country
@@ -266,6 +350,7 @@ class Organisation extends EntityRepository
 
     /**
      * @param Contact $contact
+     *
      * @return array
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
@@ -274,7 +359,8 @@ class Organisation extends EntityRepository
         //Start with your own organisation
 
         if (!is_null($contact->getContactOrganisation())) {
-            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()] = $contact->getContactOrganisation()->getOrganisation();
+            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()]
+                = $contact->getContactOrganisation()->getOrganisation();
         }
 
         foreach ($this->findOrganisationByEmailAddress($contact->getEmail()) as $organisation) {
@@ -323,7 +409,7 @@ class Organisation extends EntityRepository
     /**
      * Find participants based on the given criteria.
      *
-     * @param Meeting $meeting
+     * @param Meeting    $meeting
      * @param Parameters $search
      *
      * @return Registration[]
@@ -355,12 +441,13 @@ class Organisation extends EntityRepository
             $queryBuilder->join('o.type', 'type');
             $queryBuilder->andWhere($queryBuilder->expr()->in('type.id', $search->get('organisationType')));
         }
-        $queryBuilder->andWhere(
-            $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->like('d.description', '?4'),
-                $queryBuilder->expr()->like('o.organisation', '?4')
-            )
-        );
+        $queryBuilder->andWhere($queryBuilder->expr()->orX(
+            $queryBuilder->expr()->like(
+                'd.description',
+                '?4'
+            ),
+            $queryBuilder->expr()->like('o.organisation', '?4')
+        ));
         /*
          * Limit the results to the registered users
          */

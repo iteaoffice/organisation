@@ -5,7 +5,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2014 ITEA Office (http://itea3.org)
+ * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
@@ -17,9 +17,7 @@ use Zend\InputFilter\InputFilterAwareInterface;
  *
  * @author  Johan van der Heide <johan.van.der.heide@itea3.org>
  */
-abstract class EntityAbstract implements
-    EntityInterface,
-    InputFilterAwareInterface
+abstract class EntityAbstract implements EntityInterface, InputFilterAwareInterface
 {
     /**
      * @var
@@ -33,7 +31,7 @@ abstract class EntityAbstract implements
      */
     public function has($prop)
     {
-        $getter = 'get'.ucfirst($prop);
+        $getter = 'get' . ucfirst($prop);
         if (method_exists($this, $getter)) {
             if ('s' === substr($prop, 0, -1) && is_array($this->$getter())) {
                 return true;
@@ -52,28 +50,40 @@ abstract class EntityAbstract implements
     {
         switch ($switch) {
             case 'entity_name':
-                return implode('', array_slice(explode('\\', get_class($this)), -1));
+                return implode(
+                    '',
+                    array_slice(explode('\\', get_class($this)), -1)
+                );
             case 'dashed_entity_name':
                 $dash = function ($m) {
-                    return '-'.strtolower($m[1]);
+                    return '-' . strtolower($m[1]);
                 };
 
-                return preg_replace_callback('/([A-Z])/', $dash, lcfirst($this->get('entity_name')));
+                return preg_replace_callback(
+                    '/([A-Z])/',
+                    $dash,
+                    lcfirst($this->get('entity_name'))
+                );
             case 'underscore_entity_name':
                 $underscore = function ($m) {
-                    return '_'.strtolower($m[1]);
-                };
-
-                return preg_replace_callback('/([A-Z])/', $underscore, lcfirst($this->get('entity_name')));
-            case 'underscore_full_entity_name':
-                $underscore = function ($m) {
-                    return '_'.strtolower($m[1]);
+                    return '_' . strtolower($m[1]);
                 };
 
                 return preg_replace_callback(
                     '/([A-Z])/',
                     $underscore,
-                    lcfirst(str_replace('\\', '', __NAMESPACE__).$this->get('entity_name'))
+                    lcfirst($this->get('entity_name'))
+                );
+            case 'underscore_full_entity_name':
+                $underscore = function ($m) {
+                    return '_' . strtolower($m[1]);
+                };
+
+                return preg_replace_callback(
+                    '/([A-Z])/',
+                    $underscore,
+                    lcfirst(str_replace('\\', '', __NAMESPACE__)
+                        . $this->get('entity_name'))
                 );
         }
     }

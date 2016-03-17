@@ -1,7 +1,7 @@
-debranova/organisation
+iteaoffice/organisation
 ======================
 
-master branch: 1.1-dev
-develop branch: 1.2-dev
+master branch: 2.0-dev
+develop branch: 2.1-dev
 
 Module for the management of organisations

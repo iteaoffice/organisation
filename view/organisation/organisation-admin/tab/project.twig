@@ -5,6 +5,7 @@
         <thead>
         <tr>
             <th>{{ translate("txt-project") }}</th>
+            <th>{{ translate("txt-partner") }}</th>
             <th>{{ translate("txt-branch") }}</th>
             <th>{{ translate("txt-project-status") }}</th>
             <th>{{ translate("txt-active") }}</th>
@@ -16,10 +17,13 @@
             <tr {% if projectService.project.contact.id == affiliation.contact.id %}class="success"
                 {% endif %}{% if affiliation.dateEnd %}class="danger"{% endif %}>
                 <td>{{ projectLink(projectService,'view-admin','name') }}
-
-                    {{ affiliationLink(affiliation,'view-community','icon') }}
-                    {{ affiliationLink(affiliation,'view-admin','icon') }}
                     {{ projectLink(projectService,'view-community','icon') }}
+
+
+                </td>
+                <td>
+                    {{ affiliationLink(affiliation,'view-admin','name') }}
+                    {{ affiliationLink(affiliation,'view-community','icon') }}
                 </td>
                 <td>{{ affiliation.branch }}</td>
                 <td>{{ projectService.parseStatus() }}</td>
@@ -32,3 +36,5 @@
 {% else %}
     {{ ztbalert().info(translate("txt-%s-is-not-active-in-a-project"))|format(organisationService.organisation)|raw }}
 {% endif %}
+
+{{ organisationLink(organisationService,'add-affiliation','button') }}

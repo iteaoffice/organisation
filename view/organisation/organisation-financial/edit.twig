@@ -1,0 +1,63 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-edit-financial-organisation-%s")|format(organisationService.organisation)) %}
+
+<h1>{{ translate("txt-edit-financial-organisation-%s")|format(organisationService.organisation) }} {{ organisationLink( null ,'list-financial','button') }}</h1>
+
+
+{% include 'organisation/partial/form/financial' %}
+
+
+<script type="text/javascript">
+    $(document).on('click', '.checkVat', function (e) {
+        var $this = $(this);
+        $this.addClass('fa-spin');
+        $.ajax({
+            url: '{{ serverUrl() }}{{ url('organisation/json/check-vat') }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'financialId': {{ financial.id }},
+                'vat': $('input[name="financial[vat]"]').val(),
+            },
+            success: function (response) {
+                $("#vatStatus_{{ financial.id }}").html(response.result);
+
+                var $radios = $('input:radio[name="financial[vatStatus]"]');
+
+                $radios.filter('[value=' + response.status + ']').prop('checked', true);
+
+                $this.removeClass('fa-spin');
+            },
+            error: function (xhr) {
+                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+            }
+        });
+    });
+
+    /** Input on leaving the VAT form element */
+    $('input[name="financial[vat]"]').blur(function () {
+
+        $.ajax({
+            url: '{{ serverUrl() }}{{ url('organisation/json/check-vat') }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'financialId': {{ financial.id }},
+                'vat': $('input[name="financial[vat]"]').val(),
+            },
+            success: function (response) {
+                $("#vatStatus_{{ financial.id }}").html(response.result);
+
+                var $radios = $('input:radio[name="financial[vatStatus]"]');
+                $radios.filter('[value=' + response.status + ']').prop('checked', true);
+
+
+            },
+            error: function (xhr) {
+                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+            }
+        });
+    });
+</script>
+
+

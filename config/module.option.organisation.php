@@ -6,8 +6,8 @@
  * drop this config file in it and change the values as you wish.
  */
 $options = [
-    'country_color'         => '#00a651',
-    'country_color_faded'   => '#005C00',
+    'country_color'       => '#00a651',
+    'country_color_faded' => '#005C00',
 ];
 
 /**

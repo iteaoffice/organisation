@@ -1,4 +1,4 @@
-{% do headTitle().append(translate("txt-organisation-list")) %}
+{% do headTitle().append(translate("txt-financial-organisation-list")) %}
 
 {{ form().closeTag()|raw }}
 
@@ -16,11 +16,11 @@
 
     <div class="col-md-10">
 
-        <h1>{{ translate("txt-organisation-list") }}</h1>
+        <h1>{{ translate("txt-financial-organisation-list") }}</h1>
 
         <div class="row">
             <div class="col-md-6">
-                <p class="lead">{{ translate("txt-organisation-list-explanation") }}</p>
+                <p class="lead">{{ translate("txt-financial-organisation-list-explanation") }}</p>
             </div>
             <div class="col-md-6">
                 <div class="input-group">
@@ -33,9 +33,10 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate('txt-organisation')} %}</a></th>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th>{{ translate("txt-vat-number") }}</th>
                     <th colspan="2">{{ translate("txt-vat-status") }}</th>
                     {#<th>{{ translate("txt-vat-type") }}</th>#}
                     <th>{{ translate("txt-omit-contact") }}</th>
@@ -49,11 +50,12 @@
                 {% for financial in paginator.getCurrentItems() %}
                     {% set organisationService = organisationServiceProxy(financial.organisation) %}
                     <tr>
-                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }}</td>
-                        <td>{{ organisationService.organisation.country }}</td>
+                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }} {{ organisationLink(organisationService, 'edit-financial', 'icon') }}</td>
+                        <td>{{ organisationService.organisation.country.iso3 }}</td>
                         <td>{{ organisationService.organisation.getType().type }}</td>
+                        <td>{{ financial.vat }}</td>
                         <td id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
-                            ({{ financial.dateVat|time_diff }})
+                            ({{ financial.dateVat|string_date }})
                         <td><i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i></td>
                         {#<td>{% for type in financial.vatType %}{{ type }}{% endfor %}</td>#}
                         <td>{{ translate(financial.getOmitContact(true)) }}</td>
