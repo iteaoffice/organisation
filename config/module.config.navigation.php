@@ -20,6 +20,33 @@ return [
                     'organisations' => [
                         'label' => "txt-organisation-list",
                         'route' => 'zfcadmin/organisation/list',
+                        'pages' => [
+                            'organisation'  => [
+                                'label'   => _("txt-nav-project-partner"),
+                                'route'   => 'zfcadmin/organisation/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Organisation\Entity\Organisation::class
+                                    ],
+                                    'invokables' => [
+                                        Organisation\Navigation\Invokable\OrganisationLabel::class
+                                    ],
+                                ],
+                                'pages'   => [
+                                    'edit'  => [
+                                        'label'   => _('txt-nav-edit'),
+                                        'route'   => 'zfcadmin/organisation/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ]
                     ],
                     'financial-check'     => [
                         'label' => _("txt-financial-check"),

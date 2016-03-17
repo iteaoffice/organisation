@@ -230,9 +230,10 @@ class Organisation extends EntityRepository
         $qb->distinct('o.id');
         $qb->from('Organisation\Entity\Organisation', 'o');
         $qb->andWhere('o.organisation LIKE :searchItem');
+
         $qb->join('o.country', 'c');
-        $qb->join('o.affiliation', 'a');
-        $qb->join('a.project', 'p');
+        $qb->leftJoin('o.affiliation', 'a');
+        $qb->leftJoin('a.project', 'p');
         $qb->setParameter('searchItem', "%" . $searchItem . "%");
         if (!is_null($countryId)) {
             $qb->andWhere('o.country = ?3');

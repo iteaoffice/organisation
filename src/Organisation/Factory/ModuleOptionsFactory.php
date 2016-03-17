@@ -19,9 +19,9 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
- * Class GeneralServiceFactory
+ * Class ModuleOptionsFactory
  *
- * @package General\Factory
+ * @package Organisation\Factory
  */
 class ModuleOptionsFactory implements FactoryInterface
 {

@@ -14,15 +14,15 @@
  */
 namespace Organisation\Factory;
 
-use Organisation\Service\FormService;
 use Doctrine\ORM\EntityManager;
+use Organisation\Service\FormService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class FormServiceFactory
  *
- * @package General\Factory
+ * @package Organisation\Factory
  */
 class FormServiceFactory implements FactoryInterface
 {

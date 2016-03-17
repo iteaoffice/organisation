@@ -153,7 +153,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
         /**
          * @var $translate Translate
          */
-        $translate = $this->getServiceLocator()->get('ViewHelperManager')->get('translate');
+        $translate = $this->getPluginManager()->getServiceLocator()->get('ViewHelperManager')->get('translate');
 
         return $translate($string);
     }
