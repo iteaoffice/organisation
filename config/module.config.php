@@ -17,13 +17,6 @@ use Organisation\View\Helper;
 
 $config = [
     'controllers'     => [
-        'invokables'         => [
-            //Controller\OrganisationController::class          ,
-            //Controller\OrganisationManagerController::class   ,
-            //Controller\OrganisationAdminController::class     ,
-            //Controller\OrganisationFinancialController::class ,
-            //Controller\JsonController::class                  ,
-        ],
         'abstract_factories' => [
             Controller\Factory\ControllerInvokableAbstractFactory::class
         ]
@@ -47,7 +40,6 @@ $config = [
             Options\ModuleOptions::class       => Factory\ModuleOptionsFactory::class,
             Service\OrganisationService::class => Factory\OrganisationServiceFactory::class,
             Service\FormService::class         => Factory\FormServiceFactory::class,
-            //Acl\Assertion\Organisation::class
         ],
         'abstract_factories' => [
             Acl\Factory\AssertionInvokableAbstractFactory::class
@@ -61,7 +53,7 @@ $config = [
         'driver'       => [
             'organisation_annotation_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'paths' => [__DIR__ . '/../src/Organisation/Entity/'],
+                'paths' => [__DIR__ . '/../src/Entity/'],
             ],
             'orm_default'                    => [
                 'drivers' => [

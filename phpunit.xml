@@ -12,7 +12,7 @@
   ~ @link        http://github.com/iteaoffice/project for the canonical source repository
   -->
 
-<phpunit bootstrap="tests/OrganisationTest/Bootstrap.php"
+<phpunit bootstrap="tests/Bootstrap.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -24,7 +24,7 @@
          syntaxCheck="true"
 >
     <testsuite name="iteaoffice/organisation">
-        <directory>./tests/OrganisationTest</directory>
+        <directory>./tests</directory>
     </testsuite>
 
     <filter>

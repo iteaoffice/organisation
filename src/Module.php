@@ -2,30 +2,27 @@
 /**
  * ITEA Office copyright message placeholder.
  *
- * @category    SoloDB
+ * PHP Version 5
+ *
+ * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   2004-2016 ITEA Office
+ * @license     https://itea3.org/license.txt proprietary
  *
- * @version     4.0
+ * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
 namespace Organisation;
 
 use Organisation\Controller\Plugin\GetFilter;
-use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature;
 use Zend\Mvc\Controller\PluginManager;
 
 /**
  *
  */
-class Module implements
-    Feature\AutoloaderProviderInterface,
-    Feature\ServiceProviderInterface,
-    Feature\ConfigProviderInterface,
-    Feature\BootstrapListenerInterface,
-    Feature\ViewHelperProviderInterface
+class Module implements Feature\AutoloaderProviderInterface, Feature\ServiceProviderInterface, Feature\ConfigProviderInterface
 {
     /**
      * @return array
@@ -34,11 +31,11 @@ class Module implements
     {
         return [
             'Zend\Loader\ClassMapAutoloader' => [
-                __DIR__ . '/../../autoload_classmap.php',
+                __DIR__ . '/../autoload_classmap.php',
             ],
             'Zend\Loader\StandardAutoloader' => [
                 'namespaces' => [
-                    __NAMESPACE__ => __DIR__ . '/../../src/' . __NAMESPACE__,
+                    __NAMESPACE__ => __DIR__ . '/../src/',
                 ],
             ],
         ];
@@ -65,7 +62,7 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__ . '/../../config/module.config.php';
+        return include __DIR__ . '/../config/module.config.php';
     }
 
     /**
@@ -75,34 +72,6 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        return include __DIR__ . '/../../config/services.config.php';
-    }
-
-    /**
-     * Go to the service configuration.
-     *
-     * @return array
-     */
-    public function getViewHelperConfig()
-    {
-        return include __DIR__ . '/../../config/viewhelpers.config.php';
-    }
-
-    /**
-     * @return array
-     */
-    public function getControllerConfig()
-    {
-    }
-
-    /**
-     * Listen to the bootstrap event.
-     *
-     * @param EventInterface $e
-     *
-     * @return array
-     */
-    public function onBootstrap(EventInterface $e)
-    {
+        return include __DIR__ . '/../config/services.config.php';
     }
 }

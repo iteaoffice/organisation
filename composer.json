@@ -36,8 +36,8 @@
   },
   "autoload": {
     "psr-4": {
-      "Organisation\\": "src/Organisation/",
-      "OrganisationTest\\": "tests/OrganisationTest/"
+      "Organisation\\": "src/",
+      "OrganisationTest\\": "tests/"
     }
   },
   "config": {

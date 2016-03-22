@@ -92,7 +92,13 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Affiliation\Entity\Financial
      */
     private $affiliationFinancial;
-
+    /**
+     * @ORM\OneToOne(targetEntity="Member\Entity\Member", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @Annotation\Exclude()
+     *
+     * @var \Member\Entity\Member
+     */
+    private $member;
     /**
      * @ORM\OneToMany(targetEntity="Member\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -100,6 +106,27 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Member\Entity\Financial[]
      */
     private $memberFinancial;
+    /**
+     * @ORM\OneToOne(targetEntity="Partner\Entity\Partner", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @Annotation\Exclude()
+     *
+     * @var \Partner\Entity\Partner
+     */
+    private $partner;
+    /**
+     * @ORM\OneToMany(targetEntity="Partner\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Partner\Entity\Financial[]|Collections\ArrayCollection
+     */
+    private $partnerFinancial;
+    /**
+     * @ORM\OneToMany(targetEntity="Partner\Entity\Organisation", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Partner\Entity\Organisation[]|Collections\ArrayCollection
+     */
+    private $partnerOrganisation;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country",inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumns({
@@ -275,13 +302,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
      */
     private $doa;
-    /**
-     * @ORM\OneToOne(targetEntity="Member\Entity\Member", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
-     * @Annotation\Exclude()
-     *
-     * @var \Member\Entity\Member
-     */
-    private $member;
+
     /**
      * @ORM\OneToOne(targetEntity="Member\Entity\Applicant", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
@@ -320,6 +341,8 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->affiliation = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
         $this->memberFinancial = new Collections\ArrayCollection();
+        $this->partnerOrganisation = new Collections\ArrayCollection();
+        $this->partnerFinancial = new Collections\ArrayCollection();
         $this->domain = new Collections\ArrayCollection();
         $this->technology = new Collections\ArrayCollection();
         $this->cluster = new Collections\ArrayCollection();
@@ -335,16 +358,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->doa = new Collections\ArrayCollection();
         $this->organisationBooth = new Collections\ArrayCollection();
         $this->journal = new Collections\ArrayCollection();
-    }
-
-    /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
     }
 
     /**
@@ -455,6 +468,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
             'country'      => $this->country,
             'type'         => $this->type,
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return sprintf(static::class, $this->getId());
     }
 
     /**
@@ -958,7 +979,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return Collections\ArrayCollection|\Member\Entity\Financial[] $memberFinancial
+     * @return \Member\Entity\Financial[]
      */
     public function getMemberFinancial()
     {
@@ -966,14 +987,73 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param Collections\ArrayCollection|\Member\Entity\Financial[] $memberFinancial
+     * @param \Member\Entity\Financial[] $memberFinancial
      *
      * @return Organisation
      */
-    public function setMemberFinancial(
-        \Member\Entity\Financial $memberFinancial
-    ) {
+    public function setMemberFinancial($memberFinancial)
+    {
         $this->memberFinancial = $memberFinancial;
+
+        return $this;
+    }
+
+    /**
+     * @return \Partner\Entity\Partner
+     */
+    public function getPartner()
+    {
+        return $this->partner;
+    }
+
+    /**
+     * @param \Partner\Entity\Partner $partner
+     *
+     * @return Organisation
+     */
+    public function setPartner($partner)
+    {
+        $this->partner = $partner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Partner\Entity\Financial[]
+     */
+    public function getPartnerFinancial()
+    {
+        return $this->partnerFinancial;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Partner\Entity\Financial[] $partnerFinancial
+     *
+     * @return Organisation
+     */
+    public function setPartnerFinancial($partnerFinancial)
+    {
+        $this->partnerFinancial = $partnerFinancial;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Partner\Entity\Organisation[]
+     */
+    public function getPartnerOrganisation()
+    {
+        return $this->partnerOrganisation;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Partner\Entity\Organisation[] $partnerOrganisation
+     *
+     * @return Organisation
+     */
+    public function setPartnerOrganisation($partnerOrganisation)
+    {
+        $this->partnerOrganisation = $partnerOrganisation;
 
         return $this;
     }
