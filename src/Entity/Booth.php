@@ -97,30 +97,6 @@ class Booth extends EntityAbstract
     }
 
     /**
-     * Set input filter.
-     *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception("Setting an inputFilter is currently not supported");
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $this->inputFilter = new InputFilter();
-        }
-
-        return $this->inputFilter;
-    }
-
-    /**
      * @return \Event\Entity\Booth\Booth
      */
     public function getBooth()

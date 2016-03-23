@@ -98,13 +98,14 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param  int $which
+     * @param Organisation $organisation
+     * @param int          $which
      *
      * @return int
      */
-    public function getAffiliationCount($which = AffiliationService::WHICH_ALL)
+    public function getAffiliationCount(Organisation $organisation, $which = AffiliationService::WHICH_ALL)
     {
-        return ($this->getOrganisation()->getAffiliation()->filter(function (
+        return ($organisation->getAffiliation()->filter(function (
             Affiliation $affiliation
         ) use ($which) {
             switch ($which) {
@@ -120,13 +121,14 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param  int $which
+     * @param Organisation $organisation
+     * @param int          $which
      *
      * @return int
      */
-    public function getContactCount($which = ContactService::WHICH_ONLY_ACTIVE)
+    public function getContactCount(Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE)
     {
-        return ($this->getOrganisation()->getContactOrganisation()->filter(function (
+        return ($organisation->getContactOrganisation()->filter(function (
             ContactOrganisation $contactOrganisation
         ) use (
             $which
@@ -317,8 +319,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function findFinancialOrganisationWithVAT($vat)
     {
-        return $this->getEntityManager()->getRepository(Financial::class)
-            ->findOneBy(['vat' => $vat]);
+        return $this->getEntityManager()->getRepository(Financial::class)->findOneBy(['vat' => $vat]);
     }
 
     /**

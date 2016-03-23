@@ -15,7 +15,7 @@
         <tfoot>
         </tfoot>
         <tbody>
-        {% for contactOrganisation in organisationService.organisation.contactOrganisation %}
+        {% for contactOrganisation in organisation.contactOrganisation %}
             {% set contact = contactOrganisation.contact %}
             {% set contactService = contactServiceProxy(contact) %}
             {% set organisationService = organisationServiceProxy(contact.contactOrganisation.organisation) %}

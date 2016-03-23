@@ -45,14 +45,13 @@
                 </tfoot>
                 <tbody>
                 {% for organisation in paginator.getCurrentItems() %}
-                    {% set organisationService = organisationServiceProxy(organisation) %}
                     <tr>
-                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }}</td>
+                        <td>{{ organisationLink(organisation, 'view-admin', 'name') }}</td>
                         <td>{{ organisation.country }}</td>
-                        <td>{{ organisationService.getContactCount(constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
-                        <td>{{ organisationService.getAffiliationCount(constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
+                        <td>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
+                        <td>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
                         <td>{{ organisation.getType().type }}</td>
-                        <td>{{ organisationLink(organisationService, 'edit', 'icon') }}</td>
+                        <td>{{ organisationLink(organisation, 'edit', 'icon') }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

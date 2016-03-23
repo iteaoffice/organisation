@@ -20,7 +20,6 @@ use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\Paginator\Paginator;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
@@ -29,7 +28,7 @@ use ZfcTwig\View\TwigRenderer;
 /**
  * Class OrganisationHandler.
  */
-class OrganisationHandler extends AbstractHelper implements ServiceLocatorAwareInterface
+class OrganisationHandler extends AbstractHelper
 {
     /**
      * @var HelperPluginManager

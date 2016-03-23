@@ -22,8 +22,11 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_logo")
  */
-class Logo
+class Logo extends EntityAbstract
 {
+    /**
+     *
+     */
     const HASH_KEY = '49fksdr80sdf83409jsadvkljasruwasef';
     /**
      * @ORM\Column(name="logo_id", length=10, type="integer", nullable=false)
@@ -97,10 +100,10 @@ class Logo
      */
     public function getCacheFileName()
     {
-        $cacheDir = __DIR__.'/../../../../../public'.DIRECTORY_SEPARATOR.'assets'.
-            DIRECTORY_SEPARATOR.DEBRANOVA_HOST.DIRECTORY_SEPARATOR.'organisation-logo';
+        $cacheDir = __DIR__ . '/../../../../../public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR
+            . DEBRANOVA_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
 
-        return $cacheDir.DIRECTORY_SEPARATOR.$this->getFileName();
+        return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName();
     }
 
     /**
@@ -118,7 +121,7 @@ class Logo
      */
     public function getHash()
     {
-        return hash('sha512', $this->id.self::HASH_KEY);
+        return hash('sha512', $this->id . self::HASH_KEY);
     }
 
     /**

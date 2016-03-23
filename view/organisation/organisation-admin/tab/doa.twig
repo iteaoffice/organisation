@@ -57,7 +57,7 @@
         <th class="col-md-5">{{ translate("txt-program") }}</th>
         <th class="col-md-2">{{ translate("txt-actions") }}</th>
     </tr>
-    {% for doa in organisationService.organisation.programDoa %}
+    {% for doa in organisation.programDoa %}
         <tr>
             <td>{{ doa.id }}</td>
             <td>{{ doa.contact.displayName }}</td>
@@ -79,7 +79,7 @@
         <th class="col-md-5">{{ translate("txt-call") }}</th>
         <th class="col-md-2">{{ translate("txt-actions") }}</th>
     </tr>
-    {% for doa in organisationService.organisation.doa %}
+    {% for doa in organisation.doa %}
         <tr>
             <td>{{ doa.id }}</td>
             <td>{{ doa.contact.displayName }}</td>

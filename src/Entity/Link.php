@@ -3,8 +3,6 @@
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * OrganisationLink.
@@ -48,15 +46,6 @@ class Link extends EntityAbstract
     {
     }
 
-    /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
 
     /**
      * @param $property
@@ -78,39 +67,9 @@ class Link extends EntityAbstract
     }
 
     /**
-     * ToString
-     * Return the id here for form population.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->organisation;
-    }
-
-    /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        return new InputFilter();
-    }
-
-    /**
      * @return int
      */
-    public function getLinkId()
+    public function getId()
     {
         return $this->linkId;
     }
@@ -120,7 +79,7 @@ class Link extends EntityAbstract
      *
      * @return Link
      */
-    public function setLinkId($linkId)
+    public function setId($linkId)
     {
         $this->linkId = $linkId;
 

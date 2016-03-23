@@ -12,7 +12,6 @@
 namespace Organisation\View\Helper;
 
 use Zend\Mvc\Router\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\Helper\Url;
@@ -21,7 +20,7 @@ use Zend\View\HelperPluginManager;
 /**
  * Class LinkAbstract.
  */
-abstract class ImageAbstract extends AbstractHelper implements ServiceLocatorAwareInterface
+abstract class ImageAbstract extends AbstractHelper
 {
     /**
      * @var HelperPluginManager
@@ -63,12 +62,12 @@ abstract class ImageAbstract extends AbstractHelper implements ServiceLocatorAwa
      */
     public function createImageUrl()
     {
-        /*
-         * @var Url
+        /**
+         * @var Url $url
          */
         $url = $this->serviceLocator->get('url');
-        /*
-         * @var array
+        /**
+         * @var array $config
          */
         $config = $this->serviceLocator->getServiceLocator()->get('config');
 
@@ -90,7 +89,7 @@ abstract class ImageAbstract extends AbstractHelper implements ServiceLocatorAwa
         if (!$this->lightBox) {
             return $image;
         } else {
-            return '<a href="'.$url($this->router, $this->routerParams).'" data-lightbox="itea">'.$image.'</a>';
+            return '<a href="' . $url($this->router, $this->routerParams) . '" data-lightbox="itea">' . $image . '</a>';
         }
     }
 

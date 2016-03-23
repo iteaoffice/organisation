@@ -12,6 +12,7 @@
 namespace Organisation\Form;
 
 use Organisation\Entity\Financial;
+use Organisation\Entity\Type;
 use Organisation\Service\OrganisationService;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
@@ -47,6 +48,7 @@ class OrganisationFilter extends Form
         ]);
 
         $types = [];
+        /** @var Type $type */
         foreach ($organisationService->findAll('type') as $type) {
             $types[$type->getId()] = $type->getType();
         }

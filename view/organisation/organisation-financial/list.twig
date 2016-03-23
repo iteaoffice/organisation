@@ -48,11 +48,10 @@
                 </tfoot>
                 <tbody>
                 {% for financial in paginator.getCurrentItems() %}
-                    {% set organisationService = organisationServiceProxy(financial.organisation) %}
                     <tr>
-                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }} {{ organisationLink(organisationService, 'edit-financial', 'icon') }}</td>
-                        <td>{{ organisationService.organisation.country.iso3 }}</td>
-                        <td>{{ organisationService.organisation.getType().type }}</td>
+                        <td>{{ organisationLink(financial.organisation, 'view-admin', 'name') }} {{ organisationLink(financial.organisation, 'edit-financial', 'icon') }}</td>
+                        <td>{{ financial.organisation.country.iso3 }}</td>
+                        <td>{{ financial.organisation.getType().type }}</td>
                         <td>{{ financial.vat }}</td>
                         <td id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
                             ({{ financial.dateVat|string_date }})

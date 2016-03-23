@@ -11,8 +11,6 @@
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilterAwareInterface;
-use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -66,16 +64,6 @@ class Web extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
      * Magic Getter.
      *
      * @param $property
@@ -96,26 +84,6 @@ class Web extends EntityAbstract implements ResourceInterface
     public function __set($property, $value)
     {
         $this->$property = $value;
-    }
-
-    /**
-     * Set input filter.
-     *
-     * @param InputFilterInterface $inputFilter
-     *
-     * @return InputFilterAwareInterface
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-    }
-
-    /**
-     * Retrieve input filter.
-     *
-     * @return InputFilterInterface
-     */
-    public function getInputFilter()
-    {
     }
 
     /**

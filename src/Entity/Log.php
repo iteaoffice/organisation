@@ -15,7 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -26,7 +26,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_log")
  */
-class Log extends EntityAbstract implements ResourceInterface
+class Log extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
 {
     /**
      * @ORM\Column(name="log_id", length=10, type="integer", nullable=false)
@@ -69,16 +69,6 @@ class Log extends EntityAbstract implements ResourceInterface
     private $organisation;
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
      * @param $property
      *
      * @return mixed
@@ -98,18 +88,6 @@ class Log extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     * @return void
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-
-    /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
      */
     public function getInputFilter()
@@ -117,18 +95,14 @@ class Log extends EntityAbstract implements ResourceInterface
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
             $factory = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'log',
-                        'required' => true,
-                        'filters'  => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                    ]
-                )
-            );
+            $inputFilter->add($factory->createInput([
+                    'name'     => 'log',
+                    'required' => true,
+                    'filters'  => [
+                        ['name' => 'StripTags'],
+                        ['name' => 'StringTrim'],
+                    ],
+                ]));
 
             $this->inputFilter = $inputFilter;
         }
@@ -146,11 +120,13 @@ class Log extends EntityAbstract implements ResourceInterface
 
     /**
      * @param int $id
+     *
      * @return Log
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -164,11 +140,13 @@ class Log extends EntityAbstract implements ResourceInterface
 
     /**
      * @param \DateTime $dateCreated
+     *
      * @return Log
      */
     public function setDateCreated($dateCreated)
     {
         $this->dateCreated = $dateCreated;
+
         return $this;
     }
 
@@ -182,11 +160,13 @@ class Log extends EntityAbstract implements ResourceInterface
 
     /**
      * @param string $log
+     *
      * @return Log
      */
     public function setLog($log)
     {
         $this->log = $log;
+
         return $this;
     }
 
@@ -200,11 +180,13 @@ class Log extends EntityAbstract implements ResourceInterface
 
     /**
      * @param \Contact\Entity\Contact $contact
+     *
      * @return Log
      */
     public function setContact($contact)
     {
         $this->contact = $contact;
+
         return $this;
     }
 
@@ -218,11 +200,13 @@ class Log extends EntityAbstract implements ResourceInterface
 
     /**
      * @param Organisation $organisation
+     *
      * @return Log
      */
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
+
         return $this;
     }
 }

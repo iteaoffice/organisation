@@ -16,14 +16,13 @@
         <label class="col-sm-3 control-label">{{ translate("txt-current-logo") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static">{{ organisationLogo(organisationService) }}</p>
+            <p class="form-control-static">{{ organisationLogo(organisation) }}</p>
         </div>
     </div>
 
 
     {{ ztbformelement(form.get('file')) }}
 </fieldset>
-
 
 
 <div class="form-group">

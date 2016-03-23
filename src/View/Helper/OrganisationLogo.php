@@ -12,6 +12,7 @@
 namespace Organisation\View\Helper;
 
 use Organisation\Service;
+use Project\Entity\Logo;
 
 /**
  * Create a link to an organisation.
@@ -39,10 +40,10 @@ class OrganisationLogo extends ImageAbstract
             return '';
         }
 
-        /*
+        /**
          * The company can have multiple logo's. We now take just the first one.
          *
-         * @var Logo
+         * @var $logo Logo
          */
         $logo = $organisationService->getOrganisation()->getLogo()->first();
 

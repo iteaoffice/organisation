@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -24,7 +24,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @ORM\Table(name="organisation_financial")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Financial")
  */
-class Financial extends EntityAbstract implements ResourceInterface
+class Financial extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
 {
     const VAT_STATUS_UNDEFINED = 0;
     const VAT_STATUS_VALID = 1;
@@ -229,16 +229,6 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
      * @param $property
      *
      * @return mixed
@@ -268,16 +258,6 @@ class Financial extends EntityAbstract implements ResourceInterface
         return (string)$this->organisation;
     }
 
-    /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
 
     /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface

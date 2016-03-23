@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -26,7 +26,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_type")
  */
-class Type extends EntityAbstract implements ResourceInterface
+class Type extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
 {
     /**
      * Constant for a type without invoice.
@@ -108,16 +108,6 @@ class Type extends EntityAbstract implements ResourceInterface
     private $organisation;
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
      * Class constructor.
      */
     public function __construct()
@@ -157,16 +147,6 @@ class Type extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-    /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
      */
     public function getInputFilter()
@@ -175,35 +155,35 @@ class Type extends EntityAbstract implements ResourceInterface
             $inputFilter = new InputFilter();
             $factory = new InputFactory();
             $inputFilter->add($factory->createInput([
-                    'name'       => 'type',
-                    'required'   => true,
-                    'filters'    => [
-                        ['name' => 'StripTags'],
-                        ['name' => 'StringTrim'],
-                    ],
-                    'validators' => [
-                        [
-                            'name'    => 'StringLength',
-                            'options' => [
-                                'encoding' => 'UTF-8',
-                                'min'      => 1,
-                                'max'      => 255,
-                            ],
+                'name'       => 'type',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
                         ],
                     ],
-                ]));
+                ],
+            ]));
             $inputFilter->add($factory->createInput([
-                    'name'       => 'invoice',
-                    'required'   => true,
-                    'validators' => [
-                        [
-                            'name'    => 'InArray',
-                            'options' => [
-                                'haystack' => array_keys($this->getInvoiceTemplates()),
-                            ],
+                'name'       => 'invoice',
+                'required'   => true,
+                'validators' => [
+                    [
+                        'name'    => 'InArray',
+                        'options' => [
+                            'haystack' => array_keys($this->getInvoiceTemplates()),
                         ],
                     ],
-                ]));
+                ],
+            ]));
             $this->inputFilter = $inputFilter;
         }
 

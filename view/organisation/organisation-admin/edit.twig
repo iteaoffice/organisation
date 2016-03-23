@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
-{% do headTitle().append(translate("txt-edit-organisation-%s")|format(organisationService.organisation)) %}
+{% do headTitle().append(translate("txt-edit-organisation-%s")|format(organisation)) %}
 
-<h1>{{ translate("txt-edit-organisation-%s")|format(organisationService.organisation) }} {{ organisationLink( null ,'list','button') }}</h1>
+<h1>{{ translate("txt-edit-organisation-%s")|format(organisation) }} {{ organisationLink( null ,'list','button') }}</h1>
 
 {% include 'organisation/partial/form/organisation' %}
 

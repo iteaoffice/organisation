@@ -21,7 +21,7 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_cluster")
  */
-class Cluster //extends EntityAbstract
+class Cluster extends EntityAbstract
 {
     /**
      * @ORM\Column(name="cluster_id", length=10, type="integer", nullable=false)
@@ -47,6 +47,29 @@ class Cluster //extends EntityAbstract
      * @var \Organisation\Entity\Organisation[]
      */
     private $member;
+
+    /**
+     * Magic Getter.
+     *
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
+
+    /**
+     * Magic Setter.
+     *
+     * @param $property
+     * @param $value
+     */
+    public function __set($property, $value)
+    {
+        $this->$property = $value;
+    }
 
     /**
      * @return string

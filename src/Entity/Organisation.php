@@ -16,7 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
+use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -27,7 +27,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  */
-class Organisation extends EntityAbstract implements ResourceInterface
+class Organisation extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
 {
     /**
      * @ORM\Column(name="organisation_id", length=10, type="integer", nullable=false)
@@ -391,18 +391,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @throws \Exception
-     * @return void
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-
-    /**
      * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
      */
     public function getInputFilter()
@@ -454,28 +442,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
         }
 
         return $this->inputFilter;
-    }
-
-    /**
-     * Needed for the hydration of form elements.
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'organisation' => $this->organisation,
-            'country'      => $this->country,
-            'type'         => $this->type,
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf(static::class, $this->getId());
     }
 
     /**

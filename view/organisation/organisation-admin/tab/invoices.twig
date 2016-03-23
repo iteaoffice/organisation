@@ -31,9 +31,9 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisationService.organisation.id, 'criteria': 'number', 'text': translate('txt-number')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisationService.organisation.id, 'criteria': 'date', 'text': translate('txt-date')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header'  with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisationService.organisation.id, 'criteria': 'organisation', 'text': translate('txt-organisation')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'number', 'text': translate('txt-number')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'date', 'text': translate('txt-date')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header'  with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'organisation', 'text': translate('txt-organisation')} %}</a></th>
                     <th>{{ translate("txt-contact") }}</th>
                     <th>{{ translate("txt-period") }}</th>
                     <th>{{ translate("txt-type") }}</th>
@@ -50,7 +50,7 @@
                             {{ invoiceLink(invoice, 'view', 'invoice') }}
                         </td>
                         <td>{{ invoice.dateInvoice|string_date }}</td>
-                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }}</td>
+                        <td>{{ organisationLink(invoice.organisation, 'view-admin', 'name') }}</td>
                         <td>{{ invoice.contact.displayName }}</td>
                         <td>{{ invoice.affiliationInvoice.year }}-{{ invoice.affiliationInvoice.period }}</td>
                         <td>{{ translate(invoice.getType(true)) }}</td>

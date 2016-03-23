@@ -33,12 +33,12 @@ class OrganisationLink extends LinkAbstract
     protected $branch;
 
     /**
-     * @param OrganisationService $organisationService
-     * @param string              $action
-     * @param string              $show
-     * @param null                $branch
-     * @param null                $page
-     * @param null                $alternativeShow
+     * @param Organisation $organisation
+     * @param string       $action
+     * @param string       $show
+     * @param null         $branch
+     * @param null         $page
+     * @param null         $alternativeShow
      *
      * @return string
      *
@@ -46,13 +46,16 @@ class OrganisationLink extends LinkAbstract
      * @throws \Exception
      */
     public function __invoke(
-        OrganisationService $organisationService = null,
+        Organisation $organisation = null,
         $action = 'view',
         $show = 'name',
         $branch = null,
         $page = null,
         $alternativeShow = null
     ) {
+        /** @var OrganisationService $organisationService */
+        $organisationService = $this->getOrganisationService()->setOrganisation($organisation);
+
         $this->setOrganisationService($organisationService);
         $this->setAction($action);
         $this->setShow($show);
@@ -62,7 +65,7 @@ class OrganisationLink extends LinkAbstract
          */
         $this->setAlternativeShow($alternativeShow);
         $this->addRouterParam('entity', 'organisation');
-        if (!$this->getOrganisationService()->isEmpty()) {
+        if (!$organisationService->isEmpty()) {
             /*
              * Set the non-standard options needed to give an other link value
              */

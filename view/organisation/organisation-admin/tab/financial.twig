@@ -6,7 +6,7 @@
     <dt>{{ translate("txt-credit-number") }}</dt>
     <dd>{{ organisationService.parseCreditNumber() }}</dd>
 </dl>
-{% set financial = organisationService.organisation.financial %}
+{% set financial = organisation.financial %}
 
 
     {% if financial %}
@@ -31,14 +31,14 @@
             <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
             <dt>{{ translate("txt-amount-of-invoices") }}</dt>
             <dd>
-                <a href="{{ url('zfcadmin/organisation/view',{'id': organisationService.organisation.id}) }}#invoices">{{ organisationService.organisation.invoice.count() }}</a>
+                <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ organisation.invoice.count() }}</a>
             </dd>
         </dl>
     {% else %}
-        {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisationService.organisation))|raw }}
+        {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisation))|raw }}
     {% endif %}
 
-{{ organisationLink(organisationService,'edit-financial','button') }}
+{{ organisationLink(organisation,'edit-financial','button') }}
 
 
 <script type="text/javascript">

@@ -15,6 +15,7 @@ use Organisation\Service\OrganisationService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class VersionServiceProxy.
@@ -22,7 +23,7 @@ use Zend\View\Helper\AbstractHelper;
 class OrganisationServiceProxy extends AbstractHelper implements ServiceLocatorAwareInterface
 {
     /**
-     * @var ServiceLocatorInterface
+     * @var HelperPluginManager
      */
     protected $serviceLocator;
 
@@ -33,9 +34,7 @@ class OrganisationServiceProxy extends AbstractHelper implements ServiceLocatorA
      */
     public function __invoke(Organisation $organisation)
     {
-        $organisationService = clone $this->serviceLocator->getServiceLocator()->get(
-            OrganisationService::class
-        );
+        $organisationService = $this->serviceLocator->getServiceLocator()->get(OrganisationService::class);
 
         return $organisationService->setOrganisation($organisation);
     }

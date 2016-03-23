@@ -12,8 +12,6 @@ namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -105,25 +103,6 @@ class IctOrganisation extends EntityAbstract implements ResourceInterface
     public function __toString()
     {
         return (string)$this->organisation;
-    }
-
-    /**
-     * @param InputFilterInterface $inputFilter
-     *
-     * @return void
-     * @throws \Exception
-     */
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
-        throw new \Exception(sprintf("This class %s is unused", __CLASS__));
-    }
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        return new InputFilter();
     }
 
     /**

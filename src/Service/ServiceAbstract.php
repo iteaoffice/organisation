@@ -47,7 +47,7 @@ abstract class ServiceAbstract implements ServiceInterface
      */
     public function findAll($entity, $toArray = false)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->findAll();
+        return $this->getEntityManager()->getRepository($entity)->findAll();
     }
 
     /**
@@ -58,7 +58,7 @@ abstract class ServiceAbstract implements ServiceInterface
      */
     public function findEntitiesFiltered($entity, $filter)
     {
-        $equipmentList = $this->getEntityManager()->getRepository($this->getFullEntityName($entity))
+        $equipmentList = $this->getEntityManager()->getRepository($entity)
             ->findFiltered($filter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
 
         return $equipmentList;
@@ -74,7 +74,7 @@ abstract class ServiceAbstract implements ServiceInterface
      */
     public function findEntityById($entity, $id)
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName($entity))->find($id);
+        return $this->getEntityManager()->getRepository($entity)->find($id);
     }
 
     /**
@@ -122,30 +122,7 @@ abstract class ServiceAbstract implements ServiceInterface
      */
     public function getEntity($entity)
     {
-        $entity = $this->getFullEntityName($entity);
-
         return new $entity();
-    }
-
-    /**
-     * Create a full path to the entity for Doctrine.
-     *
-     * @param $entity
-     *
-     * @return string
-     */
-    public function getFullEntityName($entity)
-    {
-        /*
-         * Convert a - to a camelCased situation
-         */
-        if (strpos($entity, '-') !== false) {
-            $entity = explode('-', $entity);
-            $entity = $entity[0] . ucfirst($entity[1]);
-        }
-
-        return ucfirst(implode('', array_slice(explode('\\', __NAMESPACE__), 0, 1))) . '\\' . 'Entity' . '\\'
-        . ucfirst($entity);
     }
 
     /**
@@ -218,11 +195,13 @@ abstract class ServiceAbstract implements ServiceInterface
 
     /**
      * @param OrganisationService $organisationService
+     *
      * @return ServiceAbstract
      */
     public function setOrganisationService($organisationService)
     {
         $this->organisationService = $organisationService;
+
         return $this;
     }
 }
