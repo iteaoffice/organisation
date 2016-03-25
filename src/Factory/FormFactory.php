@@ -68,12 +68,7 @@ final class FormFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        try {
-            return new $requestedName($container->get(EntityManager::class));
-        } catch (\Exception $e) {
-            var_dump($e);
-            die();
-        }
+        return new $requestedName($container->get(EntityManager::class));
     }
 
     /**
@@ -113,10 +108,8 @@ final class FormFactory implements FactoryInterface
             return $this($serviceLocator, $requestedName, $this->creationOptions);
         }
 
-        throw new InvalidServiceException(sprintf(
-            '%s requires that the requested name is provided on invocation; please update your tests or consuming container',
-            __CLASS__
-        ));
+        throw new InvalidServiceException(sprintf('%s requires that the requested name is provided on invocation; please update your tests or consuming container',
+            __CLASS__));
     }
 
     /**
