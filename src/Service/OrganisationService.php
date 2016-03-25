@@ -44,7 +44,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function setOrganisationId($id)
     {
-        $this->setOrganisation($this->findEntityById('organisation', $id));
+        $this->setOrganisation($this->findEntityById(Organisation::class, $id));
 
         return $this;
     }
@@ -59,19 +59,23 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @param Organisation $organisation
+     *
      * @return string
      */
-    public function parseDebtorNumber()
+    public function parseDebtorNumber(Organisation $organisation)
     {
-        return trim(sprintf("%'.06d\n", 100000 + $this->getOrganisation()->getId()));
+        return trim(sprintf("%'.06d\n", 100000 + $organisation->getId()));
     }
 
     /**
+     * @param Organisation $organisation
+     *
      * @return string
      */
-    public function parseCreditNumber()
+    public function parseCreditNumber(Organisation $organisation)
     {
-        return trim(sprintf("%'.06d\n", 200000 + $this->getOrganisation()->getId()));
+        return trim(sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
 
 
@@ -197,23 +201,10 @@ class OrganisationService extends ServiceAbstract
         if (is_null($organisation)) {
             return null;
         }
-        $this->setOrganisation($organisation);
 
-        return $this->createServiceElement($organisation);
+        return $organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return OrganisationService
-     */
-    private function createServiceElement(Organisation $organisation)
-    {
-        $organisationService = clone $this;
-        $organisationService->organisation = $organisation;
-
-        return $organisationService;
-    }
 
     /**
      * @param              $branch
@@ -237,8 +228,7 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationTypes()
     {
-        return $this->getEntityManager()->getRepository($this->getFullEntityName('type'))
-            ->findBy([], ['type' => 'ASC']);
+        return $this->getEntityManager()->getRepository(Type::class)->findBy([], ['type' => 'ASC']);
     }
 
     /**
@@ -356,7 +346,7 @@ class OrganisationService extends ServiceAbstract
      * @param Project $project
      * @param bool    $onlyActiveProject
      *
-     * @return OrganisationService[]
+     * @return Organisation[]
      */
     public function findOrganisationByProject(
         Project $project,
@@ -371,7 +361,7 @@ class OrganisationService extends ServiceAbstract
                     $affiliation->getOrganisation()->getOrganisation(),
                     $affiliation->getOrganisation()->getCountry()->getCountry()
                 )]
-                    = $this->createServiceElement($affiliation->getOrganisation());
+                    = $affiliation->getOrganisation();
             }
         }
         //Sort on the key (ASC)

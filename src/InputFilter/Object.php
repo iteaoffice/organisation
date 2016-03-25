@@ -12,7 +12,7 @@
  *
  * @link        http://github.com/iteaoffice/partner for the canonical source repository
  */
-namespace Partner\InputFilter;
+namespace Organisation\InputFilter;
 
 use Zend\InputFilter\InputFilter;
 

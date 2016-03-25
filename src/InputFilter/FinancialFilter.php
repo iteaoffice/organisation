@@ -13,11 +13,11 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
-namespace Partner\InputFilter;
+namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator;
-use Partner\Entity\PartnerType;
+use Organisation\Entity\Financial;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -28,7 +28,7 @@ use Zend\InputFilter\InputFilter;
  * @author      Johan van der Heide <info@jield.nl>
  * @copyright   Copyright (c) 2015 Jield (http://jield.nl)
  */
-class PartnerTypeFilter extends InputFilter
+class FinancialFilter extends InputFilter
 {
     /**
      * PartnerFilter constructor.
@@ -38,27 +38,17 @@ class PartnerTypeFilter extends InputFilter
     public function __construct(EntityManager $entityManager)
     {
         $inputFilter = new InputFilter();
+
         $inputFilter->add([
-            'name'       => 'type',
-            'required'   => true,
+            'name'       => 'dateEnd',
+            'required'   => false,
             'validators' => [
                 [
-                    'name'    => Validator\UniqueObject::class,
-                    'options' => [
-                        'object_repository' => $entityManager->getRepository(PartnerType::class),
-                        'object_manager'    => $entityManager,
-                        'use_context'       => true,
-                        'fields'            => 'type',
-                    ],
+                    'name' => 'Date',
                 ],
             ],
         ]);
 
-        $inputFilter->add([
-            'name'     => 'description',
-            'required' => true,
-        ]);
-
-        $this->add($inputFilter, PartnerType::class);
+        $this->add($inputFilter, Financial::class);
     }
 }

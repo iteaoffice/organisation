@@ -38,7 +38,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()
-            ->findEntitiesFiltered('organisation', $filterPlugin->getFilter());
+            ->findEntitiesFiltered(Organisation::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -68,7 +68,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         /** @var Organisation $organisation */
         $organisation = $this->getOrganisationService()->findEntityById(Organisation::class, $this->params('id'));
 
-        if ($organisation->isEmpty()) {
+        if (is_null($organisation)) {
             return $this->notFoundAction();
         }
 
@@ -93,16 +93,17 @@ class OrganisationAdminController extends OrganisationAbstractController
         $projects = $this->getProjectService()->findProjectByOrganisation($organisation, ProjectService::WHICH_ALL);
 
         return new ViewModel([
-            'paginator'       => $paginator,
-            'form'            => $form,
-            'encodedFilter'   => urlencode($filterPlugin->getHash()),
-            'order'           => $filterPlugin->getOrder(),
-            'direction'       => $filterPlugin->getDirection(),
-            'organisation'    => $organisation,
-            'organisationDoa' => $this->getDoaService()->findDoaByOrganisation($organisation),
-            'organisationLoi' => $this->getLoiService()->findLoiByOrganisation($organisation),
-            'projects'        => $projects,
-            'projectService'  => $this->getProjectService()
+            'paginator'           => $paginator,
+            'form'                => $form,
+            'encodedFilter'       => urlencode($filterPlugin->getHash()),
+            'order'               => $filterPlugin->getOrder(),
+            'direction'           => $filterPlugin->getDirection(),
+            'organisation'        => $organisation,
+            'organisationService' => $this->getOrganisationService(),
+            'organisationDoa'     => $this->getDoaService()->findDoaByOrganisation($organisation),
+            'organisationLoi'     => $this->getLoiService()->findLoiByOrganisation($organisation),
+            'projects'            => $projects,
+            'projectService'      => $this->getProjectService()
 
         ]);
     }
@@ -115,9 +116,10 @@ class OrganisationAdminController extends OrganisationAbstractController
         /** @var Organisation $organisation */
         $organisation = $this->getOrganisationService()->findEntityById(Organisation::class, $this->params('id'));
 
-        if ($organisation->isEmpty()) {
+        if (is_null($organisation)) {
             return $this->notFoundAction();
         }
+
 
         $data = array_merge([
             'description' => $organisation->getDescription()
@@ -173,7 +175,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         }
 
         return new ViewModel([
-            'organisation' => $organisationService,
+            'organisation' => $organisation,
             'form'         => $form,
         ]);
     }
@@ -187,13 +189,13 @@ class OrganisationAdminController extends OrganisationAbstractController
         /** @var Organisation $organisation */
         $organisation = $this->getOrganisationService()->findEntityById(Organisation::class, $this->params('id'));
 
-        if ($organisation->isEmpty()) {
+        if (is_null($organisation)) {
             return $this->notFoundAction();
         }
 
         $data = array_merge($this->getRequest()->getPost()->toArray());
 
-        $form = new AddAffiliation($this->getOrganisationService(), $this->getProjectService());
+        $form = new AddAffiliation($this->getProjectService(), $organisation);
         $form->setData($data);
 
         if ($this->getRequest()->isPost()) {

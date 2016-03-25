@@ -2,7 +2,7 @@
 
 <p class="lead">{{ translate("txt-contact-list-explanation") }}</p>
 
-{% if organisationService.getContactCount() > 0 %}
+{% if organisationService.getContactCount(organisation) > 0 %}
     <table class="table table-striped table-hover">
         <thead>
         <tr>
@@ -18,7 +18,7 @@
         {% for contactOrganisation in organisation.contactOrganisation %}
             {% set contact = contactOrganisation.contact %}
             {% set contactService = contactServiceProxy(contact) %}
-            {% set organisationService = organisationServiceProxy(contact.contactOrganisation.organisation) %}
+
             <tr {% if contact.dateEnd %}class="danger"{% endif %}>
                 <td>{{ contactLink(contact, 'view-admin', 'name') }} {% if contact.dateEnd %}({{ translate("txt-expired-on-%s")|format(contact.dateEnd|date("d-m-Y")) }}){% endif %}{{ contactLink(contact, 'edit-admin', 'icon') }}</td>
                 <td>{{ contact.email }} <a href="mailto:{{ contact.email }}"><i class="fa fa-envelope-o"></i> </a></td>

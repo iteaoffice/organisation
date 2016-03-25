@@ -3,14 +3,14 @@
 
 {{ form().openTag(form)|raw }}
 
-{% set financialForm = form.get('financial') %}
+{% set financialForm = form.get('Organisation\\Entity\\Financial') %}
 
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{ translate("txt-debtor-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ organisationService.parseDebtorNumber() }}</p>
+        <p class="form-control-static">{{ organisationService.parseDebtorNumber(organisation) }}</p>
     </div>
 </div>
 
@@ -18,7 +18,7 @@
     <label class="col-sm-3 control-label">{{ translate("txt-credit-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ organisationService.parseCreditNumber() }}</p>
+        <p class="form-control-static">{{ organisationService.parseCreditNumber(organisation) }}</p>
     </div>
 </div>
 

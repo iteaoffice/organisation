@@ -25,6 +25,7 @@ return array(
     'organisation/organisation-admin/tab/general'       => __DIR__ . '//view/organisation/organisation-admin/tab/general.twig',
     'organisation/organisation-admin/tab/contact'       => __DIR__ . '//view/organisation/organisation-admin/tab/contact.twig',
     'organisation/organisation-admin/tab/financial'     => __DIR__ . '//view/organisation/organisation-admin/tab/financial.twig',
+    'organisation/organisation-admin/tab/partner'       => __DIR__ . '//view/organisation/organisation-admin/tab/partner.twig',
     'organisation/organisation-admin/tab/cluster'       => __DIR__ . '//view/organisation/organisation-admin/tab/cluster.twig',
     'organisation/organisation-admin/tab/project'       => __DIR__ . '//view/organisation/organisation-admin/tab/project.twig',
     'organisation/organisation-financial/list'          => __DIR__ . '//view/organisation/organisation-financial/list.twig',

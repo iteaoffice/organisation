@@ -49,7 +49,7 @@ class OrganisationFilter extends Form
 
         $types = [];
         /** @var Type $type */
-        foreach ($organisationService->findAll('type') as $type) {
+        foreach ($organisationService->findAll(Type::class) as $type) {
             $types[$type->getId()] = $type->getType();
         }
 

@@ -17,11 +17,11 @@ return [
                 'route'    => 'zfcadmin/organisation/list',
                 'resource' => 'zfcadmin',
                 'pages'    => [
-                    'organisations' => [
+                    'organisations'   => [
                         'label' => "txt-organisation-list",
                         'route' => 'zfcadmin/organisation/list',
                         'pages' => [
-                            'organisation'  => [
+                            'organisation' => [
                                 'label'   => _("txt-nav-project-partner"),
                                 'route'   => 'zfcadmin/organisation/view',
                                 'visible' => false,
@@ -34,9 +34,29 @@ return [
                                     ],
                                 ],
                                 'pages'   => [
-                                    'edit'  => [
+                                    'edit' => [
                                         'label'   => _('txt-nav-edit'),
                                         'route'   => 'zfcadmin/organisation/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'financial' => [
+                                        'label'   => _('txt-nav-edit-financial'),
+                                        'route'   => 'zfcadmin/organisation/financial/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'add-affiliation' => [
+                                        'label'   => _('txt-nav-add-affiliation'),
+                                        'route'   => 'zfcadmin/organisation/add-affiliation',
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
@@ -48,11 +68,11 @@ return [
                             ],
                         ]
                     ],
-                    'financial-check'     => [
+                    'financial-check' => [
                         'label' => _("txt-financial-check"),
                         'route' => 'zfcadmin/organisation/financial/no-financial',
                     ],
-                    'vat-check'     => [
+                    'vat-check'       => [
                         'label' => _("txt-financial-organisations"),
                         'route' => 'zfcadmin/organisation/financial/list',
                     ],

@@ -661,7 +661,7 @@ class Organisation extends EntityAbstract implements ResourceInterface, InputFil
     }
 
     /**
-     * @return \Organisation\Entity\Logo[]|Collections\ArrayCollection|
+     * @return \Organisation\Entity\Logo[]|Collections\ArrayCollection()
      */
     public function getLogo()
     {

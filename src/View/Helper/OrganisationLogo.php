@@ -11,6 +11,7 @@
 
 namespace Organisation\View\Helper;
 
+use Organisation\Entity\Organisation;
 use Organisation\Service;
 use Project\Entity\Logo;
 
@@ -22,20 +23,16 @@ use Project\Entity\Logo;
 class OrganisationLogo extends ImageAbstract
 {
     /**
-     * @param Service\OrganisationService $organisationService
-     * @param null                        $class
+     * @param Organisation $organisation
+     * @param null         $class
      *
      * @return string
      */
     public function __invoke(
-        Service\OrganisationService $organisationService = null,
+        Organisation $organisation,
         $class = null
     ) {
-        if (is_null($organisationService)) {
-            return '';
-        }
-
-        $logo = $organisationService->getOrganisation()->getLogo();
+        $logo = $organisation->getLogo();
         if ($logo->count() === 0) {
             return '';
         }
@@ -45,7 +42,7 @@ class OrganisationLogo extends ImageAbstract
          *
          * @var $logo Logo
          */
-        $logo = $organisationService->getOrganisation()->getLogo()->first();
+        $logo = $logo->first();
 
         /*
          * Reset the classes

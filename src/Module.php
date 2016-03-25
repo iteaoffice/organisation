@@ -22,7 +22,7 @@ use Zend\Mvc\Controller\PluginManager;
 /**
  *
  */
-class Module implements Feature\ServiceProviderInterface, Feature\ConfigProviderInterface
+class Module implements Feature\ConfigProviderInterface
 {
     /**
      * Move this to here to have config cache working
@@ -46,15 +46,5 @@ class Module implements Feature\ServiceProviderInterface, Feature\ConfigProvider
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
-    }
-
-    /**
-     * Go to the service configuration.
-     *
-     * @return array
-     */
-    public function getServiceConfig()
-    {
-        return include __DIR__ . '/../config/services.config.php';
     }
 }

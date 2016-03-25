@@ -11,6 +11,7 @@ use Organisation\Acl;
 use Organisation\Controller;
 use Organisation\Factory;
 use Organisation\Form;
+use Organisation\InputFilter;
 use Organisation\Options;
 use Organisation\Service;
 use Organisation\View;
@@ -58,6 +59,8 @@ $config = [
             Options\ModuleOptions::class       => Factory\ModuleOptionsFactory::class,
             Service\OrganisationService::class => Factory\OrganisationServiceFactory::class,
             Service\FormService::class         => Factory\FormServiceFactory::class,
+            Form\Financial::class              => Factory\FormFactory::class,
+            InputFilter\FinancialFilter::class => Factory\InputFilterFactory::class,
         ],
         'abstract_factories' => [
             Acl\Factory\AssertionInvokableAbstractFactory::class

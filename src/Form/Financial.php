@@ -10,11 +10,10 @@
 
 namespace Organisation\Form;
 
+use Doctrine\ORM\EntityManager;
 use General\Entity\VatType;
-use General\Service\GeneralService;
 use Organisation\Entity;
 use Zend\Form\Form;
-use Zend\ServiceManager\ServiceManager;
 
 /**
  *
@@ -22,14 +21,11 @@ use Zend\ServiceManager\ServiceManager;
 class Financial extends Form
 {
     /**
-     * @var ServiceManager
+     * Financial constructor.
+     *
+     * @param EntityManager $entityManager
      */
-    protected $serviceManager;
-
-    /**
-     * @param ServiceManager $serviceManager
-     */
-    public function __construct(ServiceManager $serviceManager)
+    public function __construct(EntityManager $entityManager)
     {
         $financial = new Entity\Financial();
         parent::__construct($financial->get('underscore_entity_name'));
@@ -37,24 +33,17 @@ class Financial extends Form
         $this->setAttribute('method', 'post');
         $this->setAttribute('action', '');
 
-        $this->serviceManager = $serviceManager;
-        $entityManager
-            = $this->serviceManager->get('Doctrine\ORM\EntityManager');
         $organisationFieldset = new ObjectFieldset($entityManager, $financial);
         $organisationFieldset->setUseAsBaseFieldset(true);
         $this->add($organisationFieldset);
 
-        //Vat enforcement
-        /**
-         * @var $generalService GeneralService
-         */
-        $generalService = $serviceManager->get(GeneralService::class);
+
         $vatTypes = [0 => '-- No enforcement'];
 
         /**
          * @var $vatType VatType
          */
-        foreach ($generalService->findAll('vatType') as $vatType) {
+        foreach ($entityManager->getRepository(VatType::class)->findAll() as $vatType) {
             $vatTypes[$vatType->getId()] = $vatType->getType();
         }
 

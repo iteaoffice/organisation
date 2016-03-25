@@ -30,7 +30,7 @@ class OrganisationController extends OrganisationAbstractController
         /**
          * @var $logo Logo
          */
-        $logo = $this->getOrganisationService()->findEntityById('logo', $this->params('id'));
+        $logo = $this->getOrganisationService()->findEntityById(Logo::class, $this->params('id'));
 
         /**
          * Do a check if the given has is correct to avoid guessing the image

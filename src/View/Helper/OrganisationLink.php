@@ -148,16 +148,14 @@ class OrganisationLink extends LinkAbstract
                 break;
             case 'view':
                 $this->addRouterParam('docRef', $this->getOrganisationService()->getOrganisation()->getDocRef());
-                $this->setRouter('route-' . $this->getOrganisationService()->getOrganisation()
-                        ->get("underscore_full_entity_name"));
+                $this->setRouter('route-organisation_entity_organisation');
                 $this->setText(sprintf(
                     $this->translate("txt-view-organisation-%s"),
                     $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch())
                 ));
                 break;
             case 'view-article':
-                $this->setRouter('route-' . $this->getOrganisationService()->getOrganisation()
-                        ->get("underscore_full_entity_name") . '-article');
+                $this->setRouter('route-organisation_entity_organisation-article');
                 $this->setText(sprintf(
                     $this->translate("txt-view-article-for-organisation-%s"),
                     $this->getOrganisationService()->parseOrganisationWithBranch($this->getBranch())

@@ -14,6 +14,8 @@
                                    data-toggle="tab">{{ translate("txt-contact") }}</a></li>
         <li role="presentation"><a href="#project" aria-controls="project" role="tab"
                                    data-toggle="tab">{{ translate("txt-project") }}</a></li>
+        <li role="presentation"><a href="#partner" aria-controls="partner" role="tab"
+                                   data-toggle="tab">{{ translate("txt-partner") }}</a></li>
         <li role="presentation"><a href="#doa" aria-controls="doa" role="tab"
                                    data-toggle="tab">{{ translate("txt-doa") }}</a></li>
         <li role="presentation"><a href="#cluster" aria-controls="cluster" role="tab"
@@ -30,10 +32,12 @@
              id="financial">{% include 'organisation/organisation-admin/tab/financial' %}</div>
         <div role="tabpanel" class="tab-pane"
              id="invoices">{% include 'organisation/organisation-admin/tab/invoices' %}</div>
+        {#<div role="tabpanel" class="tab-pane"#}
+             {#id="contact">{% include 'organisation/organisation-admin/tab/contact' %}</div>#}
+        {#<div role="tabpanel" class="tab-pane"#}
+             {#id="project">{% include 'organisation/organisation-admin/tab/project' %}</div>#}
         <div role="tabpanel" class="tab-pane"
-             id="contact">{% include 'organisation/organisation-admin/tab/contact' %}</div>
-        <div role="tabpanel" class="tab-pane"
-             id="project">{% include 'organisation/organisation-admin/tab/project' %}</div>
+             id="partner">{% include 'organisation/organisation-admin/tab/partner' %}</div>
         <div role="tabpanel" class="tab-pane"
              id="doa">{% include 'organisation/organisation-admin/tab/doa' %}</div>
         <div role="tabpanel" class="tab-pane"

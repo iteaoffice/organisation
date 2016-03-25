@@ -12,10 +12,13 @@ namespace Organisation\Service;
 
 use Organisation\Entity\EntityAbstract;
 
+/**
+ * Interface ServiceInterface
+ *
+ * @package Organisation\Service
+ */
 interface ServiceInterface
 {
-    public function getFullEntityName($entity);
-
     public function updateEntity(EntityAbstract $entity);
 
     public function newEntity(EntityAbstract $entity);

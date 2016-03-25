@@ -11,7 +11,7 @@
 namespace Organisation\Form;
 
 use Organisation\Entity;
-use Organisation\Service\OrganisationService;
+use Project\Entity\Project;
 use Project\Service\ProjectService;
 use Zend\Form\Form;
 
@@ -23,12 +23,12 @@ class AddAffiliation extends Form
     /**
      * AddAffiliation constructor.
      *
-     * @param OrganisationService $organisationService
      * @param ProjectService      $projectService
+     * @param Entity\Organisation $organisation
      */
     public function __construct(
-        OrganisationService $organisationService,
-        ProjectService $projectService
+        ProjectService $projectService,
+        Entity\Organisation $organisation
     ) {
         parent::__construct();
 
@@ -36,20 +36,15 @@ class AddAffiliation extends Form
         /**
          * @var $projectService ProjectService
          */
-        foreach ($projectService->findProjectByOrganisation(
-            $organisationService->getOrganisation(),
-            ProjectService::WHICH_ALL
-        ) as $projectService) {
+        foreach ($projectService->findProjectByOrganisation($organisation, ProjectService::WHICH_ALL) as $projectService) {
             $currentProjects[] = $projectService->getProject()->getId();
         }
 
         $projects = [];
-
         /**
-         * @var $newProjectService ProjectService
+         * @var $newProject Project
          */
-        foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)
-                ->getResult() as $newProject) {
+        foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)->getResult() as $newProject) {
             if (!in_array($newProject->getId(), $currentProjects)) {
                 $projects[$newProject->getId()] = sprintf("%s", $newProject);
             }
@@ -82,7 +77,7 @@ class AddAffiliation extends Form
         ]);
 
         $contacts = [];
-        foreach ($organisationService->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
+        foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
             $contacts[$contactOrganisation->getContact()->getId()] = $contactOrganisation->getContact()->getFormName();
         }
 

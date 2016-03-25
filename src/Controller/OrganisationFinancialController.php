@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Organisation\Entity\Financial;
-use Organisation\Form\OrganisationFilter;
+use Organisation\Form;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
@@ -37,7 +37,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        $form = new OrganisationFilter($this->getOrganisationService());
+        $form = new Form\OrganisationFilter($this->getOrganisationService());
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -154,7 +154,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        $form = new OrganisationFilter($this->getOrganisationService());
+        $form = new Form\OrganisationFilter($this->getOrganisationService());
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 

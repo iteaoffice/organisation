@@ -15,6 +15,7 @@ use Content\Service\ArticleService;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\View\Helper\CountryMap;
+use Organisation\Entity\Organisation;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
@@ -134,7 +135,7 @@ class OrganisationHandler extends AbstractHelper
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationLogo($this->getOrganisationService());
+                return $this->parseOrganisationLogo($this->getOrganisationService()->getOrganisation());
 
             default:
                 return sprintf(
@@ -304,14 +305,14 @@ class OrganisationHandler extends AbstractHelper
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param Organisation $organisation
      *
      * @return string
      */
-    public function parseOrganisationLogo(OrganisationService $organisationService)
+    public function parseOrganisationLogo(Organisation $organisation)
     {
         return $this->getRenderer()
-            ->render('organisation/partial/entity/organisation-logo', ['organisationService' => $organisationService]);
+            ->render('organisation/partial/entity/organisation-logo', ['organisation' => $organisation]);
     }
 
     /**
