@@ -27,23 +27,17 @@ $config = [
     ],
     'view_helpers'    => [
         'aliases'    => [
-            'createLogoFromArray'         => View\Helper\CreateLogoFromArray::class,
-            'createOrganisationFromArray' => View\Helper\CreateOrganisationFromArray::class,
-            'organisationHandler'         => View\Helper\OrganisationHandler::class,
-            'organisationServiceProxy'    => View\Helper\OrganisationServiceProxy::class,
-            'organisationLink'            => View\Helper\OrganisationLink::class,
-            'organisationLogo'            => View\Helper\OrganisationLogo::class,
+            'organisationHandler' => View\Helper\OrganisationHandler::class,
+            'organisationLink'    => View\Helper\OrganisationLink::class,
+            'organisationLogo'    => View\Helper\OrganisationLogo::class,
         ],
         'invokables' => [
             'organisationformelement' => Form\View\Helper\OrganisationFormElement::class,
         ],
         'factories'  => [
-            View\Helper\CreateLogoFromArray::class         => View\Factory\LinkInvokableFactory::class,
-            View\Helper\CreateOrganisationFromArray::class => View\Factory\LinkInvokableFactory::class,
-            View\Helper\OrganisationHandler::class         => View\Factory\LinkInvokableFactory::class,
-            View\Helper\OrganisationServiceProxy::class    => View\Factory\LinkInvokableFactory::class,
-            View\Helper\OrganisationLink::class            => View\Factory\LinkInvokableFactory::class,
-            View\Helper\OrganisationLogo::class            => View\Factory\LinkInvokableFactory::class,
+            View\Helper\OrganisationHandler::class => View\Factory\LinkInvokableFactory::class,
+            View\Helper\OrganisationLink::class    => View\Factory\LinkInvokableFactory::class,
+            View\Helper\OrganisationLogo::class    => View\Factory\LinkInvokableFactory::class,
         ],
     ],
     'form_elements'   => [

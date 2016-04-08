@@ -36,8 +36,8 @@ class AddAffiliation extends Form
         /**
          * @var $projectService ProjectService
          */
-        foreach ($projectService->findProjectByOrganisation($organisation, ProjectService::WHICH_ALL) as $projectService) {
-            $currentProjects[] = $projectService->getProject()->getId();
+        foreach ($projectService->findProjectByOrganisation($organisation, ProjectService::WHICH_ALL) as $project) {
+            $currentProjects[] = $project->getId();
         }
 
         $projects = [];

@@ -17,7 +17,6 @@ namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator;
-use Organisation\Entity\Financial;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -49,6 +48,6 @@ class FinancialFilter extends InputFilter
             ],
         ]);
 
-        $this->add($inputFilter, Financial::class);
+        $this->add($inputFilter, 'organisation_entity_financial');
     }
 }

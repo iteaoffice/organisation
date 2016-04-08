@@ -14,9 +14,6 @@ use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -27,7 +24,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  */
-class Organisation extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
+class Organisation extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="organisation_id", length=10, type="integer", nullable=false)
@@ -391,244 +388,6 @@ class Organisation extends EntityAbstract implements ResourceInterface, InputFil
     }
 
     /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add($factory->createInput([
-                'name'       => 'organisation',
-                'required'   => true,
-                'filters'    => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
-                ],
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
-                        ],
-                    ],
-                ],
-            ]));
-            $inputFilter->add($factory->createInput([
-                'name'     => 'country',
-                'required' => true,
-            ]));
-            $inputFilter->add($factory->createInput([
-                'name'     => 'type',
-                'required' => true,
-            ]));
-
-            $inputFilter->add($factory->createInput([
-                'name'     => 'domain',
-                'required' => false,
-            ]));
-            $inputFilter->add($factory->createInput([
-                'name'     => 'technology',
-                'required' => false,
-            ]));
-            $inputFilter->add($factory->createInput([
-                'name'     => 'clusterMember',
-                'required' => false,
-            ]));
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
-    /**
-     * @param \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection $affiliation
-     */
-    public function setAffiliation($affiliation)
-    {
-        $this->affiliation = $affiliation;
-    }
-
-    /**
-     * @return \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
-     */
-    public function getAffiliation()
-    {
-        return $this->affiliation;
-    }
-
-    /**
-     * @param \Organisation\Entity\Cluster[]|Collections\ArrayCollection $cluster
-     */
-    public function setCluster($cluster)
-    {
-        $this->cluster = $cluster;
-    }
-
-    /**
-     * @return \Organisation\Entity\Cluster[]|Collections\ArrayCollection
-     */
-    public function getCluster()
-    {
-        return $this->cluster;
-    }
-
-    /**
-     * @param \Organisation\Entity\Cluster[]|Collections\ArrayCollection $clusterMember
-     */
-    public function setClusterMember($clusterMember)
-    {
-        $this->clusterMember = $clusterMember;
-    }
-
-    /**
-     * @return \Organisation\Entity\Cluster[]|Collections\ArrayCollection
-     */
-    public function getClusterMember()
-    {
-        return $this->clusterMember;
-    }
-
-    /**
-     * @param \Contact\Entity\ContactOrganisation[] $contactOrganisation
-     */
-    public function setContactOrganisation($contactOrganisation)
-    {
-        $this->contactOrganisation = $contactOrganisation;
-    }
-
-    /**
-     * @return \Contact\Entity\ContactOrganisation[]|Collections\ArrayCollection
-     */
-    public function getContactOrganisation()
-    {
-        return $this->contactOrganisation;
-    }
-
-    /**
-     * @param \General\Entity\Country $country
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-    }
-
-    /**
-     * @return \General\Entity\Country
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
-     * @param \DateTime $dateCreated
-     */
-    public function setDateCreated($dateCreated)
-    {
-        $this->dateCreated = $dateCreated;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated()
-    {
-        return $this->dateCreated;
-    }
-
-    /**
-     * @param \DateTime $dateUpdated
-     */
-    public function setDateUpdated($dateUpdated)
-    {
-        $this->dateUpdated = $dateUpdated;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateUpdated()
-    {
-        return $this->dateUpdated;
-    }
-
-    /**
-     * @param \Organisation\Entity\Description $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return \Organisation\Entity\Description
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param string $docRef
-     */
-    public function setDocRef($docRef)
-    {
-        $this->docRef = $docRef;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDocRef()
-    {
-        return $this->docRef;
-    }
-
-    /**
-     * @param \Program\Entity\Domain[]|Collections\ArrayCollection $domain
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-    }
-
-    /**
-     * @return \Program\Entity\Domain[]|Collections\ArrayCollection
-     */
-    public function getDomain()
-    {
-        return $this->domain;
-    }
-
-    /**
-     * @param \Organisation\Entity\Financial $financial
-     */
-    public function setFinancial($financial)
-    {
-        $this->financial = $financial;
-    }
-
-    /**
-     * @return \Organisation\Entity\Financial
-     */
-    public function getFinancial()
-    {
-        return $this->financial;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -637,59 +396,15 @@ class Organisation extends EntityAbstract implements ResourceInterface, InputFil
     }
 
     /**
-     * @param \Organisation\Entity\Log[]|Collections\ArrayCollection $log
+     * @param int $id
+     *
+     * @return Organisation
      */
-    public function setLog($log)
+    public function setId($id)
     {
-        $this->log = $log;
-    }
+        $this->id = $id;
 
-    /**
-     * @return \Organisation\Entity\Log[]|Collections\ArrayCollection
-     */
-    public function getLog()
-    {
-        return $this->log;
-    }
-
-    /**
-     * @param \Organisation\Entity\Logo[]|Collections\ArrayCollection $logo
-     */
-    public function setLogo($logo)
-    {
-        $this->logo = $logo;
-    }
-
-    /**
-     * @return \Organisation\Entity\Logo[]|Collections\ArrayCollection()
-     */
-    public function getLogo()
-    {
-        return $this->logo;
-    }
-
-    /**
-     * @param \Organisation\Entity\Note[]|Collections\ArrayCollection $note
-     */
-    public function setNote($note)
-    {
-        $this->note = $note;
-    }
-
-    /**
-     * @return \Organisation\Entity\Note[]|Collections\ArrayCollection
-     */
-    public function getNote()
-    {
-        return $this->note;
-    }
-
-    /**
-     * @param string $organisation
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
+        return $this;
     }
 
     /**
@@ -701,139 +416,115 @@ class Organisation extends EntityAbstract implements ResourceInterface, InputFil
     }
 
     /**
-     * @param \Program\Entity\Doa[]|Collections\ArrayCollection $programDoa
+     * @param string $organisation
+     *
+     * @return Organisation
      */
-    public function setProgramDoa($programDoa)
+    public function setOrganisation($organisation)
     {
-        $this->programDoa = $programDoa;
+        $this->organisation = $organisation;
+
+        return $this;
     }
 
     /**
-     * @return \Program\Entity\Doa[]|Collections\ArrayCollection
+     * @return \Contact\Entity\ContactOrganisation[]
      */
-    public function getProgramDoa()
+    public function getContactOrganisation()
     {
-        return $this->programDoa;
+        return $this->contactOrganisation;
     }
 
     /**
-     * @param \Program\Entity\Technology[]|Collections\ArrayCollection $technology
+     * @param \Contact\Entity\ContactOrganisation[] $contactOrganisation
+     *
+     * @return Organisation
      */
-    public function setTechnology($technology)
+    public function setContactOrganisation($contactOrganisation)
     {
-        $this->technology = $technology;
+        $this->contactOrganisation = $contactOrganisation;
+
+        return $this;
     }
 
     /**
-     * @return \Program\Entity\Technology[]|Collections\ArrayCollection
+     * @return \DateTime
      */
-    public function getTechnology()
+    public function getDateCreated()
     {
-        return $this->technology;
+        return $this->dateCreated;
     }
 
     /**
-     * @param \Organisation\Entity\Type $type
+     * @param \DateTime $dateCreated
+     *
+     * @return Organisation
      */
-    public function setType($type)
+    public function setDateCreated($dateCreated)
     {
-        $this->type = $type;
+        $this->dateCreated = $dateCreated;
+
+        return $this;
     }
 
     /**
-     * @return \Organisation\Entity\Type
+     * @return string
      */
-    public function getType()
+    public function getDocRef()
     {
-        return $this->type;
+        return $this->docRef;
     }
 
     /**
-     * @param \Invoice\Entity\Invoice[]|Collections\ArrayCollection $invoice
+     * @param string $docRef
+     *
+     * @return Organisation
      */
-    public function setInvoice($invoice)
+    public function setDocRef($docRef)
     {
-        $this->invoice = $invoice;
+        $this->docRef = $docRef;
+
+        return $this;
     }
 
     /**
-     * @return \Invoice\Entity\Invoice[]|Collections\ArrayCollection
+     * @return \DateTime
      */
-    public function getInvoice()
+    public function getDateUpdated()
     {
-        return $this->invoice;
+        return $this->dateUpdated;
     }
 
     /**
-     * @param \Organisation\Entity\Web[]|Collections\ArrayCollection $web
+     * @param \DateTime $dateUpdated
+     *
+     * @return Organisation
      */
-    public function setWeb($web)
+    public function setDateUpdated($dateUpdated)
     {
-        $this->web = $web;
+        $this->dateUpdated = $dateUpdated;
+
+        return $this;
     }
 
     /**
-     * @return \Organisation\Entity\Web[]|Collections\ArrayCollection
+     * @return \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
      */
-    public function getWeb()
+    public function getAffiliation()
     {
-        return $this->web;
+        return $this->affiliation;
     }
 
     /**
-     * @param \Event\Entity\Booth\Financial[]|Collections\ArrayCollection $boothFinancial
+     * @param \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection $affiliation
+     *
+     * @return Organisation
      */
-    public function setBoothFinancial($boothFinancial)
+    public function setAffiliation($affiliation)
     {
-        $this->boothFinancial = $boothFinancial;
-    }
+        $this->affiliation = $affiliation;
 
-    /**
-     * @return \Event\Entity\Booth\Financial[]|Collections\ArrayCollection
-     */
-    public function getBoothFinancial()
-    {
-        return $this->boothFinancial;
-    }
-
-    /**
-     * @param \Program\Entity\Call\Doa[]|Collections\ArrayCollection $doa
-     */
-    public function setDoa($doa)
-    {
-        $this->doa = $doa;
-    }
-
-    /**
-     * @return \Program\Entity\Call\Doa[]|Collections\ArrayCollection
-     */
-    public function getDoa()
-    {
-        return $this->doa;
-    }
-
-    /**
-     * @param \Organisation\Entity\Financial[]|Collections\ArrayCollection $financialDebtor
-     */
-    public function setFinancialDebtor($financialDebtor)
-    {
-        $this->financialDebtor = $financialDebtor;
-    }
-
-    /**
-     * @return \Organisation\Entity\Financial[]|Collections\ArrayCollection
-     */
-    public function getFinancialDebtor()
-    {
-        return $this->financialDebtor;
-    }
-
-    /**
-     * @param \Affiliation\Entity\Financial $affiliationFinancial
-     */
-    public function setAffiliationFinancial($affiliationFinancial)
-    {
-        $this->affiliationFinancial = $affiliationFinancial;
+        return $this;
     }
 
     /**
@@ -842,6 +533,18 @@ class Organisation extends EntityAbstract implements ResourceInterface, InputFil
     public function getAffiliationFinancial()
     {
         return $this->affiliationFinancial;
+    }
+
+    /**
+     * @param \Affiliation\Entity\Financial $affiliationFinancial
+     *
+     * @return Organisation
+     */
+    public function setAffiliationFinancial($affiliationFinancial)
+    {
+        $this->affiliationFinancial = $affiliationFinancial;
+
+        return $this;
     }
 
     /**
@@ -854,92 +557,12 @@ class Organisation extends EntityAbstract implements ResourceInterface, InputFil
 
     /**
      * @param \Member\Entity\Member $member
+     *
+     * @return Organisation
      */
     public function setMember($member)
     {
         $this->member = $member;
-    }
-
-    /**
-     * @return \Member\Entity\Applicant
-     */
-    public function getApplicant()
-    {
-        return $this->applicant;
-    }
-
-    /**
-     * @param \Member\Entity\Applicant $applicant
-     */
-    public function setApplicant($applicant)
-    {
-        $this->applicant = $applicant;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|Booth[]
-     */
-    public function getOrganisationBooth()
-    {
-        return $this->organisationBooth;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|Booth[] $organisationBooth
-     */
-    public function setOrganisationBooth($organisationBooth)
-    {
-        $this->organisationBooth = $organisationBooth;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Invoice\Entity\Journal[]
-     */
-    public function getJournal()
-    {
-        return $this->journal;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Invoice\Entity\Journal[] $journal
-     */
-    public function setJournal($journal)
-    {
-        $this->journal = $journal;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Invoice\Entity\Reminder[]
-     */
-    public function getReminder()
-    {
-        return $this->reminder;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Invoice\Entity\Reminder[] $reminder
-     */
-    public function setReminder($reminder)
-    {
-        $this->reminder = $reminder;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\Partner[]
-     */
-    public function getIdeaPartner()
-    {
-        return $this->ideaPartner;
-    }
-
-    /**
-     * @param  Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
-     *
-     * @return Organisation
-     */
-    public function setIdeaPartner($ideaPartner)
-    {
-        $this->ideaPartner = $ideaPartner;
 
         return $this;
     }
@@ -1020,6 +643,446 @@ class Organisation extends EntityAbstract implements ResourceInterface, InputFil
     public function setPartnerOrganisation($partnerOrganisation)
     {
         $this->partnerOrganisation = $partnerOrganisation;
+
+        return $this;
+    }
+
+    /**
+     * @return \General\Entity\Country
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param \General\Entity\Country $country
+     *
+     * @return Organisation
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Idea\Partner[]
+     */
+    public function getIdeaPartner()
+    {
+        return $this->ideaPartner;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
+     *
+     * @return Organisation
+     */
+    public function setIdeaPartner($ideaPartner)
+    {
+        $this->ideaPartner = $ideaPartner;
+
+        return $this;
+    }
+
+    /**
+     * @return Type
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param Type $type
+     *
+     * @return Organisation
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Web[]
+     */
+    public function getWeb()
+    {
+        return $this->web;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Web[] $web
+     *
+     * @return Organisation
+     */
+    public function setWeb($web)
+    {
+        $this->web = $web;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Program\Entity\Domain[]
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Program\Entity\Domain[] $domain
+     *
+     * @return Organisation
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Program\Entity\Technology[]
+     */
+    public function getTechnology()
+    {
+        return $this->technology;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Program\Entity\Technology[] $technology
+     *
+     * @return Organisation
+     */
+    public function setTechnology($technology)
+    {
+        $this->technology = $technology;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Cluster[]
+     */
+    public function getCluster()
+    {
+        return $this->cluster;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Cluster[] $cluster
+     *
+     * @return Organisation
+     */
+    public function setCluster($cluster)
+    {
+        $this->cluster = $cluster;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Cluster[]
+     */
+    public function getClusterMember()
+    {
+        return $this->clusterMember;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Cluster[] $clusterMember
+     *
+     * @return Organisation
+     */
+    public function setClusterMember($clusterMember)
+    {
+        $this->clusterMember = $clusterMember;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Log[]
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Log[] $log
+     *
+     * @return Organisation
+     */
+    public function setLog($log)
+    {
+        $this->log = $log;
+
+        return $this;
+    }
+
+    /**
+     * @return Description
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param Description $description
+     *
+     * @return Organisation
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Logo[]
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Logo[] $logo
+     *
+     * @return Organisation
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Note[]
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Note[] $note
+     *
+     * @return Organisation
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
+     * @return Financial
+     */
+    public function getFinancial()
+    {
+        return $this->financial;
+    }
+
+    /**
+     * @param Financial $financial
+     *
+     * @return Organisation
+     */
+    public function setFinancial($financial)
+    {
+        $this->financial = $financial;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Financial[]
+     */
+    public function getFinancialDebtor()
+    {
+        return $this->financialDebtor;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Financial[] $financialDebtor
+     *
+     * @return Organisation
+     */
+    public function setFinancialDebtor($financialDebtor)
+    {
+        $this->financialDebtor = $financialDebtor;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Program\Entity\Doa[]
+     */
+    public function getProgramDoa()
+    {
+        return $this->programDoa;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Program\Entity\Doa[] $programDoa
+     *
+     * @return Organisation
+     */
+    public function setProgramDoa($programDoa)
+    {
+        $this->programDoa = $programDoa;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Invoice[]
+     */
+    public function getInvoice()
+    {
+        return $this->invoice;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Invoice[] $invoice
+     *
+     * @return Organisation
+     */
+    public function setInvoice($invoice)
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Event\Entity\Booth\Financial[]
+     */
+    public function getBoothFinancial()
+    {
+        return $this->boothFinancial;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Event\Entity\Booth\Financial[] $boothFinancial
+     *
+     * @return Organisation
+     */
+    public function setBoothFinancial($boothFinancial)
+    {
+        $this->boothFinancial = $boothFinancial;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Program\Entity\Call\Doa[]
+     */
+    public function getDoa()
+    {
+        return $this->doa;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Program\Entity\Call\Doa[] $doa
+     *
+     * @return Organisation
+     */
+    public function setDoa($doa)
+    {
+        $this->doa = $doa;
+
+        return $this;
+    }
+
+    /**
+     * @return \Member\Entity\Applicant
+     */
+    public function getApplicant()
+    {
+        return $this->applicant;
+    }
+
+    /**
+     * @param \Member\Entity\Applicant $applicant
+     *
+     * @return Organisation
+     */
+    public function setApplicant($applicant)
+    {
+        $this->applicant = $applicant;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Booth[]
+     */
+    public function getOrganisationBooth()
+    {
+        return $this->organisationBooth;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Booth[] $organisationBooth
+     *
+     * @return Organisation
+     */
+    public function setOrganisationBooth($organisationBooth)
+    {
+        $this->organisationBooth = $organisationBooth;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Journal[]
+     */
+    public function getJournal()
+    {
+        return $this->journal;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Journal[] $journal
+     *
+     * @return Organisation
+     */
+    public function setJournal($journal)
+    {
+        $this->journal = $journal;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Invoice\Entity\Reminder[]
+     */
+    public function getReminder()
+    {
+        return $this->reminder;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Invoice\Entity\Reminder[] $reminder
+     *
+     * @return Organisation
+     */
+    public function setReminder($reminder)
+    {
+        $this->reminder = $reminder;
 
         return $this;
     }

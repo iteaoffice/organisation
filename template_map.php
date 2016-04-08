@@ -7,7 +7,6 @@ return array(
     'organisation/partial/entity/organisation-info'     => __DIR__ . '//view/organisation/partial/entity/organisation-info.twig',
     'organisation/partial/entity/organisation'          => __DIR__ . '//view/organisation/partial/entity/organisation.twig',
     'organisation/partial/entity/organisation-title'    => __DIR__ . '//view/organisation/partial/entity/organisation-title.twig',
-    'organisation/partial/list/project_eu'              => __DIR__ . '//view/organisation/partial/list/project_eu.twig',
     'organisation/partial/list/article'                 => __DIR__ . '//view/organisation/partial/list/article.twig',
     'organisation/partial/list/organisation-search'     => __DIR__ . '//view/organisation/partial/list/organisation-search.twig',
     'organisation/partial/list/organisation'            => __DIR__ . '//view/organisation/partial/list/organisation.twig',

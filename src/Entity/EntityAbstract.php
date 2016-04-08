@@ -10,9 +10,6 @@
 
 namespace Organisation\Entity;
 
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
-
 /**
  * Annotations class.
  *
@@ -21,9 +18,12 @@ use Zend\InputFilter\InputFilterInterface;
 abstract class EntityAbstract implements EntityInterface
 {
     /**
-     * @var InputFilter
+     * @return string
      */
-    protected $inputFilter;
+    public function getResourceId()
+    {
+        return sprintf("%s:%s", $this->get("full_entity_name"), $this->getId());
+    }
 
     /**
      * @return bool
@@ -34,21 +34,15 @@ abstract class EntityAbstract implements EntityInterface
     }
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getResourceId()
+    public function __toString()
     {
-        return sprintf("%s:%s", static::class, $this->getId());
-    }
-
-    public function setInputFilter(InputFilterInterface $inputFilter)
-    {
+        return (string)sprintf("%s:%s", $this->get("full_entity_name"), $this->getId());
     }
 
     /**
-     * @param $prop
+     * @param string $prop
      *
      * @return bool
      */
@@ -62,6 +56,8 @@ abstract class EntityAbstract implements EntityInterface
                 return true;
             }
         }
+
+        return false;
     }
 
     /**
@@ -73,9 +69,11 @@ abstract class EntityAbstract implements EntityInterface
     {
         switch ($switch) {
             case 'full_entity_name':
-                return static::class;
+                return str_replace('DoctrineORMModule\Proxy\__CG__\\', '', static::class);
             case 'entity_name':
-                return str_replace(__NAMESPACE__ . '\\', '', static::class);
+                return str_replace(__NAMESPACE__ . '\\', '', $this->get('full_entity_name'));
+            case 'underscore_entity_name':
+                return strtolower(str_replace('\\', '_', $this->get('full_entity_name')));
         }
 
         return null;

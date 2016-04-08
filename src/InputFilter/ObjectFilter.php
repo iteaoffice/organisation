@@ -4,25 +4,29 @@
  *
  * PHP Version 5
  *
- * @category    Partner
+ * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   2004-2016 ITEA Office
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/partner for the canonical source repository
+ * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
+
 namespace Organisation\InputFilter;
 
 use Zend\InputFilter\InputFilter;
 
 /**
- * Class FilterCreateObject
+ * Class ObjectFilter
  *
- * @package Partner\Form
+ * @package Organisation\InputFilter
  */
-class Object extends InputFilter
+class ObjectFilter extends InputFilter
 {
+    /**
+     * ObjectFilter constructor.
+     */
     public function __construct()
     {
     }

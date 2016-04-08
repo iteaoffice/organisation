@@ -36,6 +36,10 @@ class OrganisationHandler extends AbstractHelper
      */
     protected $serviceLocator;
     /**
+     * @var Organisation
+     */
+    protected $organisation;
+    /**
      * @var int
      */
     protected $limit = 5;
@@ -53,89 +57,84 @@ class OrganisationHandler extends AbstractHelper
 
         switch ($content->getHandler()->getHandler()) {
             case 'organisation':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
                 $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation"));
-                $this->serviceLocator->get('headtitle')->append($this->getOrganisationService()->getOrganisation()
-                    ->getOrganisation());
+                $this->serviceLocator->get('headtitle')->append($this->getOrganisation()->getOrganisation());
 
                 //Do now show the organisation when we don't have projects
-                if (sizeof($this->getProjectService()->findProjectByOrganisation($this->getOrganisationService()
-                        ->getOrganisation())) === 0
-                ) {
+                if (sizeof($this->getProjectService()->findProjectByOrganisation($this->getOrganisation())) === 0) {
                     $this->getServiceLocator()->get("response")->setStatusCode(404);
 
                     return null;
                 }
 
-                /*
-                 * @var OrganisationLink
+                /**
+                 * @var OrganisationLink $organisationLink
                  */
                 $organisationLink = $this->serviceLocator->get('organisationLink');
                 $this->serviceLocator->get('headmeta')->setProperty('og:type', $this->translate("txt-organisation"));
                 $this->serviceLocator->get('headmeta')
-                    ->setProperty('og:title', $this->getOrganisationService()->getOrganisation()->getOrganisation());
-                $this->serviceLocator->get('headmeta')->setProperty(
-                    'og:url',
-                    $organisationLink->__invoke($this->getOrganisationService(), 'view', 'social')
-                );
+                    ->setProperty('og:title', $this->getOrganisation()->getOrganisation());
+                $this->serviceLocator->get('headmeta')
+                    ->setProperty('og:url', $organisationLink($this->getOrganisation(), 'view', 'social'));
 
-                return $this->parseOrganisation($this->getOrganisationService());
+                return $this->parseOrganisation($this->getOrganisation());
             case 'organisation_list':
                 $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation-list"));
                 $page = $this->getRouteMatch()->getParam('page');
 
                 return $this->parseOrganisationList($page);
             case 'organisation_project':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationProjectList($this->getOrganisationService());
+                return $this->parseOrganisationProjectList($this->getOrganisation());
 
             case 'organisation_metadata':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationMetadata($this->getOrganisationService());
+                return $this->parseOrganisationMetadata($this->getOrganisation());
 
             case 'organisation_article':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationArticleList($this->getOrganisationService());
+                return $this->parseOrganisationArticleList($this->getOrganisation());
 
             case 'organisation_title':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationTitle();
+                return $this->parseOrganisationTitle($this->getOrganisation());
 
             case 'organisation_info':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationInfo($this->getOrganisationService());
+                return $this->parseOrganisationInfo($this->getOrganisation());
 
             case 'organisation_map':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationMap($this->getOrganisationService());
+                return $this->parseOrganisationMap($this->getOrganisation());
 
             case 'organisation_logo':
-                if ($this->getOrganisationService()->isEmpty()) {
+                if (is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
-                return $this->parseOrganisationLogo($this->getOrganisationService()->getOrganisation());
+                return $this->parseOrganisationLogo($this->getOrganisation());
 
             default:
                 return sprintf(
@@ -153,7 +152,7 @@ class OrganisationHandler extends AbstractHelper
     {
         //Give default the docRef to the handler, this does not harm
         if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
-            $this->setDocRef($this->getRouteMatch()->getParam('docRef'));
+            $this->setOrganisationByDocRef($this->getRouteMatch()->getParam('docRef'));
         }
         foreach ($content->getContentParam() as $param) {
             /*
@@ -162,7 +161,7 @@ class OrganisationHandler extends AbstractHelper
             switch ($param->getParameter()->getParam()) {
                 case 'docRef':
                     if (!is_null($docRef = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
-                        $this->setDocRef($docRef);
+                        $this->setOrganisationByDocRef($docRef);
                     }
                     break;
                 case 'limit':
@@ -174,7 +173,7 @@ class OrganisationHandler extends AbstractHelper
                     $this->setLimit($limit);
                     break;
                 case 'organisation':
-                    $this->setId($param->getParameterId());
+                    $this->setOrganisationById($param->getParameterId());
                     break;
                 default:
                     break;
@@ -219,9 +218,12 @@ class OrganisationHandler extends AbstractHelper
      *
      * @return OrganisationService
      */
-    public function setDocRef($docRef)
+    public function setOrganisationByDocRef($docRef)
     {
-        return $this->getOrganisationService()->findOrganisationByDocRef($docRef);
+        $organisation = $this->getOrganisationService()->findOrganisationByDocRef($docRef);
+        $this->setOrganisation($organisation);
+
+        return $this;
     }
 
     /**
@@ -233,13 +235,15 @@ class OrganisationHandler extends AbstractHelper
     }
 
     /**
-     * @param $projectId
+     * @param $id
      *
      * @return OrganisationService
      */
-    public function setId($projectId)
+    public function setOrganisationById($id)
     {
-        return $this->getOrganisationService()->setOrganisationId($projectId);
+        $this->setOrganisation($this->getOrganisationService()->findOrganisationById($id));
+
+        return $this;
     }
 
     /**
@@ -253,28 +257,28 @@ class OrganisationHandler extends AbstractHelper
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param Organisation $organisation
      *
-     * @return string
+     * @return null|string
      */
-    public function parseOrganisation(OrganisationService $organisationService)
+    public function parseOrganisation(Organisation $organisation)
     {
         return $this->getRenderer()
-            ->render('organisation/partial/entity/organisation', ['organisationService' => $organisationService]);
+            ->render('organisation/partial/entity/organisation', ['organisation' => $organisation]);
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param Organisation $organisation
      *
      * @return string
      */
-    public function parseOrganisationMap(OrganisationService $organisationService)
+    public function parseOrganisationMap(Organisation $organisation)
     {
         /*
          * Collect the list of countries from the organisation and cluster
          */
-        $countries = [$organisationService->getOrganisation()->getCountry()];
-        foreach ($organisationService->getOrganisation()->getClusterMember() as $cluster) {
+        $countries = [$organisation->getCountry()];
+        foreach ($organisation->getClusterMember() as $cluster) {
             $countries[] = $cluster->getOrganisation()->getCountry();
         }
         $options = $this->getModuleOptions();
@@ -286,22 +290,22 @@ class OrganisationHandler extends AbstractHelper
             'height'    => '340px',
         ];
         /**
-         * @var CountryMap
+         * @var  CountryMap $countryMap
          */
         $countryMap = $this->serviceLocator->get('countryMap');
 
-        return $countryMap->__invoke($countries, null, $mapOptions);
+        return $countryMap($countries, null, $mapOptions);
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param Organisation $organisation
      *
      * @return string
      */
-    public function parseOrganisationInfo(OrganisationService $organisationService)
+    public function parseOrganisationInfo(Organisation $organisation)
     {
         return $this->getRenderer()
-            ->render('organisation/partial/entity/organisation-info', ['organisationService' => $organisationService]);
+            ->render('organisation/partial/entity/organisation-info', ['organisation' => $organisation]);
     }
 
     /**
@@ -343,28 +347,33 @@ class OrganisationHandler extends AbstractHelper
         ]);
     }
 
-    public function parseOrganisationTitle()
+    /**
+     * @param Organisation $organisation
+     *
+     * @return null|string
+     */
+    public function parseOrganisationTitle(Organisation $organisation)
     {
-        return $this->getRenderer()->render(
-            'organisation/partial/entity/organisation-title',
-            ['organisationService' => $this->getOrganisationService()]
-        );
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation-title', ['organisation' => $organisation]);
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param Organisation $organisation
      *
      * @return string
      */
-    public function parseOrganisationProjectList(OrganisationService $organisationService)
+    public function parseOrganisationProjectList(Organisation $organisation)
     {
         $whichProjects = $this->getProjectModuleOptions()->getProjectHasVersions() ? ProjectService::WHICH_ONLY_ACTIVE
             : ProjectService::WHICH_ALL;
 
-        $projects = $this->getProjectService()
-            ->findProjectByOrganisation($organisationService->getOrganisation(), $whichProjects, true);
+        $projects = $this->getProjectService()->findProjectByOrganisation($organisation, $whichProjects, true);
 
-        return $this->getRenderer()->render('organisation/partial/list/project', ['projects' => $projects]);
+        return $this->getRenderer()->render(
+            'organisation/partial/list/project',
+            ['projects' => $projects, 'projectService' => $this->getProjectService()]
+        );
     }
 
     /**
@@ -392,36 +401,33 @@ class OrganisationHandler extends AbstractHelper
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param Organisation $organisation
      *
      * @return string
      */
-    public function parseOrganisationMetadata(OrganisationService $organisationService)
+    public function parseOrganisationMetadata(Organisation $organisation)
     {
-        return $this->getRenderer()->render(
-            'organisation/partial/entity/organisation-metadata',
-            ['organisationService' => $organisationService]
-        );
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation-metadata', ['organisation' => $organisation]);
     }
 
     /**
-     * @param OrganisationService $organisationService
+     * @param Organisation $organisation
      *
      * @return \Content\Entity\Article[]
      */
-    public function parseOrganisationArticleList(OrganisationService $organisationService)
+    public function parseOrganisationArticleList(Organisation $organisation)
     {
-        $articles = $this->getArticleService()
-            ->findArticlesByOrganisation($organisationService->getOrganisation(), $this->getLimit());
+        $articles = $this->getArticleService()->findArticlesByOrganisation($organisation, $this->getLimit());
 
         /*
          * Parse the organisationService in to have the these functions available in the view
          */
 
         return $this->getRenderer()->render('organisation/partial/list/article', [
-            'organisationService' => $organisationService,
-            'articles'            => $articles,
-            'limit'               => $this->getLimit(),
+            'articles'     => $articles,
+            'organisation' => $this->getOrganisation(),
+            'limit'        => $this->getLimit(),
         ]);
     }
 
@@ -447,5 +453,25 @@ class OrganisationHandler extends AbstractHelper
     public function setLimit($limit)
     {
         $this->limit = $limit;
+    }
+
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     *
+     * @return OrganisationHandler
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
     }
 }

@@ -1,6 +1,6 @@
 {% if  articles|length > 0 %}
     <div class="well well-sm">
-        <h3>{{ translate("txt-related-articles-for-organisation-%s")|format(organisationService.organisation) }}</h3>
+        <h3>{{ translate("txt-related-articles-for-organisation-%s")|format(organisation) }}</h3>
         <table class="table">
             {% for article in articles %}
                 <tr>
@@ -10,7 +10,7 @@
             {% endfor %}
         </table>
         {% if limit != 0 %}
-            {{ organisationLink(organisationService.organisation,'view-article', 'more') }}
+            {{ organisationLink(organisation,'view-article', 'more') }}
         {% endif %}
 
     </div>

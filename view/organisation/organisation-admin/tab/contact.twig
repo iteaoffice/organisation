@@ -17,7 +17,6 @@
         <tbody>
         {% for contactOrganisation in organisation.contactOrganisation %}
             {% set contact = contactOrganisation.contact %}
-            {% set contactService = contactServiceProxy(contact) %}
 
             <tr {% if contact.dateEnd %}class="danger"{% endif %}>
                 <td>{{ contactLink(contact, 'view-admin', 'name') }} {% if contact.dateEnd %}({{ translate("txt-expired-on-%s")|format(contact.dateEnd|date("d-m-Y")) }}){% endif %}{{ contactLink(contact, 'edit-admin', 'icon') }}</td>

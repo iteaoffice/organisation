@@ -26,7 +26,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_log")
  */
-class Log extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
+class Log extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="log_id", length=10, type="integer", nullable=false)

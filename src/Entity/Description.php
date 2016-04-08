@@ -12,9 +12,6 @@ namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -25,7 +22,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_description")
  */
-class Description extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
+class Description extends EntityAbstract implements ResourceInterface
 {
     /**
      * @ORM\Column(name="description_id", length=10, type="integer", nullable=false)
@@ -52,16 +49,6 @@ class Description extends EntityAbstract implements ResourceInterface, InputFilt
     private $organisation;
 
     /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
-    }
-
-    /**
      * @param $property
      *
      * @return mixed
@@ -80,62 +67,24 @@ class Description extends EntityAbstract implements ResourceInterface, InputFilt
         $this->$property = $value;
     }
 
-
     /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
+     * @return int
      */
-    public function getInputFilter()
+    public function getId()
     {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add($factory->createInput([
-                    'name'       => 'organisation',
-                    'required'   => true,
-                    'filters'    => [
-                        ['name' => 'StripTags'],
-                        ['name' => 'StringTrim'],
-                    ],
-                    'validators' => [
-                        [
-                            'name'    => 'StringLength',
-                            'options' => [
-                                'encoding' => 'UTF-8',
-                                'min'      => 1,
-                                'max'      => 255,
-                            ],
-                        ],
-                    ],
-                ]));
-            $inputFilter->add($factory->createInput([
-                    'name'     => 'country',
-                    'required' => true,
-                ]));
-            $inputFilter->add($factory->createInput([
-                    'name'     => 'type',
-                    'required' => true,
-                ]));
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
+        return $this->id;
     }
 
     /**
-     * @return string
+     * @param int $id
+     *
+     * @return Description
      */
-    public function __toString()
+    public function setId($id)
     {
-        return (string)$this->description;
-    }
+        $this->id = $id;
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
+        return $this;
     }
 
     /**
@@ -147,34 +96,34 @@ class Description extends EntityAbstract implements ResourceInterface, InputFilt
     }
 
     /**
-     * @param int $id
+     * @param string $description
+     *
+     * @return Description
      */
-    public function setId($id)
+    public function setDescription($description)
     {
-        $this->id = $id;
+        $this->description = $description;
+
+        return $this;
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation
+     * @return Organisation
      */
     public function getOrganisation()
     {
         return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     *
+     * @return Description
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
     }
 }

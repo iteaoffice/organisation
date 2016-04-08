@@ -24,39 +24,37 @@ class Organisation extends AssertionAbstract
      * Returns true if and only if the assertion conditions are met.
      *
      * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
+     * $role, $organisation, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl $acl
-     * @param RoleInterface $role
-     * @param ResourceInterface $resource
-     * @param string $privilege
+     * @param Acl                                  $acl
+     * @param RoleInterface                        $role
+     * @param ResourceInterface|OrganisationEntity $organisation
+     * @param string                               $privilege
      *
      * @return bool
      */
-    public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
-    {
-        $id = $this->getRouteMatch()->getParam('id');
-        /*
-         * When the privilege is_null (not given by the isAllowed helper), get it from the routeMatch
-         */
-        if (is_null($privilege)) {
-            $privilege = $this->getRouteMatch()->getParam('privilege');
-        }
-        if (!$resource instanceof OrganisationEntity && !is_null($id)) {
-            $resource = $this->getOrganisationService()->setOrganisationId($id)->getOrganisation();
+    public function assert(
+        Acl $acl,
+        RoleInterface $role = null,
+        ResourceInterface $organisation = null,
+        $privilege = null
+    ) {
+        $this->setPrivilege($privilege);
+        $id = $this->getId();
+
+        if (!$organisation instanceof OrganisationEntity && !is_null($id)) {
+            $organisation = $this->getOrganisationService()->findOrganisationById($id);
         }
 
-       
-
-        switch ($privilege) {
+        switch ($this->getPrivilege()) {
             case 'view-community':
-                if ($this->getContactService()->contactHasPermit($this->getContact(), 'view', $resource)) {
+                if ($this->getContactService()->contactHasPermit($this->getContact(), 'view', $organisation)) {
                     return true;
                 }
                 break;
             case 'edit-community':
-                if ($this->getContactService()->contactHasPermit($this->getContact(), 'edit', $resource)) {
+                if ($this->getContactService()->contactHasPermit($this->getContact(), 'edit', $organisation)) {
                     return true;
                 }
                 break;

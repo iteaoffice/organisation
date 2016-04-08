@@ -13,20 +13,20 @@
         </tr>
         </thead>
         {% for affiliation in organisation.affiliation %}
-            {% set projectService = projectServiceProxy(affiliation.project) %}
-            <tr {% if projectService.project.contact.id == affiliation.contact.id %}class="success"
+
+            <tr {% if affiliation.project.contact.id == affiliation.contact.id %}class="success"
                 {% endif %}{% if affiliation.dateEnd %}class="danger"{% endif %}>
-                <td>{{ projectLink(projectService,'view-admin','name') }}
-                    {{ projectLink(projectService,'view-community','icon') }}
+                <td>{{ projectLink(affiliation.project,'view-admin','name') }}
+                    {{ projectLink(affiliation.project,'view-community','icon') }}
                 </td>
                 <td>
                     {{ affiliationLink(affiliation,'view-admin','name') }}
                     {{ affiliationLink(affiliation,'view-community','icon') }}
                 </td>
                 <td>{{ affiliation.branch }}</td>
-                <td>{{ projectService.parseStatus() }}</td>
+                <td>{{ projectService.parseStatus(project) }}</td>
                 <td>{% if affiliation.dateEnd %}{{ translate("txt-deactivated-on-%s")|format(affiliation.dateEnd|date('d-m-Y')) }}{% else %}{{ translate("txt-yes") }}{% endif %}</td>
-                <td>{{ contactLink(affiliation.contact,'view-admin') }} {% if projectService.project.contact.id == affiliation.contact.id %}({{ translate("txt-pl") }}){% endif %}</td>
+                <td>{{ contactLink(affiliation.contact,'view-admin') }} {% if affiliation.project.contact.id == affiliation.contact.id %}({{ translate("txt-pl") }}){% endif %}</td>
             </tr>
 
         {% endfor %}

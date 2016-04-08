@@ -11,8 +11,6 @@
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterInterface;
 
 /**
  * OrganisationBooth.
@@ -97,22 +95,6 @@ class Booth extends EntityAbstract
     }
 
     /**
-     * @return \Event\Entity\Booth\Booth
-     */
-    public function getBooth()
-    {
-        return $this->booth;
-    }
-
-    /**
-     * @param \Event\Entity\Booth\Booth $booth
-     */
-    public function setBooth($booth)
-    {
-        $this->booth = $booth;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -122,10 +104,34 @@ class Booth extends EntityAbstract
 
     /**
      * @param int $id
+     *
+     * @return Booth
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return \Event\Entity\Booth\Booth
+     */
+    public function getBooth()
+    {
+        return $this->booth;
+    }
+
+    /**
+     * @param \Event\Entity\Booth\Booth $booth
+     *
+     * @return Booth
+     */
+    public function setBooth($booth)
+    {
+        $this->booth = $booth;
+
+        return $this;
     }
 
     /**
@@ -138,10 +144,14 @@ class Booth extends EntityAbstract
 
     /**
      * @param Organisation $organisation
+     *
+     * @return Booth
      */
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
+
+        return $this;
     }
 
     /**
@@ -154,9 +164,13 @@ class Booth extends EntityAbstract
 
     /**
      * @param \Contact\Entity\Contact $contact
+     *
+     * @return Booth
      */
     public function setContact($contact)
     {
         $this->contact = $contact;
+
+        return $this;
     }
 }

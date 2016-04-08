@@ -38,24 +38,13 @@ use Zend\Stdlib\Parameters;
 class OrganisationService extends ServiceAbstract
 {
     /**
-     * @param int $id
+     * @param $id
      *
-     * @return OrganisationService;
+     * @return null|Organisation
      */
-    public function setOrganisationId($id)
+    public function findOrganisationById($id)
     {
-        $this->setOrganisation($this->findEntityById(Organisation::class, $id));
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEmpty()
-    {
-        return is_null($this->organisation)
-        || is_null($this->organisation->getId());
+        return $this->getEntityManager()->getRepository(Organisation::class)->find($id);
     }
 
     /**
@@ -150,6 +139,8 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @param $filter
+     *
      * @return Query
      */
     public function findOrganisationFinancialList($filter)
@@ -187,22 +178,11 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param $docRef
      *
-     * @return null|OrganisationService
+     * @return null|Organisation
      */
     public function findOrganisationByDocRef($docRef)
     {
-        /**
-         * @var $organisation Organisation
-         */
-        $organisation = $this->getEntityManager()->getRepository(Organisation::class)->findOneBy(['docRef' => $docRef]);
-        /*
-         * Return null when no project can be found
-         */
-        if (is_null($organisation)) {
-            return null;
-        }
-
-        return $organisation;
+        return $this->getEntityManager()->getRepository(Organisation::class)->findOneBy(['docRef' => $docRef]);
     }
 
 
@@ -214,12 +194,8 @@ class OrganisationService extends ServiceAbstract
      */
     public function parseOrganisationWithBranch(
         $branch,
-        Organisation $organisation = null
+        Organisation $organisation
     ) {
-        if (is_null($organisation)) {
-            $organisation = $this->getOrganisation();
-        }
-
         return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
     }
 
@@ -273,8 +249,6 @@ class OrganisationService extends ServiceAbstract
     public function findBranchesByOrganisation(Organisation $organisation)
     {
         $branches = [];
-
-        $this->setOrganisation($organisation);
 
         foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
             $branches[$contactOrganisation->getBranch()]
@@ -373,13 +347,14 @@ class OrganisationService extends ServiceAbstract
     /**
      * Checks if the affiliation has a DOA.
      *
-     * @param Program $program
+     * @param Organisation $organisation
+     * @param Program      $program
      *
      * @return bool
      */
-    public function hasDoaForProgram(Program $program)
+    public function hasDoaForProgram(Organisation $organisation, Program $program)
     {
-        foreach ($this->organisation->getProgramDoa() as $doa) {
+        foreach ($organisation->getProgramDoa() as $doa) {
             if ($doa->getProgram()->getId() === $program->getId()) {
                 return true;
             }

@@ -23,10 +23,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 abstract class ServiceAbstract implements ServiceInterface
 {
     /**
-     * @var Organisation
-     */
-    protected $organisation;
-    /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
@@ -111,38 +107,6 @@ abstract class ServiceAbstract implements ServiceInterface
         $this->getEntityManager()->flush();
 
         return true;
-    }
-
-    /**
-     * Build dynamically a entity based on the full entity name.
-     *
-     * @param $entity
-     *
-     * @return mixed
-     */
-    public function getEntity($entity)
-    {
-        return new $entity();
-    }
-
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return ServiceAbstract
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
     }
 
     /**

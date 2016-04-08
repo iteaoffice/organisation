@@ -18,7 +18,6 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Form\AddAffiliation;
 use Organisation\Form\OrganisationFilter;
-use Project\Service\ProjectService;
 use Zend\Paginator\Paginator;
 use Zend\Validator\File\ImageSize;
 use Zend\View\Model\JsonModel;
@@ -65,8 +64,7 @@ class OrganisationAdminController extends OrganisationAbstractController
      */
     public function viewAction()
     {
-        /** @var Organisation $organisation */
-        $organisation = $this->getOrganisationService()->findEntityById(Organisation::class, $this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
         if (is_null($organisation)) {
             return $this->notFoundAction();
@@ -90,8 +88,6 @@ class OrganisationAdminController extends OrganisationAbstractController
         $form = new InvoiceFilter($this->getInvoiceService());
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        $projects = $this->getProjectService()->findProjectByOrganisation($organisation, ProjectService::WHICH_ALL);
-
         return new ViewModel([
             'paginator'           => $paginator,
             'form'                => $form,
@@ -102,7 +98,6 @@ class OrganisationAdminController extends OrganisationAbstractController
             'organisationService' => $this->getOrganisationService(),
             'organisationDoa'     => $this->getDoaService()->findDoaByOrganisation($organisation),
             'organisationLoi'     => $this->getLoiService()->findLoiByOrganisation($organisation),
-            'projects'            => $projects,
             'projectService'      => $this->getProjectService()
 
         ]);
@@ -113,8 +108,7 @@ class OrganisationAdminController extends OrganisationAbstractController
      */
     public function editAction()
     {
-        /** @var Organisation $organisation */
-        $organisation = $this->getOrganisationService()->findEntityById(Organisation::class, $this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
         if (is_null($organisation)) {
             return $this->notFoundAction();
@@ -187,7 +181,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     public function addAffiliationAction()
     {
         /** @var Organisation $organisation */
-        $organisation = $this->getOrganisationService()->findEntityById(Organisation::class, $this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
         if (is_null($organisation)) {
             return $this->notFoundAction();
@@ -210,8 +204,8 @@ class OrganisationAdminController extends OrganisationAbstractController
             if ($form->isValid()) {
                 $formData = $form->getData();
 
-                $project = $this->getProjectService()->setProjectId((int)$formData['project'])->getProject();
-                $contact = $this->getContactService()->findEntityById('contact', (int)$formData['contact']);
+                $project = $this->getProjectService()->findProjectById((int)$formData['project']);
+                $contact = $this->getContactService()->findContactById((int)$formData['contact']);
                 $branch = $formData['branch'];
 
                 $affiliation = new Affiliation();

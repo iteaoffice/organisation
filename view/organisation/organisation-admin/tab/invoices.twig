@@ -44,7 +44,6 @@
                 </tfoot>
                 <tbody>
                 {% for invoice in paginator.getCurrentItems() %}
-                    {% set organisationService = organisationServiceProxy(invoice.organisation) %}
                     <tr>
                         <td>
                             {{ invoiceLink(invoice, 'view', 'invoice') }}

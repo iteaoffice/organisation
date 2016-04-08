@@ -13,9 +13,6 @@ namespace Organisation\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -24,7 +21,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @ORM\Table(name="organisation_financial")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Financial")
  */
-class Financial extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
+class Financial extends EntityAbstract implements ResourceInterface
 {
     const VAT_STATUS_UNDEFINED = 0;
     const VAT_STATUS_VALID = 1;
@@ -258,51 +255,6 @@ class Financial extends EntityAbstract implements ResourceInterface, InputFilter
         return (string)$this->organisation;
     }
 
-
-    /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add($factory->createInput([
-                'name'       => 'vat',
-                'required'   => true,
-                'filters'    => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
-                ],
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
-                        ],
-                    ],
-                ],
-            ]));
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
-    /**
-     * Needed for the hydration of form elements.
-     *
-     * @return array
-     */
-    public function getArrayCopy()
-    {
-        return [
-            'vat' => $this->vat,
-        ];
-    }
 
     /**
      * @return array

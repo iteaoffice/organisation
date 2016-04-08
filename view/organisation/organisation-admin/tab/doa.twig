@@ -9,13 +9,12 @@
         <th class="col-md-2">{{ translate("txt-actions") }}</th>
     </tr>
     {% for doa in organisationDoa %}
-        {% set projectService = projectServiceProxy(doa.affiliation.project) %}
         <tr>
             <td>{{ doa.id }}</td>
             <td>{{ doa.contact.displayName }}</td>
             <td>{% if doa.dateSigned %}{{ doa.dateSigned|string_date }}{% endif %}</td>
-            <td>{{ projectLink(projectService,'view-admin','name') }}
-                <div class="pull-right">{{ projectLink(projectService,'view-community','icon') }}</div>
+            <td>{{ projectLink(doa.affiliation.project,'view-admin','name') }}
+                <div class="pull-right">{{ projectLink(doa.affiliation.project,'view-community','icon') }}</div>
             </td>
             <td>{{ doaLink(doa,'edit-admin','icon') }} {{ doaLink(doa,'download','icon') }} {{ doaLink(doa,'view-admin','icon') }}</td>
         </tr>
@@ -33,13 +32,12 @@
         <th class="col-md-2">{{ translate("txt-actions") }}</th>
     </tr>
     {% for loi in organisationLoi %}
-        {% set projectService = projectServiceProxy(loi.affiliation.project) %}
         <tr>
             <td>{{ loi.id }}</td>
             <td>{{ loi.contact.displayName }}</td>
             <td>{% if loi.dateSigned %}{{ loi.dateSigned|string_date }}{% endif %}</td>
-            <td>{{ projectLink(projectService,'view-admin','name') }}
-                <div class="pull-right">{{ projectLink(projectService,'view-community','icon') }}</div>
+            <td>{{ projectLink(loi.affiliation.project,'view-admin','name') }}
+                <div class="pull-right">{{ projectLink(loi.affiliation.project,'view-community','icon') }}</div>
             </td>
             <td>{{ loiLink(loi,'edit-admin','icon') }} {{ loiLink(loi,'download','icon') }} {{ loiLink(loi,'view-admin','icon') }}</td>
         </tr>

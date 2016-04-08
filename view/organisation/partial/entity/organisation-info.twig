@@ -3,24 +3,24 @@
         <h3>{{ translate("txt-organisation-information") }}</h3>
         <dl class="project dl-horizontal">
             <dt>{{ translate("txt-type") }}</dt>
-            <dd>{{ organisationService.organisation.type }}</dd>
+            <dd>{{ organisation.type }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
-            <dd>{{ countryFlag(organisationService.organisation.country, 15) }}
-                {{ countryLink(organisationService.organisation.country,'view', 'name') }}</dd>
+            <dd>{{ countryFlag(organisation.country, 15) }}
+                {{ countryLink(organisation.country,'view', 'name') }}</dd>
             <dt>{{ translate("txt-website") }}</dt>
-            {% for web in organisationService.organisation.web %}
+            {% for web in organisation.web %}
                 <dd>{{ web|raw }}</dd>
             {% endfor %}
         </dl>
 
-        {% if organisationService.organisation.description %}
+        {% if organisation.description %}
         <h3>{{ translate("txt-organisation-description") }}</h3>
-        <p>{{ organisationService.organisation.description|raw }}</p>
+        <p>{{ organisation.description|raw }}</p>
         {% endif %}
 
-        {% if organisationService.organisation.clusterMember.count > 0 %}
+        {% if organisation.clusterMember.count > 0 %}
         <h3>{{ translate("txt-cluster-membership") }}</h3>
-        {% for cluster in organisationService.organisation.clusterMember %}
+        {% for cluster in organisation.clusterMember %}
             <p>{{ cluster.organisation }}</p>
         {% endfor %}
         {% endif %}

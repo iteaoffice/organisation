@@ -4,29 +4,24 @@
  *
  * PHP Version 5
  *
- * @category    Project
+ * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2016 ITEA Office
+ * @copyright   2004-2015 ITEA Office
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 namespace Organisation\Service;
 
-use Doctrine\ORM\EntityManager;
+use Organisation\Entity\EntityAbstract;
 use Organisation\Form\CreateObject;
-use Organisation\InputFilter\Object;
+use Organisation\InputFilter\ObjectFilter;
 use Zend\Form\Form;
 
 class FormService extends ServiceAbstract
 {
-    /**
-     * @var Form
-     */
-    protected $form;
-
     /**
      * @param null $className
      * @param null $entity
@@ -34,33 +29,31 @@ class FormService extends ServiceAbstract
      *
      * @return Form
      */
-    public function getForm($className = null, $entity = null, $bind = true)
+    public function getForm($className = null, EntityAbstract $entity = null, $bind = true)
     {
         if (!is_null($className) && is_null($entity)) {
-            $entity = new $className;
+            $entity = new $className();
         }
 
         if (!is_object($entity)) {
             throw new \InvalidArgumentException("No entity created given");
         }
 
-        $formName = 'Organisation\\Form\\' . $entity->get('entity_name');
-        $filterName = 'Organisation\\InputFilter\\' . $entity->get('entity_name') . 'Filter';
+        $formName = 'Organisation\\' . $entity->get('entity_name') . '\\Form';
+        $filterName = 'Organisation\\InputFilter\\' . $entity->get('entity_name');
 
         /*
          * The filter and the form can dynamically be created by pulling the form from the serviceManager
          * if the form or filter is not give in the serviceManager we will create it by default
          */
         if (!$this->getServiceLocator()->has($formName)) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $this->getServiceLocator()->get(EntityManager::class);
-            $form = new CreateObject($entityManager, new $entity());
+            $form = new CreateObject($this->getEntityManager(), new $entity());
         } else {
             $form = $this->getServiceLocator()->get($formName);
         }
 
         if (!$this->getServiceLocator()->has($filterName)) {
-            $filter = new Object();
+            $filter = new ObjectFilter();
         } else {
             $filter = $this->getServiceLocator()->get($filterName);
         }

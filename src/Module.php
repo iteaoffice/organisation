@@ -22,8 +22,23 @@ use Zend\Mvc\Controller\PluginManager;
 /**
  *
  */
-class Module implements Feature\ConfigProviderInterface
+class Module implements
+    Feature\ConfigProviderInterface,
+    Feature\AutoloaderProviderInterface,
+    Feature\ControllerPluginProviderInterface
 {
+    /**
+     * @return array
+     */
+    public function getAutoloaderConfig()
+    {
+        return [
+            'Zend\Loader\ClassMapAutoloader' => [
+                __DIR__ . '/../autoload_classmap.php',
+            ],
+        ];
+    }
+
     /**
      * Move this to here to have config cache working
      *

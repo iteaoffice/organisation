@@ -25,15 +25,13 @@ class JsonController extends OrganisationAbstractController
     public function getBranchesAction()
     {
         $organisationId = (int)$this->getEvent()->getRequest()->getPost()->get('organisationId');
+        $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
 
-        $this->getOrganisationService()->setOrganisationId($organisationId);
-
-        if ($this->getOrganisationService()->isEmpty()) {
+        if (is_null($organisation)) {
             return $this->notFoundAction();
         }
 
-        $options = $this->getOrganisationService()->findBranchesByOrganisation($this->getOrganisationService()
-            ->getOrganisation());
+        $options = $this->getOrganisationService()->findBranchesByOrganisation($organisation);
         asort($options);
 
         $branches = [];
@@ -56,7 +54,7 @@ class JsonController extends OrganisationAbstractController
         /**
          * @var $financial Financial
          */
-        $financial = $this->getOrganisationService()->findEntityById('financial', $financialId);
+        $financial = $this->getOrganisationService()->findEntityById(Financial::class, $financialId);
 
         if (is_null($financial->getVat()) && is_null($this->getEvent()->getRequest()->getPost()->get('vat'))) {
             return new JsonModel(['success' => 'error', 'result' => $this->translate("txt-vat-number-empty")]);

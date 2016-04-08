@@ -15,6 +15,8 @@ use BjyAuthorize\Controller\Plugin\IsAllowed;
 use BjyAuthorize\Service\Authorize;
 use Event\Acl\Assertion\AssertionAbstract;
 use Event\Entity\EntityAbstract;
+use Organisation\Entity\Organisation;
+use Organisation\Service\OrganisationService;
 use Zend\Mvc\Router\RouteMatch;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
@@ -43,6 +45,10 @@ abstract class LinkAbstract extends AbstractHelper
      * @var string
      */
     protected $router;
+    /**
+     * @var Organisation
+     */
+    protected $organisation;
     /**
      * @var string
      */
@@ -337,7 +343,15 @@ abstract class LinkAbstract extends AbstractHelper
      */
     public function getAuthorizeService()
     {
-        return $this->getServiceLocator()->get('BjyAuthorize\Service\Authorize');
+        return $this->getServiceLocator()->get(Authorize::class);
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        return $this->getServiceLocator()->get(OrganisationService::class);
     }
 
     /**
@@ -428,5 +442,29 @@ abstract class LinkAbstract extends AbstractHelper
     public function translate($string)
     {
         return $this->serviceLocator->get('translate')->__invoke($string);
+    }
+
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        if (is_null($this->organisation)) {
+            $this->organisation = new Organisation();
+        }
+
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     *
+     * @return LinkAbstract
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
     }
 }

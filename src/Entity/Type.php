@@ -26,7 +26,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_type")
  */
-class Type extends EntityAbstract implements ResourceInterface, InputFilterAwareInterface
+class Type extends EntityAbstract implements ResourceInterface
 {
     /**
      * Constant for a type without invoice.

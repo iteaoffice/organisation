@@ -11,7 +11,7 @@
             <tbody>
             {% for organisation in paginator.getCurrentItems() %}
                 <tr>
-                    {% set organisation = organisationService.setOrganisationId(organisation['id']).organisation %}
+                    {% set organisation = organisationService.findOrganisationById(organisation['id']) %}
                     <td>{{ organisationLink(organisation,'view','name') }}</td>
                     <td>{{ countryLink(organisation.country,'view','name') }}</td>
                     <td>{{ organisation.type }}</td>

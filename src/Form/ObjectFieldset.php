@@ -18,6 +18,7 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
+use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Organisation\Entity;
 use Zend\Form\Annotation\AnnotationBuilder;
@@ -25,9 +26,12 @@ use Zend\Form\Element\Radio;
 use Zend\Form\Fieldset;
 
 /**
- * Class ObjectFieldset
+ * Jield webdev copyright message placeholder.
  *
- * @package Organisation\Form
+ * @category    Organisation
+ *
+ * @author      Johan van der Heide <info@jield.nl>
+ * @copyright   Copyright (c) 2015-2016 Jield (http://jield.nl)
  */
 class ObjectFieldset extends Fieldset
 {
@@ -37,33 +41,33 @@ class ObjectFieldset extends Fieldset
      */
     public function __construct(EntityManager $entityManager, Entity\EntityAbstract $object)
     {
-        parent::__construct($object->get('full_entity_name'));
-
+        parent::__construct($object->get('underscore_entity_name'));
         $doctrineHydrator = new DoctrineHydrator($entityManager);
         $this->setHydrator($doctrineHydrator)->setObject($object);
-
         $builder = new AnnotationBuilder();
-
         /*
          * Go over the different form elements and add them to the form
          */
+
         foreach ($builder->createForm($object)->getElements() as $element) {
             /*
              * Go over each element to add the objectManager to the EntitySelect
              */
-            if ($element instanceof EntitySelect || $element instanceof EntityMultiCheckbox) {
-                $element->setOptions(array_merge_recursive($element->getOptions(), [
-                    'object_manager' => $entityManager,
-                ]));
+            if ($element instanceof EntitySelect
+                || $element instanceof EntityMultiCheckbox
+                || $element instanceof EntityRadio
+            ) {
+                $element->setOptions(array_merge($element->getOptions(), ['object_manager' => $entityManager]));
             }
-            if ($element instanceof Radio) {
+            if ($element instanceof Radio && !$element instanceof EntityRadio) {
                 $attributes = $element->getAttributes();
                 $valueOptionsArray = 'get' . ucfirst($attributes['array']);
-                $element->setOptions(array_merge_recursive($element->getOptions(), [
-                    'value_options' => $object->$valueOptionsArray(),
-                ]));
-            }
 
+                $element->setOptions(array_merge(
+                    $element->getOptions(),
+                    ['value_options' => $object::$valueOptionsArray()]
+                ));
+            }
             //Add only when a type is provided
             if (array_key_exists('type', $element->getAttributes())) {
                 $this->add($element);

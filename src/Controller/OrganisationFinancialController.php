@@ -13,6 +13,7 @@ namespace Organisation\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use General\Entity\VatType;
 use Organisation\Entity\Financial;
 use Organisation\Form;
 use Zend\Paginator\Paginator;
@@ -55,11 +56,11 @@ class OrganisationFinancialController extends OrganisationAbstractController
      */
     public function editAction()
     {
-        $organisationService = $this->getOrganisationService()->setOrganisationId($this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
-        if (is_null($financial = $organisationService->getOrganisation()->getFinancial())) {
+        if (is_null($financial = $organisation->getFinancial())) {
             $financial = new Financial();
-            $financial->setOrganisation($organisationService->getOrganisation());
+            $financial->setOrganisation($organisation);
         }
 
         $data = array_merge([
@@ -73,26 +74,24 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(sprintf(
                         $this->translate("txt-financial-organisation-of-%s-has-successfully-been-removed"),
-                        $organisationService->getOrganisation()
+                        $organisation
                     ));
 
                 $this->getOrganisationService()->removeEntity($financial);
 
-                return $this->redirect()
-                    ->toRoute(
-                        'zfcadmin/organisation/view',
-                        ['id' => $organisationService->getOrganisation()->getId()],
-                        ['fragment' => 'financial']
-                    );
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/view',
+                    ['id' => $organisation->getId()],
+                    ['fragment' => 'financial']
+                );
             }
 
             if (isset($data['cancel'])) {
-                return $this->redirect()
-                    ->toRoute(
-                        'zfcadmin/organisation/view',
-                        ['id' => $organisationService->getOrganisation()->getId()],
-                        ['fragment' => 'financial']
-                    );
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/view',
+                    ['id' => $organisation->getId()],
+                    ['fragment' => 'financial']
+                );
             }
 
             if ($form->isValid()) {
@@ -104,7 +103,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 if ($data['vatType'] == 0) {
                     $financial->setVatType(null);
                 } else {
-                    $vatType = $this->getGeneralService()->findEntityById('vatType', $data['vatType']);
+                    $vatType = $this->getGeneralService()->findEntityById(VatType::class, $data['vatType']);
                     $arrayCollection = new ArrayCollection();
                     $arrayCollection->add($vatType);
                     $financial->setVatType($arrayCollection);
@@ -116,22 +115,22 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(sprintf(
                         $this->translate("txt-financial-organisation-%s-has-successfully-been-updated"),
-                        $organisationService->getOrganisation()
+                        $organisation
                     ));
 
 
-                return $this->redirect()
-                    ->toRoute(
-                        'zfcadmin/organisation/view',
-                        ['id' => $organisationService->getOrganisation()->getId()],
-                        ['fragment' => 'financial']
-                    );
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/view',
+                    ['id' => $organisation->getId()],
+                    ['fragment' => 'financial']
+                );
             }
         }
 
 
         return new ViewModel([
-            'organisationService' => $organisationService,
+            'organisationService' => $this->getOrganisationService(),
+            'organisation'        => $organisation,
             'financial'           => $financial,
             'form'                => $form,
         ]);
