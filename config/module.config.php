@@ -17,15 +17,26 @@ use Organisation\Service;
 use Organisation\View;
 
 $config = [
-    'controllers'     => [
-        'abstract_factories' => [
-            Controller\Factory\ControllerInvokableAbstractFactory::class
+    'controllers'        => [
+        'factories' => [
+            Controller\JsonController::class                  => Controller\Factory\ControllerFactory::class,
+            Controller\OrganisationAdminController::class     => Controller\Factory\ControllerFactory::class,
+            Controller\OrganisationController::class          => Controller\Factory\ControllerFactory::class,
+            Controller\OrganisationFinancialController::class => Controller\Factory\ControllerFactory::class,
         ]
     ],
-    'view_manager'    => [
+    'controller_plugins' => [
+        'aliases'   => [
+            'getOrganisationFilter' => Controller\Plugin\GetFilter::class,
+        ],
+        'factories' => [
+            Controller\Plugin\GetFilter::class => Controller\Factory\PluginFactory::class,
+        ]
+    ],
+    'view_manager'       => [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
-    'view_helpers'    => [
+    'view_helpers'       => [
         'aliases'    => [
             'organisationHandler' => View\Helper\OrganisationHandler::class,
             'organisationLink'    => View\Helper\OrganisationLink::class,
@@ -35,12 +46,12 @@ $config = [
             'organisationformelement' => Form\View\Helper\OrganisationFormElement::class,
         ],
         'factories'  => [
-            View\Helper\OrganisationHandler::class => View\Factory\LinkInvokableFactory::class,
-            View\Helper\OrganisationLink::class    => View\Factory\LinkInvokableFactory::class,
-            View\Helper\OrganisationLogo::class    => View\Factory\LinkInvokableFactory::class,
+            View\Helper\OrganisationHandler::class => View\Factory\ViewHelperFactory::class,
+            View\Helper\OrganisationLink::class    => View\Factory\ViewHelperFactory::class,
+            View\Helper\OrganisationLogo::class    => View\Factory\ViewHelperFactory::class,
         ],
     ],
-    'form_elements'   => [
+    'form_elements'      => [
         'aliases'   => [
             'Organisation' => Form\Element\Organisation::class,
         ],
@@ -48,23 +59,19 @@ $config = [
             Form\Element\Organisation::class => \Zend\Form\ElementFactory::class,
         ],
     ],
-    'service_manager' => [
-        'factories'          => [
+    'service_manager'    => [
+        'factories' => [
             Options\ModuleOptions::class       => Factory\ModuleOptionsFactory::class,
             Service\OrganisationService::class => Factory\OrganisationServiceFactory::class,
             Service\FormService::class         => Factory\FormServiceFactory::class,
-            Form\Financial::class              => Factory\FormFactory::class,
+            Form\FinancialForm::class          => Factory\FormFactory::class,
+            Form\OrganisationForm::class       => Factory\FormFactory::class,
             InputFilter\FinancialFilter::class => Factory\InputFilterFactory::class,
-        ],
-        'abstract_factories' => [
-            Acl\Factory\AssertionInvokableAbstractFactory::class
-        ],
-        'invokables'         => [
-            'organisation_organisation_form_filter' => 'Organisation\Form\FilterOrganisation',
-            'organisation_financial_form_filter'    => 'Organisation\Form\FilterOrganisation',
+            Acl\Assertion\Organisation::class  => Acl\Factory\AssertionFactory::class
+
         ],
     ],
-    'doctrine'        => [
+    'doctrine'           => [
         'driver'       => [
             'organisation_annotation_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',

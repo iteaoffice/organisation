@@ -19,22 +19,13 @@ use Organisation\Entity\Organisation;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
-use Zend\Mvc\Router\RouteMatch;
 use Zend\Paginator\Paginator;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\HelperPluginManager;
-use ZfcTwig\View\TwigRenderer;
 
 /**
  * Class OrganisationHandler.
  */
-class OrganisationHandler extends AbstractHelper
+class OrganisationHandler extends AbstractViewHelper
 {
-    /**
-     * @var HelperPluginManager
-     */
-    protected $serviceLocator;
     /**
      * @var Organisation
      */
@@ -61,12 +52,12 @@ class OrganisationHandler extends AbstractHelper
                     return ("The selected organisation cannot be found");
                 }
 
-                $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation"));
-                $this->serviceLocator->get('headtitle')->append($this->getOrganisation()->getOrganisation());
+                $this->getHelperPluginManager()->get('headtitle')->append($this->translate("txt-organisation"));
+                $this->getHelperPluginManager()->get('headtitle')->append($this->getOrganisation()->getOrganisation());
 
                 //Do now show the organisation when we don't have projects
                 if (sizeof($this->getProjectService()->findProjectByOrganisation($this->getOrganisation())) === 0) {
-                    $this->getServiceLocator()->get("response")->setStatusCode(404);
+                    $this->getHelperPluginManager()->get('response')->setStatusCode(404);
 
                     return null;
                 }
@@ -74,16 +65,17 @@ class OrganisationHandler extends AbstractHelper
                 /**
                  * @var OrganisationLink $organisationLink
                  */
-                $organisationLink = $this->serviceLocator->get('organisationLink');
-                $this->serviceLocator->get('headmeta')->setProperty('og:type', $this->translate("txt-organisation"));
-                $this->serviceLocator->get('headmeta')
+                $organisationLink = $this->getHelperPluginManager()->get('organisationLink');
+                $this->getHelperPluginManager()->get('headmeta')
+                    ->setProperty('og:type', $this->translate("txt-organisation"));
+                $this->getHelperPluginManager()->get('headmeta')
                     ->setProperty('og:title', $this->getOrganisation()->getOrganisation());
-                $this->serviceLocator->get('headmeta')
+                $this->getHelperPluginManager()->get('headmeta')
                     ->setProperty('og:url', $organisationLink($this->getOrganisation(), 'view', 'social'));
 
                 return $this->parseOrganisation($this->getOrganisation());
             case 'organisation_list':
-                $this->serviceLocator->get('headtitle')->append($this->translate("txt-organisation-list"));
+                $this->getHelperPluginManager()->get('headtitle')->append($this->translate("txt-organisation-list"));
                 $page = $this->getRouteMatch()->getParam('page');
 
                 return $this->parseOrganisationList($page);
@@ -182,38 +174,6 @@ class OrganisationHandler extends AbstractHelper
     }
 
     /**
-     * @return RouteMatch
-     */
-    public function getRouteMatch()
-    {
-        return $this->getServiceLocator()->get('application')->getMvcEvent()->getRouteMatch();
-    }
-
-    /**
-     * Get the service locator.
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator->getServiceLocator();
-    }
-
-    /**
-     * Set the service locator.
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return AbstractHelper
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
-    }
-
-    /**
      * @param $docRef
      *
      * @return OrganisationService
@@ -231,7 +191,7 @@ class OrganisationHandler extends AbstractHelper
      */
     public function getOrganisationService()
     {
-        return $this->getServiceLocator()->get(OrganisationService::class);
+        return $this->getServiceManager()->get(OrganisationService::class);
     }
 
     /**
@@ -244,16 +204,6 @@ class OrganisationHandler extends AbstractHelper
         $this->setOrganisation($this->getOrganisationService()->findOrganisationById($id));
 
         return $this;
-    }
-
-    /**
-     * @param $string
-     *
-     * @return string
-     */
-    public function translate($string)
-    {
-        return $this->serviceLocator->get('translate')->__invoke($string);
     }
 
     /**
@@ -292,7 +242,7 @@ class OrganisationHandler extends AbstractHelper
         /**
          * @var  CountryMap $countryMap
          */
-        $countryMap = $this->serviceLocator->get('countryMap');
+        $countryMap = $this->getHelperPluginManager()->get('countryMap');
 
         return $countryMap($countries, null, $mapOptions);
     }
@@ -317,14 +267,6 @@ class OrganisationHandler extends AbstractHelper
     {
         return $this->getRenderer()
             ->render('organisation/partial/entity/organisation-logo', ['organisation' => $organisation]);
-    }
-
-    /**
-     * @return TwigRenderer
-     */
-    public function getRenderer()
-    {
-        return $this->getServiceLocator()->get('ZfcTwigRenderer');
     }
 
     /**
@@ -381,7 +323,7 @@ class OrganisationHandler extends AbstractHelper
      */
     public function getModuleOptions()
     {
-        return $this->getServiceLocator()->get(ModuleOptions::class);
+        return $this->getServiceManager()->get(ModuleOptions::class);
     }
 
     /**
@@ -389,7 +331,7 @@ class OrganisationHandler extends AbstractHelper
      */
     public function getProjectService()
     {
-        return $this->getServiceLocator()->get(ProjectService::class);
+        return $this->getServiceManager()->get(ProjectService::class);
     }
 
     /**
@@ -397,7 +339,7 @@ class OrganisationHandler extends AbstractHelper
      */
     public function getProjectModuleOptions()
     {
-        return $this->getServiceLocator()->get(\Project\Options\ModuleOptions::class);
+        return $this->getServiceManager()->get(\Project\Options\ModuleOptions::class);
     }
 
     /**
@@ -436,7 +378,7 @@ class OrganisationHandler extends AbstractHelper
      */
     public function getArticleService()
     {
-        return $this->getServiceLocator()->get(ArticleService::class);
+        return $this->getServiceManager()->get(ArticleService::class);
     }
 
     /**

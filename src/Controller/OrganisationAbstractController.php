@@ -94,7 +94,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setOrganisationService(OrganisationService $organisationService)
+    public function setOrganisationService($organisationService)
     {
         $this->organisationService = $organisationService;
 
@@ -114,7 +114,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setGeneralService(GeneralService $generalService)
+    public function setGeneralService($generalService)
     {
         $this->generalService = $generalService;
 
@@ -171,7 +171,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setInvoiceService(InvoiceService $invoiceService)
+    public function setInvoiceService($invoiceService)
     {
         $this->invoiceService = $invoiceService;
 
@@ -191,7 +191,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setProjectService(ProjectService $projectService)
+    public function setProjectService($projectService)
     {
         $this->projectService = $projectService;
 
@@ -211,7 +211,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setAffiliationService(AffiliationService $affiliationService)
+    public function setAffiliationService($affiliationService)
     {
         $this->affiliationService = $affiliationService;
 
@@ -231,7 +231,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setDoaService(DoaService $doaService)
+    public function setDoaService($doaService)
     {
         $this->doaService = $doaService;
 
@@ -251,7 +251,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setLoiService(LoiService $loiService)
+    public function setLoiService($loiService)
     {
         $this->loiService = $loiService;
 
@@ -271,7 +271,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setContactService(ContactService $contactService)
+    public function setContactService($contactService)
     {
         $this->contactService = $contactService;
 

@@ -3,14 +3,14 @@
 
 {{ form().openTag(form)|raw }}
 
-{% set organisation = form.get('organisation_entity_organisation') %}
+{% set organisationForm = form.get('organisation_entity_organisation') %}
 
 <fieldset>
     <legend>{{ translate("txt-organisation-information") }}</legend>
-    {{ ztbformelement(organisation.get('organisation')) }}
+    {{ ztbformelement(organisationForm.get('organisation')) }}
     {{ ztbformelement(form.get('description')) }}
-    {{ ztbformelement(organisation.get('type')) }}
-    {{ ztbformelement(organisation.get('country')) }}
+    {{ ztbformelement(organisationForm.get('type')) }}
+    {{ ztbformelement(organisationForm.get('country')) }}
 
     <div class="form-group">
         <label class="col-sm-3 control-label">{{ translate("txt-current-logo") }}</label>

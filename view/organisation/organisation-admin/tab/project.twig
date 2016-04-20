@@ -24,7 +24,7 @@
                     {{ affiliationLink(affiliation,'view-community','icon') }}
                 </td>
                 <td>{{ affiliation.branch }}</td>
-                <td>{{ projectService.parseStatus(project) }}</td>
+                <td>{{ projectService.parseStatus(affiliation.project) }}</td>
                 <td>{% if affiliation.dateEnd %}{{ translate("txt-deactivated-on-%s")|format(affiliation.dateEnd|date('d-m-Y')) }}{% else %}{{ translate("txt-yes") }}{% endif %}</td>
                 <td>{{ contactLink(affiliation.contact,'view-admin') }} {% if affiliation.project.contact.id == affiliation.contact.id %}({{ translate("txt-pl") }}){% endif %}</td>
             </tr>

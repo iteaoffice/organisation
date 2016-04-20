@@ -428,7 +428,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Contact\Entity\ContactOrganisation[]
+     * @return \Contact\Entity\ContactOrganisation[]|Collections\ArrayCollection
      */
     public function getContactOrganisation()
     {

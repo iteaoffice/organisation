@@ -11,11 +11,16 @@ namespace OrganisationTest\Entity;
 
 use Organisation\Entity\Organisation;
 
+/**
+ * Class OrganisationTest
+ *
+ * @package OrganisationTest\Entity
+ */
 class OrganisationTest extends \PHPUnit_Framework_TestCase
 {
     public function testCanCreateEntity()
     {
         $organisation = new Organisation();
-        $this->assertInstanceOf("Organisation\Entity\Organisation", $organisation);
+        $this->assertInstanceOf(Organisation::class, $organisation);
     }
 }

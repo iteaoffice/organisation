@@ -15,17 +15,12 @@
 
 namespace Organisation;
 
-use Organisation\Controller\Plugin\GetFilter;
 use Zend\ModuleManager\Feature;
-use Zend\Mvc\Controller\PluginManager;
 
 /**
  *
  */
-class Module implements
-    Feature\ConfigProviderInterface,
-    Feature\AutoloaderProviderInterface,
-    Feature\ControllerPluginProviderInterface
+class Module implements Feature\ConfigProviderInterface, Feature\AutoloaderProviderInterface
 {
     /**
      * @return array
@@ -36,22 +31,6 @@ class Module implements
             'Zend\Loader\ClassMapAutoloader' => [
                 __DIR__ . '/../autoload_classmap.php',
             ],
-        ];
-    }
-
-    /**
-     * Move this to here to have config cache working
-     *
-     * @return array
-     */
-    public function getControllerPluginConfig()
-    {
-        return [
-            'factories' => [
-                'getOrganisationFilter' => function (PluginManager $sm) {
-                    return new GetFilter();
-                },
-            ]
         ];
     }
 

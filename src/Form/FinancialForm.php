@@ -18,7 +18,7 @@ use Zend\Form\Form;
 /**
  *
  */
-class Financial extends Form
+class FinancialForm extends Form
 {
     /**
      * Financial constructor.

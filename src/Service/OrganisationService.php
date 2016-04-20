@@ -22,6 +22,7 @@ use General\Entity\Country;
 use Organisation\Entity\Financial;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
+use Organisation\Repository;
 use Program\Entity\Program;
 use Project\Entity\Project;
 use Zend\Stdlib\Parameters;
@@ -75,8 +76,10 @@ class OrganisationService extends ServiceAbstract
      */
     public function findActiveOrganisationWithoutFinancial($filter)
     {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findActiveOrganisationWithoutFinancial($filter);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->findActiveOrganisationWithoutFinancial($filter);
     }
 
     /**
@@ -86,8 +89,10 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
     {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisationForProfileEditByContact($contact);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->findOrganisationForProfileEditByContact($contact);
     }
 
     /**
@@ -145,7 +150,10 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationFinancialList($filter)
     {
-        return $this->getEntityManager()->getRepository(Financial::class)->findOrganisationFinancialList($filter);
+        /** @var Repository\Financial $repository */
+        $repository = $this->getEntityManager()->getRepository(Financial::class);
+
+        return $repository->findOrganisationFinancialList($filter);
     }
 
     /**
@@ -219,8 +227,10 @@ class OrganisationService extends ServiceAbstract
         $onlyActiveProject = true,
         $onlyActivePartner = true
     ) {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisations($onlyActiveProject, $onlyActivePartner);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->findOrganisations($onlyActiveProject, $onlyActivePartner);
     }
 
     /**
@@ -237,8 +247,10 @@ class OrganisationService extends ServiceAbstract
         $onlyActiveProject = true,
         $onlyActivePartner = true
     ) {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
     }
 
     /**
@@ -252,7 +264,7 @@ class OrganisationService extends ServiceAbstract
 
         foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
             $branches[$contactOrganisation->getBranch()]
-                = $this->parseOrganisationWithBranch($contactOrganisation->getBranch());
+                = $this->parseOrganisationWithBranch($contactOrganisation->getBranch(), $organisation);
         }
 
         return array_unique($branches);
@@ -272,8 +284,10 @@ class OrganisationService extends ServiceAbstract
         Country $country,
         $emailAddress
     ) {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
     }
 
     /**
@@ -296,8 +310,10 @@ class OrganisationService extends ServiceAbstract
      */
     public function findOrganisationByNameCountry($name, Country $country)
     {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisationByNameCountry($name, $country);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->findOrganisationByNameCountry($name, $country);
     }
 
     /**
@@ -310,8 +326,10 @@ class OrganisationService extends ServiceAbstract
         Meeting $meeting,
         Parameters $search
     ) {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
     }
 
     /**
@@ -381,7 +399,15 @@ class OrganisationService extends ServiceAbstract
         $onlyActiveProject = true,
         $onlyActivePartner = true
     ) {
-        return $this->getEntityManager()->getRepository(Organisation::class)
-            ->searchOrganisations($searchItem, $maxResults, $countryId, $onlyActiveProject, $onlyActivePartner);
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+
+        return $repository->searchOrganisations(
+            $searchItem,
+            $maxResults,
+            $countryId,
+            $onlyActiveProject,
+            $onlyActivePartner
+        );
     }
 }

@@ -23,11 +23,11 @@ use Zend\Form\Form;
 class FormService extends ServiceAbstract
 {
     /**
-     * @param null $className
-     * @param null $entity
-     * @param bool $bind
+     * @param null                $className
+     * @param EntityAbstract|null $entity
+     * @param bool                $bind
      *
-     * @return Form
+     * @return array|object|CreateObject
      */
     public function getForm($className = null, EntityAbstract $entity = null, $bind = true)
     {
@@ -39,8 +39,9 @@ class FormService extends ServiceAbstract
             throw new \InvalidArgumentException("No entity created given");
         }
 
-        $formName = 'Organisation\\' . $entity->get('entity_name') . '\\Form';
-        $filterName = 'Organisation\\InputFilter\\' . $entity->get('entity_name');
+        $formName = 'Organisation\\Form\\' . $entity->get('entity_name') . 'Form';
+        $filterName = 'Organisation\\InputFilter\\' . $entity->get('entity_name') . 'Filter';
+
 
         /*
          * The filter and the form can dynamically be created by pulling the form from the serviceManager

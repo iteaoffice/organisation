@@ -49,7 +49,6 @@ class Organisation extends EntityRepository
         }
 
         if (array_key_exists('options', $filter) && in_array(1, $filter['options'])) {
-
             //Make a second sub-select to cancel out organisations which have a financial organisation
             $subSelect2 = $this->_em->createQueryBuilder();
             $subSelect2->select('organisation');
@@ -74,7 +73,6 @@ class Organisation extends EntityRepository
                 break;
             default:
                 $queryBuilder->addOrderBy('o.id', $direction);
-
         }
 
         return $queryBuilder->getQuery();
@@ -142,7 +140,6 @@ class Organisation extends EntityRepository
                 break;
             default:
                 $queryBuilder->addOrderBy('o.id', $direction);
-
         }
 
         return $queryBuilder->getQuery();

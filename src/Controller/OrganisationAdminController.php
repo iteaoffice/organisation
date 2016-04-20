@@ -13,6 +13,7 @@ namespace Organisation\Controller;
 use Affiliation\Entity\Affiliation;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Invoice\Entity\Invoice;
 use Invoice\Form\InvoiceFilter;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
@@ -74,7 +75,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $filterPlugin = $this->getInvoiceFilter();
 
         $invoiceQuery = $this->getInvoiceService()
-            ->findEntitiesFiltered('invoice', array_merge($filterPlugin->getFilter(), [
+            ->findEntitiesFiltered(Invoice::class, array_merge($filterPlugin->getFilter(), [
                 'organisation' => [
                     $organisation->getId()
                 ],

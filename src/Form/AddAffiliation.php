@@ -84,7 +84,7 @@ class AddAffiliation extends Form
         asort($contacts);
 
         $this->add([
-            'type'       => 'Zend\Form\Element\Select',
+            'type'       => 'Contact\Form\Element\Contact',
             'name'       => 'contact',
             'options'    => [
                 'value_options' => $contacts,
