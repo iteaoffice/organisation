@@ -14,6 +14,7 @@ return [
             // And finally, here is where we define our page hierarchy
             'organisation' => [
                 'label'    => _("txt-organisation-admin"),
+                'order'    => 20,
                 'route'    => 'zfcadmin/organisation/list',
                 'resource' => 'zfcadmin',
                 'pages'    => [
@@ -34,7 +35,7 @@ return [
                                     ],
                                 ],
                                 'pages'   => [
-                                    'edit' => [
+                                    'edit'            => [
                                         'label'   => _('txt-nav-edit'),
                                         'route'   => 'zfcadmin/organisation/edit',
                                         'visible' => false,
@@ -44,7 +45,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'financial' => [
+                                    'financial'       => [
                                         'label'   => _('txt-nav-edit-financial'),
                                         'route'   => 'zfcadmin/organisation/financial/edit',
                                         'visible' => false,

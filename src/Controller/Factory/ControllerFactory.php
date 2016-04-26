@@ -35,7 +35,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package Project\Controller\Factory
  */
-class ControllerFactory implements FactoryInterface
+final class ControllerFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface|ControllerManager $container
@@ -47,7 +47,7 @@ class ControllerFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         /** @var OrganisationAbstractController $controller */
-        $controller = new $requestedName();
+        $controller = new $requestedName($options);
 
         $serviceManager = $container->getServiceLocator();
 

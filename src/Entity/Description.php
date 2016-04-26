@@ -15,7 +15,7 @@ use Zend\Form\Annotation;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
- * IctOrganisation.
+ * Description.
  *
  * @ORM\Table(name="organisation_description")
  * @ORM\Entity
@@ -65,6 +65,14 @@ class Description extends EntityAbstract implements ResourceInterface
     public function __set($property, $value)
     {
         $this->$property = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->description;
     }
 
     /**

@@ -15,6 +15,7 @@
 namespace Organisation\Factory;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Organisation\Service\OrganisationService;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -24,21 +25,36 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package Organisation\Factory
  */
-class OrganisationServiceFactory implements FactoryInterface
+final class OrganisationServiceFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null         $options
      *
      * @return OrganisationService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $organisationService = new OrganisationService();
+        /** @var OrganisationService $organisationService */
+        $organisationService = new $requestedName($options);
 
         /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->get(EntityManager::class);
+        $entityManager = $container->get(EntityManager::class);
         $organisationService->setEntityManager($entityManager);
 
         return $organisationService;
+    }
+
+    /**
+     * @param ServiceLocatorInterface $container
+     * @param string                  $canonicalName
+     * @param string                  $requestedName
+     *
+     * @return OrganisationService
+     */
+    public function createService(ServiceLocatorInterface $container, $canonicalName = null, $requestedName = null)
+    {
+        return $this($container, $requestedName);
     }
 }
