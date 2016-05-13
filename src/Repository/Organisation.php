@@ -10,15 +10,16 @@
 
 namespace Organisation\Repository;
 
+use Affiliation\Entity\Affiliation;
 use Contact\Entity\Contact;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
 use General\Entity\Country;
 use Organisation\Entity;
+use Project\Repository\Project;
 use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
@@ -35,28 +36,28 @@ class Organisation extends EntityRepository
     public function findFiltered(array $filter)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('o');
-        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
 
 
         if (array_key_exists('search', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
+            $queryBuilder->andWhere($queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'));
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }
 
         if (array_key_exists('type', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()->in('o.type', implode($filter['type'], ', ')));
+            $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_organisation.type', implode($filter['type'], ', ')));
         }
 
         if (array_key_exists('options', $filter) && in_array(1, $filter['options'])) {
             //Make a second sub-select to cancel out organisations which have a financial organisation
             $subSelect2 = $this->_em->createQueryBuilder();
-            $subSelect2->select('organisation');
-            $subSelect2->from('Affiliation\Entity\Affiliation', 'affiliation');
-            $subSelect2->andWhere($queryBuilder->expr()->isNull('affiliation.dateEnd'));
-            $subSelect2->join('affiliation.organisation', 'organisation');
+            $subSelect2->select('affiliation_entity_affiliation_organisation');
+            $subSelect2->from(Affiliation::class, 'affiliation_entity_affiliation');
+            $subSelect2->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
+            $subSelect2->innerJoin('affiliation_entity_affiliation.organisation', 'affiliation_entity_affiliation_organisation');
 
-            $queryBuilder->andWhere($queryBuilder->expr()->in('o', $subSelect2->getDQL()));
+            $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_organisation.id', $subSelect2->getDQL()));
         }
 
         $direction = 'ASC';
@@ -66,13 +67,13 @@ class Organisation extends EntityRepository
 
         switch ($filter['order']) {
             case 'lastUpdate':
-                $queryBuilder->addOrderBy('o.lastUpdate', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.lastUpdate', $direction);
                 break;
             case 'name':
-                $queryBuilder->addOrderBy('o.organisation', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
                 break;
             default:
-                $queryBuilder->addOrderBy('o.id', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
 
         return $queryBuilder->getQuery();
@@ -87,27 +88,29 @@ class Organisation extends EntityRepository
     public function findActiveOrganisationWithoutFinancial(array $filter)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('o');
-        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
 
         //Make a second sub-select to cancel out organisations which have a financial organisation
         $subSelect2 = $this->_em->createQueryBuilder();
         $subSelect2->select('financialOrganisation');
-        $subSelect2->from('Organisation\Entity\Financial', 'financial');
-        $subSelect2->join('financial.organisation', 'financialOrganisation');
+        $subSelect2->from(Entity\Financial::class, 'organisation_entity_financial');
+        $subSelect2->join('organisation_entity_financial.organisation', 'financialOrganisation');
 
-        $queryBuilder->andWhere($queryBuilder->expr()->notIn('o', $subSelect2->getDQL()));
+        $queryBuilder->andWhere($queryBuilder->expr()
+            ->notIn('organisation_entity_organisation', $subSelect2->getDQL()));
 
-        $queryBuilder->join('o.affiliation', 'a');
-        $queryBuilder->join('a.project', 'p');
+        $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
+        $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
 
         //Limit to only the active projects
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = $this->getEntityManager()->getRepository('Project\Entity\Project')
-            ->onlyActiveProject($queryBuilder);
+
+        /** @var Project $projectRepository */
+        $projectRepository = $this->getEntityManager()->getRepository(\Project\Entity\Project::class);
+        $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
 
         //Limit to projects which are not recently completed
-        $queryBuilder->andWhere('p.dateEndActual > :lastYear');
+        $queryBuilder->andWhere('project_entity_project.dateEndActual > :lastYear');
 
         $nextYear = new \DateTime();
         $nextYear->sub(new \DateInterval('P1Y'));
@@ -115,15 +118,17 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter('lastYear', $nextYear);
 
         //Limit to active affiliations
-        $queryBuilder->andWhere($queryBuilder->expr()->isNull('a.dateEnd'));
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
 
         if (array_key_exists('search', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':like'));
+            $queryBuilder->andWhere($queryBuilder->expr()
+                ->like('organisation_entity_organisation.organisation', ':like'));
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }
 
         if (array_key_exists('type', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()->in('o.type', implode($filter['type'], ', ')));
+            $queryBuilder->andWhere($queryBuilder->expr()
+                ->in('organisation_entity_organisation.type', implode($filter['type'], ', ')));
         }
 
         $direction = 'ASC';
@@ -133,13 +138,13 @@ class Organisation extends EntityRepository
 
         switch ($filter['order']) {
             case 'lastUpdate':
-                $queryBuilder->addOrderBy('o.lastUpdate', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.lastUpdate', $direction);
                 break;
             case 'name':
-                $queryBuilder->addOrderBy('o.organisation', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
                 break;
             default:
-                $queryBuilder->addOrderBy('o.id', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
 
         return $queryBuilder->getQuery();
@@ -155,22 +160,25 @@ class Organisation extends EntityRepository
      */
     public function findOrganisations($onlyActiveProject, $onlyActivePartner)
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('o');
-        $qb->distinct('o.id');
-        $qb->from('Organisation\Entity\Organisation', 'o');
-        $qb->join('o.affiliation', 'a');
-        $qb->join('a.project', 'p');
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
+        $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
+
         //Limit to only the active projects
         if ($onlyActiveProject) {
-            $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+            /** @var Project $projectRepository */
+            $projectRepository = $this->getEntityManager()->getRepository(\Project\Entity\Project::class);
+            $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
         }
         if ($onlyActivePartner) {
-            $qb->andWhere($qb->expr()->isNull('a.dateEnd'));
+            $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
         }
-        $qb->orderBy('o.organisation', 'ASC');
+        $queryBuilder->orderBy('organisation_entity_organisation.organisation', 'ASC');
 
-        return $qb->getQuery();
+        return $queryBuilder->getQuery();
     }
 
     /**
@@ -184,24 +192,28 @@ class Organisation extends EntityRepository
      */
     public function findOrganisationByCountry(Country $country, $onlyActiveProject, $onlyActivePartner)
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('o');
-        $qb->distinct('o.id');
-        $qb->from('Organisation\Entity\Organisation', 'o');
-        $qb->join('o.affiliation', 'a');
-        $qb->join('a.project', 'p');
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
+        $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
+
         //Limit to only the active projects
         if ($onlyActiveProject) {
-            $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+            /** @var Project $projectRepository */
+            $projectRepository = $this->getEntityManager()->getRepository(\Project\Entity\Project::class);
+            $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
         }
         if ($onlyActivePartner) {
-            $qb->andWhere($qb->expr()->isNull('a.dateEnd'));
+            $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
         }
-        $qb->andWhere('o.country = ?8');
-        $qb->setParameter(8, $country);
-        $qb->orderBy('o.organisation', 'ASC');
 
-        return $qb->getQuery();
+        $queryBuilder->andWhere('organisation_entity_organisation.country = ?8');
+        $queryBuilder->setParameter(8, $country);
+        $queryBuilder->orderBy('organisation_entity_organisation.organisation', 'ASC');
+
+        return $queryBuilder->getQuery();
     }
 
     /**
@@ -222,31 +234,35 @@ class Organisation extends EntityRepository
         $onlyActiveProject = true,
         $onlyActivePartner = true
     ) {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select(['o.id', 'o.organisation', 'c.iso3']);
-        $qb->distinct('o.id');
-        $qb->from('Organisation\Entity\Organisation', 'o');
-        $qb->andWhere('o.organisation LIKE :searchItem');
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select(['organisation_entity_organisation.id', 'organisation_entity_organisation.organisation', 'general_entity_country.iso3']);
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        
+        $queryBuilder->andWhere('organisation_entity_organisation.organisation LIKE :searchItem');
 
-        $qb->join('o.country', 'c');
-        $qb->leftJoin('o.affiliation', 'a');
-        $qb->leftJoin('a.project', 'p');
-        $qb->setParameter('searchItem', "%" . $searchItem . "%");
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        $queryBuilder->leftJoin('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
+        $queryBuilder->leftJoin('affiliation_entity_affiliation.project', 'project_entity_project');
+        $queryBuilder->setParameter('searchItem', "%" . $searchItem . "%");
+
         if (!is_null($countryId)) {
-            $qb->andWhere('o.country = ?3');
-            $qb->setParameter(3, $countryId);
+            $queryBuilder->andWhere('organisation_entity_organisation.country = ?3');
+            $queryBuilder->setParameter(3, $countryId);
         }
         //Limit to only the active projects
         if ($onlyActiveProject) {
-            $qb = $this->getEntityManager()->getRepository('Project\Entity\Project')->onlyActiveProject($qb);
+            /** @var Project $projectRepository */
+            $projectRepository = $this->getEntityManager()->getRepository(\Project\Entity\Project::class);
+            $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
         }
         if ($onlyActivePartner) {
-            $qb->andWhere($qb->expr()->isNotNull('a.dateEnd'));
+            $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
         }
-        $qb->setMaxResults($maxResults);
-        $qb->orderBy('o.organisation', 'ASC');
+        $queryBuilder->setMaxResults($maxResults);
+        $queryBuilder->orderBy('organisation_entity_organisation.organisation', 'ASC');
 
-        return $qb->getQuery()->getArrayResult();
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 
     /**
@@ -258,51 +274,48 @@ class Organisation extends EntityRepository
      */
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('o');
-        $qb->distinct('o.id');
-        $qb->from('Organisation\Entity\Organisation', 'o');
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
         //Select projects based on a type
 
         $subSelect = $this->_em->createQueryBuilder();
-        $subSelect->select('wo');
-        $subSelect->from('Organisation\Entity\Web', 'w');
-        $subSelect->join('w.organisation', 'wo');
-        $subSelect->andWhere('w.web LIKE :domain');
+        $subSelect->select('organisation_entity_web_organisation');
+        $subSelect->from(Entity\Web::class, 'organisation_entity_web');
+        $subSelect->join('organisation_entity_web.organisation', 'organisation_entity_web_organisation');
+        $subSelect->andWhere('organisation_entity_web.web LIKE :domain');
 
         //Make a second sub-select to cancel out organisations without a domain
         $subSelect2 = $this->_em->createQueryBuilder();
-        $subSelect2->select('wo2');
-        $subSelect2->from('Organisation\Entity\Web', 'web2');
-        $subSelect2->join('web2.organisation', 'wo2');
+        $subSelect2->select('organisation_entity_web_organisation2');
+        $subSelect2->from(Entity\Web::class, 'organisation_entity_web2');
+        $subSelect2->join('organisation_entity_web2.organisation', 'organisation_entity_web_organisation2');
 
         /*
          * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
          */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($emailAddress);
-        $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
+        $queryBuilder->setParameter('domain', "%" . $validateEmail->hostname . "%");
         //We want a match on the email address
-        $qb->andWhere($qb->expr()->orX(
-            $qb->expr()->in(
-                'o.id',
-                $subSelect->getDQL()
-            ),
-            $qb->expr()->notIn('o.id', $subSelect2->getDQL())
+        $queryBuilder->andWhere($queryBuilder->expr()->orX(
+            $queryBuilder->expr()->in('organisation_entity_organisation.id', $subSelect->getDQL()),
+            $queryBuilder->expr()->notIn('organisation_entity_organisation.id', $subSelect2->getDQL())
         ));
 
         /*
          * Limit on the country
          */
-        $qb->andWhere('o.country = ?3');
-        $qb->setParameter(3, $country->getId());
+        $queryBuilder->andWhere('organisation_entity_organisation.country = ?3');
+        $queryBuilder->setParameter(3, $country->getId());
         /*
          * Do a filter based on the organisation name
          */
-        $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%" . $name . "%");
+        $queryBuilder->andWhere('organisation_entity_organisation.organisation LIKE :searchItem');
+        $queryBuilder->setParameter('searchItem', "%" . $name . "%");
 
-        return $qb->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
@@ -312,37 +325,37 @@ class Organisation extends EntityRepository
      */
     public function findOrganisationByEmailAddress($emailAddress)
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('o');
-        $qb->distinct('o.id');
-        $qb->from('Organisation\Entity\Organisation', 'o');
-        $qb->join('o.country', 'c');
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
 
         //Inner join on contact_organisations to only have active organisations
-        $qb->join('o.contactOrganisation', 'co');
+        $queryBuilder->join('o.contactOrganisation', 'co');
 
 
         $subSelect = $this->_em->createQueryBuilder();
-        $subSelect->select('wo');
-        $subSelect->from('Organisation\Entity\Web', 'w');
-        $subSelect->join('w.organisation', 'wo');
-        $subSelect->andWhere('w.web LIKE :domain');
-        $subSelect->andWhere($qb->expr()->notIn('w.web', ['gmail.com', 'hotmail.com', 'yahoo.com']));
+        $subSelect->select('organisation_entity_web_organisation');
+        $subSelect->from(Entity\Web::class, 'organisation_entity_web');
+        $subSelect->join('organisation_entity_web.organisation', 'organisation_entity_web_organisation');
+        $subSelect->andWhere('organisation_entity_web.web LIKE :domain');
+        $subSelect->andWhere($queryBuilder->expr()->notIn('organisation_entity_web.web', ['gmail.com', 'hotmail.com', 'yahoo.com']));
 
         /**
          * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
          */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($emailAddress);
-        $qb->setParameter('domain', "%" . $validateEmail->hostname . "%");
+        $queryBuilder->setParameter('domain', "%" . $validateEmail->hostname . "%");
         //We want a match on the email address
-        $qb->andWhere($qb->expr()->in('o.id', $subSelect->getDQL()));
+        $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_organisation.id', $subSelect->getDQL()));
 
-        $qb->addOrderBy('c.country', 'ASC');
-        $qb->addOrderBy('o.organisation', 'ASC');
+        $queryBuilder->addOrderBy('general_entity_country.country', 'ASC');
+        $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', 'ASC');
 
 
-        return $qb->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
@@ -383,24 +396,24 @@ class Organisation extends EntityRepository
      */
     public function findOrganisationByNameCountry($name, Country $country)
     {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('o');
-        $qb->distinct('o.id');
-        $qb->from('Organisation\Entity\Organisation', 'o');
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
         /*
          * Limit on the country
          */
-        $qb->andWhere('o.country = ?3');
-        $qb->setParameter(3, $country->getId());
+        $queryBuilder->andWhere('organisation_entity_organisation.country = ?3');
+        $queryBuilder->setParameter(3, $country);
         /*
          * Do a filter based on the organisation name
          */
-        $qb->andWhere('o.organisation LIKE :searchItem');
-        $qb->setParameter('searchItem', "%" . $name . "%");
+        $queryBuilder->andWhere('organisation_entity_organisation.organisation LIKE :searchItem');
+        $queryBuilder->setParameter('searchItem', "%" . $name . "%");
 
-        $qb->setMaxResults(1);
+        $queryBuilder->setMaxResults(1);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -439,10 +452,7 @@ class Organisation extends EntityRepository
             $queryBuilder->andWhere($queryBuilder->expr()->in('type.id', $search->get('organisationType')));
         }
         $queryBuilder->andWhere($queryBuilder->expr()->orX(
-            $queryBuilder->expr()->like(
-                'd.description',
-                '?4'
-            ),
+            $queryBuilder->expr()->like('d.description', '?4'),
             $queryBuilder->expr()->like('o.organisation', '?4')
         ));
         /*

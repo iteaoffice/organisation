@@ -57,7 +57,7 @@ class OrganisationHandler extends AbstractViewHelper
 
                 //Do now show the organisation when we don't have projects
                 if (sizeof($this->getProjectService()->findProjectByOrganisation($this->getOrganisation())) === 0) {
-                    $this->getHelperPluginManager()->get('response')->setStatusCode(404);
+                    $this->getServiceManager()->get('response')->setStatusCode(404);
 
                     return null;
                 }
@@ -280,7 +280,7 @@ class OrganisationHandler extends AbstractViewHelper
     {
         $organisationQuery = $this->getOrganisationService()->findOrganisations(true, true);
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
-        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 

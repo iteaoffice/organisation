@@ -42,7 +42,7 @@ class OrganisationAdminController extends OrganisationAbstractController
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
-        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
@@ -51,11 +51,12 @@ class OrganisationAdminController extends OrganisationAbstractController
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         return new ViewModel([
-            'paginator'     => $paginator,
-            'form'          => $form,
-            'encodedFilter' => urlencode($filterPlugin->getHash()),
-            'order'         => $filterPlugin->getOrder(),
-            'direction'     => $filterPlugin->getDirection(),
+            'paginator'           => $paginator,
+            'form'                => $form,
+            'encodedFilter'       => urlencode($filterPlugin->getHash()),
+            'organisationService' => $this->getOrganisationService(),
+            'order'               => $filterPlugin->getOrder(),
+            'direction'           => $filterPlugin->getDirection(),
         ]);
     }
 
@@ -82,7 +83,7 @@ class OrganisationAdminController extends OrganisationAbstractController
             ]));
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
-        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 15);
+        $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
@@ -99,7 +100,8 @@ class OrganisationAdminController extends OrganisationAbstractController
             'organisationService' => $this->getOrganisationService(),
             'organisationDoa'     => $this->getDoaService()->findDoaByOrganisation($organisation),
             'organisationLoi'     => $this->getLoiService()->findLoiByOrganisation($organisation),
-            'projectService'      => $this->getProjectService()
+            'projectService'      => $this->getProjectService(),
+            'affiliations'        => $this->getAffiliationService()->findAffiliationByOrganisation($organisation)
 
         ]);
     }

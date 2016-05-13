@@ -9,6 +9,7 @@
  */
 namespace Organisation;
 
+use Admin\Entity\Access;
 use BjyAuthorize\Guard\Route;
 
 return [
@@ -24,45 +25,20 @@ return [
                 ['route' => 'organisation/logo', 'roles' => []],
                 ['route' => 'organisation/search', 'roles' => []],
                 ['route' => 'organisation/json/get-branches', 'roles' => []],
-                [
-                    'route' => 'organisation/json/check-vat',
-                    'roles' => ['office']
-                ],
-                [
-                    'route' => 'zfcadmin/organisation/list',
-                    'roles' => ['office']
-                ],
-
-                ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
-                [
-                    'route' => 'zfcadmin/organisation/edit',
-                    'roles' => ['office']
-                ],
-
-                [
-                    'route' => 'zfcadmin/organisation/add-affiliation',
-                    'roles' => ['office']
-                ],
-                [
-                    'route' => 'zfcadmin/organisation/view',
-                    'roles' => ['office']
-                ],
-                [
-                    'route' => 'zfcadmin/organisation/search-form',
-                    'roles' => ['office']
-                ],
-                [
-                    'route' => 'zfcadmin/organisation/financial/list',
-                    'roles' => ['office']
-                ],
-                [
-                    'route' => 'zfcadmin/organisation/financial/edit',
-                    'roles' => ['office']
-                ],
-                [
-                    'route' => 'zfcadmin/organisation/financial/no-financial',
-                    'roles' => ['office']
-                ],
+                ['route' => 'organisation/json/check-vat', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/new', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/add-affiliation', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/view', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation-type/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation-type/new', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation-type/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation-type/view', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/search-form', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/financial/list', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/financial/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/financial/no-financial', 'roles' => [Access::ACCESS_OFFICE]],
             ],
         ],
     ],

@@ -13,9 +13,10 @@ namespace Organisation\View\Helper;
 
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use BjyAuthorize\Service\Authorize;
-use Event\Acl\Assertion\AssertionAbstract;
-use Event\Entity\EntityAbstract;
+use Organisation\Acl\Assertion\AssertionAbstract;
+use Organisation\Entity\EntityAbstract;
 use Organisation\Entity\Organisation;
+use Organisation\Entity\Type;
 use Organisation\Service\OrganisationService;
 use Zend\View\Helper\ServerUrl;
 use Zend\View\Helper\Url;
@@ -37,6 +38,10 @@ abstract class LinkAbstract extends AbstractViewHelper
      * @var Organisation
      */
     protected $organisation;
+    /**
+     * @var Type
+     */
+    protected $type;
     /**
      * @var string
      */
@@ -395,6 +400,30 @@ abstract class LinkAbstract extends AbstractViewHelper
     public function setOrganisation($organisation)
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return Type
+     */
+    public function getType()
+    {
+        if (is_null($this->type)) {
+            $this->type = new Type();
+        }
+
+        return $this->type;
+    }
+
+    /**
+     * @param Type $type
+     *
+     * @return LinkAbstract
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }

@@ -12,9 +12,11 @@ use Organisation\Controller;
 use Organisation\Factory;
 use Organisation\Form;
 use Organisation\InputFilter;
+use Organisation\Navigation;
 use Organisation\Options;
 use Organisation\Service;
 use Organisation\View;
+use Zend\Stdlib;
 
 $config = [
     'controllers'        => [
@@ -23,6 +25,7 @@ $config = [
             Controller\OrganisationAdminController::class     => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationController::class          => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationFinancialController::class => Controller\Factory\ControllerFactory::class,
+            Controller\OrganisationTypeController::class      => Controller\Factory\ControllerFactory::class,
         ]
     ],
     'controller_plugins' => [
@@ -38,9 +41,10 @@ $config = [
     ],
     'view_helpers'       => [
         'aliases'    => [
-            'organisationHandler' => View\Helper\OrganisationHandler::class,
-            'organisationLink'    => View\Helper\OrganisationLink::class,
-            'organisationLogo'    => View\Helper\OrganisationLogo::class,
+            'organisationHandler'  => View\Helper\OrganisationHandler::class,
+            'organisationLink'     => View\Helper\OrganisationLink::class,
+            'organisationTypeLink' => View\Helper\TypeLink::class,
+            'organisationLogo'     => View\Helper\OrganisationLogo::class,
         ],
         'invokables' => [
             'organisationformelement' => Form\View\Helper\OrganisationFormElement::class,
@@ -48,6 +52,7 @@ $config = [
         'factories'  => [
             View\Helper\OrganisationHandler::class => View\Factory\ViewHelperFactory::class,
             View\Helper\OrganisationLink::class    => View\Factory\ViewHelperFactory::class,
+            View\Helper\TypeLink::class            => View\Factory\ViewHelperFactory::class,
             View\Helper\OrganisationLogo::class    => View\Factory\ViewHelperFactory::class,
         ],
     ],
@@ -61,13 +66,16 @@ $config = [
     ],
     'service_manager'    => [
         'factories' => [
-            Options\ModuleOptions::class       => Factory\ModuleOptionsFactory::class,
-            Service\OrganisationService::class => Factory\OrganisationServiceFactory::class,
-            Service\FormService::class         => Factory\FormServiceFactory::class,
-            Form\FinancialForm::class          => Factory\FormFactory::class,
-            Form\OrganisationForm::class       => Factory\FormFactory::class,
-            InputFilter\FinancialFilter::class => Factory\InputFilterFactory::class,
-            Acl\Assertion\Organisation::class  => Acl\Factory\AssertionFactory::class
+            Options\ModuleOptions::class                  => Factory\ModuleOptionsFactory::class,
+            Service\OrganisationService::class            => Factory\OrganisationServiceFactory::class,
+            Service\FormService::class                    => Factory\FormServiceFactory::class,
+            Form\FinancialForm::class                     => Factory\FormFactory::class,
+            Form\OrganisationForm::class                  => Factory\FormFactory::class,
+            InputFilter\FinancialFilter::class            => Factory\InputFilterFactory::class,
+            Acl\Assertion\Organisation::class             => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Type::class                     => Acl\Factory\AssertionFactory::class,
+            Navigation\Invokable\OrganisationLabel::class => Navigation\Factory\NavigationInvokableFactory::class,
+            Navigation\Invokable\TypeLabel::class         => Navigation\Factory\NavigationInvokableFactory::class,
 
         ],
     ],
@@ -93,13 +101,7 @@ $config = [
         ],
     ],
 ];
-$configFiles = [
-    __DIR__ . '/module.config.routes.php',
-    __DIR__ . '/module.config.navigation.php',
-    __DIR__ . '/module.config.authorize.php',
-    __DIR__ . '/module.option.organisation.php',
-];
-foreach ($configFiles as $configFile) {
-    $config = Zend\Stdlib\ArrayUtils::merge($config, include $configFile);
+foreach (Stdlib\Glob::glob(__DIR__ . '/module.config.{,*}.php', Stdlib\Glob::GLOB_BRACE) as $file) {
+    $config = Stdlib\ArrayUtils::merge($config, include $file);
 }
 return $config;

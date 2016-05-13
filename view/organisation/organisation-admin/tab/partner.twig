@@ -11,7 +11,14 @@
         <dt>{{ translate("txt-date-start") }}</dt>
         <dd>{{ organisation.partner.dateCreated|string_date }}</dd>
         <dt>{{ translate("txt-last-update") }}</dt>
-        <dd>{{ organisation.partner.lastUpdate|string_date }}</dd>
+        <dd>{{ organisation.partner.dateUpdated|string_date }}</dd>
+
+        <dt>{{ translate("txt-application") }}</dt>
+        {% if organisation.partner.applicantPartner.applicant %}
+            <dd>{{ applicantLink(organisation.partner.applicantPartner.applicant,'view', 'name') }} ({{ organisation.partner.applicantPartner.dateCreated|string_date }})</dd>
+        {% else %}
+            <dd>{{ translate("txt-partner-not-created-via-application") }}</dd>
+        {% endif %}
     </dl>
 {% else %}
     {{ ztbalert().info(translate("txt-organisation-%s-is-no-partner")|format(organisation))|raw }}

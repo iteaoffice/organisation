@@ -17,9 +17,14 @@ namespace Organisation\Service;
 
 use Organisation\Entity\EntityAbstract;
 use Organisation\Form\CreateObject;
-use Organisation\InputFilter\ObjectFilter;
 use Zend\Form\Form;
+use Zend\InputFilter\InputFilter;
 
+/**
+ * Class FormService
+ *
+ * @package Organisation\Service
+ */
 class FormService extends ServiceAbstract
 {
     /**
@@ -53,13 +58,16 @@ class FormService extends ServiceAbstract
             $form = $this->getServiceLocator()->get($formName);
         }
 
-        if (!$this->getServiceLocator()->has($filterName)) {
-            $filter = new ObjectFilter();
-        } else {
+        if ($this->getServiceLocator()->has($filterName)) {
+            /** @var InputFilter $filter */
             $filter = $this->getServiceLocator()->get($filterName);
+            $form->setInputFilter($filter);
         }
 
-        $form->setInputFilter($filter);
+        $form->setAttribute('role', 'form');
+        $form->setAttribute('action', '');
+        $form->setAttribute('class', 'form-horizontal');
+
         if ($bind) {
             $form->bind($entity);
         }

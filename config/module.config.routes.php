@@ -112,7 +112,7 @@ return [
             ],
             'zfcadmin'     => [
                 'child_routes' => [
-                    'organisation' => [
+                    'organisation'      => [
                         'type'          => 'Segment',
                         'priority'      => 1000,
                         'options'       => [
@@ -183,7 +183,7 @@ return [
                                 'type'          => 'Segment',
                                 'priority'      => 1000,
                                 'options'       => [
-                                    'route'    => '/vat',
+                                    'route'    => '/financial',
                                     'defaults' => [
                                         'controller' => Controller\OrganisationFinancialController::class,
                                         'action'     => 'index',
@@ -229,6 +229,55 @@ return [
                                                 'action' => 'no-financial',
                                             ],
                                         ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'organisation-type' => [
+                        'type'          => 'Segment',
+                        'options'       => [
+                            'route'    => '/organisation-type',
+                            'defaults' => [
+                                'controller' => Controller\OrganisationTypeController::class,
+                                'action'     => 'index',
+                            ],
+                        ],
+                        'may_terminate' => false,
+                        'child_routes'  => [
+                            'list' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list',
+                                    ],
+                                ],
+                            ],
+                            'new'  => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/new.html',
+                                    'defaults' => [
+                                        'action' => 'new',
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/edit/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'edit',
+                                    ],
+                                ],
+                            ],
+                            'view' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/view/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'view',
                                     ],
                                 ],
                             ],

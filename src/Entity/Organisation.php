@@ -90,20 +90,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $affiliationFinancial;
     /**
-     * @ORM\OneToOne(targetEntity="Member\Entity\Member", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
-     * @Annotation\Exclude()
-     *
-     * @var \Member\Entity\Member
-     */
-    private $member;
-    /**
-     * @ORM\OneToMany(targetEntity="Member\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
-     * @Annotation\Exclude()
-     *
-     * @var \Member\Entity\Financial[]
-     */
-    private $memberFinancial;
-    /**
      * @ORM\OneToOne(targetEntity="Partner\Entity\Partner", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
@@ -301,10 +287,10 @@ class Organisation extends EntityAbstract implements ResourceInterface
     private $doa;
 
     /**
-     * @ORM\OneToOne(targetEntity="Member\Entity\Applicant", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="Partner\Entity\Applicant", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Member\Entity\Applicant
+     * @var \Partner\Entity\Applicant
      */
     private $applicant;
     /**
@@ -337,7 +323,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
     {
         $this->affiliation = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
-        $this->memberFinancial = new Collections\ArrayCollection();
         $this->partnerOrganisation = new Collections\ArrayCollection();
         $this->partnerFinancial = new Collections\ArrayCollection();
         $this->domain = new Collections\ArrayCollection();
@@ -543,46 +528,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setAffiliationFinancial($affiliationFinancial)
     {
         $this->affiliationFinancial = $affiliationFinancial;
-
-        return $this;
-    }
-
-    /**
-     * @return \Member\Entity\Member
-     */
-    public function getMember()
-    {
-        return $this->member;
-    }
-
-    /**
-     * @param \Member\Entity\Member $member
-     *
-     * @return Organisation
-     */
-    public function setMember($member)
-    {
-        $this->member = $member;
-
-        return $this;
-    }
-
-    /**
-     * @return \Member\Entity\Financial[]
-     */
-    public function getMemberFinancial()
-    {
-        return $this->memberFinancial;
-    }
-
-    /**
-     * @param \Member\Entity\Financial[] $memberFinancial
-     *
-     * @return Organisation
-     */
-    public function setMemberFinancial($memberFinancial)
-    {
-        $this->memberFinancial = $memberFinancial;
 
         return $this;
     }
@@ -1008,7 +953,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Member\Entity\Applicant
+     * @return \Partner\Entity\Applicant
      */
     public function getApplicant()
     {
@@ -1016,7 +961,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Member\Entity\Applicant $applicant
+     * @param \Partner\Entity\Applicant $applicant
      *
      * @return Organisation
      */

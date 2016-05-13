@@ -13,16 +13,13 @@ namespace Organisation\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Type.
  *
  * @ORM\Table(name="organisation_type")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Organisation\Repository\Type")
  * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_type")
  */
@@ -51,7 +48,7 @@ class Type extends EntityAbstract implements ResourceInterface
      *
      * @var array
      */
-    protected $invoiceTemplates
+    protected static $invoiceTemplates
         = [
             self::NO_INVOICE => 'txt-invoice',
             self::INVOICE    => 'txt-no-invoice',
@@ -60,7 +57,7 @@ class Type extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="type_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Exclude()
+     * @Annotation\Type("\Zend\Form\Element\Hidden")
      *
      * @var integer
      */
@@ -147,55 +144,11 @@ class Type extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
-     */
-    public function getInputFilter()
-    {
-        if (!$this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add($factory->createInput([
-                'name'       => 'type',
-                'required'   => true,
-                'filters'    => [
-                    ['name' => 'StripTags'],
-                    ['name' => 'StringTrim'],
-                ],
-                'validators' => [
-                    [
-                        'name'    => 'StringLength',
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 1,
-                            'max'      => 255,
-                        ],
-                    ],
-                ],
-            ]));
-            $inputFilter->add($factory->createInput([
-                'name'       => 'invoice',
-                'required'   => true,
-                'validators' => [
-                    [
-                        'name'    => 'InArray',
-                        'options' => [
-                            'haystack' => array_keys($this->getInvoiceTemplates()),
-                        ],
-                    ],
-                ],
-            ]));
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
-    }
-
-    /**
      * @return array
      */
-    public function getInvoiceTemplates()
+    public static function getInvoiceTemplates()
     {
-        return $this->invoiceTemplates;
+        return self::$invoiceTemplates;
     }
 
     /**
@@ -259,10 +212,16 @@ class Type extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return int
+     * @param bool $textual
+     *
+     * @return int|string
      */
-    public function getInvoice()
+    public function getInvoice($textual = false)
     {
+        if ($textual) {
+            return self::$invoiceTemplates[$this->invoice];
+        }
+
         return $this->invoice;
     }
 
@@ -299,7 +258,7 @@ class Type extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return Collections\ArrayCollection|Organisation[]
+     * @return Organisation[]
      */
     public function getOrganisation()
     {
@@ -307,7 +266,7 @@ class Type extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param Collections\ArrayCollection|Organisation[] $organisation
+     * @param Organisation[] $organisation
      *
      * @return Type
      */
