@@ -119,7 +119,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @Annotation\Options({
      *      "target_class":"General\Entity\Country",
      *      "find_method":{
-     *          "name":"findBy",
+     *          "name":"findForForm",
      *          "params": {
      *              "criteria":{},
      *              "orderBy":{

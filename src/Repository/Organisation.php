@@ -332,7 +332,7 @@ class Organisation extends EntityRepository
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
 
         //Inner join on contact_organisations to only have active organisations
-        $queryBuilder->join('o.contactOrganisation', 'co');
+        $queryBuilder->join('organisation_entity_organisation.contactOrganisation', 'organisation_entity_contactorganisation');
 
 
         $subSelect = $this->_em->createQueryBuilder();
