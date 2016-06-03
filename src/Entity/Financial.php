@@ -152,6 +152,13 @@ class Financial extends EntityAbstract implements ResourceInterface
      */
     private $iban;
     /**
+     * @ORM\Column(name="supplier_number", type="string", length=40, nullable=true)
+     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Attributes({"label":"txt-supplier-number"})
+     * @var string
+     */
+    private $supplierNumber;
+    /**
      * @ORM\Column(name="bic", type="string", length=40, nullable=true)
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-bic"})
@@ -559,5 +566,24 @@ class Financial extends EntityAbstract implements ResourceInterface
     public function setReminder($reminder)
     {
         $this->reminder = $reminder;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSupplierNumber()
+    {
+        return $this->supplierNumber;
+    }
+
+    /**
+     * @param string $supplierNumber
+     * @return Financial
+     */
+    public function setSupplierNumber($supplierNumber)
+    {
+        $this->supplierNumber = $supplierNumber;
+
+        return $this;
     }
 }

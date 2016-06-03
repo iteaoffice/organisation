@@ -14,7 +14,7 @@
             <dt>{{ translate("txt-vat-number") }}</dt>
             <dd>{{ financial.vat }}
                 (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
-                - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
+                    - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
                 <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i>
             </dd>
             <dt>{{ translate("txt-vat-type") }}</dt>
@@ -29,6 +29,12 @@
             <dd>{{ translate(financial.getEmail(true)) }}</dd>
             <dt>{{ translate("txt-require-purchace-order") }}</dt>
             <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
+            <dt>{{ translate("txt-iban") }}</dt>
+            <dd>{{ financial.iban }}</dd>
+            <dt>{{ translate("txt-bic") }}</dt>
+            <dd>{{ financial.bic }}</dd>
+            <dt>{{ translate("txt-supplier-number") }}</dt>
+            <dd>{{ financial.supplierNumber }}</dd>
             <dt>{{ translate("txt-amount-of-invoices") }}</dt>
             <dd>
                 <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ organisation.invoice.count() }}</a>

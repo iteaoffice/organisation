@@ -19,7 +19,7 @@ return [
                 'resource' => 'zfcadmin',
                 'pages'    => [
                     'organisation-list'           => [
-                        'label' => "txt-nav-organisation-list",
+                        'label' => _("txt-nav-organisation-list"),
                         'order' => 10,
                         'route' => 'zfcadmin/organisation/list',
                         'pages' => [
