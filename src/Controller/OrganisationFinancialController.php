@@ -52,7 +52,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
     }
 
     /**
-     * @return ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
@@ -64,7 +64,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
         }
 
         $data = array_merge([
-            'vatType' => ($financial->getVatType()->count() == 0 ? 0 : $financial->getVatType()->first()->getId())
+            'vatType' => ($financial->getVatType()->count() == 0 ? 0 : $financial->getVatType()->first()->getId()),
         ], $this->getRequest()->getPost()->toArray());
 
         $form = $this->getFormService()->prepare($financial, $financial, $data);
@@ -99,6 +99,11 @@ class OrganisationFinancialController extends OrganisationAbstractController
                  * @var $financial Financial
                  */
                 $financial = $form->getData();
+
+                //Force VAT to null when not given
+                if (empty($data['vat'])) {
+                    $financial->setVat(null);
+                }
 
                 if ($data['vatType'] == 0) {
                     $financial->setVatType(null);

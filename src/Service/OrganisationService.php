@@ -41,7 +41,7 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param $id
      *
-     * @return null|Organisation
+     * @return null|Organisation|object
      */
     public function findOrganisationById($id)
     {
@@ -72,7 +72,7 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param $filter
      *
-     * @return QueryBuilder
+     * @return Query
      */
     public function findActiveOrganisationWithoutFinancial($filter)
     {
@@ -85,7 +85,7 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param  Contact $contact
      *
-     * @return Organisation[];
+     * @return Organisation[]
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
     {
@@ -159,7 +159,7 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param Organisation $organisation
      *
-     * @return Contact|\Contact\Entity\Selection|null
+     * @return Contact|\Contact\Entity\Selection|null|object
      */
     public function findFinancialContact(Organisation $organisation)
     {
@@ -186,7 +186,7 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param $docRef
      *
-     * @return null|Organisation
+     * @return null|Organisation|object
      */
     public function findOrganisationByDocRef($docRef)
     {
