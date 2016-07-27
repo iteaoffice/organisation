@@ -38,45 +38,57 @@ class OrganisationFilter extends InputFilter
     {
         $inputFilter = new InputFilter();
 
-        $inputFilter->add([
-            'name'       => 'organisation',
-            'required'   => true,
-            'filters'    => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-            'validators' => [
-                [
-                    'name'    => 'StringLength',
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min'      => 1,
-                        'max'      => 255,
+        $inputFilter->add(
+            [
+                'name'       => 'organisation',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
+                        ],
                     ],
                 ],
-            ],
-        ]);
-        $inputFilter->add([
-            'name'     => 'country',
-            'required' => true,
-        ]);
-        $inputFilter->add([
-            'name'     => 'type',
-            'required' => true,
-        ]);
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'country',
+                'required' => true,
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'type',
+                'required' => true,
+            ]
+        );
 
-        $inputFilter->add([
-            'name'     => 'domain',
-            'required' => false,
-        ]);
-        $inputFilter->add([
-            'name'     => 'technology',
-            'required' => false,
-        ]);
-        $inputFilter->add([
-            'name'     => 'clusterMember',
-            'required' => false,
-        ]);
+        $inputFilter->add(
+            [
+                'name'     => 'domain',
+                'required' => false,
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'technology',
+                'required' => false,
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'clusterMember',
+                'required' => false,
+            ]
+        );
 
 
         $this->add($inputFilter, 'organisation_entity_organisation');

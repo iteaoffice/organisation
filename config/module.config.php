@@ -26,7 +26,7 @@ $config = [
             Controller\OrganisationController::class          => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationFinancialController::class => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationTypeController::class      => Controller\Factory\ControllerFactory::class,
-        ]
+        ],
     ],
     'controller_plugins' => [
         'aliases'   => [
@@ -34,7 +34,7 @@ $config = [
         ],
         'factories' => [
             Controller\Plugin\GetFilter::class => Controller\Factory\PluginFactory::class,
-        ]
+        ],
     ],
     'view_manager'       => [
         'template_map' => include __DIR__ . '/../template_map.php',
@@ -72,6 +72,7 @@ $config = [
             Form\FinancialForm::class                     => Factory\FormFactory::class,
             Form\OrganisationForm::class                  => Factory\FormFactory::class,
             InputFilter\FinancialFilter::class            => Factory\InputFilterFactory::class,
+            InputFilter\OrganisationFilter::class         => Factory\InputFilterFactory::class,
             Acl\Assertion\Organisation::class             => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\Type::class                     => Acl\Factory\AssertionFactory::class,
             Navigation\Invokable\OrganisationLabel::class => Navigation\Factory\NavigationInvokableFactory::class,

@@ -16,21 +16,18 @@
 namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineModule\Validator;
+use Organisation\Entity;
 use Zend\InputFilter\InputFilter;
 
 /**
- * Jield webdev copyright message placeholder.
+ * Class FinancialFilter
  *
- * @category    Partner
- *
- * @author      Johan van der Heide <info@jield.nl>
- * @copyright   Copyright (c) 2015 Jield (http://jield.nl)
+ * @package Organisation\InputFilter
  */
 class FinancialFilter extends InputFilter
 {
     /**
-     * PartnerFilter constructor.
+     * FinancialFilter constructor.
      *
      * @param EntityManager $entityManager
      */
@@ -38,15 +35,39 @@ class FinancialFilter extends InputFilter
     {
         $inputFilter = new InputFilter();
 
-        $inputFilter->add([
-            'name'       => 'dateEnd',
-            'required'   => false,
-            'validators' => [
-                [
-                    'name' => 'Date',
+        $inputFilter->add(
+            [
+                'name'       => 'vat',
+                'required'   => false,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
                 ],
-            ],
-        ]);
+                'validators' => [
+                    [
+                        'name'    => '\DoctrineModule\Validator\UniqueObject',
+                        'options' => [
+                            'object_repository' => $entityManager->getRepository(Entity\Financial::class),
+                            'object_manager'    => $entityManager,
+                            'use_context'       => true,
+                            'fields'            => ['vat'],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $inputFilter->add(
+            [
+                'name'       => 'dateEnd',
+                'required'   => false,
+                'validators' => [
+                    [
+                        'name' => 'Date',
+                    ],
+                ],
+            ]
+        );
 
         $this->add($inputFilter, 'organisation_entity_financial');
     }

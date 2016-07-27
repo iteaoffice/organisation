@@ -1,0 +1,33 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-add-organisation-%s-to-project")|format(organisation)) %}
+
+<h1>{{ translate("txt-add-organisation-%s-to-project")|format(organisation) }} </h1>
+
+
+{% do form.prepare() %}
+{% do form.setAttribute('class','form-horizontal') %}
+{% do form.setAttribute('action','') %}
+
+{{ form().openTag(form)|raw }}
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-organisation") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ organisation }}</p>
+    </div>
+</div>
+
+{{ ztbformelement(form.get('project')) }}
+{{ ztbformelement(form.get('branch')) }}
+{{ contactformelement(form.get('contact')) }}
+
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}

@@ -91,6 +91,7 @@ class Financial extends EntityAbstract implements ResourceInterface
      * @ORM\Column(name="financial_id", length=10, type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Annotation\Type("Zend\Form\Element\Hidden")
      *
      * @var integer
      */
@@ -224,12 +225,13 @@ class Financial extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
-        $this->vatStatus = self::VAT_STATUS_UNCHECKED;
-        $this->shiftVat = self::VAT_NOT_SHIFT;
-        $this->omitContact = self::NO_OMIT_CONTACT;
+        $this->vatStatus             = self::VAT_STATUS_UNCHECKED;
+        $this->shiftVat              = self::VAT_NOT_SHIFT;
+        $this->omitContact           = self::NO_OMIT_CONTACT;
         $this->requiredPurchaseOrder = self::NO_REQUIRED_PURCHASE_ORDER;
-        $this->vatType = new Collections\ArrayCollection();
-        $this->reminder = new Collections\ArrayCollection();
+        $this->email                 = self::EMAIL_DELIVERY;
+        $this->vatType               = new Collections\ArrayCollection();
+        $this->reminder              = new Collections\ArrayCollection();
     }
 
     /**
@@ -578,6 +580,7 @@ class Financial extends EntityAbstract implements ResourceInterface
 
     /**
      * @param string $supplierNumber
+     *
      * @return Financial
      */
     public function setSupplierNumber($supplierNumber)

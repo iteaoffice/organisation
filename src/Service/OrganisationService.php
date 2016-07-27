@@ -114,7 +114,6 @@ class OrganisationService extends ServiceAbstract
                 default:
                     return true;
             }
-
         })->count());
     }
 
@@ -139,7 +138,6 @@ class OrganisationService extends ServiceAbstract
                 default:
                     return true;
             }
-
         })->count());
     }
 
