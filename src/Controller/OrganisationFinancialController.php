@@ -101,7 +101,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 $financial = $form->getData();
 
                 //Force VAT to null when not given
-                if (empty($data['vat'])) {
+                if (empty($data['organisation_entity_financial']['vat'])) {
                     $financial->setVat(null);
                 }
 
