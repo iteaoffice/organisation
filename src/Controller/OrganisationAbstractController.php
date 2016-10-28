@@ -25,6 +25,7 @@ use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
+use Zend\View\HelperPluginManager;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
@@ -78,6 +79,10 @@ abstract class OrganisationAbstractController extends AbstractActionController
      * @var ContactService
      */
     protected $contactService;
+    /**
+     * @var HelperPluginManager
+     */
+    protected $viewHelperManager;
 
     /**
      * Gateway to the Organisation Service
@@ -153,7 +158,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
         /**
          * @var $translate Translate
          */
-        $translate = $this->getPluginManager()->getServiceLocator()->get('ViewHelperManager')->get('translate');
+        $translate = $this->getViewHelperManager()->get('translate');
 
         return $translate($string);
     }
@@ -294,6 +299,26 @@ abstract class OrganisationAbstractController extends AbstractActionController
     public function setEntityManager($entityManager)
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * @return HelperPluginManager
+     */
+    public function getViewHelperManager(): HelperPluginManager
+    {
+        return $this->viewHelperManager;
+    }
+
+    /**
+     * @param HelperPluginManager $viewHelperManager
+     *
+     * @return OrganisationAbstractController
+     */
+    public function setViewHelperManager(HelperPluginManager $viewHelperManager): OrganisationAbstractController
+    {
+        $this->viewHelperManager = $viewHelperManager;
 
         return $this;
     }

@@ -21,7 +21,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  *
  * @ORM\Table(name="organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  */
 class Organisation extends EntityAbstract implements ResourceInterface

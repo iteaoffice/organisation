@@ -22,10 +22,12 @@ use General\Entity\Country;
 use Organisation\Entity\Financial;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
+use Organisation\Entity\Web;
 use Organisation\Repository;
 use Program\Entity\Program;
 use Project\Entity\Project;
 use Zend\Stdlib\Parameters;
+use Zend\Validator\EmailAddress;
 
 /**
  * OrganisationService.
@@ -103,18 +105,20 @@ class OrganisationService extends ServiceAbstract
      */
     public function getAffiliationCount(Organisation $organisation, $which = AffiliationService::WHICH_ALL)
     {
-        return ($organisation->getAffiliation()->filter(function (
-            Affiliation $affiliation
-        ) use ($which) {
-            switch ($which) {
-                case AffiliationService::WHICH_ONLY_ACTIVE:
-                    return is_null($affiliation->getDateEnd());
-                case AffiliationService::WHICH_ONLY_INACTIVE:
-                    return !is_null($affiliation->getDateEnd());
-                default:
-                    return true;
+        return ($organisation->getAffiliation()->filter(
+            function (
+                Affiliation $affiliation
+            ) use ($which) {
+                switch ($which) {
+                    case AffiliationService::WHICH_ONLY_ACTIVE:
+                        return is_null($affiliation->getDateEnd());
+                    case AffiliationService::WHICH_ONLY_INACTIVE:
+                        return ! is_null($affiliation->getDateEnd());
+                    default:
+                        return true;
+                }
             }
-        })->count());
+        )->count());
     }
 
     /**
@@ -125,20 +129,22 @@ class OrganisationService extends ServiceAbstract
      */
     public function getContactCount(Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE)
     {
-        return ($organisation->getContactOrganisation()->filter(function (
-            ContactOrganisation $contactOrganisation
-        ) use (
-            $which
-        ) {
-            switch ($which) {
-                case ContactService::WHICH_ONLY_ACTIVE:
-                    return is_null($contactOrganisation->getContact()->getDateEnd());
-                case ContactService::WHICH_ONLY_EXPIRED:
-                    return !is_null($contactOrganisation->getContact()->getDateEnd());
-                default:
-                    return true;
+        return ($organisation->getContactOrganisation()->filter(
+            function (
+                ContactOrganisation $contactOrganisation
+            ) use (
+                $which
+            ) {
+                switch ($which) {
+                    case ContactService::WHICH_ONLY_ACTIVE:
+                        return is_null($contactOrganisation->getContact()->getDateEnd());
+                    case ContactService::WHICH_ONLY_EXPIRED:
+                        return ! is_null($contactOrganisation->getContact()->getDateEnd());
+                    default:
+                        return true;
+                }
             }
-        })->count());
+        )->count());
     }
 
     /**
@@ -202,8 +208,45 @@ class OrganisationService extends ServiceAbstract
         $branch,
         Organisation $organisation
     ) {
+        return self::parseBranch($branch, $organisation);
+    }
+
+    /**
+     * @param $branch
+     * @param $organisation
+     *
+     * @return string
+     */
+    public static function parseBranch($branch, $organisation): string
+    {
+        if (strpos($branch, '!') === 0) {
+            return substr($branch, 1);
+        }
+
         return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
     }
+
+    /**
+     * @param string $givenName
+     * @param string $organisation
+     *
+     * @return string
+     */
+    public static function determineBranch(string $givenName, string $organisation)
+    {
+        //when the names are identical
+        if ($givenName === $organisation) {
+            return null;
+        }
+
+        /** When the name is not found in the organisation */
+        if (strpos($givenName, $organisation) === false) {
+            return sprintf("!%s", $givenName);
+        }
+
+        return str_replace($organisation, '~', $givenName);
+    }
+
 
     /**
      * @return Type[]
@@ -256,9 +299,10 @@ class OrganisationService extends ServiceAbstract
      *
      * @return array
      */
-    public function findBranchesByOrganisation(Organisation $organisation)
+    public function findBranchesByOrganisation(Organisation $organisation): array
     {
-        $branches = [];
+        //always include the <empty> branch
+        $branches = ['' => (string)$organisation->getOrganisation()];
 
         foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
             $branches[$contactOrganisation->getBranch()]
@@ -286,6 +330,40 @@ class OrganisationService extends ServiceAbstract
         $repository = $this->getEntityManager()->getRepository(Organisation::class);
 
         return $repository->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
+    }
+
+    /**
+     * @param string  $name
+     * @param Country $country
+     * @param int     $typeId
+     * @param string  $email
+     *
+     * @return Organisation
+     */
+    public function createOrganisationFromNameCountryTypeAndEmail(string $name, Country $country, int $typeId,
+        string $email
+    ): Organisation {
+        $organisation = new Organisation();
+        $organisation->setOrganisation($name);
+        $organisation->setCountry($country);
+        $organisation->setType($this->findEntityById(Type::class, $typeId));
+        /*
+         * Add the domain in the saved domains for this new company
+         * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
+         */
+        $validateEmail = new EmailAddress();
+        $validateEmail->isValid($email);
+        $organisationWeb = new Web();
+        $organisationWeb->setOrganisation($organisation);
+        $organisationWeb->setWeb($validateEmail->hostname);
+        $organisationWeb->setMain(Web::MAIN);
+
+        //Skip hostnames like yahoo, gmail and hotmail, outlook
+        if ( ! in_array($organisation->getWeb(), ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'])) {
+            $this->newEntity($organisationWeb);
+        }
+
+        return $organisation;
     }
 
     /**

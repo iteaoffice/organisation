@@ -19,7 +19,7 @@ use Zend\Form\Annotation;
  *
  * @ORM\Table(name="organisation_logo")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_logo")
  */
 class Logo extends EntityAbstract
@@ -101,7 +101,7 @@ class Logo extends EntityAbstract
     public function getCacheFileName()
     {
         $cacheDir = __DIR__ . '/../../../../../public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR
-            . DEBRANOVA_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
+            . ITEAOFFICE_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
 
         return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName();
     }

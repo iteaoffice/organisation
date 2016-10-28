@@ -57,7 +57,7 @@ abstract class ImageAbstract extends AbstractViewHelper
         /**
          * @var array $config
          */
-        $config = $this->getServiceManager()->get('config');
+        $config = $this->getServiceManager()->get('Config');
 
         $cdn = null;
         if (isset($config['cdn']) && $config['cdn']['enable']) {

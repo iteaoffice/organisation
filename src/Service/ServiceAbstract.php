@@ -12,6 +12,7 @@ namespace Organisation\Service;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
+use Interop\Container\ContainerInterface;
 use Organisation\Entity\EntityAbstract;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
@@ -138,7 +139,7 @@ abstract class ServiceAbstract implements ServiceInterface
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $serviceLocator
      *
      * @return ServiceAbstract
      */

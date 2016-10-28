@@ -18,7 +18,7 @@ namespace Organisation\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Mvc\Controller\PluginManager;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -41,21 +41,9 @@ final class PluginFactory implements FactoryInterface
         $plugin = new $requestedName($options);
 
         if (method_exists($plugin, 'setServiceLocator')) {
-            $plugin->setServiceLocator($container->getServiceLocator());
+            $plugin->setServiceLocator($container);
         }
 
         return $plugin;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $container
-     * @param string                  $canonicalName
-     * @param string                  $requestedName
-     *
-     * @return AbstractPlugin
-     */
-    public function createService(ServiceLocatorInterface $container, $canonicalName = null, $requestedName = null)
-    {
-        return $this($container, $requestedName);
     }
 }

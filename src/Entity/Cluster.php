@@ -18,7 +18,7 @@ use Zend\Form\Annotation;
  *
  * @ORM\Table(name="organisation_cluster")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_cluster")
  */
 class Cluster extends EntityAbstract

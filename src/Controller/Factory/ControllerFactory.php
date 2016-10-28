@@ -27,8 +27,9 @@ use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
 use Zend\Mvc\Controller\ControllerManager;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\HelperPluginManager;
 
 /**
  * Class ControllerFactory
@@ -38,72 +39,61 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 final class ControllerFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface|ControllerManager $container
-     * @param                                      $requestedName
-     * @param array|null                           $options
-     *
-     * @return mixed
-     */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
-    {
-        /** @var OrganisationAbstractController $controller */
-        $controller = new $requestedName($options);
-
-        $serviceManager = $container->getServiceLocator();
-
-        /** @var FormService $formService */
-        $formService = $serviceManager->get(FormService::class);
-        $controller->setFormService($formService);
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $serviceManager->get(EntityManager::class);
-        $controller->setEntityManager($entityManager);
-
-        /** @var ContactService $contactService */
-        $contactService = $serviceManager->get(ContactService::class);
-        $controller->setContactService($contactService);
-
-        /** @var GeneralService $generalService */
-        $generalService = $serviceManager->get(GeneralService::class);
-        $controller->setGeneralService($generalService);
-
-        /** @var ProjectService $projectService */
-        $projectService = $serviceManager->get(ProjectService::class);
-        $controller->setProjectService($projectService);
-
-        /** @var OrganisationService $organisationService */
-        $organisationService = $serviceManager->get(OrganisationService::class);
-        $controller->setOrganisationService($organisationService);
-
-        /** @var DoaService $doaService */
-        $doaService = $serviceManager->get(DoaService::class);
-        $controller->setDoaService($doaService);
-
-        /** @var LoiService $loiService */
-        $loiService = $serviceManager->get(LoiService::class);
-        $controller->setLoiService($loiService);
-
-        /** @var AffiliationService $affiliationService */
-        $affiliationService = $serviceManager->get(AffiliationService::class);
-        $controller->setAffiliationService($affiliationService);
-
-        /** @var InvoiceService $invoiceService */
-        $invoiceService = $serviceManager->get(InvoiceService::class);
-        $controller->setInvoiceService($invoiceService);
-
-
-        return $controller;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $container
-     * @param string                  $canonicalName
-     * @param string                  $requestedName
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null         $options
      *
      * @return OrganisationAbstractController
      */
-    public function createService(ServiceLocatorInterface $container, $canonicalName = null, $requestedName = null)
-    {
-        return $this($container, $requestedName);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null
+    ): OrganisationAbstractController {
+        /** @var OrganisationAbstractController $controller */
+        $controller = new $requestedName($options);
+
+        /** @var FormService $formService */
+        $formService = $container->get(FormService::class);
+        $controller->setFormService($formService);
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get(EntityManager::class);
+        $controller->setEntityManager($entityManager);
+
+        /** @var ContactService $contactService */
+        $contactService = $container->get(ContactService::class);
+        $controller->setContactService($contactService);
+
+        /** @var GeneralService $generalService */
+        $generalService = $container->get(GeneralService::class);
+        $controller->setGeneralService($generalService);
+
+        /** @var ProjectService $projectService */
+        $projectService = $container->get(ProjectService::class);
+        $controller->setProjectService($projectService);
+
+        /** @var OrganisationService $organisationService */
+        $organisationService = $container->get(OrganisationService::class);
+        $controller->setOrganisationService($organisationService);
+
+        /** @var DoaService $doaService */
+        $doaService = $container->get(DoaService::class);
+        $controller->setDoaService($doaService);
+
+        /** @var LoiService $loiService */
+        $loiService = $container->get(LoiService::class);
+        $controller->setLoiService($loiService);
+
+        /** @var AffiliationService $affiliationService */
+        $affiliationService = $container->get(AffiliationService::class);
+        $controller->setAffiliationService($affiliationService);
+
+        /** @var InvoiceService $invoiceService */
+        $invoiceService = $container->get(InvoiceService::class);
+        $controller->setInvoiceService($invoiceService);
+
+        /** @var HelperPluginManager $viewHelperManager */
+        $viewHelperManager = $container->get('ViewHelperManager');
+        $controller->setViewHelperManager($viewHelperManager);
+
+        return $controller;
     }
 }

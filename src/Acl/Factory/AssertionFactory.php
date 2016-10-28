@@ -21,7 +21,7 @@ use Interop\Container\ContainerInterface;
 use Organisation\Acl\Assertion\AssertionAbstract;
 use Organisation\Service\OrganisationService;
 use Zend\Authentication\AuthenticationService;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**

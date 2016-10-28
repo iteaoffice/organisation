@@ -15,8 +15,12 @@
 namespace Organisation\Factory;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
+use Interop\Container\Exception\ContainerException;
 use Organisation\Service\FormService;
-use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\Exception\ServiceNotCreatedException;
+use Zend\ServiceManager\Exception\ServiceNotFoundException;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -27,16 +31,18 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class FormServiceFactory implements FactoryInterface
 {
     /**
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ContainerInterface $container
+     * @param string             $requestedName
+     * @param array|null|null    $options
      *
      * @return FormService
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FormService
     {
         $formService = new FormService();
-        $formService->setServiceLocator($serviceLocator);
+        $formService->setServiceLocator($container);
         /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->get(EntityManager::class);
+        $entityManager = $container->get(EntityManager::class);
         $formService->setEntityManager($entityManager);
 
         return $formService;
