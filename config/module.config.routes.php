@@ -55,7 +55,7 @@ return [
                             'defaults' => [
                                 'controller' => Controller\JsonController::class,
                                 'action'     => 'get-branch',
-                            ]
+                            ],
                         ],
                         'child_routes' => [
                             'get-branches' => [
@@ -67,9 +67,9 @@ return [
                                         'action'     => 'get-branches',
                                     ],
                                     'query'    => [
-                                        'organisationId' => null
-                                    ]
-                                ]
+                                        'organisationId' => null,
+                                    ],
+                                ],
                             ],
                             'check-vat'    => [
                                 'type'    => 'Segment',
@@ -80,11 +80,11 @@ return [
                                         'action'     => 'check-vat',
                                     ],
                                     'query'    => [
-                                        'financialId' => null
-                                    ]
-                                ]
+                                        'financialId' => null,
+                                    ],
+                                ],
                             ],
-                        ]
+                        ],
 
                     ],
                     'search' => [

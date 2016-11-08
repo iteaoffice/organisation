@@ -32,8 +32,8 @@ class OrganisationTypeController extends OrganisationAbstractController
      */
     public function listAction()
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()
             ->findEntitiesFiltered(Entity\Type::class, $filterPlugin->getFilter());
 
@@ -47,13 +47,15 @@ class OrganisationTypeController extends OrganisationAbstractController
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        return new ViewModel([
-            'paginator'     => $paginator,
-            'form'          => $form,
-            'encodedFilter' => urlencode($filterPlugin->getHash()),
-            'order'         => $filterPlugin->getOrder(),
-            'direction'     => $filterPlugin->getDirection(),
-        ]);
+        return new ViewModel(
+            [
+                'paginator'     => $paginator,
+                'form'          => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
+            ]
+        );
     }
 
     /**
@@ -80,9 +82,12 @@ class OrganisationTypeController extends OrganisationAbstractController
                 $type = $form->getData();
 
                 $result = $this->getOrganisationService()->newEntity($type);
-                $this->redirect()->toRoute('zfcadmin/organisation-type/view', [
+                $this->redirect()->toRoute(
+                    'zfcadmin/organisation-type/view',
+                    [
                     'id' => $result->getId(),
-                ]);
+                    ]
+                );
             }
         }
 
@@ -109,9 +114,12 @@ class OrganisationTypeController extends OrganisationAbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/organisation-type/view', [
+                $this->redirect()->toRoute(
+                    'zfcadmin/organisation-type/view',
+                    [
                     'id' => $type->getId(),
-                ]);
+                    ]
+                );
             }
 
             if ($form->isValid()) {
@@ -119,9 +127,12 @@ class OrganisationTypeController extends OrganisationAbstractController
                 $type = $form->getData();
 
                 $result = $this->getOrganisationService()->newEntity($type);
-                $this->redirect()->toRoute('zfcadmin/organisation-type/view', [
+                $this->redirect()->toRoute(
+                    'zfcadmin/organisation-type/view',
+                    [
                     'id' => $result->getId(),
-                ]);
+                    ]
+                );
             }
         }
 

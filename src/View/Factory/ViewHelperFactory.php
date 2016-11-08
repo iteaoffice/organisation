@@ -15,11 +15,10 @@
 
 namespace Organisation\View\Factory;
 
-use Organisation\View\Helper\AbstractViewHelper;
 use Interop\Container\ContainerInterface;
+use Organisation\View\Helper\AbstractViewHelper;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\HelperPluginManager;
 
 /**
@@ -68,25 +67,5 @@ final class ViewHelperFactory implements FactoryInterface
         $viewHelper->setHelperPluginManager($container->get('ViewHelperManager'));
 
         return $viewHelper;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param string                  $canonicalName
-     * @param string                  $requestedName
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $canonicalName = null, $requestedName = null)
-    {
-        return $this($serviceLocator, $requestedName, $this->creationOptions);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setCreationOptions(array $creationOptions)
-    {
-        $this->creationOptions = $creationOptions;
     }
 }

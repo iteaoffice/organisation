@@ -15,7 +15,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
 use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
@@ -92,17 +91,21 @@ class Log extends EntityAbstract implements ResourceInterface
      */
     public function getInputFilter()
     {
-        if (!$this->inputFilter) {
+        if (! $this->inputFilter) {
             $inputFilter = new InputFilter();
-            $factory = new InputFactory();
-            $inputFilter->add($factory->createInput([
-                    'name'     => 'log',
-                    'required' => true,
-                    'filters'  => [
-                        ['name' => 'StripTags'],
-                        ['name' => 'StringTrim'],
-                    ],
-                ]));
+            $factory     = new InputFactory();
+            $inputFilter->add(
+                $factory->createInput(
+                    [
+                        'name'     => 'log',
+                        'required' => true,
+                        'filters'  => [
+                            ['name' => 'StripTags'],
+                            ['name' => 'StringTrim'],
+                        ],
+                    ]
+                )
+            );
 
             $this->inputFilter = $inputFilter;
         }

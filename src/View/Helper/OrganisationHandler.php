@@ -143,7 +143,7 @@ class OrganisationHandler extends AbstractViewHelper
     public function extractContentParam(Content $content)
     {
         //Give default the docRef to the handler, this does not harm
-        if (!is_null($this->getRouteMatch()->getParam('docRef'))) {
+        if (! is_null($this->getRouteMatch()->getParam('docRef'))) {
             $this->setOrganisationByDocRef($this->getRouteMatch()->getParam('docRef'));
         }
         foreach ($content->getContentParam() as $param) {
@@ -152,7 +152,7 @@ class OrganisationHandler extends AbstractViewHelper
              */
             switch ($param->getParameter()->getParam()) {
                 case 'docRef':
-                    if (!is_null($docRef = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
+                    if (! is_null($docRef = $this->getRouteMatch()->getParam($param->getParameter()->getParam()))) {
                         $this->setOrganisationByDocRef($docRef);
                     }
                     break;
@@ -207,6 +207,34 @@ class OrganisationHandler extends AbstractViewHelper
     }
 
     /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     *
+     * @return OrganisationHandler
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return ProjectService
+     */
+    public function getProjectService()
+    {
+        return $this->getServiceManager()->get(ProjectService::class);
+    }
+
+    /**
      * @param Organisation $organisation
      *
      * @return null|string
@@ -215,58 +243,6 @@ class OrganisationHandler extends AbstractViewHelper
     {
         return $this->getRenderer()
             ->render('organisation/partial/entity/organisation', ['organisation' => $organisation]);
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return string
-     */
-    public function parseOrganisationMap(Organisation $organisation)
-    {
-        /*
-         * Collect the list of countries from the organisation and cluster
-         */
-        $countries = [$organisation->getCountry()];
-        foreach ($organisation->getClusterMember() as $cluster) {
-            $countries[] = $cluster->getOrganisation()->getCountry();
-        }
-        $options = $this->getModuleOptions();
-        $mapOptions = [
-            'clickable' => true,
-            'colorMin'  => $options->getCountryColorFaded(),
-            'colorMax'  => $options->getCountryColor(),
-            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height'    => '340px',
-        ];
-        /**
-         * @var  CountryMap $countryMap
-         */
-        $countryMap = $this->getHelperPluginManager()->get('countryMap');
-
-        return $countryMap($countries, null, $mapOptions);
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return string
-     */
-    public function parseOrganisationInfo(Organisation $organisation)
-    {
-        return $this->getRenderer()
-            ->render('organisation/partial/entity/organisation-info', ['organisation' => $organisation]);
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return string
-     */
-    public function parseOrganisationLogo(Organisation $organisation)
-    {
-        return $this->getRenderer()
-            ->render('organisation/partial/entity/organisation-logo', ['organisation' => $organisation]);
     }
 
     /**
@@ -279,25 +255,17 @@ class OrganisationHandler extends AbstractViewHelper
     public function parseOrganisationList($page)
     {
         $organisationQuery = $this->getOrganisationService()->findOrganisations(true, true);
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
+        $paginator         = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
         $paginator->setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator->getDefaultItemCountPerPage()));
 
-        return $this->getRenderer()->render('organisation/partial/list/organisation', [
+        return $this->getRenderer()->render(
+            'organisation/partial/list/organisation',
+            [
             'paginator' => $paginator,
-        ]);
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return null|string
-     */
-    public function parseOrganisationTitle(Organisation $organisation)
-    {
-        return $this->getRenderer()
-            ->render('organisation/partial/entity/organisation-title', ['organisation' => $organisation]);
+            ]
+        );
     }
 
     /**
@@ -316,22 +284,6 @@ class OrganisationHandler extends AbstractViewHelper
             'organisation/partial/list/project',
             ['projects' => $projects, 'projectService' => $this->getProjectService()]
         );
-    }
-
-    /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions()
-    {
-        return $this->getServiceManager()->get(ModuleOptions::class);
-    }
-
-    /**
-     * @return ProjectService
-     */
-    public function getProjectService()
-    {
-        return $this->getServiceManager()->get(ProjectService::class);
     }
 
     /**
@@ -366,11 +318,14 @@ class OrganisationHandler extends AbstractViewHelper
          * Parse the organisationService in to have the these functions available in the view
          */
 
-        return $this->getRenderer()->render('organisation/partial/list/article', [
+        return $this->getRenderer()->render(
+            'organisation/partial/list/article',
+            [
             'articles'     => $articles,
             'organisation' => $this->getOrganisation(),
             'limit'        => $this->getLimit(),
-        ]);
+            ]
+        );
     }
 
     /**
@@ -398,22 +353,73 @@ class OrganisationHandler extends AbstractViewHelper
     }
 
     /**
-     * @return Organisation
+     * @param Organisation $organisation
+     *
+     * @return null|string
      */
-    public function getOrganisation()
+    public function parseOrganisationTitle(Organisation $organisation)
     {
-        return $this->organisation;
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation-title', ['organisation' => $organisation]);
     }
 
     /**
      * @param Organisation $organisation
      *
-     * @return OrganisationHandler
+     * @return string
      */
-    public function setOrganisation($organisation)
+    public function parseOrganisationInfo(Organisation $organisation)
     {
-        $this->organisation = $organisation;
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation-info', ['organisation' => $organisation]);
+    }
 
-        return $this;
+    /**
+     * @param Organisation $organisation
+     *
+     * @return string
+     */
+    public function parseOrganisationMap(Organisation $organisation)
+    {
+        /*
+         * Collect the list of countries from the organisation and cluster
+         */
+        $countries = [$organisation->getCountry()];
+        foreach ($organisation->getClusterMember() as $cluster) {
+            $countries[] = $cluster->getOrganisation()->getCountry();
+        }
+        $options    = $this->getModuleOptions();
+        $mapOptions = [
+            'clickable' => true,
+            'colorMin'  => $options->getCountryColorFaded(),
+            'colorMax'  => $options->getCountryColor(),
+            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height'    => '340px',
+        ];
+        /**
+         * @var  CountryMap $countryMap
+         */
+        $countryMap = $this->getHelperPluginManager()->get('countryMap');
+
+        return $countryMap($countries, null, $mapOptions);
+    }
+
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions()
+    {
+        return $this->getServiceManager()->get(ModuleOptions::class);
+    }
+
+    /**
+     * @param Organisation $organisation
+     *
+     * @return string
+     */
+    public function parseOrganisationLogo(Organisation $organisation)
+    {
+        return $this->getRenderer()
+            ->render('organisation/partial/entity/organisation-logo', ['organisation' => $organisation]);
     }
 }

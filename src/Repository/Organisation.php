@@ -60,7 +60,8 @@ class Organisation extends EntityRepository
             $subSelect2->from(Affiliation::class, 'affiliation_entity_affiliation');
             $subSelect2->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
             $subSelect2->innerJoin(
-                'affiliation_entity_affiliation.organisation', 'affiliation_entity_affiliation_organisation'
+                'affiliation_entity_affiliation.organisation',
+                'affiliation_entity_affiliation_organisation'
             );
 
             $queryBuilder->andWhere(
@@ -263,7 +264,7 @@ class Organisation extends EntityRepository
         $queryBuilder->leftJoin('affiliation_entity_affiliation.project', 'project_entity_project');
         $queryBuilder->setParameter('searchItem', "%" . $searchItem . "%");
 
-        if ( ! is_null($countryId)) {
+        if (! is_null($countryId)) {
             $queryBuilder->andWhere('organisation_entity_organisation.country = ?3');
             $queryBuilder->setParameter(3, $countryId);
         }
@@ -330,6 +331,36 @@ class Organisation extends EntityRepository
     }
 
     /**
+     * @param Contact $contact
+     *
+     * @return array
+     */
+    public function findOrganisationForProfileEditByContact(Contact $contact)
+    {
+        $organisations = [];
+        //Start with your own organisation
+
+        if (! is_null($contact->getContactOrganisation())) {
+            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()]
+                = $contact->getContactOrganisation()->getOrganisation();
+        }
+
+        foreach ($this->findOrganisationByEmailAddress($contact->getEmail()) as $organisation) {
+            $organisations[$organisation->getId()] = $organisation;
+        }
+
+        asort($organisations);
+
+        //Add an empty value
+        $emptyOrganisation = new Entity\Organisation();
+        $emptyOrganisation->setId(0);
+        $emptyOrganisation->setOrganisation('&mdash; None of the above');
+        $organisations[$emptyOrganisation->getId()] = $emptyOrganisation;
+
+        return $organisations;
+    }
+
+    /**
      * @param         $emailAddress
      *
      * @return Entity\Organisation[]|null
@@ -344,7 +375,8 @@ class Organisation extends EntityRepository
 
         //Inner join on contact_organisations to only have active organisations
         $queryBuilder->leftJoin(
-            'organisation_entity_organisation.contactOrganisation', 'organisation_entity_contactorganisation'
+            'organisation_entity_organisation.contactOrganisation',
+            'organisation_entity_contactorganisation'
         );
 
 
@@ -371,36 +403,6 @@ class Organisation extends EntityRepository
 
 
         return $queryBuilder->getQuery()->getResult();
-    }
-
-    /**
-     * @param Contact $contact
-     *
-     * @return array
-     */
-    public function findOrganisationForProfileEditByContact(Contact $contact)
-    {
-        $organisations = [];
-        //Start with your own organisation
-
-        if ( ! is_null($contact->getContactOrganisation())) {
-            $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()]
-                = $contact->getContactOrganisation()->getOrganisation();
-        }
-
-        foreach ($this->findOrganisationByEmailAddress($contact->getEmail()) as $organisation) {
-            $organisations[$organisation->getId()] = $organisation;
-        }
-
-        asort($organisations);
-
-        //Add an empty value
-        $emptyOrganisation = new Entity\Organisation();
-        $emptyOrganisation->setId(0);
-        $emptyOrganisation->setOrganisation('&mdash; None of the above');
-        $organisations[$emptyOrganisation->getId()] = $emptyOrganisation;
-
-        return $organisations;
     }
 
     /**

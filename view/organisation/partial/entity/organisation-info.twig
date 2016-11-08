@@ -14,15 +14,15 @@
         </dl>
 
         {% if organisation.description %}
-        <h3>{{ translate("txt-organisation-description") }}</h3>
-        <p>{{ organisation.description|raw }}</p>
+            <h3>{{ translate("txt-organisation-description") }}</h3>
+            <p>{{ organisation.description|raw }}</p>
         {% endif %}
 
         {% if organisation.clusterMember.count > 0 %}
-        <h3>{{ translate("txt-cluster-membership") }}</h3>
-        {% for cluster in organisation.clusterMember %}
-            <p>{{ cluster.organisation }}</p>
-        {% endfor %}
+            <h3>{{ translate("txt-cluster-membership") }}</h3>
+            {% for cluster in organisation.clusterMember %}
+                <p>{{ cluster.organisation }}</p>
+            {% endfor %}
         {% endif %}
     </div>
 </div>

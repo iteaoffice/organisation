@@ -74,6 +74,14 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
     }
 
     /**
+     * @return string
+     */
+    public function getCountryColor()
+    {
+        return $this->countryColor;
+    }
+
+    /**
      * @param $countryColor
      *
      * @return ModuleOptions
@@ -86,11 +94,13 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
     }
 
     /**
+     * Returns the assigned hex color of the country map.
+     *
      * @return string
      */
-    public function getCountryColor()
+    public function getCountryColorFaded()
     {
-        return $this->countryColor;
+        return $this->countryColorFaded;
     }
 
     /**
@@ -105,15 +115,5 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
         $this->countryColorFaded = $countryColorFaded;
 
         return $this;
-    }
-
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @return string
-     */
-    public function getCountryColorFaded()
-    {
-        return $this->countryColorFaded;
     }
 }

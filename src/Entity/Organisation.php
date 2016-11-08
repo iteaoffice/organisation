@@ -321,25 +321,25 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     public function __construct()
     {
-        $this->affiliation = new Collections\ArrayCollection();
+        $this->affiliation          = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
-        $this->partnerOrganisation = new Collections\ArrayCollection();
-        $this->partnerFinancial = new Collections\ArrayCollection();
-        $this->domain = new Collections\ArrayCollection();
-        $this->technology = new Collections\ArrayCollection();
-        $this->cluster = new Collections\ArrayCollection();
-        $this->clusterMember = new Collections\ArrayCollection();
-        $this->financialDebtor = new Collections\ArrayCollection();
-        $this->log = new Collections\ArrayCollection();
-        $this->logo = new Collections\ArrayCollection();
-        $this->note = new Collections\ArrayCollection();
-        $this->programDoa = new Collections\ArrayCollection();
-        $this->ideaPartner = new Collections\ArrayCollection();
-        $this->invoice = new Collections\ArrayCollection();
-        $this->boothFinancial = new Collections\ArrayCollection();
-        $this->doa = new Collections\ArrayCollection();
-        $this->organisationBooth = new Collections\ArrayCollection();
-        $this->journal = new Collections\ArrayCollection();
+        $this->partnerOrganisation  = new Collections\ArrayCollection();
+        $this->partnerFinancial     = new Collections\ArrayCollection();
+        $this->domain               = new Collections\ArrayCollection();
+        $this->technology           = new Collections\ArrayCollection();
+        $this->cluster              = new Collections\ArrayCollection();
+        $this->clusterMember        = new Collections\ArrayCollection();
+        $this->financialDebtor      = new Collections\ArrayCollection();
+        $this->log                  = new Collections\ArrayCollection();
+        $this->logo                 = new Collections\ArrayCollection();
+        $this->note                 = new Collections\ArrayCollection();
+        $this->programDoa           = new Collections\ArrayCollection();
+        $this->ideaPartner          = new Collections\ArrayCollection();
+        $this->invoice              = new Collections\ArrayCollection();
+        $this->boothFinancial       = new Collections\ArrayCollection();
+        $this->doa                  = new Collections\ArrayCollection();
+        $this->organisationBooth    = new Collections\ArrayCollection();
+        $this->journal              = new Collections\ArrayCollection();
     }
 
     /**

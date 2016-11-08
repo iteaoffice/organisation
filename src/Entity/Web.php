@@ -87,14 +87,6 @@ class Web extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -103,11 +95,11 @@ class Web extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $main
+     * @param int $id
      */
-    public function setMain($main)
+    public function setId($id)
     {
-        $this->main = $main;
+        $this->id = $id;
     }
 
     /**
@@ -119,11 +111,11 @@ class Web extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Organisation\Entity\Organisation $organisation
+     * @param int $main
      */
-    public function setOrganisation($organisation)
+    public function setMain($main)
     {
-        $this->organisation = $organisation;
+        $this->main = $main;
     }
 
     /**
@@ -135,11 +127,11 @@ class Web extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param string $web
+     * @param \Organisation\Entity\Organisation $organisation
      */
-    public function setWeb($web)
+    public function setOrganisation($organisation)
     {
-        $this->web = $web;
+        $this->organisation = $organisation;
     }
 
     /**
@@ -148,5 +140,13 @@ class Web extends EntityAbstract implements ResourceInterface
     public function getWeb()
     {
         return $this->web;
+    }
+
+    /**
+     * @param string $web
+     */
+    public function setWeb($web)
+    {
+        $this->web = $web;
     }
 }

@@ -31,8 +31,10 @@ class Financial extends EntityRepository
         $queryBuilder->join('financial.organisation', 'organisation');
 
         if (array_key_exists('search', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()
-                ->like('organisation.organisation', ':like'));
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->like('organisation.organisation', ':like')
+            );
             $queryBuilder->setParameter(
                 'like',
                 sprintf("%%%s%%", $filter['search'])
@@ -40,32 +42,40 @@ class Financial extends EntityRepository
         }
 
         if (array_key_exists('vatStatus', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()
-                ->in(
-                    'financial.vatStatus',
-                    implode($filter['vatStatus'], ', ')
-                ));
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->in(
+                        'financial.vatStatus',
+                        implode($filter['vatStatus'], ', ')
+                    )
+            );
         }
 
         if (array_key_exists('omitContact', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()
-                ->in(
-                    'financial.omitContact',
-                    implode($filter['omitContact'], ', ')
-                ));
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->in(
+                        'financial.omitContact',
+                        implode($filter['omitContact'], ', ')
+                    )
+            );
         }
 
         if (array_key_exists('requiredPurchaseOrder', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()
-                ->in(
-                    'financial.requiredPurchaseOrder',
-                    implode($filter['requiredPurchaseOrder'], ', ')
-                ));
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->in(
+                        'financial.requiredPurchaseOrder',
+                        implode($filter['requiredPurchaseOrder'], ', ')
+                    )
+            );
         }
 
         if (array_key_exists('email', $filter)) {
-            $queryBuilder->andWhere($queryBuilder->expr()
-                ->in('financial.email', implode($filter['email'], ', ')));
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->in('financial.email', implode($filter['email'], ', '))
+            );
         }
 
         $direction = 'ASC';

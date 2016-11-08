@@ -34,8 +34,8 @@ class TypeLink extends LinkAbstract
 {
     /**
      * @param Type|null $type
-     * @param string           $action
-     * @param string           $show
+     * @param string    $action
+     * @param string    $show
      *
      * @return string
      */
@@ -48,15 +48,17 @@ class TypeLink extends LinkAbstract
         $this->setAction($action);
         $this->setShow($show);
 
-        if (!$this->hasAccess($this->getType(), TypeAssertion::class, $this->getAction())) {
+        if (! $this->hasAccess($this->getType(), TypeAssertion::class, $this->getAction())) {
             return '';
         }
 
         $this->addRouterParam('id', $this->getType()->getId());
 
-        $this->setShowOptions([
-            'type' => $this->getType(),
-        ]);
+        $this->setShowOptions(
+            [
+                'type' => $this->getType(),
+            ]
+        );
 
         return $this->createLink();
     }
@@ -84,11 +86,13 @@ class TypeLink extends LinkAbstract
                 $this->setText(sprintf($this->translate('txt-view-organisation-type-%s'), $this->getType()));
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf(
-                    '%s is an incorrect action for %s',
-                    $this->getAction(),
-                    __CLASS__
-                ));
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        '%s is an incorrect action for %s',
+                        $this->getAction(),
+                        __CLASS__
+                    )
+                );
         }
     }
 }

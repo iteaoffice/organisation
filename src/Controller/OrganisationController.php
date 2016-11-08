@@ -46,7 +46,7 @@ class OrganisationController extends OrganisationAbstractController
         /*
          * Check if the file is cached and if not, create it
          */
-        if (!file_exists($logo->getCacheFileName())) {
+        if (! file_exists($logo->getCacheFileName())) {
             /*
              * The file exists, but is it not updated?
              */
@@ -68,9 +68,9 @@ class OrganisationController extends OrganisationAbstractController
      */
     public function searchAction()
     {
-        $searchItem = $this->getRequest()->getQuery()->get('search_item');
-        $maxResults = $this->getRequest()->getQuery()->get('max_rows', 12);
-        $countryId = $this->getRequest()->getQuery()->get('country');
+        $searchItem   = $this->getRequest()->getQuery()->get('search_item');
+        $maxResults   = $this->getRequest()->getQuery()->get('max_rows', 12);
+        $countryId    = $this->getRequest()->getQuery()->get('country');
         $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
         /**
          * Include a paginator to be able to have later paginated search results in pages
@@ -79,10 +79,12 @@ class OrganisationController extends OrganisationAbstractController
         $paginator->setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
-        $viewModel = new ViewModel([
-            'paginator'           => $paginator,
-            'organisationService' => $this->getOrganisationService()
-        ]);
+        $viewModel = new ViewModel(
+            [
+                'paginator'           => $paginator,
+                'organisationService' => $this->getOrganisationService(),
+            ]
+        );
         $viewModel->setTerminal(true);
         $viewModel->setTemplate('organisation/partial/list/organisation-search');
 

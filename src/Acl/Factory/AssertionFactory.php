@@ -36,11 +36,11 @@ final class AssertionFactory implements FactoryInterface
      * @param string                                     $requestedName
      * @param array|null                                 $options
      *
-     * @return mixed
+     * @return AssertionAbstract
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AssertionAbstract
     {
-        /** @var $assertion AssertionAbstract */
+        /** @var AssertionAbstract $assertion */
         $assertion = new $requestedName($options);
 
         $assertion->setServiceLocator($container);
@@ -65,17 +65,5 @@ final class AssertionFactory implements FactoryInterface
         $assertion->setOrganisationService($organisationService);
 
         return $assertion;
-    }
-
-    /**
-     * @param ServiceLocatorInterface $container
-     * @param null                    $canonicalName
-     * @param                         $requestedName
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $container, $canonicalName = null, $requestedName = null)
-    {
-        return $this($container, $requestedName);
     }
 }

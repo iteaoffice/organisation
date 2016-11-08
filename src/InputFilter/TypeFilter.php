@@ -16,7 +16,6 @@
 namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineModule\Validator;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -35,28 +34,32 @@ class TypeFilter extends InputFilter
     {
         $inputFilter = new InputFilter();
 
-        $inputFilter->add([
-            'name'       => 'type',
-            'required'   => true,
-            'filters'    => [
-                ['name' => 'StripTags'],
-                ['name' => 'StringTrim'],
-            ],
-            'validators' => [
-                [
-                    'name'    => 'StringLength',
-                    'options' => [
-                        'encoding' => 'UTF-8',
-                        'min'      => 1,
-                        'max'      => 255,
+        $inputFilter->add(
+            [
+                'name'       => 'type',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
+                        ],
                     ],
                 ],
-            ],
-        ]);
-        $inputFilter->add([
-            'name'     => 'invoice',
-            'required' => true,
-        ]);
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'invoice',
+                'required' => true,
+            ]
+        );
 
         $this->add($inputFilter, 'organisation_entity_type');
     }

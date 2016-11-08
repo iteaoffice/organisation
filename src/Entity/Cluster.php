@@ -80,14 +80,6 @@ class Cluster extends EntityAbstract
     }
 
     /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -96,11 +88,11 @@ class Cluster extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Organisation[] $member
+     * @param int $id
      */
-    public function setMember($member)
+    public function setId($id)
     {
-        $this->member = $member;
+        $this->id = $id;
     }
 
     /**
@@ -112,11 +104,11 @@ class Cluster extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Organisation $organisation
+     * @param \Organisation\Entity\Organisation[] $member
      */
-    public function setOrganisation($organisation)
+    public function setMember($member)
     {
-        $this->organisation = $organisation;
+        $this->member = $member;
     }
 
     /**
@@ -125,5 +117,13 @@ class Cluster extends EntityAbstract
     public function getOrganisation()
     {
         return $this->organisation;
+    }
+
+    /**
+     * @param \Organisation\Entity\Organisation $organisation
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
     }
 }

@@ -29,8 +29,8 @@ class OrganisationFinancialController extends OrganisationAbstractController
      */
     public function listAction()
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()->findOrganisationFinancialList($filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -42,13 +42,15 @@ class OrganisationFinancialController extends OrganisationAbstractController
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        return new ViewModel([
-            'paginator'     => $paginator,
-            'form'          => $form,
-            'encodedFilter' => urlencode($filterPlugin->getHash()),
-            'order'         => $filterPlugin->getOrder(),
-            'direction'     => $filterPlugin->getDirection(),
-        ]);
+        return new ViewModel(
+            [
+                'paginator'     => $paginator,
+                'form'          => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
+            ]
+        );
     }
 
     /**
@@ -63,19 +65,24 @@ class OrganisationFinancialController extends OrganisationAbstractController
             $financial->setOrganisation($organisation);
         }
 
-        $data = array_merge([
-            'vatType' => ($financial->getVatType()->count() == 0 ? 0 : $financial->getVatType()->first()->getId()),
-        ], $this->getRequest()->getPost()->toArray());
+        $data = array_merge(
+            [
+                'vatType' => ($financial->getVatType()->count() == 0 ? 0 : $financial->getVatType()->first()->getId()),
+            ],
+            $this->getRequest()->getPost()->toArray()
+        );
 
         $form = $this->getFormService()->prepare($financial, $financial, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-financial-organisation-of-%s-has-successfully-been-removed"),
-                        $organisation
-                    ));
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-financial-organisation-of-%s-has-successfully-been-removed"),
+                            $organisation
+                        )
+                    );
 
                 $this->getOrganisationService()->removeEntity($financial);
 
@@ -108,7 +115,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 if ($data['vatType'] == 0) {
                     $financial->setVatType(null);
                 } else {
-                    $vatType = $this->getGeneralService()->findEntityById(VatType::class, $data['vatType']);
+                    $vatType         = $this->getGeneralService()->findEntityById(VatType::class, $data['vatType']);
                     $arrayCollection = new ArrayCollection();
                     $arrayCollection->add($vatType);
                     $financial->setVatType($arrayCollection);
@@ -118,10 +125,12 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 $this->getOrganisationService()->updateEntity($financial);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-financial-organisation-%s-has-successfully-been-updated"),
-                        $organisation
-                    ));
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-financial-organisation-%s-has-successfully-been-updated"),
+                            $organisation
+                        )
+                    );
 
 
                 return $this->redirect()->toRoute(
@@ -133,12 +142,14 @@ class OrganisationFinancialController extends OrganisationAbstractController
         }
 
 
-        return new ViewModel([
-            'organisationService' => $this->getOrganisationService(),
-            'organisation'        => $organisation,
-            'financial'           => $financial,
-            'form'                => $form,
-        ]);
+        return new ViewModel(
+            [
+                'organisationService' => $this->getOrganisationService(),
+                'organisation'        => $organisation,
+                'financial'           => $financial,
+                'form'                => $form,
+            ]
+        );
     }
 
 
@@ -147,8 +158,8 @@ class OrganisationFinancialController extends OrganisationAbstractController
      */
     public function noFinancialAction()
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()
             ->findActiveOrganisationWithoutFinancial($filterPlugin->getFilter());
 
@@ -162,12 +173,14 @@ class OrganisationFinancialController extends OrganisationAbstractController
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
-        return new ViewModel([
-            'paginator'     => $paginator,
-            'form'          => $form,
-            'encodedFilter' => urlencode($filterPlugin->getHash()),
-            'order'         => $filterPlugin->getOrder(),
-            'direction'     => $filterPlugin->getDirection(),
-        ]);
+        return new ViewModel(
+            [
+                'paginator'     => $paginator,
+                'form'          => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
+            ]
+        );
     }
 }

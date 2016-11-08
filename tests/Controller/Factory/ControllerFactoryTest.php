@@ -33,7 +33,7 @@ class ControllerFactoryTest extends TestCase
         $controllerManager = new ControllerManager($container);
 
         $factory = new ControllerFactory();
-        $object = $factory->createService($controllerManager, InvokableController::class, InvokableController::class);
+        $object  = $factory->createService($controllerManager, InvokableController::class, InvokableController::class);
         $this->assertInstanceOf(InvokableController::class, $object);
     }
 

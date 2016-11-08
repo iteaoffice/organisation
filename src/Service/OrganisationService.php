@@ -16,7 +16,6 @@ use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Contact\Service\ContactService;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity\Financial;
@@ -40,6 +39,27 @@ use Zend\Validator\EmailAddress;
  */
 class OrganisationService extends ServiceAbstract
 {
+    /**
+     * @param string $givenName
+     * @param string $organisation
+     *
+     * @return string
+     */
+    public static function determineBranch(string $givenName, string $organisation)
+    {
+        //when the names are identical
+        if ($givenName === $organisation) {
+            return null;
+        }
+
+        /** When the name is not found in the organisation */
+        if (strpos($givenName, $organisation) === false) {
+            return sprintf("!%s", $givenName);
+        }
+
+        return str_replace($organisation, '~', $givenName);
+    }
+
     /**
      * @param $id
      *
@@ -69,7 +89,6 @@ class OrganisationService extends ServiceAbstract
     {
         return trim(sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
-
 
     /**
      * @param $filter
@@ -197,57 +216,6 @@ class OrganisationService extends ServiceAbstract
         return $this->getEntityManager()->getRepository(Organisation::class)->findOneBy(['docRef' => $docRef]);
     }
 
-
-    /**
-     * @param              $branch
-     * @param Organisation $organisation = null
-     *
-     * @return string
-     */
-    public function parseOrganisationWithBranch(
-        $branch,
-        Organisation $organisation
-    ) {
-        return self::parseBranch($branch, $organisation);
-    }
-
-    /**
-     * @param $branch
-     * @param $organisation
-     *
-     * @return string
-     */
-    public static function parseBranch($branch, $organisation): string
-    {
-        if (strpos($branch, '!') === 0) {
-            return substr($branch, 1);
-        }
-
-        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
-    }
-
-    /**
-     * @param string $givenName
-     * @param string $organisation
-     *
-     * @return string
-     */
-    public static function determineBranch(string $givenName, string $organisation)
-    {
-        //when the names are identical
-        if ($givenName === $organisation) {
-            return null;
-        }
-
-        /** When the name is not found in the organisation */
-        if (strpos($givenName, $organisation) === false) {
-            return sprintf("!%s", $givenName);
-        }
-
-        return str_replace($organisation, '~', $givenName);
-    }
-
-
     /**
      * @return Type[]
      */
@@ -313,6 +281,34 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * @param              $branch
+     * @param Organisation $organisation = null
+     *
+     * @return string
+     */
+    public function parseOrganisationWithBranch(
+        $branch,
+        Organisation $organisation
+    ) {
+        return self::parseBranch($branch, $organisation);
+    }
+
+    /**
+     * @param $branch
+     * @param $organisation
+     *
+     * @return string
+     */
+    public static function parseBranch($branch, $organisation): string
+    {
+        if (strpos($branch, '!') === 0) {
+            return substr($branch, 1);
+        }
+
+        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
+    }
+
+    /**
      * Find a country based on three criteria: Name, CountryObject and the email address.
      *
      * @param string  $name
@@ -340,7 +336,10 @@ class OrganisationService extends ServiceAbstract
      *
      * @return Organisation
      */
-    public function createOrganisationFromNameCountryTypeAndEmail(string $name, Country $country, int $typeId,
+    public function createOrganisationFromNameCountryTypeAndEmail(
+        string $name,
+        Country $country,
+        int $typeId,
         string $email
     ): Organisation {
         $organisation = new Organisation();
@@ -359,7 +358,7 @@ class OrganisationService extends ServiceAbstract
         $organisationWeb->setMain(Web::MAIN);
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
-        if ( ! in_array($organisation->getWeb(), ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'])) {
+        if (! in_array($organisation->getWeb(), ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'])) {
             $this->newEntity($organisationWeb);
         }
 

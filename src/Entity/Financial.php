@@ -52,16 +52,6 @@ class Financial extends EntityAbstract implements ResourceInterface
      *
      * @var array
      */
-    protected $vatShiftTemplates
-        = [
-            self::VAT_NOT_SHIFT => 'txt-no-vat-shift',
-            self::VAT_SHIFT     => 'txt-vat-shift',
-        ];
-    /**
-     * Textual versions of the vat shift.
-     *
-     * @var array
-     */
     protected static $omitContactTemplates
         = [
             self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
@@ -86,6 +76,16 @@ class Financial extends EntityAbstract implements ResourceInterface
         = [
             self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
             self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
+        ];
+    /**
+     * Textual versions of the vat shift.
+     *
+     * @var array
+     */
+    protected $vatShiftTemplates
+        = [
+            self::VAT_NOT_SHIFT => 'txt-no-vat-shift',
+            self::VAT_SHIFT     => 'txt-vat-shift',
         ];
     /**
      * @ORM\Column(name="financial_id", length=10, type="integer", nullable=false)
@@ -235,45 +235,6 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * ToString
-     * Return the id here for form population.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->organisation;
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getVatShiftTemplates()
-    {
-        return $this->vatShiftTemplates;
-    }
-
-    /**
      * @return array
      */
     public static function getVatStatusTemplates()
@@ -305,13 +266,42 @@ class Financial extends EntityAbstract implements ResourceInterface
         return self::$requiredPurchaseOrderTemplates;
     }
 
+    /**
+     * @param $property
+     *
+     * @return mixed
+     */
+    public function __get($property)
+    {
+        return $this->$property;
+    }
 
     /**
-     * @param string $bic
+     * @param $property
+     * @param $value
      */
-    public function setBic($bic)
+    public function __set($property, $value)
     {
-        $this->bic = $bic;
+        $this->$property = $value;
+    }
+
+    /**
+     * ToString
+     * Return the id here for form population.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->organisation;
+    }
+
+    /**
+     * @return array
+     */
+    public function getVatShiftTemplates()
+    {
+        return $this->vatShiftTemplates;
     }
 
     /**
@@ -323,11 +313,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \DateTime $dateVat
+     * @param string $bic
      */
-    public function setDateVat($dateVat)
+    public function setBic($bic)
     {
-        $this->dateVat = $dateVat;
+        $this->bic = $bic;
     }
 
     /**
@@ -339,11 +329,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Organisation\Entity\Organisation $debtor
+     * @param \DateTime $dateVat
      */
-    public function setDebtor($debtor)
+    public function setDateVat($dateVat)
     {
-        $this->debtor = $debtor;
+        $this->dateVat = $dateVat;
     }
 
     /**
@@ -355,11 +345,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $email
+     * @param \Organisation\Entity\Organisation $debtor
      */
-    public function setEmail($email)
+    public function setDebtor($debtor)
     {
-        $this->email = $email;
+        $this->debtor = $debtor;
     }
 
     /**
@@ -377,11 +367,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Invoice\Entity\Financial\Row[] $financialRow
+     * @param int $email
      */
-    public function setFinancialRow($financialRow)
+    public function setEmail($email)
     {
-        $this->financialRow = $financialRow;
+        $this->email = $email;
     }
 
     /**
@@ -393,11 +383,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param string $iban
+     * @param \Invoice\Entity\Financial\Row[] $financialRow
      */
-    public function setIban($iban)
+    public function setFinancialRow($financialRow)
     {
-        $this->iban = $iban;
+        $this->financialRow = $financialRow;
     }
 
     /**
@@ -409,11 +399,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $id
+     * @param string $iban
      */
-    public function setId($id)
+    public function setIban($iban)
     {
-        $this->id = $id;
+        $this->iban = $iban;
     }
 
     /**
@@ -425,11 +415,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $omitContact
+     * @param int $id
      */
-    public function setOmitContact($omitContact)
+    public function setId($id)
     {
-        $this->omitContact = $omitContact;
+        $this->id = $id;
     }
 
     /**
@@ -447,11 +437,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Organisation\Entity\Organisation $organisation
+     * @param int $omitContact
      */
-    public function setOrganisation($organisation)
+    public function setOmitContact($omitContact)
     {
-        $this->organisation = $organisation;
+        $this->omitContact = $omitContact;
     }
 
     /**
@@ -463,11 +453,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $requiredPurchaseOrder
+     * @param \Organisation\Entity\Organisation $organisation
      */
-    public function setRequiredPurchaseOrder($requiredPurchaseOrder)
+    public function setOrganisation($organisation)
     {
-        $this->requiredPurchaseOrder = $requiredPurchaseOrder;
+        $this->organisation = $organisation;
     }
 
     /**
@@ -485,11 +475,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $shiftVat
+     * @param int $requiredPurchaseOrder
      */
-    public function setShiftVat($shiftVat)
+    public function setRequiredPurchaseOrder($requiredPurchaseOrder)
     {
-        $this->shiftVat = $shiftVat;
+        $this->requiredPurchaseOrder = $requiredPurchaseOrder;
     }
 
     /**
@@ -501,11 +491,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param string $vat
+     * @param int $shiftVat
      */
-    public function setVat($vat)
+    public function setShiftVat($shiftVat)
     {
-        $this->vat = $vat;
+        $this->shiftVat = $shiftVat;
     }
 
     /**
@@ -517,11 +507,11 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param int $vatStatus
+     * @param string $vat
      */
-    public function setVatStatus($vatStatus)
+    public function setVat($vat)
     {
-        $this->vatStatus = $vatStatus;
+        $this->vat = $vat;
     }
 
     /**
@@ -536,6 +526,14 @@ class Financial extends EntityAbstract implements ResourceInterface
         }
 
         return $this->vatStatus;
+    }
+
+    /**
+     * @param int $vatStatus
+     */
+    public function setVatStatus($vatStatus)
+    {
+        $this->vatStatus = $vatStatus;
     }
 
     /**

@@ -26,9 +26,7 @@ use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
-use Zend\Mvc\Controller\ControllerManager;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\HelperPluginManager;
 
 /**
@@ -46,7 +44,8 @@ final class ControllerFactory implements FactoryInterface
      * @return OrganisationAbstractController
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null
-    ): OrganisationAbstractController {
+    ): OrganisationAbstractController
+    {
         /** @var OrganisationAbstractController $controller */
         $controller = new $requestedName($options);
 

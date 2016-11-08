@@ -110,7 +110,15 @@ class Type extends EntityAbstract implements ResourceInterface
     public function __construct()
     {
         $this->organisation = new Collections\ArrayCollection();
-        $this->meetingCost = new Collections\ArrayCollection();
+        $this->meetingCost  = new Collections\ArrayCollection();
+    }
+
+    /**
+     * @return array
+     */
+    public static function getInvoiceTemplates()
+    {
+        return self::$invoiceTemplates;
     }
 
     /**
@@ -141,14 +149,6 @@ class Type extends EntityAbstract implements ResourceInterface
     public function __toString()
     {
         return (string)$this->description;
-    }
-
-    /**
-     * @return array
-     */
-    public static function getInvoiceTemplates()
-    {
-        return self::$invoiceTemplates;
     }
 
     /**

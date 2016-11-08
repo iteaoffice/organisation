@@ -12,7 +12,6 @@
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\Organisation;
-use Organisation\Service;
 use Project\Entity\Logo;
 
 /**

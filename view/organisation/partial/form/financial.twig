@@ -31,9 +31,10 @@
     <label class="col-sm-3 control-label">{{ translate("txt-vat-status") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static"><span id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
+        <p class="form-control-static"><span
+                    id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
                 ({{ financial.dateVat|string_date }})</span>
-        {#<i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i></p>#}
+            {#<i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i></p>#}
     </div>
 </div>
 

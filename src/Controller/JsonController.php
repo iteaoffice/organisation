@@ -25,7 +25,7 @@ class JsonController extends OrganisationAbstractController
     public function getBranchesAction()
     {
         $organisationId = (int)$this->getEvent()->getRequest()->getPost()->get('organisationId');
-        $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
+        $organisation   = $this->getOrganisationService()->findOrganisationById($organisationId);
 
         if (is_null($organisation)) {
             return $this->notFoundAction();
@@ -36,10 +36,10 @@ class JsonController extends OrganisationAbstractController
 
         $branches = [];
         foreach ($options as $key => $branch) {
-            $branchValue = [];
+            $branchValue          = [];
             $branchValue['value'] = $key;
             $branchValue['label'] = $branch;
-            $branches[] = $branchValue;
+            $branches[]           = $branchValue;
         }
 
         return new JsonModel($branches);
@@ -61,7 +61,7 @@ class JsonController extends OrganisationAbstractController
         }
 
         //Overrule the vat when a VAT number is sent via the URL
-        if (!is_null($this->getEvent()->getRequest()->getPost()->get('vat'))) {
+        if (! is_null($this->getEvent()->getRequest()->getPost()->get('vat'))) {
             $vat = $this->getEvent()->getRequest()->getPost()->get('vat');
         } else {
             $vat = $financial->getVat();
@@ -69,10 +69,12 @@ class JsonController extends OrganisationAbstractController
 
         $vies = new Vies();
         if (false === $vies->getHeartBeat()->isAlive()) {
-            return new JsonModel([
-                'success' => 'error',
-                'result'  => 'Service is not available at the moment, please try again later.'
-            ]);
+            return new JsonModel(
+                [
+                    'success' => 'error',
+                    'result'  => 'Service is not available at the moment, please try again later.',
+                ]
+            );
         } else {
             try {
                 $result = $vies->validateVat(
@@ -87,29 +89,35 @@ class JsonController extends OrganisationAbstractController
                     $this->getOrganisationService()->updateEntity($financial);
 
 
-                    return new JsonModel([
-                        'success' => 'success',
-                        'result'  => 'Valid',
-                        'status'  => Financial::VAT_STATUS_VALID
-                    ]);
+                    return new JsonModel(
+                        [
+                            'success' => 'success',
+                            'result'  => 'Valid',
+                            'status'  => Financial::VAT_STATUS_VALID,
+                        ]
+                    );
                 } else {
                     //Update the financial
                     $financial->setVatStatus(Financial::VAT_STATUS_INVALID);
                     $financial->setDateVat(new \DateTime());
                     $this->getOrganisationService()->updateEntity($financial);
 
-                    return new JsonModel([
-                        'success' => 'error',
-                        'result'  => 'Invalid',
-                        'status'  => Financial::VAT_STATUS_INVALID
-                    ]);
+                    return new JsonModel(
+                        [
+                            'success' => 'error',
+                            'result'  => 'Invalid',
+                            'status'  => Financial::VAT_STATUS_INVALID,
+                        ]
+                    );
                 }
-            } catch (\Exception $e) {
-                return new JsonModel([
-                    'success' => 'error',
-                    'result'  => $e->getMessage(),
-                    'status'  => Financial::VAT_STATUS_UNDEFINED
-                ]);
+            } catch (\Throwable $e) {
+                return new JsonModel(
+                    [
+                        'success' => 'error',
+                        'result'  => $e->getMessage(),
+                        'status'  => Financial::VAT_STATUS_UNDEFINED,
+                    ]
+                );
             }
         }
     }

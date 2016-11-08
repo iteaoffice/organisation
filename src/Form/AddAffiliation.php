@@ -45,36 +45,40 @@ class AddAffiliation extends Form
          * @var $newProject Project
          */
         foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)->getResult() as $newProject) {
-            if (!in_array($newProject->getId(), $currentProjects)) {
+            if (! in_array($newProject->getId(), $currentProjects)) {
                 $projects[$newProject->getId()] = sprintf("%s", $newProject);
             }
         }
 
         arsort($projects);
 
-        $this->add([
-            'type'       => 'Zend\Form\Element\Select',
-            'name'       => 'project',
-            'options'    => [
-                'value_options' => $projects,
-                'help-block'    => _("txt-project-help-block")
-            ],
-            'attributes' => [
-                'label' => _("txt-project")
-            ],
-        ]);
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Select',
+                'name'       => 'project',
+                'options'    => [
+                    'value_options' => $projects,
+                    'help-block'    => _("txt-project-help-block"),
+                ],
+                'attributes' => [
+                    'label' => _("txt-project"),
+                ],
+            ]
+        );
 
 
-        $this->add([
-            'type'       => 'Zend\Form\Element\Text',
-            'name'       => 'branch',
-            'options'    => [
-                'help-block' => _("txt-branch-help-block")
-            ],
-            'attributes' => [
-                'label' => _("txt-branch"),
-            ],
-        ]);
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Text',
+                'name'       => 'branch',
+                'options'    => [
+                    'help-block' => _("txt-branch-help-block"),
+                ],
+                'attributes' => [
+                    'label' => _("txt-branch"),
+                ],
+            ]
+        );
 
         $contacts = [];
         foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
@@ -83,34 +87,40 @@ class AddAffiliation extends Form
 
         asort($contacts);
 
-        $this->add([
-            'type'       => 'Contact\Form\Element\Contact',
-            'name'       => 'contact',
-            'options'    => [
-                'value_options' => $contacts,
-                'help-block'    => _("txt-technical-contact-help-block")
-            ],
-            'attributes' => [
-                'label' => _("txt-technical-contact")
-            ],
-        ]);
+        $this->add(
+            [
+                'type'       => 'Contact\Form\Element\Contact',
+                'name'       => 'contact',
+                'options'    => [
+                    'value_options' => $contacts,
+                    'help-block'    => _("txt-technical-contact-help-block"),
+                ],
+                'attributes' => [
+                    'label' => _("txt-technical-contact"),
+                ],
+            ]
+        );
 
 
-        $this->add([
-            'type'       => 'Zend\Form\Element\Submit',
-            'name'       => 'submit',
-            'attributes' => [
-                'class' => "btn btn-primary",
-                'value' => _("txt-submit"),
-            ],
-        ]);
-        $this->add([
-            'type'       => 'Zend\Form\Element\Submit',
-            'name'       => 'cancel',
-            'attributes' => [
-                'class' => "btn btn-warning",
-                'value' => _("txt-cancel"),
-            ],
-        ]);
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'submit',
+                'attributes' => [
+                    'class' => "btn btn-primary",
+                    'value' => _("txt-submit"),
+                ],
+            ]
+        );
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'cancel',
+                'attributes' => [
+                    'class' => "btn btn-warning",
+                    'value' => _("txt-cancel"),
+                ],
+            ]
+        );
     }
 }

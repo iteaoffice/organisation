@@ -115,45 +115,11 @@ class Logo extends EntityAbstract
     }
 
     /**
-     * Although an alternative does not have a clear hash, we can create one based on the id;.
-     *
-     * @return string
+     * @return mixed
      */
-    public function getHash()
+    public function getId()
     {
-        return hash('sha512', $this->id . self::HASH_KEY);
-    }
-
-    /**
-     * @param \General\Entity\ContentType $contentType
-     */
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-
-    /**
-     * @return \General\Entity\ContentType
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * @param \DateTime $dateUpdated
-     */
-    public function setDateUpdated($dateUpdated)
-    {
-        $this->dateUpdated = $dateUpdated;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateUpdated()
-    {
-        return $this->dateUpdated;
+        return $this->id;
     }
 
     /**
@@ -165,19 +131,45 @@ class Logo extends EntityAbstract
     }
 
     /**
-     * @return mixed
+     * Although an alternative does not have a clear hash, we can create one based on the id;.
+     *
+     * @return string
      */
-    public function getId()
+    public function getHash()
     {
-        return $this->id;
+        return hash('sha512', $this->id . self::HASH_KEY);
     }
 
     /**
-     * @param string $logoExtension
+     * @return \General\Entity\ContentType
      */
-    public function setLogoExtension($logoExtension)
+    public function getContentType()
     {
-        $this->logoExtension = $logoExtension;
+        return $this->contentType;
+    }
+
+    /**
+     * @param \General\Entity\ContentType $contentType
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateUpdated()
+    {
+        return $this->dateUpdated;
+    }
+
+    /**
+     * @param \DateTime $dateUpdated
+     */
+    public function setDateUpdated($dateUpdated)
+    {
+        $this->dateUpdated = $dateUpdated;
     }
 
     /**
@@ -189,11 +181,11 @@ class Logo extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Organisation $organisation
+     * @param string $logoExtension
      */
-    public function setOrganisation($organisation)
+    public function setLogoExtension($logoExtension)
     {
-        $this->organisation = $organisation;
+        $this->logoExtension = $logoExtension;
     }
 
     /**
@@ -205,11 +197,11 @@ class Logo extends EntityAbstract
     }
 
     /**
-     * @param string $organisationLogo
+     * @param \Organisation\Entity\Organisation $organisation
      */
-    public function setOrganisationLogo($organisationLogo)
+    public function setOrganisation($organisation)
     {
-        $this->organisationLogo = $organisationLogo;
+        $this->organisation = $organisation;
     }
 
     /**
@@ -218,5 +210,13 @@ class Logo extends EntityAbstract
     public function getOrganisationLogo()
     {
         return $this->organisationLogo;
+    }
+
+    /**
+     * @param string $organisationLogo
+     */
+    public function setOrganisationLogo($organisationLogo)
+    {
+        $this->organisationLogo = $organisationLogo;
     }
 }

@@ -29,10 +29,10 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Organisation\Entity\Organisation::class
+                                        'id' => Organisation\Entity\Organisation::class,
                                     ],
                                     'invokables' => [
-                                        Organisation\Navigation\Invokable\OrganisationLabel::class
+                                        Organisation\Navigation\Invokable\OrganisationLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
@@ -68,7 +68,7 @@ return [
                                     ],
                                 ],
                             ],
-                        ]
+                        ],
                     ],
                     'financial-organisation-list' => [
                         'label' => _("txt-nav-financial-organisation-list"),
@@ -98,7 +98,7 @@ return [
                                     ],
                                     'invokables' => [
                                         Organisation\Navigation\Invokable\TypeLabel::class,
-                                    ]
+                                    ],
                                 ],
                                 'pages'   => [
                                     'organisation-type-edit' => [
@@ -111,7 +111,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                ]
+                                ],
                             ],
                             'organisation-new'       => [
                                 'label' => _("txt-create-new-organisation-type"),

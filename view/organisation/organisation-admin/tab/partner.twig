@@ -15,7 +15,9 @@
 
         <dt>{{ translate("txt-application") }}</dt>
         {% if organisation.partner.applicantPartner.applicant %}
-            <dd>{{ applicantLink(organisation.partner.applicantPartner.applicant,'view', 'name') }} ({{ organisation.partner.applicantPartner.dateCreated|string_date }})</dd>
+            <dd>{{ applicantLink(organisation.partner.applicantPartner.applicant,'view', 'name') }}
+                ({{ organisation.partner.applicantPartner.dateCreated|string_date }})
+            </dd>
         {% else %}
             <dd>{{ translate("txt-partner-not-created-via-application") }}</dd>
         {% endif %}
