@@ -64,8 +64,8 @@ class Financial extends EntityAbstract implements ResourceInterface
      */
     protected static $emailTemplates
         = [
-            self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
             self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
+            self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
         ];
     /**
      * Textual versions of the vat shift.
