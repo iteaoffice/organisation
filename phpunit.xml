@@ -12,8 +12,7 @@
   ~ @link        http://github.com/iteaoffice/project for the canonical source repository
   -->
 
-<phpunit bootstrap="tests/Bootstrap.php"
-         colors="true"
+<phpunit colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
