@@ -1,17 +1,3 @@
-<!--
-  ~ ITEA Office copyright message placeholder.
-  ~
-  ~ PHP Version 5
-  ~
-  ~ @category    Project
-  ~
-  ~ @author      Johan van der Heide <johan.van.der.heide@itea3.org>
-  ~ @copyright   2004-2016 ITEA Office
-  ~ @license     https://itea3.org/license.txt proprietary
-  ~
-  ~ @link        http://github.com/iteaoffice/project for the canonical source repository
-  -->
-
 <phpunit colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -33,6 +19,6 @@
     </filter>
 
     <logging>
-        <log type="coverage-clover" target="./clover.xml"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
     </logging>
 </phpunit>
