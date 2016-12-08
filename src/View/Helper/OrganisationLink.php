@@ -62,10 +62,22 @@ class OrganisationLink extends LinkAbstract
              */
             $this->setShowOptions(
                 [
-                    'more'            => $this->translate("txt-read-more"),
-                    'name'            => $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation()),
-                    'alternativeShow' => $this->getAlternativeShow(),
+                    'more'             => $this->translate("txt-read-more"),
+                    'name'             => $this->getOrganisationService()
+                                               ->parseOrganisationWithBranch(
+                                                   $this->getBranch(),
+                                                   $this->getOrganisation()
+                                               ),
+                    'name-and-country' => sprintf(
+                        "%s (%s)",
+                        $this->getOrganisationService()
+                                                                  ->parseOrganisationWithBranch(
+                                                                      $this->getBranch(),
+                                                                      $this->getOrganisation()
+                                                                  ),
+                        $this->getOrganisation()->getCountry()
+                    ),
+                    'alternativeShow'  => $this->getAlternativeShow(),
                 ]
             );
             $this->addRouterParam('id', $this->getOrganisation()->getId());
@@ -99,8 +111,8 @@ class OrganisationLink extends LinkAbstract
         if (in_array(
             $this->getAction(),
             [
-            'view',
-            'view-article',
+                'view',
+                'view-article',
             ]
         )) {
             if (is_null($this->getOrganisation())) {
@@ -128,7 +140,7 @@ class OrganisationLink extends LinkAbstract
                     sprintf(
                         $this->translate("txt-edit-organisation-%s"),
                         $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -138,7 +150,7 @@ class OrganisationLink extends LinkAbstract
                     sprintf(
                         $this->translate("txt-edit-financial-organisation-%s"),
                         $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -152,7 +164,7 @@ class OrganisationLink extends LinkAbstract
                     sprintf(
                         $this->translate("txt-add-organisation-%s-to-project"),
                         $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -174,7 +186,7 @@ class OrganisationLink extends LinkAbstract
                     sprintf(
                         $this->translate("txt-view-organisation-%s"),
                         $this->getOrganisationService()
-                        ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -184,7 +196,7 @@ class OrganisationLink extends LinkAbstract
                     sprintf(
                         $this->translate("txt-view-article-for-organisation-%s"),
                         $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());

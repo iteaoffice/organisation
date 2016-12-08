@@ -314,6 +314,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Invoice\Entity\Reminder[]|Collections\ArrayCollection()
      */
     private $reminder;
+    /**
+     * @ORM\ManyToMany(targetEntity="Project\Entity\Result\Result", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     * Second param to be able to selecte more than 1 project per result
+     *
+     * @var \Project\Entity\Result\Result[]|Collections\ArrayCollection
+     */
+    private $result;
 
 
     /**
@@ -340,6 +348,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->doa                  = new Collections\ArrayCollection();
         $this->organisationBooth    = new Collections\ArrayCollection();
         $this->journal              = new Collections\ArrayCollection();
+        $this->result               = new Collections\ArrayCollection();
     }
 
     /**
@@ -1028,6 +1037,26 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setReminder($reminder)
     {
         $this->reminder = $reminder;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|\Project\Entity\Result\Result[]
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|\Project\Entity\Result\Result[] $result
+     *
+     * @return Organisation
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
 
         return $this;
     }

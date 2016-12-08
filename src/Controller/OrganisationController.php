@@ -76,7 +76,7 @@ class OrganisationController extends OrganisationAbstractController
          * Include a paginator to be able to have later paginated search results in pages
          */
         $paginator = new Paginator(new ArrayAdapter($searchResult));
-        $paginator->setDefaultItemCountPerPage($maxResults);
+        $paginator::setDefaultItemCountPerPage($maxResults);
         $paginator->setCurrentPageNumber(1);
         $paginator->setPageRange(1);
         $viewModel = new ViewModel(

@@ -194,7 +194,7 @@ class OrganisationService extends ServiceAbstract
             $invoiceContactList[] = $invoice->getContact()->getId();
         }
 
-        if (sizeof($invoiceContactList) === 0) {
+        if (count($invoiceContactList) === 0) {
             return null;
         }
 
@@ -424,7 +424,7 @@ class OrganisationService extends ServiceAbstract
             if ($onlyActiveProject && is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
                 $organisations[sprintf(
-                    "%s-%s",
+                    '%s-%s',
                     $affiliation->getOrganisation()->getOrganisation(),
                     $affiliation->getOrganisation()->getCountry()->getCountry()
                 )]

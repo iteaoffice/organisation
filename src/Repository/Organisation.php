@@ -53,7 +53,7 @@ class Organisation extends EntityRepository
             );
         }
 
-        if (array_key_exists('options', $filter) && in_array(1, $filter['options'])) {
+        if (array_key_exists('options', $filter) && in_array(1, $filter['options'], true)) {
             //Make a second sub-select to cancel out organisations which have a financial organisation
             $subSelect2 = $this->_em->createQueryBuilder();
             $subSelect2->select('affiliation_entity_affiliation_organisation');
@@ -70,7 +70,7 @@ class Organisation extends EntityRepository
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -147,7 +147,7 @@ class Organisation extends EntityRepository
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -434,30 +434,28 @@ class Organisation extends EntityRepository
     }
 
     /**
-     * Find participants based on the given criteria.
-     *
      * @param Meeting    $meeting
      * @param Parameters $search
      *
-     * @return Registration[]
+     * @return Entity\Organisation[]
      */
     public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('o', 'partial l.{id}', 'partial ct.{id,extension}');
+        $queryBuilder->select('organisation_entity_organisation', 'partial l.{id}', 'partial ct.{id,extension}');
 
-        $queryBuilder->distinct('o.id');
-        $queryBuilder->from('Organisation\Entity\Organisation', 'o');
-        $queryBuilder->join('o.contactOrganisation', 'co');
-        $queryBuilder->leftJoin('o.description', 'd');
-        $queryBuilder->leftJoin('o.logo', 'l');
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.contactOrganisation', 'co');
+        $queryBuilder->leftJoin('organisation_entity_organisation.description', 'd');
+        $queryBuilder->leftJoin('organisation_entity_organisation.logo', 'l');
         $queryBuilder->join('l.contentType', 'ct');
 
         /*
          * The search can be refined on country and type, include the results here
          */
         if ($search->get('country') && $search->get('country') !== '0') {
-            $queryBuilder->join('o.country', 'country');
+            $queryBuilder->join('organisation_entity_organisation.country', 'country');
             $queryBuilder->andWhere('country.id = ?7');
             $queryBuilder->setParameter(7, $search->get('country'));
         }
@@ -465,13 +463,13 @@ class Organisation extends EntityRepository
          * The search can be refined on country and type, include the results here
          */
         if ($search->get('organisationType')) {
-            $queryBuilder->join('o.type', 'type');
+            $queryBuilder->join('organisation_entity_organisation.type', 'type');
             $queryBuilder->andWhere($queryBuilder->expr()->in('type.id', $search->get('organisationType')));
         }
         $queryBuilder->andWhere(
             $queryBuilder->expr()->orX(
                 $queryBuilder->expr()->like('d.description', '?4'),
-                $queryBuilder->expr()->like('o.organisation', '?4')
+                $queryBuilder->expr()->like('organisation_entity_organisation.organisation', '?4')
             )
         );
         /*
@@ -491,7 +489,7 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter(2, Registration::NOT_HIDE_IN_LIST);
         $queryBuilder->setParameter(3, Registration::NOT_OVERBOOKED);
         $queryBuilder->setParameter(4, '%' . $search->get('search') . '%');
-        $queryBuilder->addOrderBy('o.organisation', 'ASC');
+        $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', 'ASC');
 
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
