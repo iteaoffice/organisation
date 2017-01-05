@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
@@ -13,8 +13,8 @@ namespace Organisation\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Organisation\Entity\Parent\Financial;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * Organisation.
@@ -24,7 +24,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  */
-class Organisation extends EntityAbstract implements ResourceInterface
+class Organisation extends AbstractEntity
 {
     /**
      * @ORM\Column(name="organisation_id", length=10, type="integer", nullable=false)
@@ -47,7 +47,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @ORM\OneToMany(targetEntity="Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Contact\Entity\ContactOrganisation[]
+     * @var \Contact\Entity\ContactOrganisation[]|Collections\ArrayCollection
      */
     private $contactOrganisation;
     /**
@@ -81,7 +81,6 @@ class Organisation extends EntityAbstract implements ResourceInterface
      * @var \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
      */
     private $affiliation;
-
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -92,24 +91,45 @@ class Organisation extends EntityAbstract implements ResourceInterface
     /**
      * @ORM\OneToOne(targetEntity="Partner\Entity\Partner", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
-     *
+     * @deprecated
      * @var \Partner\Entity\Partner
      */
     private $partner;
     /**
+     * @ORM\OneToMany(targetEntity="Partner\Entity\Organisation", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     * @deprecated
+     * @var \Partner\Entity\Organisation[]|Collections\ArrayCollection
+     */
+    private $partnerOrganisation;
+    /**
      * @ORM\OneToMany(targetEntity="Partner\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     *
+     * @deprecated
      * @var \Partner\Entity\Financial[]|Collections\ArrayCollection
      */
     private $partnerFinancial;
     /**
-     * @ORM\OneToMany(targetEntity="Partner\Entity\Organisation", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\OParent", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Partner\Entity\Organisation[]|Collections\ArrayCollection
+     * @var \Organisation\Entity\OParent
      */
-    private $partnerOrganisation;
+    private $parent;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Financial", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\Financial[]|Collections\ArrayCollection
+     */
+    private $parentFinancial;
+    /**
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Parent\Organisation", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\Organisation
+     */
+    private $parentOrganisation;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country",inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumns({
@@ -163,7 +183,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $type;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist","remove"}, mappedBy="organisation")
      * @ORM\OrderBy({"main"="DESC"})
      *
      * @var \Organisation\Entity\Web[]|Collections\ArrayCollection
@@ -196,14 +216,14 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $technology;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Cluster", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Cluster", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
      */
     private $cluster;
     /**
-     * @ORM\ManyToMany(targetEntity="Organisation\Entity\Cluster", inversedBy="member", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Organisation\Entity\Cluster", inversedBy="member", cascade={"persist","remove"})
      * @ORM\JoinTable(name="cluster_organisation",
      *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
      *            inverseJoinColumns={@ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")}
@@ -216,35 +236,42 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $clusterMember;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Log[]|Collections\ArrayCollection
      */
     private $log;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist","remove"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Description
      */
     private $description;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Logo", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Logo", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Logo[]|Collections\ArrayCollection
      */
     private $logo;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Note", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Note", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Note[]|Collections\ArrayCollection
      */
     private $note;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Name", cascade={"persist","remove"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Name[]|Collections\ArrayCollection
+     */
+    private $names;
+    /**
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist","remove"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Financial
@@ -258,7 +285,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $financialDebtor;
     /**
-     * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
      * @var \Program\Entity\Doa[]|Collections\ArrayCollection
@@ -279,13 +306,12 @@ class Organisation extends EntityAbstract implements ResourceInterface
      */
     private $boothFinancial;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
      * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
      */
     private $doa;
-
     /**
      * @ORM\OneToOne(targetEntity="Partner\Entity\Applicant", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
@@ -331,9 +357,12 @@ class Organisation extends EntityAbstract implements ResourceInterface
     {
         $this->affiliation          = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
+        $this->contactOrganisation  = new Collections\ArrayCollection();
         $this->partnerOrganisation  = new Collections\ArrayCollection();
         $this->partnerFinancial     = new Collections\ArrayCollection();
+        $this->parentFinancial      = new Collections\ArrayCollection();
         $this->domain               = new Collections\ArrayCollection();
+        $this->names                = new Collections\ArrayCollection();
         $this->technology           = new Collections\ArrayCollection();
         $this->cluster              = new Collections\ArrayCollection();
         $this->clusterMember        = new Collections\ArrayCollection();
@@ -348,6 +377,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
         $this->doa                  = new Collections\ArrayCollection();
         $this->organisationBooth    = new Collections\ArrayCollection();
         $this->journal              = new Collections\ArrayCollection();
+        $this->reminder             = new Collections\ArrayCollection();
         $this->result               = new Collections\ArrayCollection();
     }
 
@@ -364,10 +394,22 @@ class Organisation extends EntityAbstract implements ResourceInterface
     /**
      * @param $property
      * @param $value
+     *
+     * @retun void
      */
     public function __set($property, $value)
     {
         $this->$property = $value;
+    }
+
+    /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
     }
 
     /**
@@ -376,7 +418,7 @@ class Organisation extends EntityAbstract implements ResourceInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->organisation;
     }
@@ -597,6 +639,66 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setPartnerOrganisation($partnerOrganisation)
     {
         $this->partnerOrganisation = $partnerOrganisation;
+
+        return $this;
+    }
+
+    /**
+     * @return \Organisation\Entity\OParent
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * @param \Organisation\Entity\OParent $parent
+     *
+     * @return Organisation
+     */
+    public function setParent(\Organisation\Entity\OParent $parent): Organisation
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Financial[]|Collections\ArrayCollection
+     */
+    public function getParentFinancial()
+    {
+        return $this->parentFinancial;
+    }
+
+    /**
+     * @param Financial[]|Collections\ArrayCollection $parentFinancial
+     *
+     * @return Organisation
+     */
+    public function setParentFinancial($parentFinancial)
+    {
+        $this->parentFinancial = $parentFinancial;
+
+        return $this;
+    }
+
+    /**
+     * @return \Organisation\Entity\Parent\Organisation
+     */
+    public function getParentOrganisation()
+    {
+        return $this->parentOrganisation;
+    }
+
+    /**
+     * @param \Organisation\Entity\Parent\Organisation
+     *
+     * @return Organisation
+     */
+    public function setParentOrganisation($parentOrganisation)
+    {
+        $this->parentOrganisation = $parentOrganisation;
 
         return $this;
     }
@@ -1057,6 +1159,26 @@ class Organisation extends EntityAbstract implements ResourceInterface
     public function setResult($result)
     {
         $this->result = $result;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Name[]
+     */
+    public function getNames()
+    {
+        return $this->names;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Name[] $names
+     *
+     * @return Organisation
+     */
+    public function setNames($names)
+    {
+        $this->names = $names;
 
         return $this;
     }

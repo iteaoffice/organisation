@@ -1,0 +1,993 @@
+24IP Law Group	Member of AENEAS
+3D PLUS	DoA
+3E N.V.
+77 Elektronika Müszeripari KFT	DoA
+ÅAC Microtec	Free-rider
+AAE BV	DoA
+AALBORG UNIVERSITET
+Aalto University	DoA
+ACADEMISCH ZIEKENHUIS LEIDEN
+ACCIONA INFRAESTRUCTURAS S.A.
+Acondicionamiento Tarrasense 	Member of AENEAS
+Acreo Swedish ICT AB	Member of AENEAS
+ADAMA INNOVATIONS LTD
+Adimec Advanced Image Systems BV	Member of AENEAS
+ADIRA - Metal Forming Solutions S.A.
+ADIXEN VACUUM PRODUCTS SAS
+ADR-CMP	Member of AENEAS
+Advance Mask Technology Center Dresden GmbH & Co. KG	DoA
+ADVANCED AUTOMOTIVE ANTENNAS S.L
+Advanced Laser Separation International NV	DoA
+Advanced Packaging Center BV	Member of AENEAS
+AED Engineering GmbH	Member of AENEAS
+AENEAS	other
+AENEAS pays for FreeRiders	Member of AENEAS
+AEROVIA	DoA
+Afore Oy	Member of AENEAS
+Agencia Estatal Consejo Superior de Investigaciones Científicas - CSIC	Member of AENEAS
+AGH University of Science and Technology	DoA
+Air Liquide Electronics Systems	DoA
+Airbus Defence and Space GmbH	DoA
+Airbus DS SAS	Member of AENEAS
+AIS Automation Dresden GmbH	DoA
+AISMALIBAR	Free-rider
+AIT Austrian Institute of Technology GmbH	DoA
+AITEK SOCIETA' PER AZIONI
+AITIA INTERNATIONAL INFORMATIKAI ZARTKORUEN MUKODO RT
+aixACCT Systems GmbH	Free-rider
+AIXTRON AG	Member of AENEAS
+ALCATEL-LUCENT DEUTSCHLAND AG
+Aldebaran Robotics	Free-rider
+AllGreenVehicles	Free-rider
+ALLIANCE POUR LES TECHNOLOGIES DE L'INFORMATIQUE
+ALMA Consulting Group	Member of AENEAS
+Alma Mater Studiorum - Università di Bologna	Member of AENEAS
+Alpwise
+ALTE Visetec Oy
+ALTEN SVERIGE AB
+Altera Corporation	Free-rider
+Altis Semiconductor	Free-rider
+Amepox Microelectronics	Free-rider
+AMITRONICS Angewandte Mikromechatronik GmbH	Member of AENEAS
+AMO GmbH	Member of AENEAS
+ams AG	Member of AENEAS
+ams Netherlands B.V.
+ams Sensor Solutions Germany GmbH	DoA
+Analog Devices International	Member of AENEAS
+ANDRITZ AG
+ANSALDO STS S.p.A.
+ANTERYON BV
+Anvosys GmbH	Free-rider
+APIX Analytics	DoA
+Applied Materials Israel	Member of AENEAS
+Applied Micro Electronics "AME" B.V.	Free-rider
+AP-Technologies	Free-rider
+Archimede Elettronica Srl	Member of AENEAS
+Aristotle University of Thessaloniki	Member of AENEAS
+Arkema France SA	DoA
+ARM Ltd	Past Member
+ART S.r.l.	Past Member
+Artemis Control AG	Member of AENEAS
+Artesyn Austria GmbH&CoKG	Free-rider
+ASCATRON AB
+Aselta Nanographics SA	DoA
+Aselta Nanographics SA
+ASM International N.V.	Member of AENEAS
+ASML Netherlands B.V	Member of AENEAS
+ASSOCIATION POUR LA RECHERCHE ET LE DEVELOPPEMENT DES METHODES ET PROCESSUS INDUSTRIELS - ARMINES	DoA
+ASTRON Netherlands Institute for Radio Astronomy	Member of AENEAS
+Asygn S.A.S.	DoA
+ASYS Automatic Systems GmbH & Co.KG	Member of AENEAS
+AT & S AUSTRIA TECHNOLOGIE & SYSTEMTECHNIK AKTIENGESELLSCHAFT
+AT&S	DoA
+Atlas Copco Airpower N.V.
+ATMEL	Member of AENEAS
+Atos Origin sae	DoA
+ATOTECH DEUTSCHLAND GMBH	Free-rider
+ATRENTA France SAS	DoA
+Attolight Sàrl
+AUDI AKTIENGESELLSCHAFT	Member of AENEAS
+AUDI AKTIENGESELLSCHAFT	Member of AENEAS
+Audit Diagnostics	DoA
+Austrian Center of Competence in Mechatronics GmbH	DoA
+AUTOLIV DEVELOPMENT AB
+Autoliv Electronic SAS
+AUTOLIV ELECTRONICS AB
+Automotive Industry Institute  	DoA
+Avisi B.V.	Free-rider
+AVL List GmbH	DoA
+Axiom	Free-rider
+Axon Digital Design BV	Member of AENEAS
+Axxicon Moulds Eindhoven BV	DoA
+AZCOM Technology S.R.L.	DoA
+AZZURRO Semiconductors AG	Free-rider
+BARCO NV	Free-rider
+BASF SCHWEIZ AG
+Baumann GmbH
+Benchmark Electronics BV	DoA
+Bergh Hybrid Circuits BV	Free-rider
+Berliner Glas KGaA	DoA
+BERLINER NANOTEST UND DESIGN GMBH	Member of AENEAS
+Berner&Mattner Systemtechnik GmbH
+Bernitz Electronics GmbH
+BESI Austria GmbH	Member of AENEAS
+BEST electronique	Free-rider
+Biometric Technology Solutions Limited	Free-rider
+Bitron SpA	DoA
+BJB GmbH & Co.KG	Free-rider
+BodyCap
+BONN Hungary Electronics Ltd. (BHE)	Free-rider
+Bosch Rexroth BV	Member of AENEAS
+Bosch Security Systems B.V.	Member of AENEAS
+Boschman Technologies B.V.	Member of AENEAS
+Brio Apps Alphasip SL	DoA
+British Gas Trading Ltd	Free-rider
+Brno University of Technology	Member of AENEAS
+Bronkhorst High-Tech BV	Member of AENEAS
+Brooks CCS GmbH
+Bruco	Free-rider
+Bruker JV Israel Ltd	Member of AENEAS
+BTC EMBEDDED SYSTEMS AG
+Bubbles and Beyond GmbH
+Budapest University	DoA
+Bull SAS	Member of AENEAS
+CADENCE	Free-rider
+Caeleste CVBA	Member of AENEAS
+CAMECA
+Camline	DoA
+CapnaDSP Ltd	Free-rider
+CAPRES A/S
+Carl Zeiss SMS GmbH	Member of AENEAS
+Carl Zeiss SMS Ltd	Member of AENEAS
+Carl Zeiss SMT GmbH	Member of AENEAS
+Cascade MicroTech	DoA
+Catalan Institute of Nanotechnology	Free-rider
+CATENA Holding B.V.	Member of AENEAS
+CATRENE	Member of AENEAS
+Cavendish Kinetics B.V.	DoA
+Cavotec Germany GmbH
+C-CAM
+CCM Centre for Concepts in Mechatronics BV	DoA
+CEA-LETI	Member of AENEAS
+CENTRE D ETUDES ET D EXPERTISE SUR LES RISQUES L ENVIRONNEMENT LA MOBILITE ET L AMENAGEMENT
+Centre for Energy Research, Hungarian Academy of Sciences	Member of AENEAS
+Centre Hospitalier Universitaire Grenoble Alpes	DoA
+Centre National d'Etudes Spatiales	DoA
+CENTRE TECNOLOGIC DE TELECOMUNICACIONS DE CATALUNYA	DoA
+CENTRO DE INNOVACION Y SOLUCIONES EMPRESARIALES Y TECNOLOGICAS SL
+Centro Ricerche Fiat S.C.p.A.	DoA
+CEST Kompetenzzentrum fur elektro-chemische Oberflachentechnologie GmbH	DoA
+CEZAMAT PW Sp. z o.o.	DoA
+Chalmers Tekniska Högskola AB	Free-rider
+CHAMBRE DE COMMERCE ET D'INDUSTRIE DE REGION PARIS-ILE-DE-FRANCE
+Charité-Universitätsmedizin Berlin	DoA
+CIAT	DoA
+CIDETE INGENIEROS SL	Free-rider
+Circuit Multi Projets	Free-rider
+CIRTEM	Free-rider
+CISC Semiconductor GmbH	Member of AENEAS
+CIT Recycling Development AB	Free-rider
+CLEARSY SAS
+CMOSIS bvba	DoA
+CMOSIS NV
+CNRS	Member of AENEAS
+Cochlear Technology Centre	Member of AENEAS
+Comentor AB
+ComHeat Microwave AB	Free-rider
+COMPAAN DESIGN BV	Free-rider
+Compel Electronics S.p.A.	Free-rider
+CONNECT GROUP NV	Free-rider
+Conpart AS	DoA
+CONSORCIO PARA EL DISENO, CONSTRUCCION, EQUIPAMIENTO Y EXPLOTACION DE LA PLATAFORMA OCEANICA DE CANARIAS
+CONSORZIO INTERUNIVERSITARIO NAZIONALE PER L'INFORMATICA
+Continental Corporation	Free-rider
+Corscience GmbH & Co. KG	DoA
+Coventor SARL	Member of AENEAS
+Creanex Oy
+Critical Manufacturing S.A.	Member of AENEAS
+CRYTUR  	DoA
+CSEM	Member of AENEAS
+CTR Carinthian Tech Research AG	DoA
+CycloMedia Technology B.V.	Free-rider
+Cytocentrics BV	DoA
+Czech Technical University in Prague	DoA
+Czech Technical University in Prague - Dept. Cybernetics	DoA
+D4T Systems BV	DoA
+Dai Nippon Printing	Free-rider
+DAIMLER AG
+DANFOSS A/S
+DANMARKS TEKNISKE UNIVERSITET
+Danube Mobile Communications Engineering GmbH & Co KG	Member of AENEAS
+DAS GmbH	Member of AENEAS
+DeepVision AB
+DelfMEMS	DoA
+Delft University of Technology	Member of AENEAS
+DEMCON	Member of AENEAS
+DENSO AUTOMOTIVE Deutschland GmbH
+Design and Reuse SA	DoA
+DESISTEK ROBOTIK ELEKTRONIK YAZILIM AR-GE UR.DAN.ITH.IHR. TIC.LTD.STI
+DEST	DoA
+DEUTSCHES ZENTRUM FUER LUFT - UND RAUMFAHRT EV
+DNV GL AS
+DOCEA Power	DoA
+Dolomite Microfluidics (member of Blacktrace Group)	Free-rider
+Dolphin	Free-rider
+Dr. Födisch Umweltmesstechnik AG
+Dr. Steffan Datentechnik GmbH
+Dream Chip Technologies GmbH 	Free-rider
+DSP Valley VZW	Member of AENEAS
+Dublin City University	Member of AENEAS
+DxO Labs	DoA
+DxO Silicon Group	DoA
+e2v Semiconductors 	DoA
+E3/DC GmbH	Free-rider
+Eagle Vision Systems B.V.	Member of AENEAS
+EASii IC	Member of AENEAS
+Easy Led Oy	Free-rider
+Eberhard Karls Universität Tübingen	Free-rider
+EBM-Papst	DoA
+ECA Robotics
+ECCE'LECTRO
+ECLIPSE FOUNDATION EUROPE GMBH
+Ecole des Mines de Saint Etienne	Free-rider
+Ecole Polytechnique Fédérales de Lausanne	DoA
+edacentrum e.V.	Member of AENEAS
+EDC ELECTRONIC DESIGN CHEMNITZ GMBH
+EDF R&D	Free-rider
+EDITAG SAS
+Edwards Ltd.	DoA
+EECA-ESIA	Member of AENEAS
+eesy-id GmbH	DoA
+Effegi Elettronica s.r.l.	DoA
+EGSTON System Electronics Eggenburg GmbH	DoA
+Eindhoven University of Technology	Member of AENEAS
+Elastic Clocks S.L.	Past Member
+ElBil Norge AS	Free-rider
+Elec-Con technology GmbH	DoA
+ELEKTRONIKAS UN DATORZINATNU INSTITUTS
+Elettra - Sincrotrone Trieste S.C.p.A.	Member of AENEAS
+Elmos Semiconductor AG	Member of AENEAS
+ELTEK AS
+EMC Israel advanced information technologies	DoA
+Emerson	Free-rider
+EMOSS BV	DoA
+EnablingMNT	Free-rider
+ENCAPSULIX	Free-rider
+Enecsys Limited	DoA
+ENEL DISTRIBUZIONE S.P.A.	Free-rider
+ENERBEE
+ENIAC JU	other
+Entegris Cleaning Process (ECP) SAS	DoA
+EPCOS	Free-rider
+EPIGAN NV	Free-rider
+Epyon	Free-rider
+EQUALID SOLUTIONS S.L.	Free-rider
+Erasmus Universitair Medisch Centrum Rotterdam	DoA
+Ericsson AB	Free-rider
+ESIEE Engineering	Free-rider
+eSilicon	Free-rider
+E-T-A GmbH	Free-rider
+ETC Epitaxial technology Center s.r.l.	Free-rider
+European Batteries Oy	Free-rider
+EUROPEAN CENTER FOR INFORMATION AND COMMUNICATION TECHNOLOGIES GMBH
+European Space Agency	Free-rider
+Eurotech SpA	Member of AENEAS
+EUTEMA	Free-rider
+EV Group E. Thallner	DoA
+Evalan BV	Member of AENEAS
+Eveon SAS	DoA
+EVIDENCE SRL
+EVOLOGICS GMBH
+Fabmatics GmbH	Member of AENEAS
+Fachhochschule Kärnten	DoA
+Fachhochschule Stralsund	DoA
+Fachhochschule Wiener Neustadt	Free-rider
+FAGOR ARRASATE S COOP
+Fairchild Semiconductor GmbH	Member of AENEAS
+FCI	Free-rider
+FEEI (Association of the Austrian Electrical and Electronics Industries)	Member of AENEAS
+FEI Czech Republic s.r.o	DoA
+FEI Czech Republic s.r.o.
+FEI Electron Optics B.V.	DoA
+FEI SAS
+Feinmetall GmbH	DoA
+Ferfics Limited	DoA
+FH Burgenland GmbH
+FH OÖ Forschungs & Entwicklungs GmbH 	DoA
+FH-JOANNEUM Gesellschaft mbH	DoA
+Fico B.V.	DoA
+FICOMIRRORS SA
+FICO-TRIAD SA
+Firecomms Limited	Member of AENEAS
+Fläkt Woods Oy	DoA
+FLAVIA IT Management GmbH	DoA
+Fleming Medical Ltd
+Flexbright Oy
+Fluigent SA	Free-rider
+FMC-TECH LTD.	Free-rider
+Focal 2.0 BV
+Fogale nanotech	Free-rider
+FONDAZIONE BRUNO KESSLER
+Fondazione Istituto Italiano di Tecnologia IIT	Member of AENEAS
+FOR OPTIMAL RENEWABLE ENERGY SYSTEMS SL
+Forschungszentrum Jülich GmbH	Member of AENEAS
+Fortum Power and Heat Oy
+Foundation for Research and Technology Hellas	DoA
+Foundation of Research and Technology Hellas	Free-rider
+Fraunhofer-Verbund Mikroelektronik	Member of AENEAS
+Freiberger Compound Materials GmbH
+Fresenius-Vial SAS	Member of AENEAS
+Fries Research & Technology GmbH	DoA
+Fronius International GmbH	DoA
+Fujifilm Emectroni Materials NV	DoA
+FUJITSU SEMICONDUCTOR EUROPE GMBH
+Fundación CIDETEC	Member of AENEAS
+FUNDACION PARA LA PROMOCION DE LA INNOVACION, INVESTIGACION Y DESARROLLO TECNOLOGICO EN LA INDUSTRIA DE AUTOMOCION DE GALICIA
+FUNDACION TECNALIA RESEARCH & INNOVATION
+FUNDACION TEKNIKER	Member of AENEAS
+Fundacja Rozwoju Kardiochirurgii FRK	Free-rider
+Future Horizons Ltd	Member of AENEAS
+Fyikalni ustav AV	DoA
+Galway Tool and Mould Ltd	DoA
+GAS NATURAL SDG SA
+GE Vingmed Ultrasound	DoA
+Gemalto SA	Member of AENEAS
+Global Nanotechnologies S.A.	Free-rider
+GLOBAL TCAD SOLUTIONS GMBH
+GLOBALFOUNDRIES Dresden Module One LLC & Co. KG	Member of AENEAS
+GMV
+GN ReSound
+GOIZPER S. COOP
+Gold Standard Simulations ltd
+Grass Valley Nederland B.V.	Member of AENEAS
+Green Power Technologies S.L.	DoA
+Greensphere Unip. Lda
+Guger Technologies OG	DoA
+H G E
+Havells Sylvania Lighting Belgium NV
+Heimann Sensor GmbH
+Heliox BV	Member of AENEAS
+Hella Aglaia Mobile Vision GmbH
+Hellenic Aerospace Industry SA	DoA
+Helvar Oy Ab	Free-rider
+Henkel Electronic Materials (Belgium) NV
+HERA S.p.A.	DoA
+Heraeus Quarzglas GmbH & Co KG	DoA
+HI IBERIA INGENIERIA Y PROYECTOS SL
+Hitachi Europe GmbH
+Hochschule Mittweida, University of Applied Sciences
+HÖGANÄS AB (Publ)	DoA
+HONEYWELL INTERNATIONAL SRO
+HOP Ubiquitous S.L.	DoA
+Horiba Jobin Yvon IBH Ltd	Free-rider
+Hottinger Baldwin Messtechnik GmbH
+HQ-Dielectrics GmbH	DoA
+HSEB Dresden GmbH	Member of AENEAS
+HUTCHINSON SA
+HYPERTAC
+IBEO AUTOMOTIVE SYSTEMS GMBH
+IBERMATICA S.A.	DoA
+IBM Nederland B.V.	DoA
+Icare Finland Oy	Member of AENEAS
+I-care sprl	Member of AENEAS
+ICSENSE
+ICT Integrated Circuit Testing Gesellschaft für Halbleiterprüftechnik mbH	Free-rider
+IDEAS & MOTION SRL
+IDNEO TECHNOLOGIES SL
+IHP GmbH	Member of AENEAS
+III-V LAB GIE	Member of AENEAS
+IKERLAN S.COOP.
+ILIAS Solutions
+ILMATIETEEN LAITOS
+IMA MATERIALFORSCHUNG UND ANWENDUNGSTECHNIK GMBH
+IMDS Service BV
+IMEC	Member of AENEAS
+IMEL NCSR Demokritos	Member of AENEAS
+IMEM - Consiglio Nazionale delle Ricerche 	Member of AENEAS
+IMINDS VZW
+IMMS INSTITUT FUER MIKROELEKTRONIK- UND MECHATRONIK-SYSTEME GMBH
+Impara S.r.l.
+IMPRONOVA AB
+IMT National Institute for Research and Development in Microtechnologies	Member of AENEAS
+INACCESS NETWORKS	Free-rider
+INESC Instituto de Engenharia de Sistemas e Computadores	Free-rider
+Infineon Technologies AG	Member of AENEAS
+Infinitesima Limited	Member of AENEAS
+InfraTec GmbH Infrarotsensorik und Messtechnik	DoA
+INGELUX
+Innoluce
+INNOPHYSICS BV	Free-rider
+InnoTech Solar	Free-rider
+INNOVATIVE TECHNOLOGY AND SCIENCE LIMITED - INNOTECUK
+INOV INESC INOVACAO Instituto de Novas Tecnologia	Free-rider
+InReCon AG	Free-rider
+I-NRG B.V.	Free-rider
+INRIA	Past Member
+Insa-lyon	Free-rider
+Inst of High Pressure Physics UNIPRESS	Free-rider
+Insta Elektro GmbH	DoA
+Institut Català de Nanotecnologia	Member of AENEAS
+Institut de Bioenginyeria de Catalunya	DoA
+Institut d'Electronique Fondamentale	Free-rider
+INSTITUT FUER AUTOMATION UND KOMMUNIKATION E.V. MAGDEBURG
+INSTITUT FUER MIKROELEKTRONIK STUTTGART
+Institut für Mikrotechnik Mainz GmbH	DoA
+INSTITUT JOZEF STEFAN
+INSTITUT MIKROELEKTRONICKYCH APLIKACI S.R.O.	Member of AENEAS
+Institut Mines-Télécom	Member of AENEAS
+Institut National de l'Information Géographique et Forestière	DoA
+Institut Polytechnique de Grenoble	Member of AENEAS
+Institute of Communication and Computer Systems	DoA
+Institute of High Pressure Physics of the Polish Academy of Sciences	DoA
+Institute of Scientific Instruments of the ASCR, v.v.i.	DoA
+Institute of Theoretical Electrical Engineering, Leibniz Universitaet Hannover	Free-rider
+Instituto Aragones	DoA
+Instituto de Quimica Avanzada de Catalunya _ CSIC	Member of AENEAS
+Instituto de Telecomunicacoes	DoA
+INSTITUTO TECNOLOGICO DE INFORMATICA
+INSTITUTUL NATIONAL DE CERCETAREDEZVOLTARE PENTRU MICROTEHNOLOGIE
+Instytut Technologii Elektronowej	Member of AENEAS
+INTECS SPA
+INTEGRASYS SA
+Integrated Dynamics Engineering (IDE)	Member of AENEAS
+Integrated Systems Development	Member of AENEAS
+Intel Austria GmbH	Member of AENEAS
+Intel Corporation SAS	Member of AENEAS
+Intel Deutschland GmbH	Member of AENEAS
+INTEL ELECTRONICS LTD
+Intel Mobile Communications Austria GmbH	Member of AENEAS
+Intel Research and Development Ireland Ltd.	Member of AENEAS
+Intelligence Behind Things Solutions S.r.l.
+INTERACTIVE FULLY ELECTRICAL VEHICLES SRL
+INTERDISCIPLINARY INSTITUTE FOR BROADBAND TECHNOLOGY	Free-rider
+International Iberian Nanotechnology Laboratory (INL)	Member of AENEAS
+Interuniversitair Micro-Electronica Centrum vzw	DoA
+INTRACOM S.A. TELECOM SOLUTIONS	Free-rider
+Intraspec Technologies
+Intrinsic ID bv	Member of AENEAS
+Inventas Trondheim AS
+Ion Beam Services	Member of AENEAS
+IPDiA	Member of AENEAS
+Ippon Innovation	DoA
+IQE Europe Ltd	DoA
+Iquadrat Informàtica S.L.	DoA
+Irmato Industrial Solutions Eindhoven BV	DoA
+IROC TECHNOLOGIES SA	DoA
+Isosilicon AS
+Istituto Italiano di Tecnologia	Free-rider
+Istituto P.M. Srl	Free-rider
+ISTITUTO PER LA MICROELETTRONICA E MICROSISTEMI	Free-rider
+iSyst Intelligente Systeme GmbH	Free-rider
+Iszgro Diodes B.V.	DoA
+IU.NET 	Member of AENEAS
+IXION INDUSTRY AND AEROSPACE SL
+Janssen Infectious Diseases _ Diagnotstics BVBA	DoA
+JENOPTIK Optical Systems GmbH
+JLT	Free-rider
+Joanneum Research Forschungsgesellschaft mbH	DoA
+Johannes Kepler Universität Linz	DoA
+JSR Micro NV	DoA
+JTAG Technologies B.V.	DoA
+JVI GmbH
+KAI KOMPETENZZENTRUM AUTOMOBIL - UND INDUSTRIEELEKTRONIK GMBH
+Katholieke Universiteit Leuven (K.U.Leuven)	Member of AENEAS
+KEMET Electronics Italia Srl	DoA
+Kieback&Peter GmbH & Co. KG	Member of AENEAS
+Kiel University (Christian-Albrechts Universitat zu Kiel)	DoA
+KLA-Tencor (Belgium)	DoA
+KLA-Tencor Corporation (Israel)	Member of AENEAS
+KMWE Systems Eindhoven BV	DoA
+Kompetenzzentrum - Das Virtuelle Fahrzeug, Forschungsgesellschaft mbH
+Kompetenzzentrum Automobil- und Industrieelektronik GmbH	Free-rider
+Kontron	DoA
+KPIT MEDINI TECHNOLOGIES AG
+KPS Medical Biotechnology and Healthcare Services Ltd.
+KTH Royal Institute of Technology	Member of AENEAS
+Laboratoire de Microelectronique et de Physique de Semiconducteurs 	Free-rider
+Laboratorios Alpha San Ignacio Pharma S.L.	Member of AENEAS
+LAM Research (Ireland) Limited	Member of AENEAS
+LAM Research AG	Member of AENEAS
+LAM RESEARCH BELGIUM	Member of AENEAS
+LAM Research S.r.l.	Member of AENEAS
+LAM RESEARCH SAS	Member of AENEAS
+Landshut Silicon Foundry GmbH	Member of AENEAS
+LANGE RESEARCH AIRCRAFT GMBH
+Langer EMV-Technik GmbH	Member of AENEAS
+Lapland UAS Ltd / LAPIN AMMATTIKORKEAKOULU OY
+LCPO	Free-rider
+Lear Corporation GmbH	DoA
+LEGRAND	DoA
+Leiden University Medical Center	Member of AENEAS
+Levitech BV	DoA
+Lexas Research	Free-rider
+LFoundry Srl	Member of AENEAS
+Libelium	Free-rider
+Liebherr
+Lifecare	Free-rider
+Lighting Design Collective Oy
+LINKOPINGS UNIVERSITET
+LINZ CENTER OF MECHATRONICS GMBH
+LiveU Ltd.	Free-rider
+LLRC OG	DoA
+LOX Technologies	DoA
+LPE S.p.A.	Free-rider
+Luceda N.V.	Member of AENEAS
+LUST Hybrid technik GmbH
+M+W Germany GmbH	DoA
+M+W Products GmbH	DoA
+m2Xpert GmbH & Co. KG
+M3 Systems	Member of AENEAS
+Maastricht Instruments
+MAATEL SAS	Member of AENEAS
+Machinefabriek Otto Schouten B.V.	Free-rider
+MAELARDALENS HOEGSKOLA
+Magillem Design Services	DoA
+MAGILLEM DESIGN SERVICES SAS
+MAGNA STEYR ENGINEERING AG & CO KG
+MAGNETI MARELLI S.P.A.
+MAGWEL NV	Free-rider
+MARITIME ROBOTICS AS
+Marsica Innovation and Technology S.r.l	Free-rider
+Masarykova univerzita
+MASER Engineering B.V.	Free-rider
+Massive nv.	Free-rider
+Material Recycling and Sustainability (MARAS) Dr.ir. Van Schaik	Free-rider
+Materials Center Leoben 	DoA
+Materials Innovation Institute	Free-rider
+Mat-Tech BV	DoA
+Mattson Thermal Products GmbH	Member of AENEAS
+Max-Planck-Institut für Eisenforschung	Free-rider
+MAZeT GmbH
+MBD Offshore Power
+MDAL SARL
+Mechatronic Systemtechnik GmbH	DoA
+Medimetrics Personalized Drug Delivery BV	DoA
+Mediso	Free-rider
+Medizinische Universitaet Graz	DoA
+Medtronic Bakken Research BV	Member of AENEAS
+Melexis N.V.	DoA
+Mellanox Technologies LTD - MLNX	Free-rider
+MEMSSTAR Ltd.	Member of AENEAS
+MENTOR Graphics	Free-rider
+Merkum	Free-rider
+METAIO GmbH	Past Member
+METATRON SRL	Free-rider
+Metatronics BV	Free-rider
+MetraLabs GmbH Neue Technologlen und Systeme	Member of AENEAS
+Metryx Ltd	Past Member
+METSO AUTOMATION OY	DoA
+Micro Turbine Technology BV	Free-rider
+MICROELETRONICA MASER SL
+microfluidic ChipShop GmbH	Free-rider
+microfluidic ChipShop GmbH	Free-rider
+MicroGaN GmbH	Free-rider
+Micron Semiconductor Italia srl	Member of AENEAS
+Micronic Mydata AB
+Micronit Microfluidics B.V.	DoA
+MicroOled	Free-rider
+Micropelt GmbH	Free-rider
+MICROSHARP CORPORATION LIMITED	Free-rider
+Microspire	DoA
+Microwave Characterization Center SAS	Free-rider
+Midsens Oy	Free-rider
+Minalogic	Member of AENEAS
+MinDCet NV	Member of AENEAS
+Minimax GmbH & Co KG	DoA
+Mirakonta S.L.	Member of AENEAS
+MOBILE INDUSTRIAL ROBOTS ApS
+MOBISOFT OY
+Model Engineering Solutions GmbH
+MODULIGHT OY
+Mogema BV	DoA
+MONDRAGON-Corporation
+Montanuniversität Leoben	Free-rider
+Morpho	Member of AENEAS
+MR:COMP GmbH	Free-rider
+MRI-STaR - Magnetic Resonance Institute for Safety, Technology and Research GmbH	Member of AENEAS
+MTA Atomki	DoA
+MTA TTK Hungarian Academy of Science – Institute for Technical Physics & Materials Science	Free-rider
+MULTI CHANNEL SYSTEMS MCS GMBH
+Multicert	DoA
+MunEDA GmbH	DoA
+Munisense BV	DoA
+Murata Manufacturing Co., Ltd.	DoA
+N.N. Industry	Free-rider
+Nabto ApS
+NaMLab gGmbH
+Nanda Technologies GmbH	Past Member
+Nanium S.A.	DoA
+NanoDesign, ltd.	Member of AENEAS
+NanoFocus AG
+Nanomotion LTD	DoA
+NANOPLAS SAS	other
+NanoXplore	Free-rider
+Nationaal Lucht- en Ruimtevaart Laboratorium	DoA
+National & Kapodistrian University of Athens	Free-rider
+NATIONAL UNIVERSITY OF IRELAND MAYNOOTH	Free-rider
+NAVTOR AS
+Neways Technologies BV	DoA
+Niko NV	DoA
+NM Robotic GmbH
+Nmb-Minebea GmbH	Free-rider
+Nokia	Free-rider
+Nome Oy
+Noray Bioinformativs SL	DoA
+NORDSON Bv
+NORGES TEKNISK-NATURVITENSKAPELIGE UNIVERSITET NTNU
+Norsk Elektro Optikk AS	Member of AENEAS
+NORSTEL AB
+Nova Measuring Instruments Ltd	Member of AENEAS
+NOVASiC SA	Free-rider
+NPL Management Limited	Free-rider
+NXP Semiconductors Netherlands B.V.	Member of AENEAS
+Nxtech AS	DoA
+Oberthur Technologies	DoA
+ODENSE UNIVERSITETSHOSPITAL
+OFFICE NATIONAL D'ETUDES ET DE RECHERCHES AEROSPATIALES
+OFFIS e.V.	Member of AENEAS
+O-FLEXX TECHNOLOGIES GMBH
+OJMAR S.A.
+Okmetic Oyj	DoA
+ON Semiconductor	Member of AENEAS
+OPHTIMALIA SAS
+Oplatek Group Oy
+Optisort AB	Free-rider
+Optronic	Free-rider
+Orange	Member of AENEAS
+OSRAM GMBH	DoA
+Ostbayerische technische Hochschule Amberg-Weiden	DoA
+Österreichisches Forschungs- und Prüfzentrum Arsenal GmbH	DoA
+OSYPKA AG
+Oxford Instruments	DoA
+PACKAGING SIP
+PacTech GmbH	DoA
+Panco GmbH	Free-rider
+PDF solutions	Free-rider
+Pfeiffer Vacuum sas	Member of AENEAS
+Philips Electronics Nederland BV	Member of AENEAS
+Phoenix BV	DoA
+PhoeniX Software BV	Free-rider
+PHOT	Free-rider
+Physikalisch-Technische Bundesanstalt	Past Member
+Pi Lighting SARL
+Picosun Oy	Member of AENEAS
+PISEO
+PKC Electronics	DoA
+Plan Optik AG	Free-rider
+Plansee SE	DoA
+PLASMETREX GMBH
+Plextek Limited	Free-rider
+Plugwise B.V.	Free-rider
+PLURIOMICS BV
+PMB	Free-rider
+Polaris Vision Systems EU Ltd	Free-rider
+Polewall AS	Free-rider
+POLI MODEL SRL	Free-rider
+Polight	Free-rider
+POLIMI: CONSORZIO NAZIONALE INTERUNIVERSITARIO PER LA NANOELETTRONICA
+POLITECHNIKA GDANSKA
+Politechnika Warszawska	DoA
+Politecnico di Milano	Member of AENEAS
+Politecnico di Torino	Member of AENEAS
+POLYDIAGNOST GmbH	Free-rider
+Polymer Competence Center Leoben GmbH	Member of AENEAS
+Powertec s.r.o., Bratislava	Member of AENEAS
+PRAYON S.A
+Presto Engineering Europe	DoA
+Prisma Electronics SA	Free-rider
+Probayes	Free-rider
+Prodrive	Free-rider
+Prodrive Technologies BV	DoA
+Proton World International NV	Free-rider
+PULSE Finland OY	DoA
+PVA TePla AG	Past Member
+PVA TePla Analytical Systems GmbH	Past Member
+Qamcom Research and Technology AB
+Q-Free ASA	Free-rider
+QinetiQ	Free-rider
+Quantemol Ltd	DoA
+QUEST PHOTONIC DEVICES BV
+Radboud University Nijmegen	DoA
+RAPITA SYSTEMS LIMITED
+R-DAS, s.r.o.	DoA
+RECIF Technologies SAS	Member of AENEAS
+Reden BV	DoA
+RENAULT SAS
+Replisaurus Technologies	Free-rider
+RHEINISCH-WESTFAELISCHE TECHNISCHE HOCHSCHULE AACHEN	Member of AENEAS
+RI Research Instruments GmbH
+Riber SA	DoA
+RIJKSUNIVERSITEIT GRONINGEN
+RINA SERVICES SPA
+RO TECHNOLOGY SRL
+Robert Bosch GmbH	Member of AENEAS
+Robert Bosch GmbH Department AE/ESE	Member of AENEAS
+ROBOX	Free-rider
+Rockwool France	Free-rider
+ROHDE & SCHWARZ GMBH&CO KOMMANDITGESELLSCHAFT
+RoodMicrotec Nördilingen GmbH + Co. KG	Member of AENEAS
+ROTH & RAU BV
+RSscan International	DoA
+Rudolph Technologies Europe GmbH	Member of AENEAS
+Rugged Tooling Oy
+Sabanci University	Free-rider
+SafeTRANS e.V.
+Safety Integrity AB
+Sagem Défense Sécurité S.A.	Free-rider
+SagivTech Ltd.	DoA
+Salland Engineering (Europe) BV	DoA
+Sapienza Universita' di Roma	Member of AENEAS
+SARAS technology Ltd	Free-rider
+SC Autonomous Systems SRL
+Schiller Automatisierungstechnik GmbH
+Schmid	Free-rider
+Schneider Electric Industries SAS	DoA
+SCIENCE AND TECHNOLOGY B.V.	DoA
+Science and Technology Facilities Council	Free-rider
+SCUOLA SUPERIORE DI STUDI UNIVERSITARI E DI PERFEZIONAMENTO SANT'ANNA
+Secure-IC	DoA
+SEGULA Technologies Nederland BV	DoA
+SEMCO ENGINEERING SA	Free-rider
+SEMI Europe	Member of AENEAS
+Semikron	Member of AENEAS
+Semilab Co. Ltd.	Member of AENEAS
+Semilev	Past Member
+SemiQuarz GmbH	Member of AENEAS
+Semmelweiss University	DoA
+SenseAir AB
+SenSiC AB	Member of AENEAS
+Sensing Tex	Member of AENEAS
+Sensonor Technologies AS	Past Member
+sentronics metrology GmbH	Member of AENEAS
+SEPS Technologies AB	Member of AENEAS
+SERMA Technologies SA	DoA
+serva transport systems GmbH
+Seuffer GmbH & Co. KG	DoA
+SGS Institut Fresenius GmbH	DoA
+SGS-TÜV Saar GmbH	Member of AENEAS
+SHT Smart High Tech AB	Member of AENEAS
+Sick AG	Free-rider
+SICO Technology GmbH	Free-rider
+SiCrystal AG	Free-rider
+SICS Swedish ICT Västerås AB
+Sidel Blowing and Services	Free-rider
+Siemens	Member of AENEAS
+Siemens AG CT Germany	Member of AENEAS
+Siemens AG CT T DE GTF PTP	Member of AENEAS
+Siemens AG CT T DE HW2	Member of AENEAS
+Siemens AG Oesterreich 	Member of AENEAS
+Siemens Aktiengesellschaft	Member of AENEAS
+Silex Microsystems AB	DoA
+Silicon Biosystems
+SILIOS Technologies	Member of AENEAS
+Siltronic AG	Member of AENEAS
+Silvaco Europe Ltd	DoA
+Singulus Technologies AG	DoA
+SIRRIS HET COLLECTIEF CENTRUM VAN DE TECHNOLOGISCHE INDUSTRIE
+SKF BV
+Sky-Watch A/S
+Slovak University of Technology in Bratislava	DoA
+SMA Solar Technology AG	Free-rider
+Smart High Tech AB	Free-rider
+SMARTRAC TECHNOLOGY Dresden GmbH
+SOFRADIR
+SOFTKINETIC SENSORS NV
+SOITEC	Member of AENEAS
+Solarprint Limited	DoA
+SOLARTEC AG	Free-rider
+SOLBIAN ENERGIE ALTERNATIVE SRL
+Solcalor BV	Free-rider
+SOLEMS SA
+SolMateS B.V.  	DoA
+Solteq Oyj
+Sonitor Technologies AS	Free-rider
+SONY DEUTSCHLAND GMBH
+Sorama B.V.	Member of AENEAS
+Sorin CRM	Member of AENEAS
+Sound Intelligence	Member of AENEAS
+SP	Free-rider
+SPEA S.p.A.	DoA
+SPINVERSE OY	Free-rider
+spring techno GmbH Co KG	Member of AENEAS
+SPTS Technologies Ltd	DoA
+SPTS Technologies SAS	DoA
+Stena Technoworld AB	Free-rider
+ST-Ericsson (GRENOBLE) SAS	Past Member
+STICHTING HET NEDERLANDS KANKER INSTITUUT-ANTONI VAN LEEUWENHOEK ZIEKENHUIS
+Stichting IMEC Nederland	DoA
+Stichting Kempenhaeghe	DoA
+Stiftelsen SINTEF 	Member of AENEAS
+STIFTUNG FZI FORSCHUNGSZENTRUM INFORMATIK AM KARLSRUHER INSTITUT FUR TECHNOLOGIE
+STILL GmbH
+Stiplastics	DoA
+STMicroelectronics International NV	Member of AENEAS
+Stokes Bio Ltd	DoA
+Straatum	Free-rider
+SUPELEC	DoA
+SURECORE LTD	DoA
+SUSS MicroTec AG	Member of AENEAS
+SYNCOM	Free-rider
+Synopsys Switzerland LLC	DoA
+System Integration Laboratory R + D	Member of AENEAS
+SYSTEMA GmbH	Member of AENEAS
+Team Nanotec GmbH	DoA
+TeamNet World Professional Services SRL
+Technical University Dresden	DoA
+TECHNICON APS
+TECHNIKON FORSCHUNGS- UND PLANUNGSGESELLSCHAFT MBH
+TECHNISCHE UNIVERSITAET CHEMNITZ	Free-rider
+Technische Universität Berlin	DoA
+Technische Universität Darmstadt	Free-rider
+Technische Universität Dresden	Member of AENEAS
+Technische Universität Graz	Member of AENEAS
+Technische Universität Ilmenau	Member of AENEAS
+Technische Universität of Wien - Institut für Elektrische Mess-u.	DoA
+Technische Universität of Wien - Institute of Telecommunications	DoA
+Technische Universität of Wien - Other Departments	Free-rider
+Technobis Fibre Technologies BV	Member of AENEAS
+Technofittings	Free-rider
+TECHNOLUTION B.V.	Member of AENEAS
+Technoprobe	DoA
+Tecnologías Servicios Telemáticos y Sistemas S.A.	DoA
+TEKEVER II AUTONOMOUS SYSTEMS LDA
+TEKLATECH	Free-rider
+TEKNOLOGISK INSTITUT
+TELEFUNKEN SEMICONDUCTORS GMBH & CO. KG	Past Member
+TeleMedic Systems Limited	Free-rider
+Teletel	DoA
+TELIT AUTOMOTIVE SOLUTIONS SARL	DoA
+Temento Systems	DoA
+TENNECO AUTOMOTIVE EUROPE BVBA
+TESLA, akciova spolecnost	DoA
+Thales Research & Technology France	Member of AENEAS
+The Chancellor, Masters and Scholars of the University of Cambridge	Free-rider
+The Magstim Company Ltd	Free-rider
+The Motor Insurance Repair Research Centre (Thatcham)
+The University of Glasgow	Free-rider
+The University of Newcastle upon Tyne	Past Member
+The University of Sheffield	DoA
+There Corporation Ltd.	Free-rider
+Theta Microelectronics S.A.	Free-rider
+Think Global AS	Free-rider
+TIEMPO SAS	DoA
+Tieto Finland Oy
+TNO Science and Technology	Member of AENEAS
+TNT-Elektronik AB	Free-rider
+TOKYO ELECTRON EUROPE LIMITED
+TopGaN Sp.z.o.o.	Member of AENEAS
+Toppan Photomasks France SAS	DoA
+Toppan Photomasks Germany GmbH	DoA
+TORINO E-DISTRICT CONSORZIO
+Towa Europe	DoA
+TOYOTA MOTOR EUROPE
+TP Vision Netherlands B.V.	DoA
+Tronico SAS	DoA
+Tronics Microsystems SA	DoA
+Trymax Semiconductor Equipment BV
+T-Systems Enterprise Services GmbH	Free-rider
+TTControl GmbH
+TTI NORTE, S.L.
+TTTECH COMPUTERTECHNIK AG
+TTY-säätiö	Free-rider
+Tubitak	Free-rider
+TWT GmbH 	DoA
+Tyndall National Institute	Member of AENEAS
+UAB Metis Baltic
+ULIS SAS	Free-rider
+Ulm University	DoA
+ULPGC-IUMA	DoA
+Umicore	Free-rider
+UNINOVA - Instituto de Desenvolvimento de Novas Tecnologias	Free-rider
+UNITED MONOLITHIC SEMICONDUCTORS SAS
+United Technologies Research Center	DoA
+UNIVERSIDAD CARLOS III DE MADRID
+Universidad Complutense de Madrid	DoA
+Universidad de Cantabria	Member of AENEAS
+UNIVERSIDAD DE GRANADA
+UNIVERSIDAD DE LAS PALMAS DE GRAN CANARIA
+Universidad de Sevilla	DoA
+UNIVERSIDAD DE ZARAGOZA
+Universidad del Pais Vasco	DoA
+UNIVERSIDAD POLITECNICA DE MADRID
+UNIVERSIDADE DE AVEIRO
+Universidade do Minho	DoA
+UNIVERSITA CATTOLICA DEL SACRO CUORE	DoA
+UNIVERSITA DEGLI STUDI DELL'AQUILA
+Università degli Studi di Firenze	DoA
+Università degli Studi di Milano	Free-rider
+Università degli Studi di Milano-Bicocca	Member of AENEAS
+UNIVERSITA DEGLI STUDI DI PALERMO
+Università degli Studi di Pavia	DoA
+UNIVERSITA DEGLI STUDI GABRIELE D'ANNUNZIO DI CHIETI-PESCARA
+Università degli Studi Roma Tre	Free-rider
+Università della Calabria	Member of AENEAS
+UNIVERSITA DI PISA
+UNIVERSITAET DER BUNDESWEHR MUENCHEN.	DoA
+Universitaet Karlsruhe	Past Member
+UNIVERSITAIR MEDISCH CENTRUM UTRECHT	Free-rider
+UNIVERSITAT AUTONOMA DE BARCELONA	Member of AENEAS
+Universität Innsbruck	DoA
+Universität Kassel	DoA
+Universität München	Free-rider
+Universitat Politècnica de Catalunya	Member of AENEAS
+Universite Catholique Louvain	Member of AENEAS
+UNIVERSITE DE BOURGOGNE
+UNIVERSITE DE LIEGE
+UNIVERSITE DE LORRAINE
+UNIVERSITE FRANCOIS RABELAIS DE TOURS
+UNIVERSITE JOSEPH FOURIER GRENOBLE 1	Free-rider
+UNIVERSITE LYON 1 CLAUDE BERNARD	DoA
+UNIVERSITEIT MAASTRICHT
+UNIVERSITETET I OSLO
+University College Cork	Free-rider
+UNIVERSITY COLLEGE DUBLIN, NATIONAL UNIVERSITY OF IRELAND, DUBLIN
+University College London	DoA
+University of Applied Sciences Amberg-Weiden	DoA
+University of Augsburg	Free-rider
+UNIVERSITY OF BRISTOL	Free-rider
+University of Catania	DoA
+University of Debrecen	DoA
+University of Edinburgh	Free-rider
+University of Erlangen-Nuremberg	Member of AENEAS
+University of Klagenfurt	Member of AENEAS
+University of Leeds	DoA
+University of Malta	Free-rider
+University of Modena	Member of AENEAS
+University of Padova	Free-rider
+University of Pannonia	DoA
+University of Patras	Member of AENEAS
+University of Pavia	Free-rider
+University of Perugia	Member of AENEAS
+University of Salerno	Free-rider
+UNIVERSITY OF SOUTHAMPTON
+UNIVERSITY OF SUSSEX	Free-rider
+University of Twente	DoA
+University of Warsaw	Free-rider
+University POLITEHNICA of Bucharest	Free-rider
+Uppsala University	Member of AENEAS
+Ustav teorie informace a automatizace AV CR v.v.i.	Member of AENEAS
+Vabrema B.V.	DoA
+Vaisala Oyj	DoA
+VALEO	Free-rider
+Valopaa Oy	Free-rider
+VALTION TEKNILLINEN TUTKIMUSKESKUS	Free-rider
+VDL Enabling Technologies Group Eindhoven B.V.	Member of AENEAS
+VDMA Productronics	Member of AENEAS
+VECTOR FABRICS BV
+Vereniging High Tech NL	Member of AENEAS
+Verhaert New Products & Services	DoA
+VESTAS WIND SYSTEMS A/S
+VIA Electronic GmbH	DoA
+VILNIAUS GEDIMINO TECHNIKOS UNIVERSITETAS
+Vilnuis University	Member of AENEAS
+VIRES Simulationstechnologie  GmbH
+VISEO	Free-rider
+Vistec Electron Beam GmbH	Past Member
+VL BV*VIRAGE LOGIC
+VMW Solutions Ltd	Free-rider
+Volvo	Free-rider
+VON ARDENNE GmbH
+VTI Technologies Oy	DoA
+VTT Memsfab Ltd	Member of AENEAS
+VTT Technical Research Centre of Finland Ltd	Member of AENEAS
+Wacker Chemie AG	Free-rider
+WAPICE OY
+WATER LINKED AS
+Westsachsische Hochschule Zwickau	DoA
+WESZTA-T Industrial and Trade Ltd	Free-rider
+Whirlpool	Free-rider
+WHITEHEAD ALENIA SISTEMI SUBACQUEI
+Wittenburg BV	Free-rider
+Xenia Progetti srl	Free-rider
+XENICS	DoA
+XENON Automatisierungstechnik GmbH
+X-FAB Semiconductor Foundries AG	Member of AENEAS
+XLAB RAZVOJ PROGRAMSKE OPREME IN SVETOVANJE D.O.O.
+Xycarb Ceramics BV	DoA
+ZEMSANIA SL	Member of AENEAS
+Zentrum Für Elektronenmikroskopie Graz 	Free-rider
+ZENTRUM MIKROELEKTRONIK DRESDEN AG
+ZF Friedrichshafen AG	DoA
+Zimmertech AS	Free-rider
+ZMDI	Free-rider
+znt Zentren fur Neue Technologien GmbH	DoA

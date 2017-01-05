@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Controller;
@@ -38,7 +38,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $page              = $this->params()->fromRoute('page', 1);
         $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()
-            ->findEntitiesFiltered(Organisation::class, $filterPlugin->getFilter());
+                                  ->findEntitiesFiltered(Organisation::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -77,17 +77,17 @@ class OrganisationAdminController extends OrganisationAbstractController
         $filterPlugin = $this->getInvoiceFilter();
 
         $invoiceQuery = $this->getInvoiceService()
-            ->findEntitiesFiltered(
-                Invoice::class,
-                array_merge(
-                    $filterPlugin->getFilter(),
-                    [
-                        'organisation' => [
-                            $organisation->getId(),
-                        ],
-                    ]
-                )
-            );
+                             ->findEntitiesFiltered(
+                                 Invoice::class,
+                                 array_merge(
+                                     $filterPlugin->getFilter(),
+                                     [
+                                         'organisation' => [
+                                             $organisation->getId(),
+                                         ],
+                                     ]
+                                 )
+                             );
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
@@ -135,19 +135,37 @@ class OrganisationAdminController extends OrganisationAbstractController
         );
         $form = $this->getFormService()->prepare($organisation, $organisation, $data);
 
+        if (! $this->getOrganisationService()->canDeleteOrganisation($organisation)) {
+            $form->remove('delete');
+        }
+
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $organisation->getId()]);
             }
 
+            if (isset($data['delete']) && $this->getOrganisationService()->canDeleteOrganisation($organisation)) {
+                $this->flashMessenger()->setNamespace('success')
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-organisation-%s-has-been-removed-successfully"),
+                             $organisation
+                         )
+                     );
+
+                $this->getOrganisationService()->removeEntity($organisation);
+
+                return $this->redirect()->toRoute('zfcadmin/organisation/list');
+            }
+
             if ($form->isValid()) {
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-organisation-%s-has-successfully-been-updated"),
-                            $organisation
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-organisation-%s-has-successfully-been-updated"),
+                             $organisation
+                         )
+                     );
                 /**
                  * @var $organisation Organisation
                  */
@@ -167,7 +185,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                     $imageSizeValidator->isValid($fileData['file']);
                     $logo->setContentType(
                         $this->getGeneralService()
-                            ->findContentTypeByContentTypeName($fileData['file']['type'])
+                             ->findContentTypeByContentTypeName($fileData['file']['type'])
                     );
                     $logo->setLogoExtension($logo->getContentType()->getExtension());
 
@@ -184,8 +202,6 @@ class OrganisationAdminController extends OrganisationAbstractController
                 $this->getOrganisationService()->updateEntity($organisation);
 
                 return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $organisation->getId()]);
-            } else {
-                var_dump($form->getInputFilter()->getMessages());
             }
         }
 
@@ -242,13 +258,13 @@ class OrganisationAdminController extends OrganisationAbstractController
                 $this->getAffiliationService()->newEntity($affiliation);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
-                            $organisation,
-                            $project
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
+                             $organisation,
+                             $project
+                         )
+                     );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/view',

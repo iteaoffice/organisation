@@ -1,15 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
 
@@ -21,7 +22,7 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_cluster")
  */
-class Cluster extends EntityAbstract
+class Cluster extends AbstractEntity
 {
     /**
      * @ORM\Column(name="cluster_id", length=10, type="integer", nullable=false)
@@ -44,9 +45,17 @@ class Cluster extends EntityAbstract
      * @ORM\ManyToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="clusterMember")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Organisation[]
+     * @var \Organisation\Entity\Organisation[]|ArrayCollection
      */
     private $member;
+
+    /**
+     * Cluster constructor.
+     */
+    public function __construct()
+    {
+        $this->member = new ArrayCollection();
+    }
 
     /**
      * Magic Getter.
@@ -72,9 +81,19 @@ class Cluster extends EntityAbstract
     }
 
     /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf("%s cluster", $this->organisation);
     }
@@ -96,7 +115,7 @@ class Cluster extends EntityAbstract
     }
 
     /**
-     * @return \Organisation\Entity\Organisation[]
+     * @return \Organisation\Entity\Organisation[]|ArrayCollection
      */
     public function getMember()
     {
@@ -104,7 +123,7 @@ class Cluster extends EntityAbstract
     }
 
     /**
-     * @param \Organisation\Entity\Organisation[] $member
+     * @param \Organisation\Entity\Organisation[]|ArrayCollection $member
      */
     public function setMember($member)
     {

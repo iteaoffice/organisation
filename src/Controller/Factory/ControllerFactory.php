@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2016 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -25,6 +25,7 @@ use Invoice\Service\InvoiceService;
 use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\View\HelperPluginManager;
@@ -43,9 +44,11 @@ final class ControllerFactory implements FactoryInterface
      *
      * @return OrganisationAbstractController
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null
-    ): OrganisationAbstractController
-    {
+    public function __invoke(
+        ContainerInterface $container,
+        $requestedName,
+        array $options = null
+    ): OrganisationAbstractController {
         /** @var OrganisationAbstractController $controller */
         $controller = new $requestedName($options);
 
@@ -56,6 +59,10 @@ final class ControllerFactory implements FactoryInterface
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
         $controller->setEntityManager($entityManager);
+
+        /** @var ParentService $parentService */
+        $parentService = $container->get(ParentService::class);
+        $controller->setParentService($parentService);
 
         /** @var ContactService $contactService */
         $contactService = $container->get(ContactService::class);

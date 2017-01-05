@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2016 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -16,16 +16,16 @@
 namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
-use Organisation\Entity\EntityAbstract;
+use Organisation\Entity\AbstractEntity;
 use Zend\Form\Form;
 
 /**
- * Jield webdev copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
- * @author      Johan van der Heide <info@jield.nl>
- * @copyright   Copyright (c) 2015-2016 Jield (http://jield.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 class CreateObject extends Form
 {
@@ -33,9 +33,9 @@ class CreateObject extends Form
      * CreateObject constructor.
      *
      * @param EntityManager  $entityManager
-     * @param EntityAbstract $object
+     * @param AbstractEntity $object
      */
-    public function __construct(EntityManager $entityManager, EntityAbstract $object)
+    public function __construct(EntityManager $entityManager, AbstractEntity $object)
     {
         parent::__construct($object->get("underscore_entity_name"));
 

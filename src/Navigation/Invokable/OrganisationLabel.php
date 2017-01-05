@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2016 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
@@ -16,7 +16,7 @@
 namespace Organisation\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
-use Organisation\Entity\Organisation;
+use Organisation\Entity\Parent\Organisation;
 use Zend\Navigation\Page\Mvc;
 
 /**
@@ -40,7 +40,7 @@ class OrganisationLabel extends AbstractNavigationInvokable
                 array_merge(
                     $page->getParams(),
                     [
-                    'id' => $organisation->getId(),
+                        'id' => $organisation->getId(),
                     ]
                 )
             );

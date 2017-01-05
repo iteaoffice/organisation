@@ -1,17 +1,16 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * OrganisationWeb.
@@ -19,7 +18,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @ORM\Table(name="organisation_web")
  * @ORM\Entity
  */
-class Web extends EntityAbstract implements ResourceInterface
+class Web extends AbstractEntity
 {
     const NOT_MAIN = 0;
     const MAIN = 1;
@@ -56,11 +55,9 @@ class Web extends EntityAbstract implements ResourceInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        $url = '<a href="http://%s">%s</a>';
-
-        return sprintf($url, $this->web, $this->web);
+        return sprintf($this->web);
     }
 
     /**
@@ -84,6 +81,16 @@ class Web extends EntityAbstract implements ResourceInterface
     public function __set($property, $value)
     {
         $this->$property = $value;
+    }
+
+    /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
     }
 
     /**

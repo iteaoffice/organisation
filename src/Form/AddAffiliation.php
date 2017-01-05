@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Content
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Form;
@@ -23,12 +23,12 @@ class AddAffiliation extends Form
     /**
      * AddAffiliation constructor.
      *
-     * @param ProjectService      $projectService
-     * @param Entity\Organisation $organisation
+     * @param ProjectService             $projectService
+     * @param Entity\Parent\Organisation $parentOrganisation
      */
     public function __construct(
         ProjectService $projectService,
-        Entity\Organisation $organisation
+        Entity\Parent\Organisation $parentOrganisation
     ) {
         parent::__construct();
 
@@ -36,7 +36,7 @@ class AddAffiliation extends Form
         /**
          * @var $projectService ProjectService
          */
-        foreach ($projectService->findProjectByOrganisation($organisation, ProjectService::WHICH_ALL) as $project) {
+        foreach ($projectService->findProjectByParentOrganisation($parentOrganisation, ProjectService::WHICH_ALL) as $project) {
             $currentProjects[] = $project->getId();
         }
 
@@ -45,8 +45,8 @@ class AddAffiliation extends Form
          * @var $newProject Project
          */
         foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)->getResult() as $newProject) {
-            if (! in_array($newProject->getId(), $currentProjects)) {
-                $projects[$newProject->getId()] = sprintf("%s", $newProject);
+            if (! in_array($newProject->getId(), $currentProjects, true)) {
+                $projects[$newProject->getId()] = sprintf('%s', $newProject);
             }
         }
 
@@ -81,7 +81,7 @@ class AddAffiliation extends Form
         );
 
         $contacts = [];
-        foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
+        foreach ($parentOrganisation->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
             $contacts[$contactOrganisation->getContact()->getId()] = $contactOrganisation->getContact()->getFormName();
         }
 

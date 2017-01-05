@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2016 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -35,7 +35,7 @@ class OrganisationTypeController extends OrganisationAbstractController
         $page              = $this->params()->fromRoute('page', 1);
         $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()
-            ->findEntitiesFiltered(Entity\Type::class, $filterPlugin->getFilter());
+                                  ->findEntitiesFiltered(Entity\Type::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -85,7 +85,7 @@ class OrganisationTypeController extends OrganisationAbstractController
                 $this->redirect()->toRoute(
                     'zfcadmin/organisation-type/view',
                     [
-                    'id' => $result->getId(),
+                        'id' => $result->getId(),
                     ]
                 );
             }
@@ -117,7 +117,7 @@ class OrganisationTypeController extends OrganisationAbstractController
                 $this->redirect()->toRoute(
                     'zfcadmin/organisation-type/view',
                     [
-                    'id' => $type->getId(),
+                        'id' => $type->getId(),
                     ]
                 );
             }
@@ -130,7 +130,7 @@ class OrganisationTypeController extends OrganisationAbstractController
                 $this->redirect()->toRoute(
                     'zfcadmin/organisation-type/view',
                     [
-                    'id' => $result->getId(),
+                        'id' => $result->getId(),
                     ]
                 );
             }

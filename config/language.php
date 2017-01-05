@@ -13,6 +13,6 @@ _("txt-no-vat-enforcement");
 
 _("txt-no-purchase-order-required");
 _("txt-purchase-order-required");
-
+_("txt-organisation-name-help-block");
 _("txt-iban");
 _("txt-bic");

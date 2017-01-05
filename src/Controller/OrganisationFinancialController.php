@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Controller;
@@ -77,12 +77,12 @@ class OrganisationFinancialController extends OrganisationAbstractController
         if ($this->getRequest()->isPost()) {
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-financial-organisation-of-%s-has-successfully-been-removed"),
-                            $organisation
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-financial-organisation-of-%s-has-successfully-been-removed"),
+                             $organisation
+                         )
+                     );
 
                 $this->getOrganisationService()->removeEntity($financial);
 
@@ -125,12 +125,12 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 $this->getOrganisationService()->updateEntity($financial);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translate("txt-financial-organisation-%s-has-successfully-been-updated"),
-                            $organisation
-                        )
-                    );
+                     ->addMessage(
+                         sprintf(
+                             $this->translate("txt-financial-organisation-%s-has-successfully-been-updated"),
+                             $organisation
+                         )
+                     );
 
 
                 return $this->redirect()->toRoute(
@@ -161,7 +161,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
         $page              = $this->params()->fromRoute('page', 1);
         $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()
-            ->findActiveOrganisationWithoutFinancial($filterPlugin->getFilter());
+                                  ->findActiveOrganisationWithoutFinancial($filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));

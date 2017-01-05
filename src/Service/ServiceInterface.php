@@ -1,16 +1,17 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Service;
 
-use Organisation\Entity\EntityAbstract;
+use Doctrine\ORM\EntityManager;
+use Organisation\Entity\AbstractEntity;
 
 /**
  * Interface ServiceInterface
@@ -19,11 +20,29 @@ use Organisation\Entity\EntityAbstract;
  */
 interface ServiceInterface
 {
-    public function updateEntity(EntityAbstract $entity);
+    /**
+     * @param AbstractEntity $entity
+     *
+     * @return AbstractEntity
+     */
+    public function updateEntity(AbstractEntity $entity);
 
-    public function newEntity(EntityAbstract $entity);
+    /**
+     * @param AbstractEntity $entity
+     *
+     * @return AbstractEntity
+     */
+    public function newEntity(AbstractEntity $entity);
 
-    public function getEntityManager();
+    /**
+     * @return EntityManager
+     */
+    public function getEntityManager(): EntityManager;
 
-    public function findAll($entity);
+    /**
+     * @param string $entity
+     *
+     * @return array
+     */
+    public function findAll(string $entity);
 }

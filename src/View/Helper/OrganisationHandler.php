@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\View\Helper;
@@ -183,6 +183,56 @@ class OrganisationHandler extends AbstractViewHelper
         return null;
     }
 
+    /**
+     * @param $docRef
+     *
+     * @return void
+     */
+    private function setOrganisationByDocRef($docRef)
+    {
+        $organisation = $this->getOrganisationService()->findOrganisationByDocRef($docRef);
+
+        if (is_null($organisation)) {
+            $this->getOrganisationService()->findOrganisationById((int)$docRef);
+        }
+        $this->setOrganisation($organisation);
+    }
+
+    /**
+     * @return OrganisationService
+     */
+    public function getOrganisationService()
+    {
+        return $this->getServiceManager()->get(OrganisationService::class);
+    }
+
+    /**
+     * @return Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * @param Organisation $organisation
+     *
+     * @return OrganisationHandler
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * @return ProjectService
+     */
+    public function getProjectService(): ProjectService
+    {
+        return $this->getServiceManager()->get(ProjectService::class);
+    }
 
     /**
      * @param Organisation $organisation
@@ -236,6 +286,13 @@ class OrganisationHandler extends AbstractViewHelper
         );
     }
 
+    /**
+     * @return \Project\Options\ModuleOptions
+     */
+    public function getProjectModuleOptions(): \Project\Options\ModuleOptions
+    {
+        return $this->getServiceManager()->get(\Project\Options\ModuleOptions::class);
+    }
 
     /**
      * @param Organisation $organisation
@@ -271,6 +328,29 @@ class OrganisationHandler extends AbstractViewHelper
         );
     }
 
+    /**
+     * @return ArticleService
+     */
+    public function getArticleService(): ArticleService
+    {
+        return $this->getServiceManager()->get(ArticleService::class);
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param int $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+    }
 
     /**
      * @param Organisation $organisation
@@ -324,6 +404,13 @@ class OrganisationHandler extends AbstractViewHelper
         return $countryMap($countries, null, $mapOptions);
     }
 
+    /**
+     * @return ModuleOptions
+     */
+    public function getModuleOptions(): ModuleOptions
+    {
+        return $this->getServiceManager()->get(ModuleOptions::class);
+    }
 
     /**
      * @param Organisation $organisation
@@ -334,98 +421,5 @@ class OrganisationHandler extends AbstractViewHelper
     {
         return $this->getRenderer()
                     ->render('organisation/partial/entity/organisation-logo', ['organisation' => $organisation]);
-    }
-
-    /**
-     * @param $docRef
-     *
-     * @return void
-     */
-    private function setOrganisationByDocRef($docRef)
-    {
-        $organisation = $this->getOrganisationService()->findOrganisationByDocRef($docRef);
-
-        if (is_null($organisation)) {
-            $this->getOrganisationService()->findOrganisationById((int)$docRef);
-        }
-        $this->setOrganisation($organisation);
-    }
-
-    /**
-     * @return int
-     */
-    public function getLimit()
-    {
-        return $this->limit;
-    }
-
-    /**
-     * @param int $limit
-     */
-    public function setLimit($limit)
-    {
-        $this->limit = $limit;
-    }
-
-
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param Organisation $organisation
-     *
-     * @return OrganisationHandler
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-
-        return $this;
-    }
-
-    /**
-     * @return \Project\Options\ModuleOptions
-     */
-    public function getProjectModuleOptions(): \Project\Options\ModuleOptions
-    {
-        return $this->getServiceManager()->get(\Project\Options\ModuleOptions::class);
-    }
-
-
-    /**
-     * @return OrganisationService
-     */
-    public function getOrganisationService()
-    {
-        return $this->getServiceManager()->get(OrganisationService::class);
-    }
-
-    /**
-     * @return ProjectService
-     */
-    public function getProjectService(): ProjectService
-    {
-        return $this->getServiceManager()->get(ProjectService::class);
-    }
-
-    /**
-     * @return ArticleService
-     */
-    public function getArticleService(): ArticleService
-    {
-        return $this->getServiceManager()->get(ArticleService::class);
-    }
-
-    /**
-     * @return ModuleOptions
-     */
-    public function getModuleOptions(): ModuleOptions
-    {
-        return $this->getServiceManager()->get(ModuleOptions::class);
     }
 }

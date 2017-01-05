@@ -5,7 +5,7 @@
  * @category    Organisation
  * @package     Controller
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 namespace Organisation\Controller;
 
@@ -21,6 +21,7 @@ use Invoice\Service\InvoiceService;
 use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -47,6 +48,10 @@ abstract class OrganisationAbstractController extends AbstractActionController
      * @var OrganisationService
      */
     protected $organisationService;
+    /**
+     * @var ParentService
+     */
+    protected $parentService;
     /**
      * @var DoaService
      */
@@ -89,7 +94,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationService
      */
-    public function getOrganisationService()
+    public function getOrganisationService(): OrganisationService
     {
         return $this->organisationService;
     }
@@ -99,7 +104,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setOrganisationService($organisationService)
+    public function setOrganisationService($organisationService): OrganisationAbstractController
     {
         $this->organisationService = $organisationService;
 
@@ -109,7 +114,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return GeneralService
      */
-    public function getGeneralService()
+    public function getGeneralService(): GeneralService
     {
         return $this->generalService;
     }
@@ -119,7 +124,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setGeneralService($generalService)
+    public function setGeneralService($generalService): OrganisationAbstractController
     {
         $this->generalService = $generalService;
 
@@ -127,9 +132,29 @@ abstract class OrganisationAbstractController extends AbstractActionController
     }
 
     /**
+     * @return ParentService
+     */
+    public function getParentService(): ParentService
+    {
+        return $this->parentService;
+    }
+
+    /**
+     * @param ParentService $parentService
+     *
+     * @return OrganisationAbstractController
+     */
+    public function setParentService(ParentService $parentService): OrganisationAbstractController
+    {
+        $this->parentService = $parentService;
+
+        return $this;
+    }
+
+    /**
      * @return \Organisation\Service\FormService
      */
-    public function getFormService()
+    public function getFormService(): FormService
     {
         return $this->formService;
     }
@@ -137,9 +162,9 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @param $formService
      *
-     * @return OrganisationController
+     * @return OrganisationAbstractController
      */
-    public function setFormService($formService)
+    public function setFormService($formService): OrganisationAbstractController
     {
         $this->formService = $formService;
 
@@ -149,7 +174,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return InvoiceService
      */
-    public function getInvoiceService()
+    public function getInvoiceService(): InvoiceService
     {
         return $this->invoiceService;
     }
@@ -159,7 +184,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setInvoiceService($invoiceService)
+    public function setInvoiceService($invoiceService): OrganisationAbstractController
     {
         $this->invoiceService = $invoiceService;
 
@@ -169,7 +194,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return ProjectService
      */
-    public function getProjectService()
+    public function getProjectService(): ProjectService
     {
         return $this->projectService;
     }
@@ -179,7 +204,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setProjectService($projectService)
+    public function setProjectService($projectService): OrganisationAbstractController
     {
         $this->projectService = $projectService;
 
@@ -189,7 +214,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return AffiliationService
      */
-    public function getAffiliationService()
+    public function getAffiliationService(): AffiliationService
     {
         return $this->affiliationService;
     }
@@ -199,7 +224,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setAffiliationService($affiliationService)
+    public function setAffiliationService($affiliationService): OrganisationAbstractController
     {
         $this->affiliationService = $affiliationService;
 
@@ -209,7 +234,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return DoaService
      */
-    public function getDoaService()
+    public function getDoaService(): DoaService
     {
         return $this->doaService;
     }
@@ -219,7 +244,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setDoaService($doaService)
+    public function setDoaService($doaService): OrganisationAbstractController
     {
         $this->doaService = $doaService;
 
@@ -229,7 +254,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return LoiService
      */
-    public function getLoiService()
+    public function getLoiService(): LoiService
     {
         return $this->loiService;
     }
@@ -239,7 +264,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setLoiService($loiService)
+    public function setLoiService($loiService): OrganisationAbstractController
     {
         $this->loiService = $loiService;
 
@@ -249,7 +274,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return ContactService
      */
-    public function getContactService()
+    public function getContactService(): ContactService
     {
         return $this->contactService;
     }
@@ -259,7 +284,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setContactService($contactService)
+    public function setContactService($contactService): OrganisationAbstractController
     {
         $this->contactService = $contactService;
 
@@ -269,7 +294,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
     /**
      * @return EntityManager
      */
-    public function getEntityManager()
+    public function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
@@ -279,7 +304,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return OrganisationAbstractController
      */
-    public function setEntityManager($entityManager)
+    public function setEntityManager($entityManager): OrganisationAbstractController
     {
         $this->entityManager = $entityManager;
 
@@ -293,7 +318,7 @@ abstract class OrganisationAbstractController extends AbstractActionController
      *
      * @return string
      */
-    protected function translate($string)
+    protected function translate($string): string
     {
         /**
          * @var $translate Translate

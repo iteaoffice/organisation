@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Service;
@@ -18,10 +18,7 @@ use Contact\Service\ContactService;
 use Doctrine\ORM\Query;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
-use Organisation\Entity\Financial;
-use Organisation\Entity\Organisation;
-use Organisation\Entity\Type;
-use Organisation\Entity\Web;
+use Organisation\Entity;
 use Organisation\Repository;
 use Program\Entity\Program;
 use Project\Entity\Project;
@@ -29,15 +26,11 @@ use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
 /**
- * OrganisationService.
+ * Class OrganisationService
  *
- * this is a generic wrapper service for all the other services
- *
- * First parameter of all methods (lowercase, underscore_separated)
- * will be used to fetch the correct model service, one exception is the 'linkModel'
- * method.
+ * @package Organisation\Service
  */
-class OrganisationService extends ServiceAbstract
+class OrganisationService extends AbstractService
 {
     /**
      * @param string $givenName
@@ -61,31 +54,55 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
+     * Function which checks if an organisation can be deleted
+     *
+     * @param Entity\Organisation $organisation
+     *
+     * @return bool
+     */
+    public function canDeleteOrganisation(Entity\Organisation $organisation): bool
+    {
+        return
+            $organisation->getContactOrganisation()->isEmpty()
+            && $organisation->getAffiliation()->isEmpty()
+            && is_null($organisation->getParent())
+            && $organisation->getParentFinancial()->isEmpty()
+            && is_null($organisation->getParentOrganisation())
+            && $organisation->getInvoice()->isEmpty()
+            && $organisation->getBoothFinancial()->isEmpty()
+            && $organisation->getOrganisationBooth()->isEmpty()
+            && $organisation->getJournal()->isEmpty()
+            && $organisation->getReminder()->isEmpty()
+            && $organisation->getResult()->isEmpty();
+    }
+
+
+    /**
      * @param $id
      *
-     * @return null|Organisation|object
+     * @return null|Entity\Organisation|object
      */
     public function findOrganisationById($id)
     {
-        return $this->getEntityManager()->getRepository(Organisation::class)->find($id);
+        return $this->getEntityManager()->getRepository(Entity\Organisation::class)->find($id);
     }
 
     /**
-     * @param Organisation $organisation
+     * @param Entity\Organisation $organisation
      *
      * @return string
      */
-    public function parseDebtorNumber(Organisation $organisation)
+    public function parseDebtorNumber(Entity\Organisation $organisation)
     {
         return trim(sprintf("%'.06d\n", 100000 + $organisation->getId()));
     }
 
     /**
-     * @param Organisation $organisation
+     * @param Entity\Organisation $organisation
      *
      * @return string
      */
-    public function parseCreditNumber(Organisation $organisation)
+    public function parseCreditNumber(Entity\Organisation $organisation)
     {
         return trim(sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
@@ -98,31 +115,52 @@ class OrganisationService extends ServiceAbstract
     public function findActiveOrganisationWithoutFinancial($filter)
     {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findActiveOrganisationWithoutFinancial($filter);
     }
 
     /**
+     * @param Entity\Organisation $organisation
+     * @param string              $organisationName
+     * @param Project             $project
+     *
+     * @return mixed|null|Entity\Name
+     */
+    public function findOrganisationNameByNameAndProject(
+        Entity\Organisation $organisation,
+        string $organisationName,
+        Project $project
+    ) {
+        foreach ($organisation->getNames() as $name) {
+            if ($name->getName() === $organisationName && $name->getProject() === $project) {
+                return $name;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param  Contact $contact
      *
-     * @return Organisation[]
+     * @return Entity\Organisation[]
      */
     public function findOrganisationForProfileEditByContact(Contact $contact)
     {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationForProfileEditByContact($contact);
     }
 
     /**
-     * @param Organisation $organisation
-     * @param int          $which
+     * @param Entity\Organisation $organisation
+     * @param int                 $which
      *
      * @return int
      */
-    public function getAffiliationCount(Organisation $organisation, $which = AffiliationService::WHICH_ALL)
+    public function getAffiliationCount(Entity\Organisation $organisation, $which = AffiliationService::WHICH_ALL)
     {
         return ($organisation->getAffiliation()->filter(
             function (
@@ -141,12 +179,12 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param Organisation $organisation
-     * @param int          $which
+     * @param Entity\Organisation $organisation
+     * @param int                 $which
      *
      * @return int
      */
-    public function getContactCount(Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE)
+    public function getContactCount(Entity\Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE)
     {
         return ($organisation->getContactOrganisation()->filter(
             function (
@@ -174,17 +212,17 @@ class OrganisationService extends ServiceAbstract
     public function findOrganisationFinancialList($filter)
     {
         /** @var Repository\Financial $repository */
-        $repository = $this->getEntityManager()->getRepository(Financial::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Financial::class);
 
         return $repository->findOrganisationFinancialList($filter);
     }
 
     /**
-     * @param Organisation $organisation
+     * @param Entity\Organisation $organisation
      *
      * @return Contact|\Contact\Entity\Selection|null|object
      */
-    public function findFinancialContact(Organisation $organisation)
+    public function findFinancialContact(Entity\Organisation $organisation)
     {
         /**
          * The financial contact can be found be taking the contact which has the most invoices on his/her name
@@ -209,19 +247,19 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param $docRef
      *
-     * @return null|Organisation|object
+     * @return null|Entity\Organisation|object
      */
     public function findOrganisationByDocRef($docRef)
     {
-        return $this->getEntityManager()->getRepository(Organisation::class)->findOneBy(['docRef' => $docRef]);
+        return $this->getEntityManager()->getRepository(Entity\Organisation::class)->findOneBy(['docRef' => $docRef]);
     }
 
     /**
-     * @return Type[]
+     * @return Entity\Type[]
      */
     public function findOrganisationTypes()
     {
-        return $this->getEntityManager()->getRepository(Type::class)->findBy([], ['type' => 'ASC']);
+        return $this->getEntityManager()->getRepository(Entity\Type::class)->findBy([], ['type' => 'ASC']);
     }
 
     /**
@@ -237,7 +275,7 @@ class OrganisationService extends ServiceAbstract
         $onlyActivePartner = true
     ) {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisations($onlyActiveProject, $onlyActivePartner);
     }
@@ -257,17 +295,17 @@ class OrganisationService extends ServiceAbstract
         $onlyActivePartner = true
     ) {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
     }
 
     /**
-     * @param  Organisation $organisation
+     * @param  Entity\Organisation $organisation
      *
      * @return array
      */
-    public function findBranchesByOrganisation(Organisation $organisation): array
+    public function findBranchesByOrganisation(Entity\Organisation $organisation): array
     {
         //always include the <empty> branch
         $branches = ['' => (string)$organisation->getOrganisation()];
@@ -281,14 +319,14 @@ class OrganisationService extends ServiceAbstract
     }
 
     /**
-     * @param              $branch
-     * @param Organisation $organisation = null
+     * @param                     $branch
+     * @param Entity\Organisation $organisation = null
      *
      * @return string
      */
     public function parseOrganisationWithBranch(
         $branch,
-        Organisation $organisation
+        Entity\Organisation $organisation
     ) {
         return self::parseBranch($branch, $organisation);
     }
@@ -315,7 +353,7 @@ class OrganisationService extends ServiceAbstract
      * @param Country $country
      * @param string  $emailAddress
      *
-     * @return Organisation[]
+     * @return Entity\Organisation[]
      */
     public function findOrganisationByNameCountryAndEmailAddress(
         $name,
@@ -323,7 +361,7 @@ class OrganisationService extends ServiceAbstract
         $emailAddress
     ) {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
     }
@@ -334,28 +372,28 @@ class OrganisationService extends ServiceAbstract
      * @param int     $typeId
      * @param string  $email
      *
-     * @return Organisation
+     * @return Entity\Organisation
      */
     public function createOrganisationFromNameCountryTypeAndEmail(
         string $name,
         Country $country,
         int $typeId,
         string $email
-    ): Organisation {
-        $organisation = new Organisation();
+    ): Entity\Organisation {
+        $organisation = new Entity\Organisation();
         $organisation->setOrganisation($name);
         $organisation->setCountry($country);
-        $organisation->setType($this->findEntityById(Type::class, $typeId));
+        $organisation->setType($this->findEntityById(Entity\Type::class, $typeId));
         /*
          * Add the domain in the saved domains for this new company
          * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
          */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($email);
-        $organisationWeb = new Web();
+        $organisationWeb = new Entity\Web();
         $organisationWeb->setOrganisation($organisation);
         $organisationWeb->setWeb($validateEmail->hostname);
-        $organisationWeb->setMain(Web::MAIN);
+        $organisationWeb->setMain(Entity\Web::MAIN);
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
         if (! in_array($organisation->getWeb(), ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'])) {
@@ -368,11 +406,11 @@ class OrganisationService extends ServiceAbstract
     /**
      * @param $vat
      *
-     * @return Financial|null
+     * @return Entity\Financial|null|object
      */
     public function findFinancialOrganisationWithVAT($vat)
     {
-        return $this->getEntityManager()->getRepository(Financial::class)->findOneBy(['vat' => $vat]);
+        return $this->getEntityManager()->getRepository(Entity\Financial::class)->findOneBy(['vat' => $vat]);
     }
 
     /**
@@ -380,29 +418,31 @@ class OrganisationService extends ServiceAbstract
      *
      * @param string  $name
      * @param Country $country
+     * @param bool    $onlyMain
      *
-     * @return Organisation
+     * @return Entity\Organisation
      */
-    public function findOrganisationByNameCountry($name, Country $country)
+    public function findOrganisationByNameCountry($name, Country $country, bool $onlyMain = true)
     {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
-        return $repository->findOrganisationByNameCountry($name, $country);
+        return $repository->findOrganisationByNameCountry($name, $country, $onlyMain);
     }
+
 
     /**
      * @param Meeting    $meeting
      * @param Parameters $search
      *
-     * @return Organisation[]
+     * @return Entity\Organisation[]
      */
     public function findOrganisationByMeetingAndDescriptionSearch(
         Meeting $meeting,
         Parameters $search
     ) {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
     }
@@ -413,7 +453,7 @@ class OrganisationService extends ServiceAbstract
      * @param Project $project
      * @param bool    $onlyActiveProject
      *
-     * @return Organisation[]
+     * @return Entity\Organisation[]
      */
     public function findOrganisationByProject(
         Project $project,
@@ -440,12 +480,12 @@ class OrganisationService extends ServiceAbstract
     /**
      * Checks if the affiliation has a DOA.
      *
-     * @param Organisation $organisation
-     * @param Program      $program
+     * @param Entity\Organisation $organisation
+     * @param Program             $program
      *
      * @return bool
      */
-    public function hasDoaForProgram(Organisation $organisation, Program $program)
+    public function hasDoaForProgram(Entity\Organisation $organisation, Program $program)
     {
         foreach ($organisation->getProgramDoa() as $doa) {
             if ($doa->getProgram()->getId() === $program->getId()) {
@@ -465,7 +505,7 @@ class OrganisationService extends ServiceAbstract
      * @param bool $onlyActiveProject
      * @param bool $onlyActivePartner
      *
-     * @return Organisation[]
+     * @return Entity\Organisation[]
      */
     public function searchOrganisation(
         $searchItem,
@@ -475,7 +515,7 @@ class OrganisationService extends ServiceAbstract
         $onlyActivePartner = true
     ) {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Organisation::class);
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->searchOrganisations(
             $searchItem,

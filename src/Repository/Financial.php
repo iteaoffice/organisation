@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Financial
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Repository;
@@ -33,7 +33,7 @@ class Financial extends EntityRepository
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->like('organisation.organisation', ':like')
+                             ->like('organisation.organisation', ':like')
             );
             $queryBuilder->setParameter(
                 'like',
@@ -44,37 +44,37 @@ class Financial extends EntityRepository
         if (array_key_exists('vatStatus', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in(
-                        'financial.vatStatus',
-                        implode($filter['vatStatus'], ', ')
-                    )
+                             ->in(
+                                 'financial.vatStatus',
+                                 implode($filter['vatStatus'], ', ')
+                             )
             );
         }
 
         if (array_key_exists('omitContact', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in(
-                        'financial.omitContact',
-                        implode($filter['omitContact'], ', ')
-                    )
+                             ->in(
+                                 'financial.omitContact',
+                                 implode($filter['omitContact'], ', ')
+                             )
             );
         }
 
         if (array_key_exists('requiredPurchaseOrder', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in(
-                        'financial.requiredPurchaseOrder',
-                        implode($filter['requiredPurchaseOrder'], ', ')
-                    )
+                             ->in(
+                                 'financial.requiredPurchaseOrder',
+                                 implode($filter['requiredPurchaseOrder'], ', ')
+                             )
             );
         }
 
         if (array_key_exists('email', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in('financial.email', implode($filter['email'], ', '))
+                             ->in('financial.email', implode($filter['email'], ', '))
             );
         }
 

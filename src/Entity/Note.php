@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
@@ -13,9 +13,6 @@ namespace Organisation\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Zend\Form\Annotation;
-use Zend\InputFilter\Factory as InputFactory;
-use Zend\InputFilter\InputFilter;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * OrganisationLog.
@@ -25,7 +22,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_note")
  */
-class Note extends EntityAbstract implements ResourceInterface
+class Note extends AbstractEntity
 {
     /**
      * @ORM\Column(name="note_id", length=10, type="integer", nullable=false)
@@ -93,43 +90,13 @@ class Note extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Zend\InputFilter\InputFilter|\Zend\InputFilter\InputFilterInterface
+     * @param $property
+     *
+     * @return bool
      */
-    public function getInputFilter()
+    public function __isset($property)
     {
-        if (! $this->inputFilter) {
-            $inputFilter = new InputFilter();
-            $factory     = new InputFactory();
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'note',
-                        'required' => true,
-                        'filters'  => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                    ]
-                )
-            );
-
-            $inputFilter->add(
-                $factory->createInput(
-                    [
-                        'name'     => 'source',
-                        'required' => true,
-                        'filters'  => [
-                            ['name' => 'StripTags'],
-                            ['name' => 'StringTrim'],
-                        ],
-                    ]
-                )
-            );
-
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
+        return isset($this->$property);
     }
 
     /**

@@ -9,7 +9,7 @@
          syntaxCheck="true"
 >
     <testsuite name="iteaoffice/organisation">
-        <directory>./tests</directory>
+        <directory>./test</directory>
     </testsuite>
 
     <filter>

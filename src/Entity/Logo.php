@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
@@ -22,7 +22,7 @@ use Zend\Form\Annotation;
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_logo")
  */
-class Logo extends EntityAbstract
+class Logo extends AbstractEntity
 {
     /**
      *
@@ -96,12 +96,22 @@ class Logo extends EntityAbstract
     }
 
     /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * @return string
      */
     public function getCacheFileName()
     {
         $cacheDir = __DIR__ . '/../../../../../public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR
-            . ITEAOFFICE_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
+                    . ITEAOFFICE_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
 
         return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName();
     }
@@ -109,7 +119,7 @@ class Logo extends EntityAbstract
     /**
      * @return string
      */
-    public function getFileName()
+    public function getFileName(): string
     {
         return sprintf("%s-%s.%s", $this->getId(), $this->getHash(), $this->getContentType()->getExtension());
     }
@@ -135,7 +145,7 @@ class Logo extends EntityAbstract
      *
      * @return string
      */
-    public function getHash()
+    public function getHash(): string
     {
         return hash('sha512', $this->id . self::HASH_KEY);
     }
@@ -205,7 +215,7 @@ class Logo extends EntityAbstract
     }
 
     /**
-     * @return resource
+     * @return mixed
      */
     public function getOrganisationLogo()
     {

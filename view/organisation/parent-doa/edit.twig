@@ -1,0 +1,54 @@
+{% do headTitle().append(translate("txt-upload-parent-doa-title")) %}
+
+{% do headLink().appendStylesheet(
+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+) %}
+
+
+<h1>{{ translate("txt-replace-doa-for-parent-%s")|
+    format(doa.parent)|raw }}</h1>
+
+{% do form.prepare() %}
+{% do form.setAttribute('class','form-horizontal') %}
+
+{{ form().openTag(form)|raw }}
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-parent") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ parentLink(doa.parent, 'view', 'parent') }}</p>
+    </div>
+</div>
+
+{{ ztbformelement(form.get('dateSigned')) }}
+{{ ztbformelement(form.get('dateApproved')) }}
+{{ contactformelement(form.get('contact')) }}
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-download-current-doa") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ parentDoaLink(doa,'download','text') }}</p>
+    </div>
+</div>
+{{ ztbformelement(form.get('file')) }}
+
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('delete')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+
+<script type="text/javascript">
+    $('input[type=date]').datepicker({
+        sliderAccessArgs: {touchonly: false},
+        dateFormat: 'yy-mm-dd'
+    });
+</script>

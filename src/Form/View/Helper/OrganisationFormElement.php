@@ -117,17 +117,17 @@ class OrganisationFormElement extends ZendFormElement
     ) {
         //Inject the javascript in the header
         $this->view->headLink()
-            ->appendStylesheet('/assets/css/bootstrap-select.min.css');
+                   ->appendStylesheet('/assets/css/bootstrap-select.min.css');
         $this->view->headScript()
-            ->appendFile(
-                '/assets/js/bootstrap-select.min.js',
-                'text/javascript'
-            );
+                   ->appendFile(
+                       '/assets/js/bootstrap-select.min.js',
+                       'text/javascript'
+                   );
         $this->view->headScript()
-            ->appendFile(
-                '/assets/js/ajax-bootstrap-select.min.js',
-                'text/javascript'
-            );
+                   ->appendFile(
+                       '/assets/js/ajax-bootstrap-select.min.js',
+                       'text/javascript'
+                   );
 
         $this->view->inlineScript()->appendScript(
             "var options = {
@@ -213,7 +213,7 @@ class OrganisationFormElement extends ZendFormElement
             $controlLabel .= $labelHelper->openTag(
                 [
                     'class' => 'col-lg-3 '
-                        . ($element->getOption('wrapCheckboxInLabel')
+                               . ($element->getOption('wrapCheckboxInLabel')
                             ? 'checkbox' : 'control-label'),
                 ] + ($element->hasAttribute('id') ? ['for' => $id] : [])
             );

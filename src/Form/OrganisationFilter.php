@@ -5,8 +5,8 @@
  *
  * @category    Organisation
  *
- * @author      Johan van der Heide <info@jield.nl>
- * @copyright   Copyright (c) 2004-2015 Jield (http://jield.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Form;
@@ -22,8 +22,8 @@ use Zend\Form\Form;
  *
  * @category    Organisation
  *
- * @author      Johan van der Heide <info@jield.nl>
- * @copyright   Copyright (c) 2004-2015 Jield (http://jield.nl)
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 class OrganisationFilter extends Form
 {
@@ -75,7 +75,10 @@ class OrganisationFilter extends Form
                 'name'       => 'options',
                 'options'    => [
                     'inline'        => true,
-                    'value_options' => [1 => _("txt-active-in-project")],
+                    'value_options' => [
+                        1 => _("txt-active-in-project"),
+                        2 => _("txt-is-parent"),
+                    ],
                 ],
                 'attributes' => [
                     'label' => _("txt-options-type"),

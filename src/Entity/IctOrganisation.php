@@ -1,18 +1,18 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * IctOrganisation.
@@ -22,7 +22,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("ict_organisation")
  */
-class IctOrganisation extends EntityAbstract implements ResourceInterface
+class IctOrganisation extends AbstractEntity
 {
     /**
      * @ORM\Column(name="ict_id", length=10, type="integer", nullable=false)
@@ -54,25 +54,16 @@ class IctOrganisation extends EntityAbstract implements ResourceInterface
      * @ORM\ManyToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="ictOrganisation")
      * @Annotation\Exclude()
      *
-     * @var \Affiliation\Entity\Affiliation[]
+     * @var \Affiliation\Entity\Affiliation[]|ArrayCollection
      */
     private $affiliation;
 
     /**
-     *
+     * IctOrganisation constructor.
      */
     public function __construct()
     {
-    }
-
-    /**
-     * Returns the string identifier of the Resource.
-     *
-     * @return string
-     */
-    public function getResourceId()
-    {
-        return sprintf("%s:%s", __CLASS__, $this->id);
+        $this->affiliation = new ArrayCollection();
     }
 
     /**
@@ -95,12 +86,22 @@ class IctOrganisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * ToString
      * Return the id here for form population.
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->organisation;
     }
@@ -166,7 +167,7 @@ class IctOrganisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @return \Affiliation\Entity\Affiliation[]
+     * @return \Affiliation\Entity\Affiliation[]|ArrayCollection
      */
     public function getAffiliation()
     {
@@ -174,7 +175,7 @@ class IctOrganisation extends EntityAbstract implements ResourceInterface
     }
 
     /**
-     * @param \Affiliation\Entity\Affiliation[] $affiliation
+     * @param \Affiliation\Entity\Affiliation[]|ArrayCollection $affiliation
      *
      * @return IctOrganisation
      */

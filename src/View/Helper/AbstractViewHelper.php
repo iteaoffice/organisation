@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2016 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -15,9 +15,14 @@
 
 namespace Organisation\View\Helper;
 
+use Affiliation\Service\AffiliationService;
+use Contact\Service\ContactService;
 use Interop\Container\ContainerInterface;
+use Organisation\Service\ParentService;
+use Project\Service\ProjectService;
+use Project\Service\VersionService;
+use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Router\Http\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
@@ -41,6 +46,26 @@ abstract class AbstractViewHelper extends AbstractHelper
      * @var RouteMatch
      */
     protected $routeMatch = null;
+    /**
+     * @var ContactService
+     */
+    protected $contactService;
+    /**
+     * @var ParentService
+     */
+    protected $parentService;
+    /**
+     * @var AffiliationService
+     */
+    protected $affiliationService;
+    /**
+     * @var ProjectService
+     */
+    protected $projectService;
+    /**
+     * @var VersionService
+     */
+    protected $versionService;
 
     /**
      * RouteInterface match returned by the router.
@@ -60,17 +85,17 @@ abstract class AbstractViewHelper extends AbstractHelper
     /**
      * @return ContainerInterface
      */
-    public function getServiceManager()
+    public function getServiceManager(): ContainerInterface
     {
         return $this->serviceManager;
     }
 
     /**
-     * @param ContainerInterface|ServiceLocatorInterface $serviceManager
+     * @param ContainerInterface $serviceManager
      *
      * @return AbstractViewHelper
      */
-    public function setServiceManager($serviceManager)
+    public function setServiceManager($serviceManager): AbstractViewHelper
     {
         $this->serviceManager = $serviceManager;
 
@@ -80,7 +105,7 @@ abstract class AbstractViewHelper extends AbstractHelper
     /**
      * @return TwigRenderer
      */
-    public function getRenderer()
+    public function getRenderer(): TwigRenderer
     {
         return $this->getServiceManager()->get('ZfcTwigRenderer');
     }
@@ -90,15 +115,18 @@ abstract class AbstractViewHelper extends AbstractHelper
      *
      * @return string
      */
-    public function translate($string)
+    public function translate($string): string
     {
-        return $this->getHelperPluginManager()->get('translate')->__invoke($string);
+        /** @var Translate $translator */
+        $translate = $this->getHelperPluginManager()->get('translate');
+
+        return $translate($string);
     }
 
     /**
      * @return HelperPluginManager
      */
-    public function getHelperPluginManager()
+    public function getHelperPluginManager(): HelperPluginManager
     {
         return $this->helperPluginManager;
     }
@@ -111,6 +139,106 @@ abstract class AbstractViewHelper extends AbstractHelper
     public function setHelperPluginManager($helperPluginManager)
     {
         $this->helperPluginManager = $helperPluginManager;
+
+        return $this;
+    }
+
+    /**
+     * @return ContactService
+     */
+    public function getContactService(): ContactService
+    {
+        return $this->contactService;
+    }
+
+    /**
+     * @param ContactService $contactService
+     *
+     * @return AbstractViewHelper
+     */
+    public function setContactService(ContactService $contactService): AbstractViewHelper
+    {
+        $this->contactService = $contactService;
+
+        return $this;
+    }
+
+    /**
+     * @return ParentService
+     */
+    public function getParentService(): ParentService
+    {
+        return $this->parentService;
+    }
+
+    /**
+     * @param ParentService $parentService
+     *
+     * @return AbstractViewHelper
+     */
+    public function setParentService(ParentService $parentService): AbstractViewHelper
+    {
+        $this->parentService = $parentService;
+
+        return $this;
+    }
+
+    /**
+     * @return AffiliationService
+     */
+    public function getAffiliationService(): AffiliationService
+    {
+        return $this->affiliationService;
+    }
+
+    /**
+     * @param AffiliationService $affiliationService
+     *
+     * @return AbstractViewHelper
+     */
+    public function setAffiliationService(AffiliationService $affiliationService): AbstractViewHelper
+    {
+        $this->affiliationService = $affiliationService;
+
+        return $this;
+    }
+
+    /**
+     * @return ProjectService
+     */
+    public function getProjectService(): ProjectService
+    {
+        return $this->projectService;
+    }
+
+    /**
+     * @param ProjectService $projectService
+     *
+     * @return AbstractViewHelper
+     */
+    public function setProjectService(ProjectService $projectService): AbstractViewHelper
+    {
+        $this->projectService = $projectService;
+
+        return $this;
+    }
+
+    /**
+     * @return VersionService
+     */
+    public function getVersionService(): VersionService
+    {
+        return $this->versionService;
+    }
+
+    /**
+     * @param VersionService $versionService
+     *
+     * @return AbstractViewHelper
+     */
+    public function setVersionService(VersionService $versionService): AbstractViewHelper
+    {
+        $this->versionService = $versionService;
 
         return $this;
     }

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\View\Helper;
@@ -14,7 +14,7 @@ namespace Organisation\View\Helper;
 use Zend\View\Helper\Url;
 
 /**
- * Class LinkAbstract.
+ * Class AbstractLink.
  */
 abstract class ImageAbstract extends AbstractViewHelper
 {

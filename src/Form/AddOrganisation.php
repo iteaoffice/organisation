@@ -1,0 +1,80 @@
+<?php
+/**
+ * ITEA Office all rights reserved
+ *
+ * PHP Version 7
+ *
+ * @category    Project
+ *
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
+ *
+ * @link        http://github.com/iteaoffice/project for the canonical source repository
+ */
+
+namespace Organisation\Form;
+
+use Zend\Form\Form;
+
+/**
+ *
+ */
+class AddOrganisation extends Form
+{
+    /**
+     * AddOrganisation constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->add(
+            [
+                'type'       => 'Organisation\Form\Element\Organisation',
+                'name'       => 'organisation',
+                'options'    => [
+                    'help-block' => _("txt-project-help-block"),
+                ],
+                'attributes' => [
+                    'label' => _("txt-organisation"),
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'type'       => 'Contact\Form\Element\Contact',
+                'name'       => 'contact',
+                'options'    => [
+                    'help-block' => _("txt-technical-contact-help-block"),
+                ],
+                'attributes' => [
+                    'label' => _("txt-technical-contact"),
+                ],
+            ]
+        );
+
+
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'submit',
+                'attributes' => [
+                    'class' => "btn btn-primary",
+                    'value' => _("txt-submit"),
+                ],
+            ]
+        );
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'cancel',
+                'attributes' => [
+                    'class' => "btn btn-warning",
+                    'value' => _("txt-cancel"),
+                ],
+            ]
+        );
+    }
+}

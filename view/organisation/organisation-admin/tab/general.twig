@@ -14,8 +14,7 @@
             <dd>{{ organisation.country }}</dd>
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
-                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
-                )
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
             </dd>
             <dt>{{ translate("txt-projects") }}</dt>
             <dd>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
@@ -38,8 +37,7 @@
 
         {{ organisationLink(organisation,'edit','button') }}
     </div>
-    {% if organisation.logo %}
-        <h2>{{ translate("txt-logo") }}</h2>
+    {% if not organisation.logo.isEmpty() %}
         <div class="col-md-4">
             <div class="thumbnail">{{ organisationLogo(organisation,'view') }}</div>
         </div>

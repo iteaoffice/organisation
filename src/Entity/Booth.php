@@ -5,7 +5,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="organisation_booth")
  * @ORM\Entity
  */
-class Booth extends EntityAbstract
+class Booth extends AbstractEntity
 {
     /**
      * @ORM\Column(name="organisation_booth_id", length=10, type="integer", nullable=false)
@@ -87,9 +87,19 @@ class Booth extends EntityAbstract
     }
 
     /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf("Booth %s on %s", $this->organisation, $this->booth);
     }

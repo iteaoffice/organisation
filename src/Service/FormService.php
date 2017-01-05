@@ -1,13 +1,13 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
- * PHP Version 5
+ * PHP Version 7
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   2004-2015 ITEA Office
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
@@ -15,7 +15,7 @@
 
 namespace Organisation\Service;
 
-use Organisation\Entity\EntityAbstract;
+use Organisation\Entity\AbstractEntity;
 use Organisation\Form\CreateObject;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
@@ -25,7 +25,7 @@ use Zend\InputFilter\InputFilter;
  *
  * @package Organisation\Service
  */
-class FormService extends ServiceAbstract
+class FormService extends AbstractService
 {
     /**
      * @param      $className
@@ -44,12 +44,12 @@ class FormService extends ServiceAbstract
 
     /**
      * @param null                $className
-     * @param EntityAbstract|null $entity
+     * @param AbstractEntity|null $entity
      * @param bool                $bind
      *
      * @return array|object|CreateObject
      */
-    public function getForm($className = null, EntityAbstract $entity = null, bool $bind = true): Form
+    public function getForm($className = null, AbstractEntity $entity = null, bool $bind = true): Form
     {
         if (! is_null($className) && is_null($entity)) {
             $entity = new $className();

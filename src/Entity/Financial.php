@@ -1,11 +1,11 @@
 <?php
 /**
- * ITEA Office copyright message placeholder.
+ * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2015 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
 namespace Organisation\Entity;
@@ -13,7 +13,6 @@ namespace Organisation\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
  * OrganisationFinancial.
@@ -21,14 +20,12 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @ORM\Table(name="organisation_financial")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Financial")
  */
-class Financial extends EntityAbstract implements ResourceInterface
+class Financial extends AbstractEntity
 {
     const VAT_STATUS_UNDEFINED = 0;
     const VAT_STATUS_VALID = 1;
     const VAT_STATUS_INVALID = 2;
     const VAT_STATUS_UNCHECKED = 3;
-    const VAT_NOT_SHIFT = 0;
-    const VAT_SHIFT = 1;
     const NO_OMIT_CONTACT = 0;
     const OMIT_CONTACT = 1;
     const NO_REQUIRED_PURCHASE_ORDER = 0;
@@ -77,16 +74,7 @@ class Financial extends EntityAbstract implements ResourceInterface
             self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
             self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
         ];
-    /**
-     * Textual versions of the vat shift.
-     *
-     * @var array
-     */
-    protected $vatShiftTemplates
-        = [
-            self::VAT_NOT_SHIFT => 'txt-no-vat-shift',
-            self::VAT_SHIFT     => 'txt-vat-shift',
-        ];
+
     /**
      * @ORM\Column(name="financial_id", length=10, type="integer", nullable=false)
      * @ORM\Id
@@ -226,7 +214,6 @@ class Financial extends EntityAbstract implements ResourceInterface
     public function __construct()
     {
         $this->vatStatus             = self::VAT_STATUS_UNCHECKED;
-        $this->shiftVat              = self::VAT_NOT_SHIFT;
         $this->omitContact           = self::NO_OMIT_CONTACT;
         $this->requiredPurchaseOrder = self::NO_REQUIRED_PURCHASE_ORDER;
         $this->email                 = self::EMAIL_DELIVERY;
@@ -237,7 +224,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     /**
      * @return array
      */
-    public static function getVatStatusTemplates()
+    public static function getVatStatusTemplates(): array
     {
         return self::$vatStatusTemplates;
     }
@@ -245,7 +232,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     /**
      * @return array
      */
-    public static function getOmitContactTemplates()
+    public static function getOmitContactTemplates(): array
     {
         return self::$omitContactTemplates;
     }
@@ -253,7 +240,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     /**
      * @return array
      */
-    public static function getEmailTemplates()
+    public static function getEmailTemplates(): array
     {
         return self::$emailTemplates;
     }
@@ -261,7 +248,7 @@ class Financial extends EntityAbstract implements ResourceInterface
     /**
      * @return array
      */
-    public static function getRequiredPurchaseOrderTemplates()
+    public static function getRequiredPurchaseOrderTemplates(): array
     {
         return self::$requiredPurchaseOrderTemplates;
     }
@@ -286,22 +273,24 @@ class Financial extends EntityAbstract implements ResourceInterface
     }
 
     /**
+     * @param $property
+     *
+     * @return bool
+     */
+    public function __isset($property)
+    {
+        return isset($this->$property);
+    }
+
+    /**
      * ToString
      * Return the id here for form population.
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->organisation;
-    }
-
-    /**
-     * @return array
-     */
-    public function getVatShiftTemplates()
-    {
-        return $this->vatShiftTemplates;
     }
 
     /**
