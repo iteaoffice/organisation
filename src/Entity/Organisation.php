@@ -13,7 +13,6 @@ namespace Organisation\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Organisation\Entity\Parent\Financial;
 use Zend\Form\Annotation;
 
 /**

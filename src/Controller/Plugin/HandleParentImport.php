@@ -49,9 +49,18 @@ class HandleParentImport extends AbstractImportPlugin
     {
         foreach ($this->content as $key => $content) {
             $parentName = $content[0];
-            if (isset($content[1])) {
+            $type = '';
+            if (! empty($content[1])) {
                 $type = $content[1];
             }
+            $country = '';
+            if (empty($content[2])) {
+                $country = $content[2];
+            }
+
+            var_dump($parentName);
+            var_dump($type);
+            var_dump($country);
         }
     }
 
