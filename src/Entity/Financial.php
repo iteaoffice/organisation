@@ -45,7 +45,7 @@ class Financial extends AbstractEntity
             self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
         ];
     /**
-     * Textual versions of the vat shift.
+     * Textual versions of the omit contact
      *
      * @var array
      */
@@ -65,7 +65,7 @@ class Financial extends AbstractEntity
             self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
         ];
     /**
-     * Textual versions of the vat shift.
+     * Textual versions of the require purchase order
      *
      * @var array
      */
@@ -76,7 +76,7 @@ class Financial extends AbstractEntity
         ];
 
     /**
-     * @ORM\Column(name="financial_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="financial_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("Zend\Form\Element\Hidden")
@@ -85,7 +85,7 @@ class Financial extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="vat", type="string", length=40, nullable=true)
+     * @ORM\Column(name="vat", type="string", nullable=true)
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-vat-number", "help-block":"txt-vat-number-help-block"})
      * @var string
@@ -116,7 +116,7 @@ class Financial extends AbstractEntity
      */
     private $debtor;
     /**
-     * @ORM\Column(name="shiftvat", type="smallint", nullable=false)
+     * @ORM\Column(name="shiftvat", type="smallint", nullable=true)
      * @Annotation\Exclude
      *
      * @deprecated
@@ -134,21 +134,21 @@ class Financial extends AbstractEntity
      */
     private $omitContact;
     /**
-     * @ORM\Column(name="iban", type="string", length=40, nullable=true)
+     * @ORM\Column(name="iban", type="string", nullable=true)
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-iban"})
      * @var string
      */
     private $iban;
     /**
-     * @ORM\Column(name="supplier_number", type="string", length=40, nullable=true)
+     * @ORM\Column(name="supplier_number", type="string", nullable=true)
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-supplier-number"})
      * @var string
      */
     private $supplierNumber;
     /**
-     * @ORM\Column(name="bic", type="string", length=40, nullable=true)
+     * @ORM\Column(name="bic", type="string", nullable=true)
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-bic"})
      *

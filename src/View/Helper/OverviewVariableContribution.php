@@ -26,15 +26,15 @@ class OverviewVariableContribution extends AbstractViewHelper
 {
     /**
      * @param OParent $parent
-     * @param int     $year
-     * @param int     $period
+     * @param int $year
+     * @param int $period
      *
      * @return string
      */
     public function __invoke(OParent $parent, $year, $period): string
     {
         return $this->getRenderer()->render(
-            'parent/partial/overview-variable-contribution',
+            'organisation/partial/overview-variable-contribution',
             [
                 'year'               => $year,
                 'period'             => $period,

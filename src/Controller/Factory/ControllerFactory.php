@@ -100,6 +100,7 @@ final class ControllerFactory implements FactoryInterface
         $viewHelperManager = $container->get('ViewHelperManager');
         $controller->setViewHelperManager($viewHelperManager);
 
+
         return $controller;
     }
 }

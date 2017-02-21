@@ -13,28 +13,35 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
-namespace Organisation\View\Helper;
+namespace Organisation\Controller\Plugin;
 
 use Organisation\Entity\OParent;
 
 /**
- * Class OverviewExtraVariableContribution
- *
- * @package Organisation\View\Helper
+ * Class RenderOverviewExtraVariableContributionSheet
+ * @package Parent\Controller\Plugin
  */
-class OverviewExtraVariableContribution extends AbstractViewHelper
+class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationPlugin
 {
     /**
      * @param OParent $parent
-     * @param int $year
-     * @param int $period
-     *
-     * @return string
+     * @param $year
+     * @param $period
+     * @return OrganisationPdf|\TCPDF
      */
-    public function __invoke(OParent $parent, int $year, int $period): string
+    public function __invoke(OParent $parent, $year, $period): OrganisationPdf
     {
-        return $this->getRenderer()->render(
-            'organisation/partial/overview-extra-variable-contribution',
+        /**
+         * @var $pdf OrganisationPdf|\TCPDF
+         */
+        $pdf = new OrganisationPdf();
+        $pdf->setTemplate($this->getModuleOptions()->getOverviewVariableContributionTemplate());
+        $pdf->AddPage();
+        $pdf->SetMargins(10, 40, 10, true);
+        $pdf->SetFontSize(10);
+
+        $content = $this->getTwigRenderer()->render(
+            'organisation/pdf/overview-extra-variable-contribution',
             [
                 'year'               => $year,
                 'period'             => $period,
@@ -47,7 +54,12 @@ class OverviewExtraVariableContribution extends AbstractViewHelper
                 'financialContact'   => $this->getParentService()->getFinancialContact($parent),
                 'projects'           => $this->getProjectService()->findProjectsByParent($parent),
                 'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $year),
+
             ]
         );
+
+        $pdf->writeHTMLCell(0, 0, 10, 40, $content);
+
+        return $pdf;
     }
 }

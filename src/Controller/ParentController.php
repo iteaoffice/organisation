@@ -24,6 +24,7 @@ use Organisation\Entity;
 use Organisation\Entity\Financial;
 use Organisation\Form;
 use Zend\Paginator\Paginator;
+use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -37,9 +38,9 @@ class ParentController extends OrganisationAbstractController
      */
     public function listAction()
     {
-        $page         = $this->params()->fromRoute('page', 1);
+        $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $query        = $this->getParentService()->findEntitiesFiltered(
+        $query = $this->getParentService()->findEntitiesFiltered(
             Entity\OParent::class,
             $filterPlugin->getFilter()
         );
@@ -73,20 +74,20 @@ class ParentController extends OrganisationAbstractController
     public function newAction()
     {
         $organisation = null;
-        if (! is_null($this->params('organisationId'))) {
+        if (!is_null($this->params('organisationId'))) {
             $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
         }
 
         $data = array_merge($this->getRequest()->getPost()->toArray());
 
         $parent = new Entity\OParent();
-        $form   = $this->getFormService()->prepare($parent, null, $data);
+        $form = $this->getFormService()->prepare($parent, null, $data);
         $form->remove('delete');
 
-        if (! is_null($organisation)) {
+        if (!is_null($organisation)) {
             //Inject the organisation in the form
             $form->get($parent->get('underscore_entity_name'))->get('organisation')
-                 ->setValueOptions([$organisation->getId() => $organisation->getOrganisation()]);
+                ->setValueOptions([$organisation->getId() => $organisation->getOrganisation()]);
 
             $contactsInOrganisation = [];
             foreach ($this->getContactService()->findContactsInOrganisation($organisation) as $contact) {
@@ -96,7 +97,7 @@ class ParentController extends OrganisationAbstractController
 
             //Inject the organisation in the form
             $form->get($parent->get('underscore_entity_name'))->get('contact')
-                 ->setValueOptions($contactsInOrganisation);
+                ->setValueOptions($contactsInOrganisation);
         }
 
 
@@ -136,7 +137,7 @@ class ParentController extends OrganisationAbstractController
         $parent = $this->getParentService()->findParentById($this->params('id'));
 
         $organisation = null;
-        if (! is_null($this->params('organisationId'))) {
+        if (!is_null($this->params('organisationId'))) {
             $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
         }
 
@@ -144,7 +145,7 @@ class ParentController extends OrganisationAbstractController
 
         $form = new Form\AddOrganisation();
 
-        if (! is_null($organisation)) {
+        if (!is_null($organisation)) {
             //Inject the organisation in the form
             $form->get('organisation')->setValueOptions([$organisation->getId() => $organisation->getOrganisation()]);
 
@@ -220,7 +221,7 @@ class ParentController extends OrganisationAbstractController
 
         $form->get($parent->get('underscore_entity_name'))->get('contact')->injectContact($parent->getContact());
         $form->get($parent->get('underscore_entity_name'))->get('organisation')
-             ->injectOrganisation($parent->getOrganisation());
+            ->injectOrganisation($parent->getOrganisation());
 
         $form->setAttribute('class', 'form-horizontal');
 
@@ -298,22 +299,22 @@ class ParentController extends OrganisationAbstractController
 
         $form = new Form\Financial($parent, $this->getGeneralService(), $this->getOrganisationService());
 
-        if (! is_null($parent->getFinancial())) {
-            $branch                = $parent->getFinancial()->getBranch();
+        if (!is_null($parent->getFinancial())) {
+            $branch = $parent->getFinancial()->getBranch();
             $formData['attention'] = $parent->getFinancial()->getContact()->getDisplayName();
 
             $form->get('contact')->injectContact($parent->getFinancial()->getContact());
 
-            if (! is_null(
+            if (!is_null(
                 $financialAddress = $this->getContactService()->getFinancialAddress(
                     $parent->getFinancial()
-                           ->getContact()
+                        ->getContact()
                 )
             )
             ) {
                 $formData['address'] = $financialAddress->getAddress();
                 $formData['zipCode'] = $financialAddress->getZipCode();
-                $formData['city']    = $financialAddress->getCity();
+                $formData['city'] = $financialAddress->getCity();
                 $formData['country'] = $financialAddress->getCountry()->getId();
             }
         }
@@ -328,7 +329,7 @@ class ParentController extends OrganisationAbstractController
 
             /** @var Financial $financialOrganisation */
             $financialOrganisation = $this->getOrganisationService()
-                                          ->findEntityById(Financial::class, $formData['organisationFinancial']);
+                ->findEntityById(Financial::class, $formData['organisationFinancial']);
 
             /**
              *
@@ -357,7 +358,7 @@ class ParentController extends OrganisationAbstractController
                  * @var $addressType AddressType
                  */
                 $addressType = $this->getContactService()
-                                    ->findEntityById(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
+                    ->findEntityById(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
                 $financialAddress->setType($addressType);
             }
             $financialAddress->setAddress($formData['address']);
@@ -370,12 +371,12 @@ class ParentController extends OrganisationAbstractController
             $financialAddress->setCountry($country);
             $this->getContactService()->updateEntity($financialAddress);
             $this->flashMessenger()->setNamespace('success')
-                 ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-updated"), $parent));
+                ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-updated"), $parent));
 
             return $this->redirect()->toRoute(
                 'zfcadmin/parent/view',
                 [
-                'id' => $parent->getId(),
+                    'id' => $parent->getId(),
                 ],
                 [
                     'fragment' => 'financial',
@@ -404,14 +405,15 @@ class ParentController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $year   = (int)$this->params('year');
+        $year = (int)$this->params('year');
         $period = (int)$this->params('period');
 
         return new ViewModel(
             [
-                'year'   => $year,
-                'period' => $period,
-                'parent' => $parent,
+                'year'          => $year,
+                'period'        => $period,
+                'parent'        => $parent,
+                'invoiceFactor' => $this->getParentService()->parseInvoiceFactor($parent, $year)
 
             ]
         );
@@ -428,25 +430,25 @@ class ParentController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $year   = (int)$this->params('year');
+        $year = (int)$this->params('year');
         $period = (int)$this->params('period');
 
 
         $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $year, $period);
-        $response           = $this->getResponse();
+        $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
-                 ->addHeaderLine(
-                     'Content-Disposition',
-                     'attachment; filename="' . sprintf(
-                         "overview_variable_contribution_%s_%s_%sH.pdf",
-                         $parent->getOrganisation()->getDocRef(),
-                         $year,
-                         $period
-                     ) . '"'
-                 )
-                 ->addHeaderLine('Content-Type: application/pdf')
-                 ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine(
+                'Content-Disposition',
+                'attachment; filename="' . sprintf(
+                    "overview_variable_contribution_%s_%s_%sH.pdf",
+                    $parent->getOrganisation()->getDocRef(),
+                    $year,
+                    $period
+                ) . '"'
+            )
+            ->addHeaderLine('Content-Type: application/pdf')
+            ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
 
         return $response;
@@ -463,7 +465,7 @@ class ParentController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $year   = (int)$this->params('year');
+        $year = (int)$this->params('year');
         $period = (int)$this->params('period');
 
         return new ViewModel(
@@ -487,25 +489,25 @@ class ParentController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $year   = (int)$this->params('year');
+        $year = (int)$this->params('year');
         $period = (int)$this->params('period');
 
 
         $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $year, $period);
-        $response           = $this->getResponse();
+        $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
-                 ->addHeaderLine(
-                     'Content-Disposition',
-                     'attachment; filename="' . sprintf(
-                         "overview_extra_variable_contribution_%s_%s_%sH.pdf",
-                         $parent->getOrganisation()->getDocRef(),
-                         $year,
-                         $period
-                     ) . '"'
-                 )
-                 ->addHeaderLine('Content-Type: application/pdf')
-                 ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine(
+                'Content-Disposition',
+                'attachment; filename="' . sprintf(
+                    "overview_extra_variable_contribution_%s_%s_%sH.pdf",
+                    $parent->getOrganisation()->getDocRef(),
+                    $year,
+                    $period
+                ) . '"'
+            )
+            ->addHeaderLine('Content-Type: application/pdf')
+            ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
 
         return $response;
@@ -514,7 +516,7 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function importAction()
+    public function ImportParentAction()
     {
         set_time_limit(0);
 
@@ -533,15 +535,64 @@ class ParentController extends OrganisationAbstractController
             if (isset($data['upload']) && $form->isValid()) {
                 $fileData = file_get_contents($data['file']['tmp_name'], FILE_TEXT);
 
-                $importSession->active   = true;
+                $importSession->active = true;
                 $importSession->fileData = $fileData;
 
-                $handleImport = $this->handlePartnerImport($fileData);
+                $handleImport = $this->handleParentImport(
+                    $fileData,
+                    [],
+                    false
+                );
             }
 
-            if (isset($data['import']) && $importSession->active) {
-                $handleImport = $this->handlePartnerImport(
+            if (isset($data['import'], $data['key']) && $importSession->active) {
+                $handleImport = $this->handleParentImport(
                     $importSession->fileData,
+                    $data['key'],
+                    true
+                );
+            }
+        }
+
+        return new ViewModel(['form' => $form, 'handleImport' => $handleImport]);
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function ImportProjectAction()
+    {
+        set_time_limit(0);
+
+        $data = array_merge_recursive(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
+        $form = new Form\Import();
+        $form->setData($data);
+
+        /** store the data in the session, so we can use it when we really handle the import */
+        $importSession = new Container('import');
+
+        $handleImport = null;
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['upload']) && $form->isValid()) {
+                $fileData = file_get_contents($data['file']['tmp_name'], FILE_TEXT);
+
+                $importSession->active = true;
+                $importSession->fileData = $fileData;
+
+                $handleImport = $this->handleParentAndProjectImport(
+                    $fileData,
+                    [],
+                    false
+                );
+            }
+
+            if (isset($data['import'], $data['key']) && $importSession->active) {
+                $handleImport = $this->handleParentAndProjectImport(
+                    $importSession->fileData,
+                    $data['key'],
                     true
                 );
             }

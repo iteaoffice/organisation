@@ -12,6 +12,7 @@
  *
  * @link        http://github.com/iteaoffice/parent for the canonical source repository
  */
+
 namespace Organisation\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -44,7 +45,7 @@ class OParent extends EntityRepository
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                             ->like('organisation_entity_organisation.organisation', ':like')
+                    ->like('organisation_entity_organisation.organisation', ':like')
             );
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }
@@ -100,6 +101,24 @@ class OParent extends EntityRepository
     }
 
     /**
+     * @return array
+     */
+    public function findParentsForInvoicing()
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_parent');
+        $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
+
+        //Limit on parent types which have a fee
+        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
+        $queryBuilder->join('organisation_entity_parent_status.projectFee', 'project_entity_fee');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+
+    /**
      * This subselect returns all free riders and limits the query automatically
      *
      * @param QueryBuilder $queryBuilder
@@ -112,13 +131,13 @@ class OParent extends EntityRepository
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('organisation_entity_parent_freerider.id');
         $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_freerider');
-        $subSelect->join('organisation_entity_parent_freerider.type', 'organisation_entity_parent_freerider_type');
+        $subSelect->join('organisation_entity_parent_freerider.status', 'organisation_entity_parent_freerider_status');
 
-        $subSelect->andWhere('organisation_entity_parent_freerider_type.id = :type');
+        $subSelect->andWhere('organisation_entity_parent_freerider_status.status = :status');
         $subSelect->andWhere('organisation_entity_parent_freerider.epossMemberType = :epossMemberType');
         $subSelect->andWhere('organisation_entity_parent_freerider.artemisiaMemberType = :artemisiaMemberType');
 
-        $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_FEE_RIDER);
+        $queryBuilder->setParameter('status', Entity\Parent\Status::STATUS_FREE_RIDER);
         $queryBuilder->setParameter('epossMemberType', Entity\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER);
         $queryBuilder->setParameter('artemisiaMemberType', Entity\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER);
 
@@ -146,8 +165,8 @@ class OParent extends EntityRepository
         $subSelect->andWhere('organisation_entity_parent_c_chamber_type.id = :type');
         $subSelect->andWhere('organisation_entity_parent_c_chamber_status.id = :status');
 
-        $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_MEMBER);
-        $queryBuilder->setParameter('status', Entity\Parent\Status::STATUS_C_MEMBER);
+        $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_C_CHAMBER);
+        $queryBuilder->setParameter('status', Entity\Parent\Status::STATUS_MEMBER);
 
         $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_parent', $subSelect->getDQL()));
 

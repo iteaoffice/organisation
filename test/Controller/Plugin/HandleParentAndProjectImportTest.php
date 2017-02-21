@@ -51,6 +51,32 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
     {
         $this->handleParentAndProjectImport = new HandleParentAndProjectImport();
         $this->handleParentAndProjectImport->setEntityManager($this->getEntityManagerMock());
+
+        //Mock the GeneralService for the country lookup
+        $generalServiceMock = $this->getMockBuilder(GeneralService::class)
+                                   ->setMethods([
+                                       'findEntityById',
+                                       'findCountryByCD',
+                                   ])
+                                   ->getMock();
+
+        $gender = new Gender();
+        $gender->setId(Gender::GENDER_UNKNOWN);
+
+        $generalServiceMock->expects($this->any())
+                           ->method('findEntityById')
+                           ->with(
+                               [
+                                   $this->identicalTo(Gender::class),
+                                   $this->identicalTo(Gender::GENDER_UNKNOWN),
+                               ])
+                           ->will($this->returnValue($gender));
+
+        $generalServiceMock->expects($this->any())
+                           ->method('findCountryByCD')
+                           ->will($this->returnValue(new Country()));
+
+        $this->handleParentAndProjectImport->setGeneralService($generalServiceMock);
     }
 
     /**
@@ -76,17 +102,18 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
         $this->handleParentAndProjectImport->setData($data);
 
 
-        //Mock the GeneralService for the country lookup
-        $generalServiceMock = $this->getMockBuilder(GeneralService::class)
-                                   ->setMethods(['findCountryByCD'])
-                                   ->getMock();
+        $parentStatus  = new Status();
+        $parentService = $this->getMockBuilder(ParentService::class)
+                              ->setMethods([
+                                  'findEntityById',
+                              ])->getMock();
 
-        $generalServiceMock->expects($this->any())
-                           ->method('findCountryByCD')
-                           ->with($this->identicalTo('DE'))
-                           ->will($this->returnValue('Germany'));
+        $parentService->expects($this->any())
+                      ->method('findEntityById')
+                      ->with($this->equalTo(Status::class), $this->isType('int'))
+                      ->will($this->returnValue($parentStatus));
 
-        $this->handleParentAndProjectImport->setGeneralService($generalServiceMock);
+        $this->handleParentAndProjectImport->setParentService($parentService);
 
         $this->assertTrue($this->handleParentAndProjectImport->validateData());
         $this->assertEmpty($this->handleParentAndProjectImport->getErrors());
@@ -105,36 +132,26 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
                                    ->setMethods(['findCountryByCD'])
                                    ->getMock();
 
+        $country = new Country();
         $generalServiceMock->expects($this->any())
                            ->method('findCountryByCD')
-                           ->with($this->identicalTo('DE'))
-                           ->will($this->returnValue('Germany'));
+                           ->with($this->isType('string'))
+                           ->will($this->returnValue($country));
 
         $this->handleParentAndProjectImport->setGeneralService($generalServiceMock);
 
-        $this->assertTrue($this->handleParentAndProjectImport->validateData());
-        $this->assertNotEmpty($this->handleParentAndProjectImport->getErrors());
-    }
+        $parentStatus  = new Status();
+        $parentService = $this->getMockBuilder(ParentService::class)
+                              ->setMethods([
+                                  'findEntityById',
+                              ])->getMock();
 
-    /**
-     * Test the validation with an incorrect country (XX)
-     */
-    public function testCanValidateIncorrectCountryAddress()
-    {
-        $data = file_get_contents(__DIR__ . '/../../input/ecsel_call_and_costs_incorrect_country.txt');
-        $this->handleParentAndProjectImport->setData($data);
+        $parentService->expects($this->any())
+                      ->method('findEntityById')
+                      ->with($this->equalTo(Status::class), $this->isType('int'))
+                      ->will($this->returnValue($parentStatus));
 
-        //Mock the GeneralService for the country lookup
-        $generalServiceMock = $this->getMockBuilder(GeneralService::class)
-                                   ->setMethods(['findCountryByCD'])
-                                   ->getMock();
-
-        $generalServiceMock->expects($this->any())
-                           ->method('findCountryByCD')
-                           ->with($this->identicalTo('XX'))
-                           ->will($this->returnValue(null));
-
-        $this->handleParentAndProjectImport->setGeneralService($generalServiceMock);
+        $this->handleParentAndProjectImport->setParentService($parentService);
 
         $this->assertTrue($this->handleParentAndProjectImport->validateData());
         $this->assertNotEmpty($this->handleParentAndProjectImport->getErrors());
@@ -175,31 +192,6 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
         $this->handleParentAndProjectImport->setContactService($contactServiceMock);
 
-        //Mock the GeneralService for the country lookup
-        $generalServiceMock = $this->getMockBuilder(GeneralService::class)
-                                   ->setMethods([
-                                       'findEntityById',
-                                       'findCountryByCD',
-                                   ])
-                                   ->getMock();
-
-        $gender = new Gender();
-        $gender->setId(Gender::GENDER_UNKNOWN);
-
-        $generalServiceMock->expects($this->any())
-                           ->method('findEntityById')
-                           ->with(
-                               [
-                                   $this->identicalTo(Gender::class),
-                                   $this->identicalTo(Gender::GENDER_UNKNOWN),
-                               ])
-                           ->will($this->returnValue($gender));
-
-        $generalServiceMock->expects($this->any())
-                           ->method('findCountryByCD')
-                           ->will($this->returnValue(new Country()));
-
-        $this->handleParentAndProjectImport->setGeneralService($generalServiceMock);
 
         //Mock the program service
         $program            = new Program();
@@ -249,30 +241,30 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
         $parentService = $this->getMockBuilder(ParentService::class)
                               ->setMethods([
-                                  'findParentStatusByName',
+                                  'findParentTypeByName',
                                   'findEntityById',
                               ])->getMock();
 
-        $parentService->expects($this->any())
-                      ->method('findParentStatusByName')
-                      ->with($this->anything())
-                      ->will($this->returnValue($parentStatus));
-
-        $parentType = new Type();
-
+        $parentStatus = new Status();
         $parentService->expects($this->any())
                       ->method('findEntityById')
                       ->with(
-                          $this->equalTo(Type::class),
-                          $this->anything()
+                          $this->equalTo(Status::class), $this->isType('int')
                       )
-                      ->will($this->returnValue($parentType));
+                      ->will($this->returnValue($parentStatus));
+
+        $parentType = new Type();
+        $parentService->expects($this->any())
+                      ->method('findParentTypeByName')
+                      ->with($this->isType('string'))->will($this->returnValue($parentType));
 
         $this->handleParentAndProjectImport->setParentService($parentService);
 
         $this->handleParentAndProjectImport->validateData();
         $this->handleParentAndProjectImport->prepareContent();
 
+        $this->assertEmpty($this->handleParentAndProjectImport->getErrors());
+        $this->assertEmpty($this->handleParentAndProjectImport->getWarnings());
 
     }
 

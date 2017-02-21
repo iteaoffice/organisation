@@ -80,9 +80,13 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/new');
                 $this->setText($this->translate('txt-new-parent'));
                 break;
-            case 'import':
-                $this->setRouter('zfcadmin/parent/import');
+            case 'import-parent':
+                $this->setRouter('zfcadmin/parent/import/parent');
                 $this->setText($this->translate('txt-import-parent'));
+                break;
+            case 'import-project':
+                $this->setRouter('zfcadmin/parent/import/project');
+                $this->setText($this->translate('txt-import-project'));
                 break;
             case 'create-from-organisation':
                 $this->setRouter('zfcadmin/parent/new');

@@ -19,7 +19,6 @@ namespace Organisation\Entity\Parent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
-use Project\Entity\Fee;
 use Zend\Form\Annotation;
 
 /**
@@ -32,14 +31,12 @@ use Zend\Form\Annotation;
  */
 class Type extends AbstractEntity
 {
-    const TYPE_MEMBER = 1;
-    const TYPE_DOA_SIGNER = 2;
-    const TYPE_FEE_RIDER = 3;
-    const TYPE_APPLICATION_SIGNED = 4;
-    const TYPE_PAST_MEMBER = 5;
-    const TYPE_OTHER = 6;
+    const TYPE_A_CHAMBER = 1;
+    const TYPE_B_CHAMBER = 2;
+    const TYPE_C_CHAMBER = 3;
+    const TYPE_OTHER = 4;
     /**
-     * @ORM\Column(name="type_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="type_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
@@ -68,21 +65,13 @@ class Type extends AbstractEntity
      * @var \Organisation\Entity\OParent[]|ArrayCollection
      */
     private $parent;
-    /**
-     * @ORM\ManyToMany(targetEntity="Project\Entity\Fee", cascade={"persist"}, mappedBy="parentType")
-     * @Annotation\Exclude()
-     *
-     * @var Fee[]|ArrayCollection
-     */
-    private $projectFee;
 
     /**
      * Type constructor.
      */
     public function __construct()
     {
-        $this->parent     = new ArrayCollection();
-        $this->projectFee = new ArrayCollection();
+        $this->parent = new ArrayCollection();
     }
 
     /**
@@ -200,26 +189,6 @@ class Type extends AbstractEntity
     public function setParent($parent)
     {
         $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection|Fee[]
-     */
-    public function getProjectFee()
-    {
-        return $this->projectFee;
-    }
-
-    /**
-     * @param ArrayCollection|Fee[] $projectFee
-     *
-     * @return Type
-     */
-    public function setProjectFee($projectFee)
-    {
-        $this->projectFee = $projectFee;
 
         return $this;
     }

@@ -294,7 +294,7 @@ return [
                         ],
                         'may_terminate' => false,
                         'child_routes'  => [
-                            'list'                                     => [
+                            'list'   => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
@@ -303,15 +303,36 @@ return [
                                     ],
                                 ],
                             ],
-                            'import'                                   => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/import.html',
+                            'import' => [
+                                'type'         => 'Literal',
+                                'options'      => [
+                                    'route'    => '/import',
                                     'defaults' => [
                                         'action' => 'import',
                                     ],
                                 ],
+                                'child_routes' => [
+                                    'parent' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/parent.html',
+                                            'defaults' => [
+                                                'action' => 'import-parent',
+                                            ],
+                                        ],
+                                    ],
+                                    'project' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/project.html',
+                                            'defaults' => [
+                                                'action' => 'import-project',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
+
                             'new'                                      => [
                                 'type'    => 'Segment',
                                 'options' => [

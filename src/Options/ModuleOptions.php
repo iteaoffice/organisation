@@ -11,19 +11,14 @@
  *
  * @link       https://itea3.org
  */
+
 namespace Organisation\Options;
 
 use Zend\Stdlib\AbstractOptions;
 
 /**
- * Create a link to an project.
- *
- * @category   Organisation
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @license    https://itea3.org/licence.txt proprietary
- *
- * @link       https://itea3.org
+ * Class ModuleOptions
+ * @package Organisation\Options
  */
 class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterface
 {
@@ -52,6 +47,20 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
      * @var string
      */
     protected $countryColorFaded = '#005C00';
+    /**
+     * Location to the variable contribution template
+     *
+     * @var string
+     */
+    protected $overviewVariableContributionTemplate = '';
+
+    /**
+     * Location to the variable contribution template
+     *
+     * @var string
+     */
+    protected $overviewExtraVariableContributionTemplate = '';
+
 
     /**
      * @return bool
@@ -113,6 +122,47 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
     public function setCountryColorFaded($countryColorFaded)
     {
         $this->countryColorFaded = $countryColorFaded;
+
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getOverviewVariableContributionTemplate()
+    {
+        return $this->overviewVariableContributionTemplate;
+    }
+
+    /**
+     * @param string $overviewVariableContributionTemplate
+     *
+     * @return ModuleOptions
+     */
+    public function setOverviewVariableContributionTemplate($overviewVariableContributionTemplate)
+    {
+        $this->overviewVariableContributionTemplate = $overviewVariableContributionTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOverviewExtraVariableContributionTemplate()
+    {
+        return $this->overviewExtraVariableContributionTemplate;
+    }
+
+    /**
+     * @param string $overviewExtraVariableContributionTemplate
+     *
+     * @return ModuleOptions
+     */
+    public function setOverviewExtraVariableContributionTemplate($overviewExtraVariableContributionTemplate)
+    {
+        $this->overviewExtraVariableContributionTemplate = $overviewExtraVariableContributionTemplate;
 
         return $this;
     }

@@ -10,7 +10,16 @@
 
 namespace OrganisationTest\Controller\Plugin;
 
+use Contact\Entity\Contact;
+use Contact\Service\ContactService;
+use General\Entity\Country;
+use General\Service\GeneralService;
 use Organisation\Controller\Plugin\HandleParentImport;
+use Organisation\Entity\Organisation;
+use Organisation\Entity\Parent\Status;
+use Organisation\Entity\Parent\Type;
+use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
 use Testing\Util\AbstractServiceTest;
 
 /**
@@ -31,6 +40,8 @@ class HandleParentImportTest extends AbstractServiceTest
     public function setUp()
     {
         $this->handleParentImport = new HandleParentImport();
+
+        $this->handleParentImport->setEntityManager($this->getEntityManagerMock());
     }
 
     public function testCanCreatePlugin()
@@ -50,14 +61,133 @@ class HandleParentImportTest extends AbstractServiceTest
         $this->handleParentImport->setData($data);
 
         $this->assertNotEmpty($this->handleParentImport->getContent());
-        $this->assertEmpty($this->handleParentImport->getWarnings());
+        $this->assertNotEmpty($this->handleParentImport->getWarnings());
+    }
+
+    public function testCanValidateData()
+    {
+        $data = file_get_contents(__DIR__ . '/../../input/parents.txt');
+        $this->handleParentImport->setData($data);
+
+        $country = new Country();
+
+        //Mock the GeneralService for the country lookup
+        /** @var GeneralService| $generalServiceMock */
+        $generalServiceMock = $this->getMockBuilder(GeneralService::class)
+                                   ->setMethods(['findCountryByCD'])
+                                   ->getMock();
+
+        $generalServiceMock->expects($this->any())
+                           ->method('findCountryByCD')
+                           ->with($this->isType('string'))
+                           ->will($this->returnValue($country));
+
+        $this->handleParentImport->setGeneralService($generalServiceMock);
+
+        /** @var ParentService $parentService */
+        $parentService = $this->getMockBuilder(ParentService::class)
+                              ->setMethods(['findParentTypeByName', 'findParentStatusByName'])
+                              ->getMock();
+
+        $parentType = new Type();
+
+        $parentService->expects($this->any())
+                      ->method('findParentTypeByName')
+                      ->with($this->isType('string'))
+                      ->will($this->returnValue($parentType));
+        $status = new Status();
+        $parentService->expects($this->any())
+                      ->method('findParentStatusByName')
+                      ->with($this->isType('string'))
+                      ->will($this->returnValue($status));
+
+        $this->handleParentImport->setParentService($parentService);
+
+        $this->handleParentImport->setParentService($parentService);
+
+
+        $this->handleParentImport->validateData();
+
+        $this->assertEmpty($this->handleParentImport->getErrors());
+        $this->assertNotEmpty($this->handleParentImport->getContent());
     }
 
     public function testCanPrepareData()
     {
         $data = file_get_contents(__DIR__ . '/../../input/parents.txt');
+
         $this->handleParentImport->setData($data);
 
+        //Mock the GeneralService for the country lookup
+        /** @var GeneralService| $generalServiceMock */
+        $generalServiceMock = $this->getMockBuilder(GeneralService::class)
+                                   ->setMethods(['findCountryByCD'])
+                                   ->getMock();
+
+        $country = new Country();
+        $generalServiceMock->expects($this->any())
+                           ->method('findCountryByCD')
+                           ->with($this->isType('string'))
+                           ->will($this->returnValue($country));
+
+        $this->handleParentImport->setGeneralService($generalServiceMock);
+
+        /** @var ParentService $parentService */
+        $parentService = $this->getMockBuilder(ParentService::class)
+                              ->setMethods(['findParentTypeByName', 'findParentStatusByName', 'findEntityById'])
+                              ->getMock();
+
+        $parentType = new Type();
+
+        $parentService->expects($this->any())
+                      ->method('findParentTypeByName')
+                      ->with($this->isType('string'))
+                      ->will($this->returnValue($parentType));
+        $status = new Status();
+        $parentService->expects($this->any())
+                      ->method('findParentStatusByName')
+                      ->with($this->isType('string'))
+                      ->will($this->returnValue($status));
+        $parentService->expects($this->any())
+                      ->method('findEntityById')
+                      ->with($this->isType('string'), $this->isType('int'))
+                      ->will($this->returnValue($parentType), $this->returnValue($status));
+
+        $this->handleParentImport->setParentService($parentService);
+
+
+        /** @var OrganisationService $organisationService */
+        $organisationService = $this->getMockBuilder(OrganisationService::class)
+                                    ->setMethods(['findOrganisationByNameCountry', 'findEntityById'])
+                                    ->getMock();
+
+        $organisation = new Organisation();
+
+        $organisationService->expects($this->any())
+                            ->method('findOrganisationByNameCountry')
+                            ->with($this->isType('string'), $this->isInstanceOf(Country::class))
+                            ->will($this->returnValue($organisation));
+        $this->handleParentImport->setOrganisationService($organisationService);
+
+        /** @var OrganisationService $organisationService */
+        $contactService = $this->getMockBuilder(ContactService::class)
+                               ->setMethods(['findContactById'])
+                               ->getMock();
+
+        $contact = new Contact();
+
+        $contactService->expects($this->any())
+                       ->method('findContactById')
+                       ->with($this->isType('int'))
+                       ->will($this->returnValue($contact));
+        $this->handleParentImport->setContactService($contactService);
+
+
+        $this->handleParentImport->validateData();
+
         $this->handleParentImport->prepareContent();
+
+        $this->assertEmpty($this->handleParentImport->getErrors());
+        $this->assertNotEmpty($this->handleParentImport->getParents());
     }
 }

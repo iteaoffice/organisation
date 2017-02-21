@@ -426,22 +426,29 @@ class Organisation extends EntityRepository
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->distinct('organisation_entity_organisation.id');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+
+        if (! $onlyMain) {
+            $queryBuilder->leftJoin('organisation_entity_organisation.names', 'organisation_entity_name');
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->like('organisation_entity_name.name', ':searchItem'),
+                    $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':searchItem')
+                )
+            );
+        } else {
+            $queryBuilder->andWhere('organisation_entity_organisation.organisation LIKE :searchItem');
+        }
+
         /*
          * Limit on the country
          */
         $queryBuilder->andWhere('organisation_entity_organisation.country = :country');
-        $queryBuilder->setParameter('country', $country);
 
-        $queryBuilder->andWhere('organisation_entity_organisation.organisation LIKE :searchItem');
-
-        if (! $onlyMain) {
-            $queryBuilder->leftJoin('organisation_entity_organisation.names', 'organisation_entity_name');
-            $queryBuilder->orWhere('organisation_entity_name.name  LIKE :searchItem');
-        }
 
         /**
          * Do a filter based on the organisation name
          */
+        $queryBuilder->setParameter('country', $country);
         $queryBuilder->setParameter('searchItem', "%" . $name . "%");
 
         $queryBuilder->setMaxResults(1);

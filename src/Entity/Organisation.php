@@ -26,7 +26,7 @@ use Zend\Form\Annotation;
 class Organisation extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="organisation_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="organisation_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
@@ -87,27 +87,6 @@ class Organisation extends AbstractEntity
      * @var \Affiliation\Entity\Financial
      */
     private $affiliationFinancial;
-    /**
-     * @ORM\OneToOne(targetEntity="Partner\Entity\Partner", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
-     * @Annotation\Exclude()
-     * @deprecated
-     * @var \Partner\Entity\Partner
-     */
-    private $partner;
-    /**
-     * @ORM\OneToMany(targetEntity="Partner\Entity\Organisation", cascade={"persist"}, mappedBy="organisation")
-     * @Annotation\Exclude()
-     * @deprecated
-     * @var \Partner\Entity\Organisation[]|Collections\ArrayCollection
-     */
-    private $partnerOrganisation;
-    /**
-     * @ORM\OneToMany(targetEntity="Partner\Entity\Financial", cascade={"persist"}, mappedBy="organisation")
-     * @Annotation\Exclude()
-     * @deprecated
-     * @var \Partner\Entity\Financial[]|Collections\ArrayCollection
-     */
-    private $partnerFinancial;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\OParent", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
@@ -312,13 +291,6 @@ class Organisation extends AbstractEntity
      */
     private $doa;
     /**
-     * @ORM\OneToOne(targetEntity="Partner\Entity\Applicant", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
-     * @Annotation\Exclude()
-     *
-     * @var \Partner\Entity\Applicant
-     */
-    private $applicant;
-    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
@@ -354,30 +326,28 @@ class Organisation extends AbstractEntity
      */
     public function __construct()
     {
-        $this->affiliation          = new Collections\ArrayCollection();
+        $this->affiliation = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
-        $this->contactOrganisation  = new Collections\ArrayCollection();
-        $this->partnerOrganisation  = new Collections\ArrayCollection();
-        $this->partnerFinancial     = new Collections\ArrayCollection();
-        $this->parentFinancial      = new Collections\ArrayCollection();
-        $this->domain               = new Collections\ArrayCollection();
-        $this->names                = new Collections\ArrayCollection();
-        $this->technology           = new Collections\ArrayCollection();
-        $this->cluster              = new Collections\ArrayCollection();
-        $this->clusterMember        = new Collections\ArrayCollection();
-        $this->financialDebtor      = new Collections\ArrayCollection();
-        $this->log                  = new Collections\ArrayCollection();
-        $this->logo                 = new Collections\ArrayCollection();
-        $this->note                 = new Collections\ArrayCollection();
-        $this->programDoa           = new Collections\ArrayCollection();
-        $this->ideaPartner          = new Collections\ArrayCollection();
-        $this->invoice              = new Collections\ArrayCollection();
-        $this->boothFinancial       = new Collections\ArrayCollection();
-        $this->doa                  = new Collections\ArrayCollection();
-        $this->organisationBooth    = new Collections\ArrayCollection();
-        $this->journal              = new Collections\ArrayCollection();
-        $this->reminder             = new Collections\ArrayCollection();
-        $this->result               = new Collections\ArrayCollection();
+        $this->contactOrganisation = new Collections\ArrayCollection();
+        $this->parentFinancial = new Collections\ArrayCollection();
+        $this->domain = new Collections\ArrayCollection();
+        $this->names = new Collections\ArrayCollection();
+        $this->technology = new Collections\ArrayCollection();
+        $this->cluster = new Collections\ArrayCollection();
+        $this->clusterMember = new Collections\ArrayCollection();
+        $this->financialDebtor = new Collections\ArrayCollection();
+        $this->log = new Collections\ArrayCollection();
+        $this->logo = new Collections\ArrayCollection();
+        $this->note = new Collections\ArrayCollection();
+        $this->programDoa = new Collections\ArrayCollection();
+        $this->ideaPartner = new Collections\ArrayCollection();
+        $this->invoice = new Collections\ArrayCollection();
+        $this->boothFinancial = new Collections\ArrayCollection();
+        $this->doa = new Collections\ArrayCollection();
+        $this->organisationBooth = new Collections\ArrayCollection();
+        $this->journal = new Collections\ArrayCollection();
+        $this->reminder = new Collections\ArrayCollection();
+        $this->result = new Collections\ArrayCollection();
     }
 
     /**
@@ -578,66 +548,6 @@ class Organisation extends AbstractEntity
     public function setAffiliationFinancial($affiliationFinancial)
     {
         $this->affiliationFinancial = $affiliationFinancial;
-
-        return $this;
-    }
-
-    /**
-     * @return \Partner\Entity\Partner
-     */
-    public function getPartner()
-    {
-        return $this->partner;
-    }
-
-    /**
-     * @param \Partner\Entity\Partner $partner
-     *
-     * @return Organisation
-     */
-    public function setPartner($partner)
-    {
-        $this->partner = $partner;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Partner\Entity\Financial[]
-     */
-    public function getPartnerFinancial()
-    {
-        return $this->partnerFinancial;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Partner\Entity\Financial[] $partnerFinancial
-     *
-     * @return Organisation
-     */
-    public function setPartnerFinancial($partnerFinancial)
-    {
-        $this->partnerFinancial = $partnerFinancial;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Partner\Entity\Organisation[]
-     */
-    public function getPartnerOrganisation()
-    {
-        return $this->partnerOrganisation;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Partner\Entity\Organisation[] $partnerOrganisation
-     *
-     * @return Organisation
-     */
-    public function setPartnerOrganisation($partnerOrganisation)
-    {
-        $this->partnerOrganisation = $partnerOrganisation;
 
         return $this;
     }
@@ -1058,26 +968,6 @@ class Organisation extends AbstractEntity
     public function setDoa($doa)
     {
         $this->doa = $doa;
-
-        return $this;
-    }
-
-    /**
-     * @return \Partner\Entity\Applicant
-     */
-    public function getApplicant()
-    {
-        return $this->applicant;
-    }
-
-    /**
-     * @param \Partner\Entity\Applicant $applicant
-     *
-     * @return Organisation
-     */
-    public function setApplicant($applicant)
-    {
-        $this->applicant = $applicant;
 
         return $this;
     }

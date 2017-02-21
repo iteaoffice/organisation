@@ -22,7 +22,7 @@ use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\I18n\View\Helper\Translate;
-use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 use Zend\View\Helper\AbstractHelper;
 use Zend\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;

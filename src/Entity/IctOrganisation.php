@@ -25,7 +25,7 @@ use Zend\Form\Annotation;
 class IctOrganisation extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="ict_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="ict_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

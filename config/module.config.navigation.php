@@ -85,7 +85,7 @@ return [
                         'order' => 50,
                         'route' => 'zfcadmin/parent/list',
                         'pages' => [
-                            'parent-view' => [
+                            'parent-view'    => [
                                 'route'   => 'zfcadmin/parent/view',
                                 'visible' => false,
                                 'params'  => [
@@ -210,14 +210,18 @@ return [
                                     ],
                                 ],
                             ],
-                            'parent-new'  => [
+                            'parent-new'     => [
                                 'label' => _("txt-create-new-parent"),
                                 'route' => 'zfcadmin/parent/new',
                             ],
-                            //                            'parent-import' => [
-                            //                                'label' => _("txt-import-parents"),
-                            //                                'route' => 'zfcadmin/parent/import',
-                            //                            ],
+                            'import-parent'  => [
+                                'label' => _("txt-import-parents"),
+                                'route' => 'zfcadmin/parent/import/parent',
+                            ],
+                            'import-project' => [
+                                'label' => _("txt-import-project"),
+                                'route' => 'zfcadmin/parent/import/project',
+                            ],
                         ],
                     ],
 

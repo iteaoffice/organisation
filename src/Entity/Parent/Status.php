@@ -18,6 +18,7 @@ namespace Organisation\Entity\Parent;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use DoctrineORMModule\Proxy\__CG__\Project\Entity\Fee;
 use Organisation\Entity\AbstractEntity;
 use Zend\Form\Annotation;
 
@@ -33,12 +34,10 @@ use Zend\Form\Annotation;
  */
 class Status extends AbstractEntity
 {
-    const STATUS_A_MEMBER = 1;
-    const STATUS_B_MEMBER = 2;
-    const STATUS_C_MEMBER = 3;
-
+    const STATUS_MEMBER = 1;
+    const STATUS_FREE_RIDER = 3;
     /**
-     * @ORM\Column(name="status_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="status_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
@@ -67,6 +66,13 @@ class Status extends AbstractEntity
      * @var \Organisation\Entity\OParent[]|ArrayCollection
      */
     private $parent;
+    /**
+     * @ORM\ManyToMany(targetEntity="Project\Entity\Fee", cascade={"persist"}, mappedBy="parentStatus")
+     * @Annotation\Exclude()
+     *
+     * @var Fee[]|ArrayCollection
+     */
+    private $projectFee;
 
     /**
      * OrganisationType constructor.
@@ -74,6 +80,7 @@ class Status extends AbstractEntity
     public function __construct()
     {
         $this->parent = new ArrayCollection();
+        $this->projectFee = new ArrayCollection();
     }
 
     /**
@@ -191,6 +198,26 @@ class Status extends AbstractEntity
     public function setParent($parent)
     {
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Fee[]
+     */
+    public function getProjectFee()
+    {
+        return $this->projectFee;
+    }
+
+    /**
+     * @param ArrayCollection|Fee[] $projectFee
+     *
+     * @return Status
+     */
+    public function setProjectFee($projectFee)
+    {
+        $this->projectFee = $projectFee;
 
         return $this;
     }

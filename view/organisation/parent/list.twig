@@ -16,7 +16,7 @@
 
     <div class="col-md-10">
 
-        <h1>{{ translate("txt-parent-list") }} {{ parentLink(null,'new', 'button') }} {{ parentLink(null,'import', 'button') }}</h1>
+        <h1>{{ translate("txt-parent-list") }} {{ parentLink(null,'new', 'button') }} {{ parentLink(null,'import-parent', 'button') }} {{ parentLink(null,'import-project', 'button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -47,7 +47,7 @@
                 {% for parent in paginator.getCurrentItems() %}
                     <tr>
                         <td>{{ parentLink(parent, 'view', 'parent') }}</td>
-                        <td>{{ countryLink(parent.organisation.country,'view-admin','name') }}</td>
+                        <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
                         <td>{{ parentTypeLink(parent.type,'view', 'type') }}</td>
                         <td>{{ parentStatusLink(parent.status,'view', 'status') }}</td>
                         <td>{{ parent.parentOrganisation.count() }}</td>

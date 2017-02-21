@@ -15,7 +15,6 @@
 
 namespace Organisation\Entity\Parent;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
 use Zend\Form\Annotation;
@@ -32,7 +31,7 @@ use Zend\Form\Annotation;
 class Invoice extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="partner_invoice_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="partner_invoice_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -40,13 +39,13 @@ class Invoice extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="period", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="period", type="integer", nullable=false)
      *
      * @var integer
      */
     private $period;
     /**
-     * @ORM\Column(name="year", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="year", type="integer", nullable=false)
      *
      * @var integer
      */
@@ -74,20 +73,12 @@ class Invoice extends AbstractEntity
      * @var \Invoice\Entity\Invoice
      */
     private $invoice;
-    /**
-     * @ORM\OneToMany(targetEntity="Partner\Entity\Affiliation\Invoice", cascade={"persist","remove"}, mappedBy="invoice")
-     * @Annotation\Exclude()
-     *
-     * @var \Partner\Entity\Affiliation\Invoice[]|ArrayCollection
-     */
-    private $affiliationInvoice;
 
     /**
      * Class constructor.
      */
     public function __construct()
     {
-        $this->affiliationInvoice = new ArrayCollection();
     }
 
     /**
@@ -245,26 +236,6 @@ class Invoice extends AbstractEntity
     public function setInvoice(\Invoice\Entity\Invoice $invoice): Invoice
     {
         $this->invoice = $invoice;
-
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection|\Partner\Entity\Affiliation\Invoice[]
-     */
-    public function getAffiliationInvoice()
-    {
-        return $this->affiliationInvoice;
-    }
-
-    /**
-     * @param ArrayCollection|\Partner\Entity\Affiliation\Invoice[] $affiliationInvoice
-     *
-     * @return Invoice
-     */
-    public function setAffiliationInvoice($affiliationInvoice)
-    {
-        $this->affiliationInvoice = $affiliationInvoice;
 
         return $this;
     }

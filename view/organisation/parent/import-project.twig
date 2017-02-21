@@ -1,0 +1,163 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-import-parents-and-project-information")) %}
+
+<h1>{{ translate("txt-import-parents-and-parent-information") }}</h1>
+
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+ {{ ztbformelement(form.get('file')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {% if handleImport.hasErrors() %}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    {% for error in handleImport.getErrors() %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if handleImport.hasWarnings() %}
+            <div class="alert alert-warning" role="alert">
+                <ul>
+                    {% for warning in handleImport.getWarnings() %}
+                        <li>{{ warning }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('upload')) }}
+        {{ ztbformelement(form.get('import')) }}
+    </div>
+</div>
+
+{% if  handleImport.getImportedParentOrganisations()|length > 0 %}
+    {{ ztbalert().info(translate("txt-%s-parents-imported")|format(handleImport.getImportedParents()|length))|raw }}
+{% endif %}
+
+
+    {% if  handleImport.getParentOrganisation()|length > 0 %}
+        <table class="table table-hover table-striped table-condensed">
+            <thead>
+            <tr>
+                <th></th>
+                <th>{{ translate("txt-parent") }}</th>
+                <th>{{ translate("txt-country") }}</th>
+                <th>{{ translate("txt-parent-organisation") }}</th>
+                <th>{{ translate("txt-parent-organisation-country") }}</th>
+                <th>{{ translate("txt-project") }}</th>
+                <th>{{ translate("txt-call") }}</th>
+                <th>{{ translate("txt-program") }}</th>
+                <th>{{ translate("txt-affiliation") }}</th>
+                <th>{{ translate("txt-status") }}</th>
+                <th>{{ translate("txt-type") }}</th>
+                <th>{{ translate("txt-funding-national") }}</th>
+                <th>{{ translate("txt-funding-eu") }}</th>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <td colspan="11">
+                    <button class="btn btn-xs btn-info" id="check_all"
+                            onclick="return false;">{{ translate("txt-check-all") }}</button>
+                    <button class="btn btn-xs btn-info" id="check_none"
+                            onclick="return false;">{{ translate("txt-check-none") }}</button>
+                    <button class="btn btn-xs btn-info" id="check_inverse"
+                            onclick="return false;">{{ translate("txt-check-inverse") }}</button>
+                    <button class="btn btn-xs btn-info" id="check_known"
+                            onclick="return false;">{{ translate("txt-check-known") }}</button>
+                    <button class="btn btn-xs btn-info" id="check_unknown"
+                            onclick="return false;">{{ translate("txt-check-unknown") }}</button>
+                </td>
+            </tr>
+            </tfoot>
+            <tbody>
+            {% for key, parentOrganisation in handleImport.getParentOrganisation() %}
+
+                {# take the lastest affiliation #}
+                {% set affiliation = parentOrganisation.affiliation.last %}
+
+                {% set funded = affiliation.funded.last %}
+
+                <tr>
+                    <td><input type="checkbox" name="key[]"
+                               class="check_import  {% if parentOrganisation.id %}known_parent{% endif %}"
+                               value="{{ key }}"></td>
+                    <td>{{ parentOrganisation.parent }} {% if parentOrganisation.parent.id %}{{ parentLink(parentOrganisation.parent,'view', 'icon') }}{% else %}
+                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                    <td>{% if parentOrganisation.parent %}{{ countryLink(parentOrganisation.parent.organisation.country,'view-admin','iso3') }}{% endif %}</td>
+                    <td>{% for name in parentOrganisation.organisation.names if name.project.id == affiliation.project.id %}{{ name.name }}{% endfor %}{% if parentOrganisation.id %}{{ parentOrganisationLink(parentOrganisation,'view', 'icon') }}{% else %}
+                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                    <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin','iso3') }}</td>
+                    <td>{% if affiliation.project.id %}{{ projectLink(affiliation.project,'view-admin','name') }}{% else %}{{ affiliation.project }}
+                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                    <td>{% if affiliation.project.call.id %}{{ callLink(affiliation.project.call,'view-admin','name') }}{% else %}{{ affiliation.project.call }}
+                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                    <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view-admin','name') }}{% else %}{{ affiliation.project.call.program }}
+                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                    <td>{% if affiliation.id %}{{ affiliationLink(affiliation,'view-admin','name') }}{% else %}{{ affiliation }}
+                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                    <td>{{ parentOrganisation.parent.status }}</td>
+                    <td>{{ parentOrganisation.parent.type }}</td>
+                    <td>{{ funded.fundingNational }}</td>
+                    <td>{{ funded.fundingEu }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                {{ ztbformelement(form.get('import')) }}
+            </div>
+        </div>
+
+
+        {{ form().closeTag()|raw }}
+
+    {% endif %}
+
+<script type="text/javascript">
+    $("#check_all").click(function () {
+        $('.check_import').prop('checked', true);
+    });
+
+    $("#check_none").click(function () {
+        $('.check_import').prop('checked', false);
+    });
+
+    $("#check_known").click(function () {
+        $('.known_parent').prop('checked', true);
+        $('.check_import:not(.known_parent)').prop('checked', false);
+    });
+
+    $("#check_unknown").click(function () {
+        $('.known_parent').prop('checked', false);
+        $('.check_import:not(.known_parent)').prop('checked', true);
+    });
+
+    $("#check_inverse").click(function () {
+        $('input:checkbox:not(:disabled)').each(function () {
+            if (!$(this).prop('checked')) {
+                $(this).prop('checked', true);
+            } else {
+                $(this).prop('checked', false);
+            }
+        });
+    });
+
+
+</script>

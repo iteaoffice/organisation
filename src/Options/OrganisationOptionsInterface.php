@@ -11,18 +11,12 @@
  *
  * @link       https://itea3.org
  */
+
 namespace Organisation\Options;
 
 /**
- * ITEA Office all rights reserved
- *
- * @category   Organisation
- *
- * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
- * @license    https://itea3.org/license.txt proprietary
- *
- * @link       https://itea3.org
+ * Interface OrganisationOptionsInterface
+ * @package Organisation\Options
  */
 interface OrganisationOptionsInterface
 {
@@ -65,4 +59,28 @@ interface OrganisationOptionsInterface
      * @return string
      */
     public function getCountryColorFaded();
+
+    /**
+     * @return string
+     */
+    public function getOverviewVariableContributionTemplate();
+
+    /**
+     * @param string $overviewVariableContributionTemplate
+     *
+     * @return ModuleOptions
+     */
+    public function setOverviewVariableContributionTemplate($overviewVariableContributionTemplate);
+
+    /**
+     * @return string
+     */
+    public function getOverviewExtraVariableContributionTemplate();
+
+    /**
+     * @param string $overviewExtraVariableContributionTemplate
+     *
+     * @return ModuleOptions
+     */
+    public function setOverviewExtraVariableContributionTemplate($overviewExtraVariableContributionTemplate);
 }

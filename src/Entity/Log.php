@@ -25,7 +25,7 @@ use Zend\Form\Annotation;
 class Log extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="log_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="log_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

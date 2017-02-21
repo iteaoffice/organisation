@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 namespace Organisation\Controller;
 
 use Affiliation\Service\AffiliationService;
@@ -19,6 +20,9 @@ use General\Service\GeneralService;
 use Invoice\Controller\Plugin\GetFilter as InvoiceFilterPlugin;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
+use Organisation\Controller\Plugin\HandleParentAndProjectImport;
+use Organisation\Controller\Plugin\HandleParentImport;
+use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
@@ -35,8 +39,11 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
- * @method      InvoiceFilterPlugin getInvoiceFilter
- * @method      OrganisationFilterPlugin getOrganisationFilter
+ * @method      InvoiceFilterPlugin getInvoiceFilter()
+ * @method      OrganisationFilterPlugin getOrganisationFilter()
+ * @method      RenderOverviewVariableContributionSheet renderOverviewVariableContributionSheet()
+ * @method      HandleParentAndProjectImport handleParentAndProjectImport($fileData, $keys, $doImport)
+ * @method      HandleParentImport handleParentImport($fileData, $keys, $doImport)
  */
 abstract class OrganisationAbstractController extends AbstractActionController
 {

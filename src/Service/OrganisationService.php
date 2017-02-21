@@ -22,6 +22,7 @@ use Organisation\Entity;
 use Organisation\Repository;
 use Program\Entity\Program;
 use Project\Entity\Project;
+use Project\Entity\Result\Result;
 use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
@@ -92,7 +93,7 @@ class OrganisationService extends AbstractService
      *
      * @return string
      */
-    public function parseDebtorNumber(Entity\Organisation $organisation)
+    public function parseDebtorNumber(Entity\Organisation $organisation): string
     {
         return trim(sprintf("%'.06d\n", 100000 + $organisation->getId()));
     }
@@ -102,7 +103,7 @@ class OrganisationService extends AbstractService
      *
      * @return string
      */
-    public function parseCreditNumber(Entity\Organisation $organisation)
+    public function parseCreditNumber(Entity\Organisation $organisation): string
     {
         return trim(sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
@@ -118,6 +119,26 @@ class OrganisationService extends AbstractService
         $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findActiveOrganisationWithoutFinancial($filter);
+    }
+
+    /**
+     * @param Result $result
+     *
+     * @return array
+     */
+    public function findOrganisationByResult(Result $result): array
+    {
+        //Create a list of organisations
+        $organisations = [];
+
+        //Now add the projects
+        foreach ($result->getOrganisation() as $organisation) {
+            $organisations[$organisation->getOrganisation()] = $organisation;
+        }
+
+        ksort($organisations);
+
+        return $organisations;
     }
 
     /**

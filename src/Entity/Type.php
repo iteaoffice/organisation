@@ -54,7 +54,7 @@ class Type extends AbstractEntity implements ResourceInterface
             self::INVOICE    => 'txt-no-invoice',
         ];
     /**
-     * @ORM\Column(name="type_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="type_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
@@ -72,7 +72,7 @@ class Type extends AbstractEntity implements ResourceInterface
      */
     private $type;
     /**
-     * @ORM\Column(name="description", type="string", length=40, nullable=false, unique=true)
+     * @ORM\Column(name="description", type="string", nullable=false, unique=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)

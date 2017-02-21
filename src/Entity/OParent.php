@@ -39,6 +39,10 @@ class OParent extends AbstractEntity
     const ARTEMISIA_MEMBER_TYPE_MEMBER = 2;
     const ARTEMISIA_MEMBER_TYPE_DOA_SIGNER = 3;
 
+    //Create a set of criteria as dedicated constants as they don't fit in the normal type/status tables
+    const CRITERION_C_CHAMBER = 1;
+    const CRITERION_FREE_RIDER = 2;
+
     /**
      * @var array
      */
@@ -61,7 +65,7 @@ class OParent extends AbstractEntity
 
 
     /**
-     * @ORM\Column(name="parent_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="parent_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("Zend\Form\Element\Hidden")
@@ -224,10 +228,10 @@ class OParent extends AbstractEntity
      */
     public function __construct()
     {
-        $this->invoice             = new Collections\ArrayCollection();
-        $this->parentOrganisation  = new Collections\ArrayCollection();
-        $this->doa                 = new Collections\ArrayCollection();
-        $this->epossMemberType     = self::EPOSS_MEMBER_TYPE_NO_MEMBER;
+        $this->invoice = new Collections\ArrayCollection();
+        $this->parentOrganisation = new Collections\ArrayCollection();
+        $this->doa = new Collections\ArrayCollection();
+        $this->epossMemberType = self::EPOSS_MEMBER_TYPE_NO_MEMBER;
         $this->artemisiaMemberType = self::ARTEMISIA_MEMBER_TYPE_NO_MEMBER;
     }
 

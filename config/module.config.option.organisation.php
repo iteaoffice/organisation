@@ -6,8 +6,12 @@
  * drop this config file in it and change the values as you wish.
  */
 $options = [
-    'country_color'       => '#00a651',
-    'country_color_faded' => '#005C00',
+    'country_color'                                 => '#00a651',
+    'country_color_faded'                           => '#005C00',
+    'overview_variable_contribution_template'       => __DIR__ . '/../../../../styles/' . ITEAOFFICE_HOST
+        . '/template/pdf/aeneas-template.pdf',
+    'overview_extra_variable_contribution_template' => __DIR__ . '/../../../../styles/' . ITEAOFFICE_HOST
+        . '/template/pdf/aeneas-template.pdf',
 ];
 
 /**

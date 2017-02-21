@@ -25,7 +25,7 @@ use Zend\Form\Annotation;
 class Name extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="name_id", length=10, type="integer", nullable=false)
+     * @ORM\Column(name="name_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -48,7 +48,7 @@ class Name extends AbstractEntity
      */
     private $dateCreated;
     /**
-     * @ORM\OneToOne(targetEntity="Project\Entity\Project", inversedBy="organisationName", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Project\Entity\Project", inversedBy="organisationName", cascade={"persist"})
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false)
      * })
