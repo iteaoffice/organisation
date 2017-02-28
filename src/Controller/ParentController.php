@@ -554,7 +554,10 @@ class ParentController extends OrganisationAbstractController
             }
         }
 
-        return new ViewModel(['form' => $form, 'handleImport' => $handleImport]);
+        return new ViewModel(['form'           => $form,
+                              'handleImport'   => $handleImport,
+                              'contactService' => $this->getContactService()
+        ]);
     }
 
     /**

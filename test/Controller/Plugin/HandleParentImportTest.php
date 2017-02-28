@@ -56,17 +56,17 @@ class HandleParentImportTest extends AbstractServiceTest
 
     public function testCanSetData()
     {
-        $data = file_get_contents(__DIR__ . '/../../input/parents.txt');
+        $data = file_get_contents(__DIR__ . '/../../input/parents_and_financial_data.txt');
 
         $this->handleParentImport->setData($data);
 
         $this->assertNotEmpty($this->handleParentImport->getContent());
-        $this->assertNotEmpty($this->handleParentImport->getWarnings());
+        $this->assertEmpty($this->handleParentImport->getErrors());
     }
 
     public function testCanValidateData()
     {
-        $data = file_get_contents(__DIR__ . '/../../input/parents.txt');
+        $data = file_get_contents(__DIR__ . '/../../input/parents_and_financial_data.txt');
         $this->handleParentImport->setData($data);
 
         $country = new Country();
@@ -114,7 +114,7 @@ class HandleParentImportTest extends AbstractServiceTest
 
     public function testCanPrepareData()
     {
-        $data = file_get_contents(__DIR__ . '/../../input/parents.txt');
+        $data = file_get_contents(__DIR__ . '/../../input/parents_and_financial_data.txt');
 
         $this->handleParentImport->setData($data);
 

@@ -10,8 +10,17 @@
 
 namespace Organisation\Controller\Plugin;
 
+use Contact\Entity\Address;
+use Contact\Entity\AddressType;
 use Contact\Entity\Contact;
-use Organisation\Entity;
+use General\Entity\Country;
+use General\Entity\Gender;
+use General\Entity\Title;
+use Organisation\Entity\Financial;
+use Organisation\Entity\OParent;
+use Organisation\Entity\Organisation;
+use Organisation\Entity\Parent\Type as ParentType;
+use Zend\Validator\EmailAddress;
 
 /**
  * Class HandleImport.
@@ -31,6 +40,9 @@ class HandleParentImport extends AbstractImportPlugin
         $explodedData = explode(PHP_EOL, $data);
 
         $this->header = explode($this->delimiter, trim($explodedData[0]));
+
+        $this->header = array_map('strtolower', $this->header);
+
         /*
          * Go over the rest of the data and add the rows to the array
          */
@@ -61,113 +73,199 @@ class HandleParentImport extends AbstractImportPlugin
     {
         foreach ($this->content as $key => $content) {
             $name = $content[$this->headerKeys['parent']];
+            $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
+            $parentCountry = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['iso 2']]);
 
-
-            $status  = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
-            $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
-
-            //Try first to see if we can find the parent based on the country and on the $name
-            $organisation = $this->getOrganisationService()->findOrganisationByNameCountry($name, $country);
-
-            $type = $this->getParentService()
-                         ->findEntityById(Entity\Parent\Type::class, Entity\Parent\Type::TYPE_OTHER);
-            if (! empty($content[$this->headerKeys['type']])) {
-                //Try to find the type
-                $type = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
-            }
+            //Try to find the parent organisation
+            $organisation = $this->getOrganisationService()->findOrganisationByNameCountry(
+                $name,
+                $parentCountry,
+                false
+            );
 
             if (is_null($organisation)) {
-                $organisation = $this->createOrganisation($name, $country);
+                $organisation = $this->createOrganisation(
+                    $name,
+                    $parentCountry
+                );
+            }
 
-                //We have no parent at all, so create it
-                $parent = new Entity\OParent();
-                $parent->setOrganisation($organisation);
-                $parent->setType($type);
-                $parent->setStatus($status);
+            //Find the contact
+            $contact = $this->handleContactInformation($content);
 
+            $parent = $this->handleParentInformation(
+                $organisation,
+                $parentCountry,
+                $contact,
+                $content
+            );
+
+            //Create the financial information
+            if (is_null($financial = $parent->getFinancial())) {
+                $financial = new \Organisation\Entity\Parent\Financial();
+                $financial->setParent($parent);
+            }
+
+            $financial->setOrganisation($organisation);
+
+
+            if (is_null($financialOrganisation = $organisation->getFinancial())) {
+                $financialOrganisation = new Financial();
+                $financialOrganisation->setOrganisation($organisation);
+            }
+
+            if (!empty($content[$this->headerKeys['vat']])) {
+                $financialOrganisation->setVat($content[$this->headerKeys['vat']]);
+            }
+
+            $organisation->setFinancial($financialOrganisation);
+
+            $financial->setOrganisation($organisation);
+            $financial->setContact($contact);
+
+            $parent->setFinancial($financial);
+            //Only persist when the key is given
+            if (in_array($key, $keys, false)) {
                 $this->getEntityManager()->persist($parent);
+                $this->getEntityManager()->flush($parent);
 
-                //Add the $organisation so the parent becomes his own organisation as well
-                $parentOrganisation = new Entity\Parent\Organisation();
-                $parentOrganisation->setParent($parent);
-                $parentOrganisation->setOrganisation($organisation);
-
-                /** @var Contact $contact */
-                $contact = $this->getEntityManager()->find(Contact::class, 1);
-
-                $parentOrganisation->setContact($contact);
-
-                //Only persist when the result is in the array
-                if (in_array($key, $keys, false)) {
-                    $this->getEntityManager()->persist($parent);
-                    $this->importedParents[] = $parent;
-                }
-
-                $this->parents[$key] = $parent;
+                $this->importedParents[] = $parent;
             }
 
-            if (! is_null($organisation)) {
-                //We have the organisation, but we need to check if the organisation is a parent
-                if (is_null($organisation->getParent())) {
-                    //We have no parent at all, so create it
-                    $parent = new Entity\OParent();
-                    $parent->setOrganisation($organisation);
-                    $parent->setType($type);
-                    $parent->setStatus($status);
 
-                    $this->getEntityManager()->persist($parent);
-
-                    //Add the $organisation so the parent becomes his own organisation as well
-                    $parentOrganisation = new Entity\Parent\Organisation();
-                    $parentOrganisation->setParent($parent);
-                    $parentOrganisation->setOrganisation($organisation);
-
-                    /** @var Contact $contact */
-                    $contact = $this->getContactService()->findContactById(1);
-
-                    $parentOrganisation->setContact($contact);
-                    $this->getEntityManager()->persist($parent);
-
-                    //Only persist when the result is in the array
-                    if (in_array($key, $keys, false)) {
-                        $this->getEntityManager()->persist($parent);
-                        $this->importedParents[] = $parent;
-                    }
-
-                    $this->parents[$key] = $parent;
-                }
-
-
-                if (! is_null($organisation->getParent())) {
-                    //We have the parent, update the status now
-                    $parent = $organisation->getParent();
-                    $parent->setStatus($status);
-                    $parent->setType($type);
-
-                    //Only persist when the result is in the array
-                    if (in_array($key, $keys, false)) {
-                        $this->getEntityManager()->persist($parent);
-                        $this->importedParents[] = $parent;
-                    }
-
-                    $this->parents[$key] = $parent;
-                }
-            }
+            /** Add the parent to the parents array */
+            $this->parents[$key] = $parent;
         }
     }
+
+    /**
+     * @param Organisation $organisation
+     * @param Country $country
+     * @param Contact $contact
+     * @param array $content
+     *
+     * @return OParent
+     */
+    public function handleParentInformation(
+        Organisation $organisation,
+        Country $country,
+        Contact $contact,
+        array $content
+    ): OParent {
+        //If we find the organisation and the organisation is a parent, just return it
+        if (!is_null($organisation->getParent())) {
+            $parent = $organisation->getParent();
+        } else {
+            $parent = new OParent();
+            $parent->setContact($contact);
+            $parent->setOrganisation($organisation);
+        }
+
+        $parentType = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
+        if (is_null($parentType)) {
+            $parentType = $this->getParentService()->findEntityById(ParentType::class, ParentType::TYPE_OTHER);
+        }
+        $parent->setType($parentType);
+
+        $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
+        $parent->setStatus($status);
+
+        $parent->setArtemisiaMemberType(OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER);
+        $parent->setEpossMemberType(OParent::EPOSS_MEMBER_TYPE_NO_MEMBER);
+
+        $parent->setContact($contact);
+
+        //Add the parent to the organisation
+        $organisation->setParent($parent);
+
+        return $parent;
+    }
+
+    /**
+     * @param array $content
+     * @return Contact
+     */
+    public function handleContactInformation(array $content): Contact
+    {
+        //Try first to find the contact based on the email address
+        $contact = $this->getContactService()->findContactByEmail($content[$this->headerKeys['email']]);
+
+        //Only when we have an email we can create a new contact
+        if (is_null($contact) && !empty($content[$this->headerKeys['email']])) {
+            $contact = new Contact();
+            $contact->setEmail($content[$this->headerKeys['email']]);
+            $contact->setGender($this->getGeneralService()->findEntityById(Gender::class, Gender::GENDER_UNKNOWN));
+            $contact->setTitle($this->getGeneralService()->findEntityById(Title::class, Title::TITLE_UNKNOWN));
+        }
+
+        //We have no contact, no name, so we can't do anything
+        if (is_null($contact)) {
+            return $this->getContactService()->findContactById(1);
+        }
+
+        $contact->setFirstName($content[$this->headerKeys['first name']]);
+        if (!empty($content[$this->headerKeys['middle name']])) {
+            $contact->setMiddleName($content[$this->headerKeys['middle name']]);
+        }
+        $contact->setLastName($content[$this->headerKeys['last name']]);
+
+        if (!empty($content[$this->headerKeys['country']])) {
+            //Set the address
+            $financialAddress = null;
+            if (!$contact->isEmpty()) {
+                $financialAddress = $this->getContactService()->getFinancialAddress($contact);
+            }
+
+            if (is_null($financialAddress)) {
+                $financialAddress = new Address();
+                /** @var AddressType $addressType */
+                $addressType = $this->getContactService()->findEntityById(
+                    AddressType::class,
+                    AddressType::ADDRESS_TYPE_FINANCIAL
+                );
+                $financialAddress->setType($addressType);
+                $financialAddress->setContact($contact);
+            }
+
+            $financialAddress->setAddress($content[$this->headerKeys['address']]);
+            $financialAddress->setZipCode($content[$this->headerKeys['zip']]);
+            $financialAddress->setCity($content[$this->headerKeys['city']]);
+
+            $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
+            $financialAddress->setCountry($country);
+
+            $contact->getAddress()->add($financialAddress);
+        }
+
+        return $contact;
+    }
+
 
     /**
      * validate the data
      */
     public function validateData()
     {
-        $minimalRequiredElements = ['parent', 'type', 'status', 'country'];
+        $minimalRequiredElements = [
+            'parent',
+            'type',
+            'iso 2',
+            'vat',
+            'first name',
+            'middle name',
+            'last name',
+            'email',
+            'address',
+            'city',
+            'country'
+        ];
+
 
         /*
          * Go over all elements and check if the required elements are present
          */
         foreach ($minimalRequiredElements as $element) {
-            if (! in_array(strtolower($element), $this->header, true)) {
+            if (!in_array(strtolower($element), $this->header, true)) {
                 $this->errors[] = sprintf('Element %s is missing in the file', $element);
             }
         }
@@ -192,8 +290,22 @@ class HandleParentImport extends AbstractImportPlugin
                     );
                 }
 
+                if (!empty($content[$this->headerKeys['email']])) {
+                    /**
+                     * Validate the email addresses
+                     */
+                    $validate = new EmailAddress();
+                    if (!$validate->isValid($content[$this->headerKeys['email']])) {
+                        $this->errors[] = sprintf(
+                            "EmailAddress (%s) in row %s is invalid",
+                            $content[$this->headerKeys['email']],
+                            $counter
+                        );
+                    }
+                }
 
-                if (! empty($content[$this->headerKeys['type']])) {
+
+                if (!empty($content[$this->headerKeys['type']])) {
                     //Try to find the type
                     $type = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
 
@@ -207,15 +319,28 @@ class HandleParentImport extends AbstractImportPlugin
                 }
 
 
-                //Try to find the country
-                $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
+                //Try to find the parent country
+                $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['iso 2']]);
 
                 if (is_null($country)) {
                     $this->errors[] = sprintf(
-                        'Country (%s) in row %s cannot be found',
-                        $content[$this->headerKeys['country']],
+                        'Parent Country (%s) in row %s cannot be found',
+                        $content[$this->headerKeys['iso 2']],
                         $counter
                     );
+                }
+
+                if (!empty($content[$this->headerKeys['country']])) {
+                    //Try to find the financial country
+                    $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
+
+                    if (is_null($country)) {
+                        $this->errors[] = sprintf(
+                            'Financial Country (%s) in row %s cannot be found',
+                            $content[$this->headerKeys['country']],
+                            $counter
+                        );
+                    }
                 }
 
                 $counter++;

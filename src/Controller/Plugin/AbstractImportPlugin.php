@@ -10,7 +10,6 @@
 
 namespace Organisation\Controller\Plugin;
 
-use DoctrineORMModule\Proxy\__CG__\Organisation\Entity\ParentOrganisation;
 use General\Entity\Country;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
@@ -71,8 +70,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
      * @param string $data
      * @param array $keys
      * @param bool $doImport
-     *
-     * @return AbstractImportPlugin
+     * @return AbstractOrganisationPlugin
      */
     public function __invoke(string $data, array $keys = [], $doImport = false): AbstractOrganisationPlugin
     {
@@ -83,10 +81,6 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
 
         if (!$this->hasErrors()) {
             $this->prepareContent($keys);
-
-            if ($doImport) {
-                $this->getEntityManager()->flush();
-            }
         }
 
         return $this;
@@ -131,6 +125,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
 
         return $organisation;
     }
+
 
     /**
      * @return bool
@@ -283,6 +278,14 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
         $this->importedParents = $importedParents;
 
         return $this;
+    }
+
+    /**
+     * @return OParent[]
+     */
+    public function getParents(): array
+    {
+        return $this->parents;
     }
 
     /**

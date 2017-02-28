@@ -53,21 +53,22 @@
             <thead>
             <tr>
                 <th></th>
-                <th class="col-md-1">{{ translate("txt-title") }}</th>
-                <th class="col-md-2">{{ translate("txt-firstname") }}</th>
-                <th class="col-md-1">{{ translate("txt-middlename") }}</th>
-                <th class="col-md-2">{{ translate("txt-lastname") }}</th>
-                <th class="col-md-1">{{ translate("txt-gender") }}</th>
-                <th class="col-md-1">{{ translate("txt-email") }}</th>
-                <th class="col-md-2">{{ translate("txt-phone") }}</th>
-                <th class="col-md-2">{{ translate("txt-organisation") }}</th>
+                <th>{{ translate("txt-parent") }}</th>
                 <th>{{ translate("txt-country") }}</th>
-                <th class="col-md-2">{{ translate("txt-position") }}</th>
+                <th>{{ translate("txt-status") }}</th>
+                <th>{{ translate("txt-type") }}</th>
+                <th>{{ translate("txt-vat-number") }}</th>
+                <th>{{ translate("txt-financial-contact") }}</th>
+                <th>{{ translate("txt-email") }}</th>
+                <th>{{ translate("txt-address") }}</th>
+                <th>{{ translate("txt-zip") }}</th>
+                <th>{{ translate("txt-city") }}</th>
+                <th>{{ translate("txt-country") }}</th>
             </tr>
             </thead>
             <tfoot>
             <tr>
-                <td colspan="11">
+                <td colspan="12">
                     <button class="btn btn-xs btn-info" id="check_all"
                             onclick="return false;">{{ translate("txt-check-all") }}</button>
                     <button class="btn btn-xs btn-info" id="check_none"
@@ -82,21 +83,22 @@
             </tr>
             </tfoot>
             <tbody>
-            {% for parent in handleImport.getParents() %}
+            {% for key, parent in handleImport.getParents() %}
                 <tr>
                     <td><input type="checkbox" name="key[]"
                                class="check_import  {% if parent.id %}known_parent{% endif %}"
-                               value="{{ parent.key }}"></td>
-                    <td>{{ parent.title }}</td>
-                    <td>{{ parent.firstname }} {% if parent.id %}{{ parentLink(parent,'view-admin', 'icon') }}{% endif %}</td>
-                    <td>{{ parent.middlename }}</td>
-                    <td>{{ parent.lastname }}</td>
-                    <td>{{ parent.gender }}</td>
-                    <td>{{ parent.email }}</td>
-                    <td>{% for phone in parent.phone %}{{ phone.phone }}{% endfor %}</td>
-                    <td>{{ parent.parentOrganisation.organisation }}</td>
-                    <td>{{ parent.parentOrganisation.organisation.country }}</td>
-                    <td>{{ parent.position }}</td>
+                               value="{{ key }}"></td>
+                    <td>{{ parent.organisation }} {% if parent.id %}{{ parentLink(parent,'view', 'icon') }}{% endif %}</td>
+                    <td>{{ parent.organisation.country.iso3 }} </td>
+                    <td>{{ parent.status }}</td>
+                    <td>{{ parent.type }}</td>
+                    <td>{{ parent.financial.organisation.financial.vat }} {% if parent.financial.organisation.financial.id %}known{% endif %}</td>
+                    <td>{{ parent.financial.contact.displayName }}</td>
+                    <td>{{ parent.financial.contact.email }} {% if parent.financial.contact.id %}{{ contactLink(parent.financial.contact,'view-admin', 'icon') }}{% endif %}</td>
+                    <td>{% for address in parent.financial.contact.address %}{{ address.address }}{% endfor %}</td>
+                    <td>{% for address in parent.financial.contact.address %}{{ address.zipCode }}{% endfor %}</td>
+                    <td>{% for address in parent.financial.contact.address %}{{ address.city }}{% endfor %}</td>
+                    <td>{% for address in parent.financial.contact.address %}{{ address.country.iso3 }}{% endfor %}</td>
                 </tr>
             {% endfor %}
             </tbody>
