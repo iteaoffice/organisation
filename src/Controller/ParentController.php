@@ -301,8 +301,9 @@ class ParentController extends OrganisationAbstractController
 
         if (!is_null($parent->getFinancial())) {
             $branch = $parent->getFinancial()->getBranch();
+            $formData['organisationFinancial'] = $parent->getFinancial()->getOrganisation()->getFinancial()->getId();
             $formData['attention'] = $parent->getFinancial()->getContact()->getDisplayName();
-
+            $formData['contact'] = $parent->getFinancial()->getContact()->getId();
             $form->get('contact')->injectContact($parent->getFinancial()->getContact());
 
             if (!is_null(
@@ -554,9 +555,10 @@ class ParentController extends OrganisationAbstractController
             }
         }
 
-        return new ViewModel(['form'           => $form,
-                              'handleImport'   => $handleImport,
-                              'contactService' => $this->getContactService()
+        return new ViewModel([
+            'form'           => $form,
+            'handleImport'   => $handleImport,
+            'contactService' => $this->getContactService()
         ]);
     }
 

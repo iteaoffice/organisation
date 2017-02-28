@@ -234,6 +234,7 @@ class HandleParentImport extends AbstractImportPlugin
             $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
             $financialAddress->setCountry($country);
 
+            //@todo, figure out why the address is not updated
             $contact->getAddress()->add($financialAddress);
         }
 
