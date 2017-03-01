@@ -107,6 +107,9 @@ class ParentService extends AbstractService
         /** @var Entity\Parent\Type $type */
         $type = $this->findEntityById(Entity\Parent\Type::class, Entity\Parent\Type::TYPE_OTHER);
         $parent->setType($type);
+        /** @var Entity\Parent\Status $status */
+        $status = $this->findEntityById(Entity\Parent\Status::class, Entity\Parent\Status::STATUS_FREE_RIDER);
+        $parent->setStatus($status);
 
         $this->updateEntity($parent);
 
