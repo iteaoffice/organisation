@@ -16,6 +16,7 @@
 namespace Organisation\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
+use Organisation\Entity\OParent;
 use Organisation\Entity\Parent\Organisation;
 use Zend\Navigation\Page\Mvc;
 
@@ -36,6 +37,8 @@ class OrganisationLabel extends AbstractNavigationInvokable
         if ($this->getEntities()->containsKey(Organisation::class)) {
             /** @var Organisation $organisation */
             $organisation = $this->getEntities()->get(Organisation::class);
+
+            $this->getEntities()->set(OParent::class, $organisation->getParent());
             $page->setParams(
                 array_merge(
                     $page->getParams(),

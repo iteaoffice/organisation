@@ -37,6 +37,15 @@ class ParentLabel extends AbstractNavigationInvokable
             /** @var OParent $parent */
             $parent = $this->getEntities()->get(OParent::class);
 
+            $page->setParams(
+                array_merge(
+                    $page->getParams(),
+                    [
+                        'id' => $parent->getId(),
+                    ]
+                )
+            );
+
             $label = (string)$parent;
         } else {
             $label = $this->translate('txt-nav-view');

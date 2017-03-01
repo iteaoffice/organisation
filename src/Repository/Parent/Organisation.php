@@ -12,51 +12,32 @@
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
+
 namespace Organisation\Repository\Parent;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Partner\Entity;
+use Organisation\Entity;
 
 /**
- * @category    Affiliation
+ * Class Organisation
+ * @package Organisation\Repository\Parent
  */
 class Organisation extends EntityRepository
 {
     /**
-     * @param array $filter
-     *
-     * @return Query
+     * @param string $name
+     * @return mixed
      */
-    public function findFiltered(array $filter)
+    public function findParentOrganisationByNameLike(string $name)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent_organisation');
-        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_parent_organisation');
-        $queryBuilder->join('organisation_entity_parent_organisation.partner', 'organisation_entity_partner');
+        $queryBuilder->from(Entity\Parent\Organisation::class, 'organisation_entity_parent_organisation');
+        $queryBuilder->join('organisation_entity_parent_organisation.organisation', 'organisation_entity_organisation');
+        $queryBuilder->andWhere($queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'));
+        $queryBuilder->setParameter('like', sprintf("%%%s%%", $name));
+        $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', 'ASC');
 
-
-        if (array_key_exists('search', $filter)) {
-            $queryBuilder->andWhere(
-                $queryBuilder->expr()
-                             ->like('organisation_entity_organisation.organisation', ':like')
-            );
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
-        }
-
-        $direction = 'ASC';
-        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
-            $direction = strtoupper($filter['direction']);
-        }
-
-        switch ($filter['order']) {
-            case 'name':
-                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
-                break;
-            default:
-                $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
-        }
-
-        return $queryBuilder->getQuery();
+        return $queryBuilder->getQuery()->getResult();
     }
 }

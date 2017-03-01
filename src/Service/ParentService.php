@@ -398,7 +398,7 @@ class ParentService extends AbstractService
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Entity\OParent[]
      */
     public function findActiveParents(): ArrayCollection
     {
@@ -406,6 +406,18 @@ class ParentService extends AbstractService
         $repository = $this->getEntityManager()->getRepository(Entity\OParent::class);
 
         return new ArrayCollection($repository->findActiveParents());
+    }
+
+    /**
+     * @param string $name
+     * @return ArrayCollection|Entity\Parent\Organisation[]
+     */
+    public function findParentOrganisationByNameLike(string $name)
+    {
+        /** @var Repository\Parent\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Entity\Parent\Organisation::class);
+
+        return new ArrayCollection($repository->findParentOrganisationByNameLike($name));
     }
 
     /**
