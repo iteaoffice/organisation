@@ -236,6 +236,7 @@ class Organisation extends AbstractEntity
     private $logo;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Note", cascade={"persist","remove"}, mappedBy="organisation")
+     * @ORM\OrderBy({"dateCreated" = "DESC"})
      * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Note[]|Collections\ArrayCollection

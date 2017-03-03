@@ -108,19 +108,10 @@ class OrganisationLink extends AbstractLink
      */
     public function parseAction()
     {
-        if (in_array(
-            $this->getAction(),
-            [
-                'view',
-                'view-article',
-            ]
-        )) {
+        if (in_array($this->getAction(), ['view', 'view-article'])) {
             if (is_null($this->getOrganisation())) {
                 throw new \InvalidArgumentException(
-                    sprintf(
-                        "OrganisationService is cannot be null for %s",
-                        $this->getAction()
-                    )
+                    sprintf("OrganisationService is cannot be null for %s", $this->getAction())
                 );
             }
             $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
@@ -169,15 +160,16 @@ class OrganisationLink extends AbstractLink
                 );
                 break;
             case 'list':
-                /*
-                 * For a list in the front-end simply use the MatchedRouteName
-                 */
+                // For a list in the front-end simply use the MatchedRouteName
                 $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
-                /*
-                 * Push the docRef in the params array
-                 */
+                // Push the docRef in the params array
                 $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
                 $this->setText($this->translate("txt-list-organisations"));
+                break;
+            case 'list-admin':
+                $this->setRouter('zfcadmin/organisation/list');
+                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
+                $this->setText($this->translate('txt-list-organisations'));
                 break;
             case 'view':
                 $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());

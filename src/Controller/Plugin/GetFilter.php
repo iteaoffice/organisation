@@ -12,7 +12,8 @@
 namespace Organisation\Controller\Plugin;
 
 /**
- * @category    Application
+ * Class GetFilter
+ * @package Organisation\Controller\Plugin
  */
 class GetFilter extends AbstractOrganisationPlugin
 {
@@ -30,35 +31,35 @@ class GetFilter extends AbstractOrganisationPlugin
     {
         $encodedFilter = urldecode($this->getRouteMatch()->getParam('encodedFilter'));
 
-        $order = $this->getRequest()->getQuery('order');
+        $order     = $this->getRequest()->getQuery('order');
         $direction = $this->getRequest()->getQuery('direction');
 
-        //Take the filter from the URL
+        // Take the filter from the URL
         $filter = unserialize(base64_decode($encodedFilter));
 
-        //If the form is submitted, refresh the URL
-        if ($this->getRequest()->isGet() && !is_null($this->getRequest()->getQuery('submit'))) {
+        // If the form is submitted, refresh the URL
+        if ($this->getRequest()->isGet() && ! is_null($this->getRequest()->getQuery('submit'))) {
             $filter = $this->getRequest()->getQuery()->toArray()['filter'];
         }
 
-        //Create a new filter if not set already
-        if (!$filter) {
+        // Create a new filter if not set already
+        if (! $filter) {
             $filter = [];
         }
 
-        //Add a default order and direction if not known in the filter
-        if (!isset($filter['order'])) {
-            $filter['order'] = 'name';
+        // Add a default order and direction if not known in the filter
+        if (! isset($filter['order'])) {
+            $filter['order']     = 'name';
             $filter['direction'] = 'asc';
         }
 
-        //Overrule the order if set in the query
-        if (!is_null($order)) {
+        // Overrule the order if set in the query
+        if (! is_null($order)) {
             $filter['order'] = $order;
         }
 
-        //Overrule the direction if set in the query
-        if (!is_null($direction)) {
+        // Overrule the direction if set in the query
+        if (! is_null($direction)) {
             $filter['direction'] = $direction;
         }
 
@@ -67,13 +68,12 @@ class GetFilter extends AbstractOrganisationPlugin
         return $this;
     }
 
-
     /**
      * Return the filter
      *
      * @return array
      */
-    public function getFilter(): array
+    public function getFilter()
     {
         return $this->filter;
     }

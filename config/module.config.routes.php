@@ -232,6 +232,37 @@ return [
                                     ],
                                 ],
                             ],
+                            'note' => [
+                                'type'          => 'Segment',
+                                'options'       => [
+                                    'route'    => '/note',
+                                    'defaults' => [
+                                        'controller' => Controller\NoteController::class,
+                                        'action'     => 'edit',
+                                    ],
+                                ],
+                                'may_terminate' => false,
+                                'child_routes'  => [
+                                    'new' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/new/organisation-[:organisationId].html',
+                                            'defaults' => [
+                                                'action' => 'new',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'organisation-type' => [

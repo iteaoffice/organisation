@@ -39,6 +39,8 @@ return [
                 ['route' => 'zfcadmin/organisation/financial/list', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/organisation/financial/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/organisation/financial/no-financial', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/note/new', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/note/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/list', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/import/parent', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/import/project', 'roles' => [Access::ACCESS_OFFICE]],

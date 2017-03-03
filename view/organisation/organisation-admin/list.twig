@@ -33,11 +33,11 @@
             <table class="table table-hover table-striped table-condensed">
                 <thead>
                 <tr>
-                    <th colspan="2">{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'contacts', 'text': translate('txt-contacts')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'projects', 'text': translate('txt-projects')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th colspan="2">{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
+                    <th>{{ translate('txt-contacts') }}</th>
+                    <th>{{ translate('txt-projects') }}</th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate('txt-type')} %}</th>
                     <th>{{ translate("txt-actions") }}</th>
                 </tr>
                 </thead>

@@ -12,6 +12,7 @@ namespace Organisation\Repository;
 
 use Affiliation\Entity\Affiliation;
 use Contact\Entity\Contact;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -36,9 +37,14 @@ class Organisation extends EntityRepository
     public function findFiltered(array $filter)
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->select([
+            'organisation_entity_organisation',
+            'general_entity_country',
+            'organisation_entity_type'
+        ]);
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
-
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        $queryBuilder->join('organisation_entity_organisation.type', 'organisation_entity_type');
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
@@ -74,8 +80,10 @@ class Organisation extends EntityRepository
             $queryBuilder->join('organisation_entity_organisation.parent', 'parent');
         }
 
-        $direction = 'ASC';
-        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        $direction = Criteria::ASC;
+        if (isset($filter['direction'])
+            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true))
+        {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -85,6 +93,12 @@ class Organisation extends EntityRepository
                 break;
             case 'name':
                 $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
+                break;
+            case 'country':
+                $queryBuilder->addOrderBy('general_entity_country.country', $direction);
+                break;
+            case 'type':
+                $queryBuilder->addOrderBy('organisation_entity_type.type', $direction);
                 break;
             default:
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);

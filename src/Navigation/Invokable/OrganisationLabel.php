@@ -39,14 +39,7 @@ class OrganisationLabel extends AbstractNavigationInvokable
             $organisation = $this->getEntities()->get(Organisation::class);
 
             $this->getEntities()->set(OParent::class, $organisation->getParent());
-            $page->setParams(
-                array_merge(
-                    $page->getParams(),
-                    [
-                        'id' => $organisation->getId(),
-                    ]
-                )
-            );
+            $page->setParams(array_merge($page->getParams(), ['id' => $organisation->getId()]));
             $label = (string)$organisation;
         } else {
             $label = $this->translate('txt-nav-view');

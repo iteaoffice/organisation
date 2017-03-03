@@ -33,13 +33,17 @@ class Note extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="note", type="text", nullable=false)
+     * @ORM\Column(name="note", length=65535, type="text", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\Textarea")
+     * @Annotation\Options({"label":"txt-note","help-block":"txt-note-help-block"})
      *
      * @var string
      */
     private $note;
     /**
      * @ORM\Column(name="source", type="string", length=45, nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Options({"label":"txt-note-source","help-block":"txt-note-source-help-block"})
      *
      * @var string
      */
@@ -47,24 +51,23 @@ class Note extends AbstractEntity
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
+     * @Annotation\Exclude()
      *
      * @var \DateTime
      */
     private $dateCreated;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="organisationLog", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
-     * })
+     * @Annotation\Exclude()
      *
      * @var \Contact\Entity\Contact
      */
     private $contact;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="note", cascade="persist")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     * })
+     * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Organisation
      */

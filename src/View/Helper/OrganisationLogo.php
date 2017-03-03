@@ -23,17 +23,19 @@ class OrganisationLogo extends ImageAbstract
 {
     /**
      * @param Organisation $organisation
-     * @param null         $class
+     * @param null|string  $class
+     * @param bool         $silent
      *
      * @return string
      */
     public function __invoke(
         Organisation $organisation,
-        $class = null
+        $class = null,
+        $silent = true
     ) {
         $logo = $organisation->getLogo();
         if ($logo->count() === 0) {
-            return '';
+            return $silent ? '' : $this->translate('txt-no-logo-available');
         }
 
         /**

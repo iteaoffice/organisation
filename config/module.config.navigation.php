@@ -66,7 +66,35 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'add-note' => [
+                                        'label'   => _('txt-nav-add-note'),
+                                        'route'   => 'zfcadmin/organisation/note/new',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                            'routeParam' => [
+                                                'id' => 'organisationId',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit-note' => [
+                                        'label'   => _('txt-nav-edit-note'),
+                                        'route'   => 'zfcadmin/organisation/note/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Note::class,
+                                            ],
+                                        ],
+                                    ],
                                 ],
+                            ],
+                            'organisation-new' => [
+                                'label'   => _('txt-add-organisation'),
+                                'route'   => 'zfcadmin/organisation/new',
+                                'visible' => false,
                             ],
                         ],
                     ],
@@ -257,7 +285,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'organisation-new'       => [
+                            'organisation-type-new' => [
                                 'label' => _("txt-create-new-organisation-type"),
                                 'route' => 'zfcadmin/organisation-type/new',
                             ],

@@ -19,6 +19,7 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Form\AddAffiliation;
 use Organisation\Form\OrganisationFilter;
+use Zend\Http\Request;
 use Zend\Paginator\Paginator;
 use Zend\Validator\File\ImageSize;
 use Zend\View\Model\JsonModel;
@@ -40,8 +41,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $organisationQuery = $this->getOrganisationService()
                                   ->findEntitiesFiltered(Organisation::class, $filterPlugin->getFilter());
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
@@ -116,6 +116,57 @@ class OrganisationAdminController extends OrganisationAbstractController
     }
 
     /**
+     * @return \Zend\Http\Response|ViewModel
+     */
+    public function newAction()
+    {
+        $organisation = new Organisation();
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $data = array_merge($request->getPost()->toArray(), $request->getFiles()->toArray());
+        $form = $this->getFormService()->prepare($organisation, $organisation, $data);
+        $form->remove('delete');
+
+        if ($request->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/organisation/list');
+            }
+
+            if ($form->isValid()) {
+                /** @var Organisation $organisation */
+                $organisation = $form->getData();
+                $fileData = $this->params()->fromFiles();
+
+                if (! empty($fileData['file']['name'])) {
+                    $logo = new Logo();
+                    $logo->setOrganisation($organisation);
+                    $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));
+                    $imageSizeValidator = new ImageSize();
+                    $imageSizeValidator->isValid($fileData['file']);
+                    $logo->setContentType(
+                        $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
+                    );
+                    $logo->setLogoExtension($logo->getContentType()->getExtension());
+                    $organisation->getLogo()->add($logo);
+                }
+
+                $this->getOrganisationService()->updateEntity($organisation);
+                $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
+                    $this->translate("txt-organisation-%s-has-successfully-been-added"),
+                    $organisation
+                ));
+
+                return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $organisation->getId()]);
+            }
+        }
+
+        return new ViewModel([
+            'form'         => $form,
+            'organisation' => $organisation
+        ]);
+    }
+
+    /**
      * @return array|\Zend\Http\Response|ViewModel
      */
     public function editAction()
@@ -128,9 +179,7 @@ class OrganisationAdminController extends OrganisationAbstractController
 
 
         $data = array_merge(
-            [
-                'description' => $organisation->getDescription(),
-            ],
+            ['description' => $organisation->getDescription()],
             $this->getRequest()->getPost()->toArray()
         );
         $form = $this->getFormService()->prepare($organisation, $organisation, $data);
@@ -145,13 +194,10 @@ class OrganisationAdminController extends OrganisationAbstractController
             }
 
             if (isset($data['delete']) && $this->getOrganisationService()->canDeleteOrganisation($organisation)) {
-                $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             $this->translate("txt-organisation-%s-has-been-removed-successfully"),
-                             $organisation
-                         )
-                     );
+                $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
+                     $this->translate("txt-organisation-%s-has-been-removed-successfully"),
+                     $organisation
+                ));
 
                 $this->getOrganisationService()->removeEntity($organisation);
 
@@ -159,24 +205,18 @@ class OrganisationAdminController extends OrganisationAbstractController
             }
 
             if ($form->isValid()) {
-                $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             $this->translate("txt-organisation-%s-has-successfully-been-updated"),
-                             $organisation
-                         )
-                     );
-                /**
-                 * @var $organisation Organisation
-                 */
+                $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
+                    $this->translate("txt-organisation-%s-has-successfully-been-updated"),
+                    $organisation
+                ));
+
+                /** @var Organisation $organisation */
                 $organisation = $form->getData();
-
-
                 $fileData = $this->params()->fromFiles();
                 if (! empty($fileData['file']['name'])) {
                     $logo = $organisation->getLogo()->first();
                     if (! $logo) {
-                        //Create a logo element
+                        // Create a new logo element
                         $logo = new Logo();
                         $logo->setOrganisation($organisation);
                     }
@@ -184,16 +224,12 @@ class OrganisationAdminController extends OrganisationAbstractController
                     $imageSizeValidator = new ImageSize();
                     $imageSizeValidator->isValid($fileData['file']);
                     $logo->setContentType(
-                        $this->getGeneralService()
-                             ->findContentTypeByContentTypeName($fileData['file']['type'])
+                        $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
                     );
                     $logo->setLogoExtension($logo->getContentType()->getExtension());
-
                     $organisation->getLogo()->add($logo);
 
-                    /**
-                     * Remove the cached file
-                     */
+                    // Remove the cached file
                     if (file_exists($logo->getCacheFileName())) {
                         unlink($logo->getCacheFileName());
                     }
@@ -205,12 +241,10 @@ class OrganisationAdminController extends OrganisationAbstractController
             }
         }
 
-        return new ViewModel(
-            [
-                'organisation' => $organisation,
-                'form'         => $form,
-            ]
-        );
+        return new ViewModel([
+            'organisation' => $organisation,
+            'form'         => $form,
+        ]);
     }
 
 
