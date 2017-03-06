@@ -60,6 +60,11 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
                 false
             );
 
+            //Skip the rest of the calculation if a project has no version
+            if (is_null($latestVersion)) {
+                continue;
+            }
+
             $funding = $this->getVersionService()->findTotalFundingEuVersionByAffiliationAndVersion(
                 $affiliation,
                 $latestVersion

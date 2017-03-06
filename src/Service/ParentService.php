@@ -70,6 +70,15 @@ class ParentService extends AbstractService
     }
 
     /**
+     * @param Entity\OParent $parent
+     * @return bool
+     */
+    public function parentCanBeDeleted(Entity\OParent $parent): bool
+    {
+        return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty();
+    }
+
+    /**
      * @param Entity\Organisation $organisation
      * @param Contact $contact
      *
@@ -358,10 +367,10 @@ class ParentService extends AbstractService
     {
         $amountOfMemberships = 1;
 
-        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_MEMBER) {
+        if ($parent->getArtemisiaMemberType() !== Entity\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER) {
             $amountOfMemberships++;
         }
-        if ($parent->getEpossMemberType() === Entity\OParent::EPOSS_MEMBER_TYPE_MEMBER) {
+        if ($parent->getEpossMemberType() !== Entity\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER) {
             $amountOfMemberships++;
         }
 

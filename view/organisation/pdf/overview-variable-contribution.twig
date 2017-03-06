@@ -16,7 +16,7 @@
 <p style="text-align: center"><strong>Annex 1 - Overview of {{ year }} Variable Contribution for ECSEL
         Project(s)</strong></p>
 
-{% for project in projects %}
+{% for project in projects if project.totalContribution > 0 %}
     <table class="table" width="555" cellpadding="1">
         <tr class="header">
             <th width="70">ECSEL project name</th>
@@ -48,7 +48,7 @@
 
     <p>Totals for {{ year }} AENEAS Variable Contribution</p>
 
-    {% for project in projects %}
+    {% for project in projects if project.totalContribution > 0 %}
         Sum {{ project.call }}: {{ project.totalContribution|parse_funding }}<br>
     {% endfor %}
 

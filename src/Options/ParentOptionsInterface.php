@@ -29,7 +29,6 @@ interface ParentOptionsInterface
      */
     public function getApplicationFormTemplate();
 
-
     /**
      * returns the location to the Application Form Template
      *

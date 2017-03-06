@@ -204,7 +204,7 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
-     * @return array|ViewModel
+     * @return array|\Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
@@ -223,11 +223,22 @@ class ParentController extends OrganisationAbstractController
         $form->get($parent->get('underscore_entity_name'))->get('organisation')
             ->injectOrganisation($parent->getOrganisation());
 
-        $form->setAttribute('class', 'form-horizontal');
+        if (!$this->getParentService()->parentCanBeDeleted($parent)) {
+            $form->remove('delete');
+        }
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/parent/list');
+                return $this->redirect()->toRoute('zfcadmin/parent/list');
+            }
+
+            if (isset($data['delete']) && $this->getParentService()->parentCanBeDeleted($parent)) {
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-deleted"), $parent));
+
+                $this->getParentService()->removeEntity($parent);
+
+                return $this->redirect()->toRoute('zfcadmin/parent/list');
             }
 
             if ($form->isValid()) {
@@ -238,8 +249,12 @@ class ParentController extends OrganisationAbstractController
                     $parent->setDateParentTypeUpdate(new \DateTime());
                 }
 
-                $result = $this->getParentService()->newEntity($parent);
-                $this->redirect()->toRoute(
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-updated"), $parent));
+
+                $result = $this->getParentService()->updateEntity($parent);
+
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
                     [
                         'id' => $result->getId(),
@@ -275,6 +290,7 @@ class ParentController extends OrganisationAbstractController
                 'contactService'      => $this->getContactService(),
                 'year'                => $year,
                 'invoiceFactor'       => $this->getParentService()->parseInvoiceFactor($parent, $year),
+                'membershipFactor'    => $this->getParentService()->parseMembershipFactor($parent),
             ]
         );
     }
@@ -456,7 +472,7 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
-     * @return ViewModel
+     * @return array|ViewModel
      */
     public function overviewExtraVariableContributionAction()
     {

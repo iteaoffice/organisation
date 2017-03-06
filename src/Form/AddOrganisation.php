@@ -34,10 +34,10 @@ class AddOrganisation extends Form
                 'type'       => 'Organisation\Form\Element\Organisation',
                 'name'       => 'organisation',
                 'options'    => [
-                    'help-block' => _("txt-project-help-block"),
+                    'help-block' => _("txt-parent-add-organisation-organisation-help-block"),
                 ],
                 'attributes' => [
-                    'label' => _("txt-organisation"),
+                    'label' => _("txt-parent-add-organiation-organisation-label"),
                 ],
             ]
         );
@@ -47,10 +47,10 @@ class AddOrganisation extends Form
                 'type'       => 'Contact\Form\Element\Contact',
                 'name'       => 'contact',
                 'options'    => [
-                    'help-block' => _("txt-technical-contact-help-block"),
+                    'help-block' => _("txt-parent-add-organisation-contact-help-block"),
                 ],
                 'attributes' => [
-                    'label' => _("txt-technical-contact"),
+                    'label' => _("txt-parent-add-organisation-contact-label"),
                 ],
             ]
         );

@@ -24,7 +24,7 @@ class Organisation extends Element\Select
     /**
      * Organisation constructor.
      *
-     * @param null  $name
+     * @param null $name
      * @param array $options
      */
     public function __construct($name = null, $options = [])
@@ -39,6 +39,7 @@ class Organisation extends Element\Select
      */
     public function injectOrganisation(Entity\Organisation $organisation)
     {
-        $this->valueOptions[$organisation->getId()] = $organisation->getOrganisation();
+        $this->valueOptions[$organisation->getId()] = sprintf("%s (%s)", $organisation->getOrganisation(),
+            $organisation->getCountry()->getIso3());
     }
 }

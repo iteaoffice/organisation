@@ -79,7 +79,8 @@ class OParent extends AbstractEntity
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      * })
      * @Annotation\Type("Contact\Form\Element\Contact")
-     * @Annotation\Attributes({"label":"txt-organisation-representative"})
+     * @Annotation\Attributes({"label":"txt-parent-contact-label"})
+     * @Annotation\Options({"help-block":"txt-parent-contact-help-block"})
      *
      * @var \Contact\Entity\Contact
      */
@@ -91,6 +92,7 @@ class OParent extends AbstractEntity
      * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({
+     *      "help-block":"txt-parent-type-help-block",
      *      "target_class":"Organisation\Entity\Parent\Type",
      *      "find_method":{
      *          "name":"findBy",
@@ -102,7 +104,7 @@ class OParent extends AbstractEntity
      *          }
      *      }
      * )
-     * @Annotation\Attributes({"label":"txt-parent-type"})
+     * @Annotation\Attributes({"label":"txt-parent-type-label"})
      *
      * @var \Organisation\Entity\Parent\Type
      */
@@ -114,6 +116,7 @@ class OParent extends AbstractEntity
      * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({
+     *      "help-block":"txt-parent-status-help-block",
      *      "target_class":"Organisation\Entity\Parent\Status",
      *      "find_method":{
      *          "name":"findBy",
@@ -125,7 +128,7 @@ class OParent extends AbstractEntity
      *          }
      *      }
      * )
-     * @Annotation\Attributes({"label":"txt-organisation-parent-status"})
+     * @Annotation\Attributes({"label":"txt-parent-status-label"})
      *
      * @var \Organisation\Entity\Parent\Status
      */
@@ -135,7 +138,7 @@ class OParent extends AbstractEntity
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"epossMemberTypeTemplates"})
      * @Annotation\Attributes({"label":"txt-eposs-member-type"})
-     * @Annotation\Options({"help-block":"txt-is-eposs-member-type-explanation"})
+     * @Annotation\Options({"help-block":"txt-is-eposs-member-type-help-block"})
      *
      * @var int
      */
@@ -145,7 +148,7 @@ class OParent extends AbstractEntity
      * @Annotation\Type("Zend\Form\Element\Radio")
      * @Annotation\Attributes({"array":"artemisiaMemberTypeTemplates"})
      * @Annotation\Attributes({"label":"txt-artemisia-member-type"})
-     * @Annotation\Options({"help-block":"txt-is-artemisia-member-type-explanation"})
+     * @Annotation\Options({"help-block":"txt-is-artemisia-member-type-help-block"})
      *
      * @var int
      */
@@ -163,7 +166,8 @@ class OParent extends AbstractEntity
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      * })
      * @Annotation\Type("Organisation\Form\Element\Organisation")
-     * @Annotation\Attributes({"label":"txt-organisation"})
+     * @Annotation\Attributes({"label":"txt-parent-organisation-label"})
+     * @Annotation\Options({"help-block":"txt-parent-organisation-help-block"})
      *
      * @var \Organisation\Entity\Organisation
      */
@@ -186,7 +190,8 @@ class OParent extends AbstractEntity
     /**
      * @ORM\Column(name="date_parent_type_update", type="datetime", nullable=true)
      * @Annotation\Type("Zend\Form\Element\Date")
-     * @Annotation\Attributes({"label":"txt-date-parent-type-update"})
+     * @Annotation\Attributes({"label":"txt-date-parent-type-update-label"})
+     * @Annotation\Options({"help-block":"txt-date-parent-type-update-help-block"})
      *
      * @var \DateTime
      */
@@ -202,7 +207,8 @@ class OParent extends AbstractEntity
     /**
      * @ORM\Column(name="date_end", type="datetime", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\Date")
-     * @Annotation\Options({"label":"txt-organisation-date-end"})
+     * @Annotation\Options({"label":"txt-parent-date-end-label"})
+     * @Annotation\Options({"help-block":"txt-parent-date-end-help-block"})
      *
      * @var \DateTime
      */

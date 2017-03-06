@@ -27,7 +27,6 @@
 {{ ztbformelement(parent.get('id')) }}
 {{ ztbformelement(parent.get('type')) }}
 {{ ztbformelement(parent.get('status')) }}
-{{ ztbformelement(parent.get('dateParentTypeUpdate')) }}
 {{ ztbformelement(parent.get('epossMemberType')) }}
 {{ ztbformelement(parent.get('artemisiaMemberType')) }}
 {{ organisationformelement(parent.get('organisation')) }}
@@ -37,7 +36,9 @@
 <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
-        {{ ztbformelement(form.get('delete')) }}
+        {% if form.has('delete') %}
+            {{ ztbformelement(form.get('delete')) }}
+        {% endif %}
         {{ ztbformelement(form.get('cancel')) }}
     </div>
 </div>

@@ -26,14 +26,12 @@ class ModuleOptions extends AbstractOptions implements OrganisationOptionsInterf
      * Turn off strict options mode.
      */
     protected $__strictMode__ = false;
-
     /**
      * Use Organisation Map.
      *
      * @var bool
      */
     protected $useOrganisationMap = true;
-
     /**
      * Color to use on country map.
      *
