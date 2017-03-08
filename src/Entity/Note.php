@@ -28,6 +28,7 @@ class Note extends AbstractEntity
      * @ORM\Column(name="note_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Annotation\Exclude()
      *
      * @var integer
      */
@@ -84,8 +85,10 @@ class Note extends AbstractEntity
     }
 
     /**
-     * @param $property
-     * @param $value
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return void
      */
     public function __set($property, $value)
     {

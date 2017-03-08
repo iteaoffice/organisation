@@ -19,6 +19,7 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Form\AddAffiliation;
 use Organisation\Form\OrganisationFilter;
+use Organisation\Form\OrganisationMerge;
 use Zend\Http\Request;
 use Zend\Paginator\Paginator;
 use Zend\Validator\File\ImageSize;
@@ -94,13 +95,15 @@ class OrganisationAdminController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new InvoiceFilter($this->getInvoiceService());
-        $form->setData(['filter' => $filterPlugin->getFilter()]);
+        $invoiceFilter = new InvoiceFilter($this->getInvoiceService());
+        $invoiceFilter->setData(['filter' => $filterPlugin->getFilter()]);
+
+        $mergeForm = new OrganisationMerge($this->getEntityManager(), $organisation);
 
         return new ViewModel(
             [
                 'paginator'           => $paginator,
-                'form'                => $form,
+                'invoiceFilter'       => $invoiceFilter,
                 'encodedFilter'       => urlencode($filterPlugin->getHash()),
                 'order'               => $filterPlugin->getOrder(),
                 'direction'           => $filterPlugin->getDirection(),
@@ -110,7 +113,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                 'organisationLoi'     => $this->getLoiService()->findLoiByOrganisation($organisation),
                 'projectService'      => $this->getProjectService(),
                 'affiliations'        => $this->getAffiliationService()->findAffiliationByOrganisation($organisation),
-
+                'mergeForm'           => $mergeForm,
             ]
         );
     }
@@ -315,6 +318,57 @@ class OrganisationAdminController extends OrganisationAbstractController
                 'form'         => $form,
             ]
         );
+    }
+
+    /**
+     * @return array|\Zend\Http\Response|ViewModel
+     */
+    public function mergeAction()
+    {
+        /** @var Request $request */
+        $request = $this->getRequest();
+        /** @var Organisation $source */
+        $source = $this->getOrganisationService()->findOrganisationById($this->params('sourceId'));
+        /** @var Organisation $destination */
+        $destination = $this->getOrganisationService()->findOrganisationById($this->params('destinationId'));
+
+        if (is_null($source) || is_null($destination)) {
+            return $this->notFoundAction();
+        }
+
+        if ($request->isPost()) {
+            $data = $request->getPost()->toArray();
+
+            // Cancel the merge
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/view', ['id' => $destination->getId()], ['fragment' => 'merge']
+                );
+            }
+
+            // Do the merge
+            if (isset($data['merge'])) {
+
+                // Not doing anything yet!
+                $this->mergeOrganisation()->merge($source, $destination);
+
+                $this->flashMessenger()->setNamespace('success')->addMessage(
+                    $this->translate('txt-organisations-have-been-successfully-merged')
+                );
+
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/view', ['id' => $destination->getId()], ['fragment' => 'general']
+                );
+            }
+        }
+
+        return new ViewModel([
+            'errors'              => $this->mergeOrganisation()->checkMerge($source, $destination),
+            'source'              => $source,
+            'destination'         => $destination,
+            'mergeForm'           => new OrganisationMerge(),
+            'organisationService' => $this->getOrganisationService(),
+        ]);
     }
 
 

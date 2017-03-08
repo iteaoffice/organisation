@@ -263,6 +263,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'merge' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/merge/[:sourceId]/into/[:destinationId].html',
+                                    'defaults' => [
+                                        'action' => 'merge',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                     'organisation-type' => [

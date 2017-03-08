@@ -1,0 +1,92 @@
+{% do mergeForm.prepare() %}
+
+{{ form().openTag(mergeForm)|raw }}
+
+<h1>{{ translate("txt-merge-organisation-%s")|format(organisation) }}</h1>
+<p class="lead">{{ translate("txt-merge-organisation-explanation") }}</p>
+
+<div class="row">
+    <div class="col-md-5 col-sm-6">
+        <h2>{{ translate("txt-source") }}</h2>
+        <hr>
+        <div class="form-group">
+        {% set main = mergeForm.get('source-main') %}
+        {% if main.getValueOptions()|length == 0  %}
+            {{ ztbalert().info(translate("txt-no-suggestions-found"))|raw }}
+        {% else %}
+            {% for value, label in main.getValueOptions() %}
+                <div class="radio">
+                    <label>
+                        <input value="{{ value }}" type="radio" name="{{ main.getAttribute('name') }}">{{ label }}
+                    </label>
+                </div>
+            {% endfor %}
+        {%  endif %}
+            <div class="radio">
+                <label>
+                    <input value="other" type="radio" name="{{ main.getAttribute('name') }}"{% if main.getValueOptions()|length == 0 %} checked{% endif %}>
+                    {{ translate("txt-use-search-below") }}
+                </label>
+                {{ organisationformelement(mergeForm.get('source-search')) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-2 hidden-sm hidden-xs text-center" style="margin-top:150px;">
+        <h2><i class="fa fa-arrow-circle-right fa-2x"></i></h2>
+    </div>
+    <div class="hidden-lg hidden-md hidden-sm text-center">
+        <h2><i class="fa fa-arrow-circle-down fa-2x"></i></h2>
+    </div>
+
+    <div class="col-md-5 col-sm-6">
+        <h2>{{ translate("txt-destination") }}</h2>
+        <hr>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-name") }}</dt>
+            <dd>{{ organisation.organisation }}</dd>
+            <dt>{{ translate("txt-description") }}</dt>
+            <dd>{{ organisation.description|raw }}</dd>
+            <dt>{{ translate("txt-organisation-type") }}</dt>
+            <dd>{{ organisation.type }}</dd>
+            <dt>{{ translate("txt-country") }}</dt>
+            <dd>{{ organisation.country }}</dd>
+            <dt>{{ translate("txt-contacts") }}</dt>
+            <dd>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
+            </dd>
+            <dt>{{ translate("txt-projects") }}</dt>
+            <dd>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
+            <dt>{{ translate("txt-websites") }}</dt>
+            {% for web in organisation.web %}
+                <dd><a href="{{ web.web }}">{{ web.web }}</a></dd>
+            {% else %}
+                <dd>{{ translate("txt-no-website-known") }}</dd>
+            {% endfor %}
+
+            {% if organisation.getDateCreated() %}
+                <dt>{{ translate("txt-date-created") }}</dt>
+                <dd>{{ organisation.getDateCreated()|string_date }}</dd>
+            {% endif %}
+            {% if organisation.getDateUpdated() %}
+                <dt>{{ translate("txt-last-update") }}</dt>
+                <dd>{{ organisation.getDateUpdated()|string_date }}</dd>
+            {% endif %}
+        </dl>
+    </div>
+</div>
+<hr>
+{{ ztbformelement(mergeForm.get('preview')) }}
+{{ form().closeTag()|raw }}
+
+<script>
+    $(function(){
+        var actionTemplate = '{{ url('zfcadmin/organisation/merge',  {'sourceId': '-src-', 'destinationId': organisation.id})|raw }}',
+            $form = $('#organisation-merge');
+        $('#btn-preview').click(function(){
+            var selected = $form.find('input[name="source-main"]:checked').val(),
+                source = (selected === 'other') ? $form.find('#source-search').val() : selected;
+            source && $form.attr('action', actionTemplate.replace('-src-', source));
+        });
+    });
+</script>

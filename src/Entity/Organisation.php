@@ -362,10 +362,10 @@ class Organisation extends AbstractEntity
     }
 
     /**
-     * @param $property
-     * @param $value
+     * @param string $property
+     * @param mixed $value
      *
-     * @retun void
+     * @return void
      */
     public function __set($property, $value)
     {

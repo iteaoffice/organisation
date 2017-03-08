@@ -22,6 +22,8 @@
                                    data-toggle="tab">{{ translate("txt-cluster") }}</a></li>
         <li role="presentation"><a href="#note" aria-controls="general" role="tab"
                                    data-toggle="tab">{{ translate("txt-notes") }}</a></li>
+        <li role="presentation"><a href="#merge" aria-controls="general" role="tab"
+                                   data-toggle="tab">{{ translate("txt-merge") }}</a></li>
 
     </ul>
     <!-- Tab panes -->
@@ -44,5 +46,7 @@
              id="cluster">{% include 'organisation/organisation-admin/tab/cluster' %}</div>
         <div role="tabpanel" class="tab-pane"
              id="note">{% include 'organisation/organisation-admin/tab/note' %}</div>
+        <div role="tabpanel" class="tab-pane"
+             id="merge">{% include 'organisation/organisation-admin/tab/merge' %}</div>
     </div>
 </div>

@@ -7,7 +7,6 @@
             <th>{{ translate('txt-date-created') }}</th>
             <th>{{ translate('txt-placed-by') }}</th>
             <th>{{ translate('txt-note') }}</th>
-            <th></th>
         </tr>
         </thead>
         <tfoot>
@@ -15,10 +14,9 @@
         <tbody>
         {% for note in organisation.note %}
             <tr>
-                <td>{{ note.dateCreated|string_date }}</td>
+                <td>{{ note.dateCreated|string_date }} {{ organisationNoteLink(note, null, 'edit', 'icon') }}</td>
                 <td>{{ contactLink(note.contact, 'view-admin', 'name') }}</td>
                 <td>{{ note.note }}</td>
-                <td>{{ organisationNoteLink(note, null, 'edit', 'icon') }}</td>
             </tr>
         {% endfor %}
         </tbody>

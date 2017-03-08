@@ -4,7 +4,7 @@
  *
  * PHP Version 7
  *
- * @category    Partner
+ * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
@@ -16,6 +16,7 @@
 namespace Organisation\Navigation\Invokable\Parent;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
+use Organisation\Entity\OParent;
 use Organisation\Entity\Parent\Organisation;
 use Zend\Navigation\Page\Mvc;
 
@@ -36,8 +37,9 @@ class OrganisationLabel extends AbstractNavigationInvokable
         if ($this->getEntities()->containsKey(Organisation::class)) {
             /** @var Organisation $organisation */
             $organisation = $this->getEntities()->get(Organisation::class);
-            $this->getEntities()->set(ParentOrganisation::class, $organisation->getParent());
 
+            $this->getEntities()->set(OParent::class, $organisation->getParent());
+            $page->setParams(array_merge($page->getParams(), ['id' => $organisation->getId()]));
             $label = (string)$organisation;
         } else {
             $label = $this->translate('txt-nav-view');

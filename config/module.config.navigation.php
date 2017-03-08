@@ -89,6 +89,19 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'merge' => [
+                                        'label'   => _('txt-nav-merge'),
+                                        'route'   => 'zfcadmin/organisation/merge',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                            'routeParam' => [
+                                                'id' => 'destinationId',
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                             'organisation-new' => [

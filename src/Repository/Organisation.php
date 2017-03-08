@@ -530,4 +530,42 @@ class Organisation extends EntityRepository
 
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult(AbstractQuery::HYDRATE_ARRAY);
     }
+
+    /**
+     * @param Entity\Organisation $organisation
+     * @return Entity\Organisation[]
+     */
+    public function findMergeCandidatesFor(Entity\Organisation $organisation){
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
+        $queryBuilder->select('o');
+        $queryBuilder->from(Entity\Organisation::class, 'o');
+        $queryBuilder->join('o.country', 'c');
+        $queryBuilder->leftJoin('o.financial', 'f');
+        $queryBuilder->where($queryBuilder->expr()->neq('o.id', ':organisationId'));
+
+        // Exclude when both organisations have a different VAT number
+        if (!is_null($organisation->getFinancial())) {
+            $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                $queryBuilder->expr()->isNull('f.vat'),
+                $queryBuilder->expr()->neq('f.vat', ':vat')
+            ));
+            $queryBuilder->setParameter('vat', $organisation->getFinancial()->getVat());
+        }
+
+        // Exclude when both organisations are parent organisations
+        /*if (!is_null($organisation->getParentOrganisation())) {
+
+        }*/
+
+        $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':organisationName'));
+        $queryBuilder->andWhere($queryBuilder->expr()->eq('o.country', ':country'));
+        $queryBuilder->orderBy('o.organisation', Criteria::ASC);
+        $queryBuilder->addOrderBy('c.country', Criteria::ASC);
+
+        $queryBuilder->setParameter('organisationId', $organisation->getId());
+        $queryBuilder->setParameter('organisationName', '%' .$organisation->getOrganisation() . '%');
+        $queryBuilder->setParameter('country', $organisation->getCountry());
+
+        return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+    }
 }

@@ -16,8 +16,8 @@
 namespace Organisation\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
-use Organisation\Entity\OParent;
-use Organisation\Entity\Parent\Organisation;
+use Organisation\Entity\Note;
+use Organisation\Entity\Organisation;
 use Zend\Navigation\Page\Mvc;
 
 /**
@@ -37,10 +37,20 @@ class OrganisationLabel extends AbstractNavigationInvokable
         if ($this->getEntities()->containsKey(Organisation::class)) {
             /** @var Organisation $organisation */
             $organisation = $this->getEntities()->get(Organisation::class);
-
-            $this->getEntities()->set(OParent::class, $organisation->getParent());
-            $page->setParams(array_merge($page->getParams(), ['id' => $organisation->getId()]));
-            $label = (string)$organisation;
+            $page->setParams(array_merge(
+                $page->getParams(),
+                ['id' => $organisation->getId()]
+            ));
+            $label = (string) $organisation;
+        // Get organisation from note
+        } elseif ($this->getEntities()->containsKey(Note::class)) {
+            /** @var Note $note */
+            $note = $this->getEntities()->get(Note::class);
+            $page->setParams(array_merge(
+                $page->getParams(),
+                ['id' => $note->getOrganisation()->getId()]
+            ));
+            $label = (string) $note->getOrganisation();
         } else {
             $label = $this->translate('txt-nav-view');
         }

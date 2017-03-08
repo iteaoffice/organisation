@@ -1,0 +1,92 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-merge-organisation-%s")|format(destination)) %}
+
+{% do mergeForm.prepare() %}
+
+{{ form().openTag(mergeForm)|raw }}
+<h1>{{ translate("txt-merge-organisation-%s")|format(destination) }}</h1>
+<p class="lead">{{ translate("txt-merge-organisation-warning") }}</p>
+
+<div class="row">
+    <div class="col-md-5 col-sm-6">
+        <h2>{{ translate("txt-source") }}</h2>
+        <hr>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-name") }}</dt>
+            <dd>{{ organisationLink(source, 'view-admin') }} {{ organisationLink(source, 'edit', 'icon') }}</dd>
+            <dt>{{ translate("txt-description") }}</dt>
+            <dd>{{ source.description|raw }}</dd>
+            <dt>{{ translate("txt-organisation-type") }}</dt>
+            <dd>{{ source.type }}</dd>
+            <dt>{{ translate("txt-country") }}</dt>
+            <dd>{{ source.country }}</dd>
+            <dt>{{ translate("txt-contacts") }}</dt>
+            <dd>{{ organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
+            </dd>
+            <dt>{{ translate("txt-projects") }}</dt>
+            <dd>{{ organisationService.getAffiliationCount(source, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
+            <dt>{{ translate("txt-websites") }}</dt>
+            {% for web in source.web %}
+                <dd><a href="{{ web.web }}">{{ web.web }}</a></dd>
+            {% else %}
+                <dd>{{ translate("txt-no-website-known") }}</dd>
+            {% endfor %}
+
+            {% if source.getDateCreated() %}
+                <dt>{{ translate("txt-date-created") }}</dt>
+                <dd>{{ source.getDateCreated()|string_date }}</dd>
+            {% endif %}
+            {% if source.getDateUpdated() %}
+                <dt>{{ translate("txt-last-update") }}</dt>
+                <dd>{{ source.getDateUpdated()|string_date }}</dd>
+            {% endif %}
+        </dl>
+    </div>
+
+    <div class="col-md-2 hidden-sm hidden-xs text-center" style="margin-top:150px;">
+        <h2><i class="fa fa-arrow-circle-right fa-2x"></i></h2>
+    </div>
+    <div class="hidden-lg hidden-md hidden-sm text-center">
+        <h2><i class="fa fa-arrow-circle-down fa-2x"></i></h2>
+    </div>
+
+    <div class="col-md-5 col-sm-6">
+        <h2>{{ translate("txt-destination") }}</h2>
+        <hr>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-name") }}</dt>
+            <dd>{{ organisationLink(destination, 'view-admin') }} {{ organisationLink(destination, 'edit', 'icon') }}</dd>
+            <dt>{{ translate("txt-description") }}</dt>
+            <dd>{{ destination.description|raw }}</dd>
+            <dt>{{ translate("txt-organisation-type") }}</dt>
+            <dd>{{ destination.type }}</dd>
+            <dt>{{ translate("txt-country") }}</dt>
+            <dd>{{ destination.country }}</dd>
+            <dt>{{ translate("txt-contacts") }}</dt>
+            <dd>{{ organisationService.getContactCount(destination, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(destination, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
+            </dd>
+            <dt>{{ translate("txt-projects") }}</dt>
+            <dd>{{ organisationService.getAffiliationCount(destination, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
+            <dt>{{ translate("txt-websites") }}</dt>
+            {% for web in destination.web %}
+                <dd><a href="{{ web.web }}">{{ web.web }}</a></dd>
+            {% else %}
+                <dd>{{ translate("txt-no-website-known") }}</dd>
+            {% endfor %}
+
+            {% if destination.getDateCreated() %}
+                <dt>{{ translate("txt-date-created") }}</dt>
+                <dd>{{ destination.getDateCreated()|string_date }}</dd>
+            {% endif %}
+            {% if destination.getDateUpdated() %}
+                <dt>{{ translate("txt-last-update") }}</dt>
+                <dd>{{ destination.getDateUpdated()|string_date }}</dd>
+            {% endif %}
+        </dl>
+    </div>
+</div>
+<hr>
+{{ ztbformelement(mergeForm.get('merge')) }} {{ ztbformelement(mergeForm.get('cancel')) }}
+{{ form().closeTag()|raw }}

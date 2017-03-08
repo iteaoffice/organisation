@@ -41,6 +41,7 @@ $config = [
             'handleParentImport'                           => Controller\Plugin\HandleParentImport::class,
             'renderOverviewExtraVariableContributionSheet' => Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class,
             'renderOverviewVariableContributionSheet'      => Controller\Plugin\RenderOverviewVariableContributionSheet::class,
+            'mergeOrganisation'                            => Controller\Plugin\MergeOrganisation::class,
 
         ],
         'factories' => [
@@ -49,6 +50,7 @@ $config = [
             Controller\Plugin\HandleParentImport::class                           => Controller\Factory\PluginFactory::class,
             Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class => Controller\Factory\PluginFactory::class,
             Controller\Plugin\RenderOverviewVariableContributionSheet::class      => Controller\Factory\PluginFactory::class,
+            Controller\Plugin\MergeOrganisation::class                            => Controller\Factory\PluginFactory::class,
         ],
     ],
     'view_manager'       => [
