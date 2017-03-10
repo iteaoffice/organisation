@@ -553,9 +553,9 @@ class Organisation extends EntityRepository
         }
 
         // Exclude when both organisations are parent organisations
-        /*if (!is_null($organisation->getParentOrganisation())) {
-
-        }*/
+        if (!is_null($organisation->getParent())) {
+            $queryBuilder->andWhere($queryBuilder->expr()->isNull('o.parent'));
+        }
 
         $queryBuilder->andWhere($queryBuilder->expr()->like('o.organisation', ':organisationName'));
         $queryBuilder->andWhere($queryBuilder->expr()->eq('o.country', ':country'));

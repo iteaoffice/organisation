@@ -22,6 +22,7 @@ use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
 use Organisation\Controller\Plugin\AbstractOrganisationPlugin;
+use Organisation\Controller\Plugin\MergeOrganisation;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
@@ -30,6 +31,8 @@ use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Http\Request;
+use Zend\I18n\View\Helper\Translate;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use ZfcTwig\View\TwigRenderer;
@@ -46,71 +49,86 @@ final class PluginFactory implements FactoryInterface
      * @param string $requestedName
      * @param array|null $options
      *
-     * @return AbstractOrganisationPlugin
+     * @return AbstractPlugin
      */
     public function __invoke(
         ContainerInterface $container,
-        $requestedName,
-        array $options = null
-    ): AbstractOrganisationPlugin {
-        /** @var AbstractOrganisationPlugin $plugin */
-        $plugin = new $requestedName($options);
+        $requestedName, array
+        $options = null
+    ): AbstractPlugin {
 
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
-        $plugin->setEntityManager($entityManager);
 
-        /** @var ModuleOptions $moduleOptions */
-        $moduleOptions = $container->get(ModuleOptions::class);
-        $plugin->setModuleOptions($moduleOptions);
+        switch ($requestedName) {
+            case MergeOrganisation::class:
+                /** @var Translate $translateHelper */
+                $translateHelper = $container->get('ViewHelperManager')->get('translate');
 
-        /** @var GeneralService $generalService */
-        $generalService = $container->get(GeneralService::class);
-        $plugin->setGeneralService($generalService);
+                $plugin = new MergeOrganisation(
+                    $entityManager,
+                    $translateHelper->getTranslator()
+                );
 
-        /** @var ProjectService $projectService */
-        $projectService = $container->get(ProjectService::class);
-        $plugin->setProjectService($projectService);
+                break;
+            default:
+                /** @var AbstractOrganisationPlugin $plugin */
+                $plugin = new $requestedName($options);
 
-        /** @var VersionService $versionService */
-        $versionService = $container->get(VersionService::class);
-        $plugin->setVersionService($versionService);
+                $plugin->setEntityManager($entityManager);
 
-        /** @var AffiliationService $affiliationService */
-        $affiliationService = $container->get(AffiliationService::class);
-        $plugin->setAffiliationService($affiliationService);
+                /** @var ModuleOptions $moduleOptions */
+                $moduleOptions = $container->get(ModuleOptions::class);
+                $plugin->setModuleOptions($moduleOptions);
 
-        /** @var OrganisationService $organisationService */
-        $organisationService = $container->get(OrganisationService::class);
-        $plugin->setOrganisationService($organisationService);
+                /** @var GeneralService $generalService */
+                $generalService = $container->get(GeneralService::class);
+                $plugin->setGeneralService($generalService);
 
-        /** @var ParentService $parentService */
-        $parentService = $container->get(ParentService::class);
-        $plugin->setParentService($parentService);
+                /** @var ProjectService $projectService */
+                $projectService = $container->get(ProjectService::class);
+                $plugin->setProjectService($projectService);
 
-        /** @var ContactService $contactService */
-        $contactService = $container->get(ContactService::class);
-        $plugin->setContactService($contactService);
+                /** @var VersionService $versionService */
+                $versionService = $container->get(VersionService::class);
+                $plugin->setVersionService($versionService);
 
-        /** @var ProgramService $programService */
-        $programService = $container->get(ProgramService::class);
-        $plugin->setProgramService($programService);
+                /** @var AffiliationService $affiliationService */
+                $affiliationService = $container->get(AffiliationService::class);
+                $plugin->setAffiliationService($affiliationService);
 
-        /** @var CallService $callService */
-        $callService = $container->get(CallService::class);
-        $plugin->setCallService($callService);
+                /** @var OrganisationService $organisationService */
+                $organisationService = $container->get(OrganisationService::class);
+                $plugin->setOrganisationService($organisationService);
 
-        /** @var TwigRenderer $twigRenderer */
-        $twigRenderer = $container->get(TwigRenderer::class);
-        $plugin->setTwigRenderer($twigRenderer);
+                /** @var ParentService $parentService */
+                $parentService = $container->get(ParentService::class);
+                $plugin->setParentService($parentService);
 
-        /** @var Request $request */
-        $request = $container->get('application')->getMvcEvent()->getRequest();
-        $plugin->setRequest($request);
+                /** @var ContactService $contactService */
+                $contactService = $container->get(ContactService::class);
+                $plugin->setContactService($contactService);
 
-        /** @var Request $request */
-        $routeMatch = $container->get('application')->getMvcEvent()->getRouteMatch();
-        $plugin->setRouteMatch($routeMatch);
+                /** @var ProgramService $programService */
+                $programService = $container->get(ProgramService::class);
+                $plugin->setProgramService($programService);
+
+                /** @var CallService $callService */
+                $callService = $container->get(CallService::class);
+                $plugin->setCallService($callService);
+
+                /** @var TwigRenderer $twigRenderer */
+                $twigRenderer = $container->get(TwigRenderer::class);
+                $plugin->setTwigRenderer($twigRenderer);
+
+                /** @var Request $request */
+                $request = $container->get('application')->getMvcEvent()->getRequest();
+                $plugin->setRequest($request);
+
+                /** @var Request $request */
+                $routeMatch = $container->get('application')->getMvcEvent()->getRouteMatch();
+                $plugin->setRouteMatch($routeMatch);
+        }
 
         return $plugin;
     }

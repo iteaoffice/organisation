@@ -60,7 +60,6 @@ return array(
     'organisation/organisation-admin/tab/merge'                 => __DIR__ . '//view/organisation/organisation-admin/tab/merge.twig',
     'organisation/organisation-admin/tab/project'               => __DIR__ . '//view/organisation/organisation-admin/tab/project.twig',
     'organisation/organisation-admin/tab/invoices'              => __DIR__ . '//view/organisation/organisation-admin/tab/invoices.twig',
-    'organisation/organisation-admin/tab/cluster'               => __DIR__ . '//view/organisation/organisation-admin/tab/cluster.twig',
     'organisation/organisation-admin/tab/parent'                => __DIR__ . '//view/organisation/organisation-admin/tab/parent.twig',
     'organisation/organisation-admin/list'                      => __DIR__ . '//view/organisation/organisation-admin/list.twig',
     'organisation/organisation-admin/add-affiliation'           => __DIR__ . '//view/organisation/organisation-admin/add-affiliation.twig',
