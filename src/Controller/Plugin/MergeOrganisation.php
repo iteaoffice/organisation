@@ -48,7 +48,7 @@ final class MergeOrganisation extends AbstractPlugin
     public function __construct(
         EntityManagerInterface $entityManager,
         TranslatorInterface    $translator
-    ){
+    ) {
         $this->entityManager = $entityManager;
         $this->translator    = $translator;
     }
@@ -82,7 +82,7 @@ final class MergeOrganisation extends AbstractPlugin
         }
 
         // Organisations can't both be parents
-        if(!is_null($target->getParent()) && !is_null($source->getParent())){
+        if (!is_null($target->getParent()) && !is_null($source->getParent())) {
             $errors[] = $this->translate('txt-organisations-cant-both-be-parents');
         }
 
@@ -99,7 +99,6 @@ final class MergeOrganisation extends AbstractPlugin
         $response = ['success' => true, 'errorMessage' => ''];
 
         try {
-
             // Update organisation properties
             if (is_null($target->getType())) {
                 $target->setType($source->getType());
@@ -206,7 +205,6 @@ final class MergeOrganisation extends AbstractPlugin
             $this->persist($target);
             $this->entityManager->remove($source);
             $this->entityManager->flush();
-
         } catch (ORMException $e) {
             $response = ['success' => false, 'errorMessage' => $e->getMessage()];
             error_log($e->getFile() . ':' . $e->getLine() . ' ' . $e->getMessage());

@@ -82,8 +82,7 @@ class Organisation extends EntityRepository
 
         $direction = Criteria::ASC;
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true))
-        {
+            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -535,7 +534,8 @@ class Organisation extends EntityRepository
      * @param Entity\Organisation $organisation
      * @return Entity\Organisation[]
      */
-    public function findMergeCandidatesFor(Entity\Organisation $organisation){
+    public function findMergeCandidatesFor(Entity\Organisation $organisation)
+    {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->select('o');
         $queryBuilder->from(Entity\Organisation::class, 'o');

@@ -198,8 +198,8 @@ class OrganisationAdminController extends OrganisationAbstractController
 
             if (isset($data['delete']) && $this->getOrganisationService()->canDeleteOrganisation($organisation)) {
                 $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
-                     $this->translate("txt-organisation-%s-has-been-removed-successfully"),
-                     $organisation
+                    $this->translate("txt-organisation-%s-has-been-removed-successfully"),
+                    $organisation
                 ));
 
                 $this->getOrganisationService()->removeEntity($organisation);
@@ -342,13 +342,14 @@ class OrganisationAdminController extends OrganisationAbstractController
             // Cancel the merge
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view', ['id' => $destination->getId()], ['fragment' => 'merge']
+                    'zfcadmin/organisation/view',
+                    ['id' => $destination->getId()],
+                    ['fragment' => 'merge']
                 );
             }
 
             // Do the merge
             if (isset($data['merge'])) {
-
                 // Not doing anything yet!
                 $this->mergeOrganisation()->merge($source, $destination);
 
@@ -357,7 +358,9 @@ class OrganisationAdminController extends OrganisationAbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view', ['id' => $destination->getId()], ['fragment' => 'general']
+                    'zfcadmin/organisation/view',
+                    ['id' => $destination->getId()],
+                    ['fragment' => 'general']
                 );
             }
         }

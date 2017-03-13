@@ -39,7 +39,10 @@ class Organisation extends Element\Select
      */
     public function injectOrganisation(Entity\Organisation $organisation)
     {
-        $this->valueOptions[$organisation->getId()] = sprintf("%s (%s)", $organisation->getOrganisation(),
-            $organisation->getCountry()->getIso3());
+        $this->valueOptions[$organisation->getId()] = sprintf(
+            "%s (%s)",
+            $organisation->getOrganisation(),
+            $organisation->getCountry()->getIso3()
+        );
     }
 }

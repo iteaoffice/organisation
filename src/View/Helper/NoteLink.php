@@ -38,7 +38,8 @@ class NoteLink extends AbstractLink
      * @param string            $show
      * @return string
      */
-    public function __invoke(Note $note = null, Organisation $organisation = null, $action = 'edit', $show = 'icon') {
+    public function __invoke(Note $note = null, Organisation $organisation = null, $action = 'edit', $show = 'icon')
+    {
         $this->setNote($note);
         $this->setOrganisation($organisation);
         $this->setAction($action);

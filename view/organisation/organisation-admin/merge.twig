@@ -5,7 +5,7 @@
 
 {{ form().openTag(mergeForm)|raw }}
 <h1>{{ translate("txt-merge-organisation-%s")|format(destination) }}</h1>
-<p class="lead">{{ translate("txt-merge-organisation-explanation") }}</p>
+<p>{{ translate("txt-merge-organisation-explanation") }}</p>
 
 {% if errors|length > 0 %}
     <div class="alert alert-danger">
@@ -33,7 +33,8 @@
             <dd>{{ source.country }}</dd>
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
-                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
+                )
             </dd>
             <dt>{{ translate("txt-projects") }}</dt>
             <dd>{{ organisationService.getAffiliationCount(source, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
@@ -76,7 +77,8 @@
             <dd>{{ destination.country }}</dd>
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(destination, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
-                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(destination, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(destination, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
+                )
             </dd>
             <dt>{{ translate("txt-projects") }}</dt>
             <dd>{{ organisationService.getAffiliationCount(destination, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
@@ -100,7 +102,7 @@
 </div>
 <hr>
 {% if errors|length == 0 %}
-{{ ztbformelement(mergeForm.get('merge')) }}
+    {{ ztbformelement(mergeForm.get('merge')) }}
 {% endif %}
 {{ ztbformelement(mergeForm.get('cancel')) }}
 {{ form().closeTag()|raw }}

@@ -53,7 +53,8 @@ final class PluginFactory implements FactoryInterface
      */
     public function __invoke(
         ContainerInterface $container,
-        $requestedName, array
+        $requestedName,
+        array
         $options = null
     ): AbstractPlugin {
 

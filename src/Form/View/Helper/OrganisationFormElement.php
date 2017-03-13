@@ -147,11 +147,11 @@ class OrganisationFormElement extends FormElement
         }
 
         $html = $controlLabel . sprintf(
-                $controlWrapper,
-                $controls,
-                $descriptionHelper->render($element),
-                $elementErrorHelper->render($element)
-            );
+            $controlWrapper,
+            $controls,
+            $descriptionHelper->render($element),
+            $elementErrorHelper->render($element)
+        );
         $addtClass = ($element->getMessages()) ? ' has-error' : '';
 
         return sprintf($groupWrapper, $addtClass, $id, $html);

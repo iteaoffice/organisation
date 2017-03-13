@@ -3,28 +3,29 @@
 {{ form().openTag(mergeForm)|raw }}
 
 <h1>{{ translate("txt-merge-organisation-%s")|format(organisation) }}</h1>
-<p class="lead">{{ translate("txt-merge-organisation-explanation") }}</p>
+<p>{{ translate("txt-merge-organisation-explanation-step-one") }}</p>
 
 <div class="row">
     <div class="col-md-5 col-sm-6">
         <h2>{{ translate("txt-source") }}</h2>
         <hr>
         <div class="form-group">
-        {% set main = mergeForm.get('source-main') %}
-        {% if main.getValueOptions()|length == 0  %}
-            {{ ztbalert().info(translate("txt-no-suggestions-found"))|raw }}
-        {% else %}
-            {% for value, label in main.getValueOptions() %}
-                <div class="radio">
-                    <label>
-                        <input value="{{ value }}" type="radio" name="{{ main.getAttribute('name') }}">{{ label }}
-                    </label>
-                </div>
-            {% endfor %}
-        {%  endif %}
+            {% set main = mergeForm.get('source-main') %}
+            {% if main.getValueOptions()|length == 0 %}
+                {{ ztbalert().info(translate("txt-no-suggestions-found"))|raw }}
+            {% else %}
+                {% for value, label in main.getValueOptions() %}
+                    <div class="radio">
+                        <label>
+                            <input value="{{ value }}" type="radio" name="{{ main.getAttribute('name') }}">{{ label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="radio">
                 <label>
-                    <input value="other" type="radio" name="{{ main.getAttribute('name') }}"{% if main.getValueOptions()|length == 0 %} checked{% endif %}>
+                    <input value="other" type="radio"
+                           name="{{ main.getAttribute('name') }}"{% if main.getValueOptions()|length == 0 %} checked{% endif %}>
                     {{ translate("txt-use-search-below") }}
                 </label>
                 {{ organisationformelement(mergeForm.get('source-search')) }}
@@ -53,7 +54,8 @@
             <dd>{{ organisation.country }}</dd>
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
-                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
+                )
             </dd>
             <dt>{{ translate("txt-projects") }}</dt>
             <dd>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
@@ -80,10 +82,10 @@
 {{ form().closeTag()|raw }}
 
 <script>
-    $(function(){
+    $(function () {
         var actionTemplate = '{{ url('zfcadmin/organisation/merge',  {'sourceId': '-src-', 'destinationId': organisation.id})|raw }}',
             $form = $('#organisation-merge');
-        $('#btn-preview').click(function(){
+        $('#btn-preview').click(function () {
             var selected = $form.find('input[name="source-main"]:checked').val(),
                 source = (selected === 'other') ? $form.find('#source-search').val() : selected;
             source && $form.attr('action', actionTemplate.replace('-src-', source));
