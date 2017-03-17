@@ -320,6 +320,13 @@ class Organisation extends AbstractEntity
      * @var \Project\Entity\Result\Result[]|Collections\ArrayCollection
      */
     private $result;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\IctOrganisation", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var IctOrganisation[]|Collections\ArrayCollection
+     */
+    private $ictOrganisation;
 
 
     /**
@@ -349,6 +356,8 @@ class Organisation extends AbstractEntity
         $this->journal = new Collections\ArrayCollection();
         $this->reminder = new Collections\ArrayCollection();
         $this->result = new Collections\ArrayCollection();
+        $this->web = new Collections\ArrayCollection();
+        $this->ictOrganisation = new Collections\ArrayCollection();
     }
 
     /**
@@ -434,7 +443,7 @@ class Organisation extends AbstractEntity
     }
 
     /**
-     * @return \Contact\Entity\ContactOrganisation[]|Collections\ArrayCollection
+     * @return ContactOrganisation[]|Collections\ArrayCollection
      */
     public function getContactOrganisation()
     {
@@ -442,7 +451,7 @@ class Organisation extends AbstractEntity
     }
 
     /**
-     * @param \Contact\Entity\ContactOrganisation[] $contactOrganisation
+     * @param ContactOrganisation[]|Collections\ArrayCollection $contactOrganisation
      *
      * @return Organisation
      */
@@ -1072,4 +1081,23 @@ class Organisation extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @return Collections\ArrayCollection|IctOrganisation[]
+     */
+    public function getIctOrganisation()
+    {
+        return $this->ictOrganisation;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|IctOrganisation[] $ictOrganisation
+     * @return Organisation
+     */
+    public function setIctOrganisation($ictOrganisation)
+    {
+        $this->ictOrganisation = $ictOrganisation;
+        return $this;
+    }
+
 }

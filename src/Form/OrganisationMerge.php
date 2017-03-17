@@ -95,5 +95,14 @@ class OrganisationMerge extends Form
                 'value' => _('txt-cancel'),
             ],
         ]);
+
+        $this->add([
+            'type'       => Element\Submit::class,
+            'name'       => 'swap',
+            'attributes' => [
+                'class' => 'btn btn-primary',
+                'value' => _('txt-swap-source-and-destination'),
+            ],
+        ]);
     }
 }

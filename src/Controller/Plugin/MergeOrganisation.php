@@ -29,7 +29,7 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
  *
  * @package Organisation\Controller\Plugin
  */
-final class MergeOrganisation extends AbstractPlugin
+class MergeOrganisation extends AbstractPlugin
 {
     /**
      * @var EntityManagerInterface
@@ -86,6 +86,13 @@ final class MergeOrganisation extends AbstractPlugin
             $errors[] = $this->translate('txt-organisations-cant-both-be-parents');
         }
 
+        // Check countries
+        if(!is_null($target->getCountry()) && !is_null($source->getCountry())
+            && ($target->getCountry()->getId() !== $source->getCountry()->getId())
+        ){
+            $errors[] = $this->translate('txt-organisations-cant-have-different-countries');
+        }
+
         return $errors;
     }
 
@@ -105,6 +112,9 @@ final class MergeOrganisation extends AbstractPlugin
             }
             if ($source->getDateCreated() < $target->getDateCreated()) {
                 $target->setDateCreated($source->getDateCreated());
+            }
+            if ($source->getDateUpdated() > $target->getDateUpdated()) {
+                $target->setDateUpdated($source->getDateUpdated());
             }
             if (is_null($target->getDescription())) {
                 $target->setDescription($source->getDescription());
@@ -166,12 +176,11 @@ final class MergeOrganisation extends AbstractPlugin
             }
 
             // Transfer ICT organisations
-            /** @var EntityRepository $repository */
-            $repository = $this->entityManager->getRepository(IctOrganisation::class);
-            /** @var IctOrganisation $ictOrganisation */
-            foreach ($repository->findBy(['organisation', $source->getId()]) as $ictOrganisation) {
+            foreach ($source->getIctOrganisation() as $key => $ictOrganisation) {
                 $ictOrganisation->setOrganisation($target);
                 $this->persist($ictOrganisation);
+                $target->getIctOrganisation()->add($ictOrganisation);
+                $source->getIctOrganisation()->remove($key);
             }
 
             // Remove cluster membership
@@ -205,9 +214,9 @@ final class MergeOrganisation extends AbstractPlugin
             $this->persist($target);
             $this->entityManager->remove($source);
             $this->entityManager->flush();
-        } catch (ORMException $e) {
-            $response = ['success' => false, 'errorMessage' => $e->getMessage()];
-            error_log($e->getFile() . ':' . $e->getLine() . ' ' . $e->getMessage());
+        } catch (ORMException $exception) {
+            $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
+            $this->logException($exception);
         }
 
         return $response;
@@ -227,8 +236,17 @@ final class MergeOrganisation extends AbstractPlugin
      * @param object $object
      *
      */
-    private function persist(object $object): void
+    private function persist($object): void
     {
         $this->entityManager->persist($object);
+    }
+
+    /**
+     * Log a merge error
+     * @param ORMException $exception
+     */
+    protected function logException(ORMException $exception)
+    {
+        error_log($exception->getFile() . ':' . $exception->getLine() . ' ' . $exception->getMessage());
     }
 }

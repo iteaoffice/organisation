@@ -348,6 +348,14 @@ class OrganisationAdminController extends OrganisationAbstractController
                 );
             }
 
+            // Swap source and destination
+            if (isset($data['swap'])) {
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/merge',
+                    ['sourceId' => $destination->getId(), 'destinationId' => $source->getId()]
+                );
+            }
+
             // Do the merge
             if (isset($data['merge'])) {
                 // Not doing anything yet!

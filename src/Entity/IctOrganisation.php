@@ -34,18 +34,14 @@ class IctOrganisation extends AbstractEntity
     private $id;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country", inversedBy="ictOrganisation")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=false)
-     * })
      *
      * @var \General\Entity\Country
      */
     private $country;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation")
-     * @ORM\JoinColumns({
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation" inversedBy="ictOrganisation")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */
