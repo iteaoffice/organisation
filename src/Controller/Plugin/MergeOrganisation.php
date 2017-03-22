@@ -16,12 +16,10 @@
 namespace Organisation\Controller\Plugin;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
-use Organisation\Entity\Cluster;
-use Organisation\Entity\IctOrganisation;
 use Organisation\Entity\Organisation;
 use Zend\I18n\Translator\TranslatorInterface;
+use Zend\Log\LoggerInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
@@ -39,18 +37,25 @@ class MergeOrganisation extends AbstractPlugin
      * @var TranslatorInterface
      */
     private $translator;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * MergeOrganisation constructor.
      * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface    $translator
+     * @param LoggerInterface|null   $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        TranslatorInterface    $translator
+        TranslatorInterface    $translator,
+        LoggerInterface        $logger = null
     ) {
         $this->entityManager = $entityManager;
         $this->translator    = $translator;
+        $this->logger        = $logger;
     }
 
     /**
@@ -119,7 +124,12 @@ class MergeOrganisation extends AbstractPlugin
             if (is_null($target->getDescription())) {
                 $target->setDescription($source->getDescription());
             }
-            if (is_null($target->getFinancial())) {
+            if (!is_null($source->getFinancial())
+                && (is_null($target->getFinancial())
+                    || empty($target->getFinancial()->getVat())
+                    || ($target->getFinancial()->getVat() === $target->getFinancial()->getVat())
+                )
+            ) {
                 $target->setFinancial($source->getFinancial());
             }
             if ($target->getLogo()->isEmpty()) {
@@ -175,6 +185,14 @@ class MergeOrganisation extends AbstractPlugin
                 $source->getAffiliation()->remove($key);
             }
 
+            // Transfer affiliation financial data
+            foreach ($source->getAffiliationFinancial() as $key => $affiliationFinancial) {
+                $affiliationFinancial->setOrganisation($target);
+                $this->persist($affiliationFinancial);
+                $target->getAffiliationFinancial()->add($affiliationFinancial);
+                $source->getAffiliationFinancial()->remove($key);
+            }
+
             // Transfer ICT organisations
             foreach ($source->getIctOrganisation() as $key => $ictOrganisation) {
                 $ictOrganisation->setOrganisation($target);
@@ -183,16 +201,21 @@ class MergeOrganisation extends AbstractPlugin
                 $source->getIctOrganisation()->remove($key);
             }
 
-            // Remove cluster membership
-            /** @var EntityRepository $repository */
-//            $repository = $this->entityManager->getRepository(Cluster::class);
-//            /** @var Cluster $cluster */
-//            foreach ($repository->findBy(['organisation', $source->getId()]) as $cluster) {
-//                $cluster->getOrganisation()->removeElement($source);
-//                $technology->getOrganisation()->add($target);
-//                $ictOrganisation->setOrganisation($target);
-//                $this->persist($ictOrganisation);
-//            }
+            // Transfer cluster head
+            foreach ($source->getCluster() as $key => $cluster) {
+                $cluster->setOrganisation($target);
+                $this->persist($cluster);
+                $target->getCluster()->add($cluster);
+                $source->getCluster()->remove($key);
+            }
+
+            // Transfer cluster memberships
+            foreach ($source->getClusterMember() as $key => $clusterMember) {
+                $clusterMember->setOrganisation($target);
+                $this->persist($clusterMember);
+                $target->getClusterMember()->add($clusterMember);
+                $source->getClusterMember()->remove($key);
+            }
 
             // Transfer contacts
             foreach ($source->getContactOrganisation() as $key => $contactOrganisation) {
@@ -210,13 +233,90 @@ class MergeOrganisation extends AbstractPlugin
                 $source->getOrganisationBooth()->remove($key);
             }
 
+            // Transfer booth financial data
+            foreach ($source->getBoothFinancial() as $key => $boothFinancial) {
+                $boothFinancial->setOrganisation($target);
+                $this->persist($boothFinancial);
+                $target->getBoothFinancial()->add($boothFinancial);
+                $source->getBoothFinancial()->remove($key);
+            }
+
+            // Transfer idea partners
+            foreach ($source->getIdeaPartner() as $key => $ideaPartner) {
+                $ideaPartner->setOrganisation($target);
+                $this->persist($ideaPartner);
+                $target->getIdeaPartner()->add($ideaPartner);
+                $source->getIdeaPartner()->remove($key);
+            }
+
+            // Transfer invoices
+            foreach ($source->getInvoice() as $key => $invoice) {
+                $invoice->setOrganisation($target);
+                $this->persist($invoice);
+                $target->getInvoice()->add($invoice);
+                $source->getInvoice()->remove($key);
+            }
+
+            // Transfer invoice journal
+            foreach ($source->getJournal() as $key => $journal) {
+                $journal->setOrganisation($target);
+                $this->persist($journal);
+                $target->getJournal()->add($journal);
+                $source->getJournal()->remove($key);
+            }
+
+            // Transfer program doa
+            foreach ($source->getProgramDoa() as $key => $programDoa) {
+                $programDoa->setOrganisation($target);
+                $this->persist($programDoa);
+                $target->getProgramDoa()->add($programDoa);
+                $source->getProgramDoa()->remove($key);
+            }
+
+            // Transfer program call doa
+            foreach ($source->getDoa() as $key => $callDoa) {
+                $callDoa->setOrganisation($target);
+                $this->persist($callDoa);
+                $target->getDoa()->add($callDoa);
+                $source->getDoa()->remove($key);
+            }
+
+            // Transfer reminders
+            foreach ($source->getReminder() as $key => $reminder) {
+                $reminder->setOrganisation($target);
+                $this->persist($reminder);
+                $target->getReminder()->add($reminder);
+                $source->getReminder()->remove($key);
+            }
+
+            // Transfer results (many-to-many)
+            foreach ($source->getResult() as $key => $result) {
+                $result->getOrganisation()->removeElement($source);
+                $result->getOrganisation()->add($target);
+                $this->persist($result);
+                $target->getResult()->add($result);
+                $source->getResult()->remove($key);
+            }
+
             // Persist main organisation, remove the other + flush and update permissions
             $this->persist($target);
             $this->entityManager->remove($source);
             $this->entityManager->flush();
+            if($this->logger instanceof LoggerInterface){
+                $this->logger->info(sprintf(
+                    'Successfully merged organisation %s (%d) into %s (%d)',
+                    $source->getOrganisation(), $source->getId(), $target->getOrganisation(), $target->getId()
+                ));
+            }
         } catch (ORMException $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
-            $this->logException($exception);
+            if($this->logger instanceof LoggerInterface){
+                $this->logger->err(sprintf(
+                    '%s: %d %s',
+                    $exception->getFile(), $exception->getLine(), $exception->getMessage()
+                ));
+            }
+
         }
 
         return $response;
@@ -239,14 +339,5 @@ class MergeOrganisation extends AbstractPlugin
     private function persist($object): void
     {
         $this->entityManager->persist($object);
-    }
-
-    /**
-     * Log a merge error
-     * @param ORMException $exception
-     */
-    protected function logException(ORMException $exception)
-    {
-        error_log($exception->getFile() . ':' . $exception->getLine() . ' ' . $exception->getMessage());
     }
 }

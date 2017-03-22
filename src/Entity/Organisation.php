@@ -543,7 +543,7 @@ class Organisation extends AbstractEntity
     }
 
     /**
-     * @return \Affiliation\Entity\Financial
+     * @return \Affiliation\Entity\Financial[]|Collections\ArrayCollection
      */
     public function getAffiliationFinancial()
     {
@@ -551,7 +551,7 @@ class Organisation extends AbstractEntity
     }
 
     /**
-     * @param \Affiliation\Entity\Financial $affiliationFinancial
+     * @param \Affiliation\Entity\Financial[]|Collections\ArrayCollection $affiliationFinancial
      *
      * @return Organisation
      */
