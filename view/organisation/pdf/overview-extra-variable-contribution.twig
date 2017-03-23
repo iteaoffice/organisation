@@ -1,94 +1,101 @@
-<h3>{{ translate("txt-status-of-%s-extra-variable-contribution-for-%s-projects-due-by-%s-at-%s")|format(year, 'ECSEL',parent, "now"|date("d-m-Y")) }}</h3>
+<style>
+    table.table > tr > th {
+        background-color: #ffffcc;
+        font-weight: bold;
+    }
+
+    .footer > th {
+        border-top: 1px solid #0066cc;
+    }
+
+    .header > th {
+        border-bottom: 1px solid #0066cc;
+    }
+</style>
+
+<strong>{{ translate("txt-status-of-extra-variable-contribution-for-ecsel-projects-due-by-%s")|format(parent) }}</strong>
 
 
 {% for project in projects %}
     {# Take the latest version to calculate the contribution of the affiliation#}
     {% set version = projectService.getLatestProjectVersion(project, null, null, false, false) %}
 
-    <h4>{{ project.call }} {{ project }}</h4>
+    {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
 
-    <table border="1" cellpadding="2">
-        <thead>
-        <tr>
-            <th>{{ translate("txt-name-of-free-rider") }}</th>
-            <th>{{ translate("txt-country") }}</th>
-            <th><span class="pull-right">{{ translate("txt-maximum-eligible-funding") }}</span></th>
-        </tr>
-        </thead>
+        <p><strong>{{ project.call }} {{ project }}</strong></p>
 
-        <tbody>
-        {% for affiliation in affiliationService.findAffiliationByProjectAndWhichAndType(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE"), constant("Parent\\Service\\AffiliationService::TYPE_FEE_RIDERS") ) %}
-            <tr>
-                <td>{{ affiliation.organisation.parent.organisation }}</td>
-                <td>{{ affiliation.organisation.parent.organisation.country }}</td>
-                <td>
-                    <span class="pull-right">{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version)|parse_funding }}</span>
-                </td>
+        <table class="table" width="545" cellpadding="1">
+            <tr class="header">
+                <th align="left" width="350">{{ translate("txt-name-of-free-rider") }}</th>
+                <th align="left" width="45">{{ translate("txt-country") }}</th>
+                <th align="right" width="150">{{ translate("txt-maximum-eligible-funding") }}</th>
             </tr>
-        {% endfor %}
-        </tbody>
-        <tfoot>
-        <tr>
-            <th colspan="2">{{ translate("txt-total-eligible-funding-by-free-riders-for-project") }}</th>
-            <th>
-                <span class="pull-right">{{ versionService.findTotalFundingVersionByFreeRidersInVersion(version)|parse_funding }}</span>
-            </th>
-        </tr>
-        <tr>
-            <th colspan="2">{{ translate("txt-total-eligible-funding-by-parent-%s")|format(parent) }}</th>
-            <th>
-                <span class="pull-right">{{ versionService.findTotalFundingVersionByParentAndVersion(parent, version)|parse_funding }}</span>
-            </th>
-        </tr>
-        <tr>
-            <th colspan="2">{{ translate("txt-total-eligible-funding-c-chambers-for-project") }}</th>
-            <th>
-                <span class="pull-right">{{ versionService.findTotalFundingVersionByCChambersInVersion(version)|parse_funding }}</span>
-            </th>
-        </tr>
-        <tr>
-            <th colspan="2">{{ translate("txt-extra-variable-contribution-for-project") }}</th>
-            <th>
-                <span class="pull-right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|parse_funding }}</span>
-            </th>
-        </tr>
-        </tfoot>
-    </table>
-    <hr>
+            {% for affiliation in affiliationService.findAffiliationByProjectAndWhichAndCriterion(project, constant("Organisation\\Entity\\OParent::CRITERION_FREE_RIDER"), constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE") ) %}
+                <tr>
+                    <td align="left" width="350">{{ affiliation.parentOrganisation.parent.organisation }}</td>
+                    <td align="left">{{ affiliation.parentOrganisation.parent.organisation.country.iso3 }}</td>
+                    <td align="right"
+                        width="150">{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version)|parse_funding }}</td>
+                </tr>
+            {% endfor %}
+            <tr class="footer">
+                <th align="left"
+                    colspan="2">{{ translate("txt-total-eligible-funding-by-free-riders-for-project") }}</th>
+                <th align="right" width="150">
+                    {{ versionService.findTotalFundingVersionByFreeRidersInVersion(version)|parse_funding }}
+                </th>
+            </tr>
+            <tr>
+                <th align="left"
+                    colspan="2">{{ translate("txt-total-eligible-funding-by-parent-%s")|format(parent) }}</th>
+                <th align="right"
+                    width="150">{{ versionService.findTotalFundingVersionByParentAndVersion(parent, version)|parse_funding }}</th>
+            </tr>
+            <tr>
+                <th align="left" colspan="2">{{ translate("txt-total-eligible-funding-c-chambers-for-project") }}</th>
+                <th align="right"
+                    width="150">{{ versionService.findTotalFundingVersionByCChambersInVersion(version)|parse_funding }}</th>
+            </tr>
+            <tr>
+                <th align="left" colspan="2">{{ translate("txt-extra-variable-contribution-for-project") }}</th>
+                <th align="right"
+                    width="150">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|parse_funding }}</th>
+            </tr>
+        </table>
+        <p></p>
+    {% endif %}
 {% endfor %}
 
-<h3>{{ translate("txt-details-of-total-additional-invoice-to-be-expected-by-%s-half-year-%s")|format(period + 1, year) }}</h3>
+<br pagebreak="true"/>
+<strong>{{ translate("txt-details-of-total-additional-invoice-to-be-expected-by-second-half-year-%s")|format(year) }}</strong>
+<br><br>
 
-<table border="1" cellpadding="2">
-    <thead>
-    <tr>
+<table class="table" width="545" cellpadding="1">
+    <tr class="header">
         <th>{{ translate("txt-project-name") }}</th>
         <th>{{ translate("txt-parent-name") }}</th>
-        <th><span class="pull-right">{{ translate("txt-maximum-eligible-funding") }}</span></th>
+        <th align="right">{{ translate("txt-maximum-eligible-funding") }}</th>
     </tr>
-    </thead>
-
-    <tbody>
     {% for project in projects %}
 
         {# Take the latest version to calculate the contribution of the affiliation#}
         {% set version = projectService.getLatestProjectVersion(project, null, null, false, false) %}
 
-        <tr>
-            <td>{{ project }}</td>
-            <td>{{ parent }}</td>
-            <td>
-                <span class="pull-right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|parse_funding }}</span>
-            </td>
-        </tr>
+        {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
+
+            <tr>
+                <td align="left">{{ project }}</td>
+                <td>{{ parent }}</td>
+                <td align="right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|parse_funding }}</td>
+            </tr>
+        {% endif %}
     {% endfor %}
-    </tbody>
-    <tfoot>
-    <tr>
+    <tr class="footer">
         <th colspan="2">{{ translate("txt-total-extra-%s-contribution-in-year-%s")|format(parent, year) }}</th>
-        <th>
-            <span class="pull-right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent)|parse_funding }}</span>
-        </th>
+        <th align="right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent)|parse_funding }}</th>
     </tr>
-    </tfoot>
 </table>
+<p></p>
+<center>
+    <img width="550px" src="/var/www/dev1/styles/aeneas/img/aeneas-invoice-formula.png">
+</center>

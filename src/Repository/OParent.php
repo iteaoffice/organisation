@@ -63,7 +63,7 @@ class OParent extends EntityRepository
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])) {
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -133,7 +133,7 @@ class OParent extends EntityRepository
         $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_freerider');
         $subSelect->join('organisation_entity_parent_freerider.status', 'organisation_entity_parent_freerider_status');
 
-        $subSelect->andWhere('organisation_entity_parent_freerider_status.status = :status');
+        $subSelect->andWhere('organisation_entity_parent_freerider_status.id = :status');
         $subSelect->andWhere('organisation_entity_parent_freerider.epossMemberType = :epossMemberType');
         $subSelect->andWhere('organisation_entity_parent_freerider.artemisiaMemberType = :artemisiaMemberType');
 

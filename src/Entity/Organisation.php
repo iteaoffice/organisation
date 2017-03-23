@@ -1099,5 +1099,4 @@ class Organisation extends AbstractEntity
         $this->ictOrganisation = $ictOrganisation;
         return $this;
     }
-
 }

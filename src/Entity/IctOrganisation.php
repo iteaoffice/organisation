@@ -40,7 +40,7 @@ class IctOrganisation extends AbstractEntity
      */
     private $country;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation" inversedBy="ictOrganisation")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="ictOrganisation")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
      *
      * @var \Organisation\Entity\Organisation

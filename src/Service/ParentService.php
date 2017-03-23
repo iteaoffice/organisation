@@ -106,6 +106,8 @@ class ParentService extends AbstractService
                 $parentOrganisation->setParent($organisation->getParent());
                 $parentOrganisation->setContact($contact);
                 $this->newEntity($parentOrganisation);
+
+                return $parentOrganisation;
             }
         }
 
@@ -308,7 +310,10 @@ class ParentService extends AbstractService
         foreach ($this->getProjectService()->findProjectsByParent($parent) as $project) {
             $version = $this->getProjectService()->getLatestProjectVersion($project, null, null, false, false);
 
-            $balanceTotal += $this->parseExtraVariableBalanceByParentAndVersion($parent, $version);
+            //Only add the balance when there is a version
+            if (!is_null($version)) {
+                $balanceTotal += $this->parseExtraVariableBalanceByParentAndVersion($parent, $version);
+            }
         }
 
         return $balanceTotal;
@@ -320,7 +325,7 @@ class ParentService extends AbstractService
      *
      * @return float
      */
-    public function parseExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version)
+    public function parseExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version): float
     {
         /**
          * The formula is
@@ -332,7 +337,7 @@ class ParentService extends AbstractService
         $sumOfFundingByCChamber = $this->getVersionService()
             ->findTotalFundingVersionByParentAndVersion($parent, $version);
         $sumOfFundingByCChambers = $this->getVersionService()->findTotalFundingVersionByCChambersInVersion($version);
-        $amountOfMemberships = count($this->parseInvoiceFactor($parent, date("Y"))->member);
+        $amountOfMemberships = $this->parseMembershipFactor($parent);
 
         if ($amountOfMemberships === 0 || $sumOfFundingByCChambers < 0.001) {
             return (float)0;
@@ -340,6 +345,74 @@ class ParentService extends AbstractService
 
         return (float)(0.015 * $sumOfFreeRiders * $sumOfFundingByCChamber) / (3 * $amountOfMemberships
                 * $sumOfFundingByCChambers);
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @param int $year
+     * @param int $period
+     * @return array
+     */
+    public function renderProjectsByParentInYearAndPeriod(Entity\OParent $parent, int $year, int $period): array
+    {
+        //Sort the projects per call
+        $projects = [];
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+            $call = $affiliation->getProject()->getCall();
+            //Initialize the array
+            if (!array_key_exists($call->getId(), $projects)) {
+                $projects[$call->getId()]['affiliation'] = [];
+                $projects[$call->getId()]['call'] = $call;
+                $projects[$call->getId()]['totalFunding'] = 0;
+                $projects[$call->getId()]['totalContribution'] = 0;
+            }
+
+            $latestVersion = $this->getProjectService()->getLatestProjectVersion(
+                $affiliation->getProject(),
+                null,
+                null,
+                false,
+                false
+            );
+
+            //Skip the rest of the calculation if a project has no version
+            if (is_null($latestVersion)) {
+                continue;
+            }
+
+            $funding = $this->getVersionService()->findTotalFundingVersionByAffiliationAndVersion(
+                $affiliation,
+                $latestVersion
+            );
+            $contribution = $this->getAffiliationService()->parseContribution(
+                $affiliation,
+                $latestVersion,
+                $year,
+                $period
+            );
+
+            $projects[$call->getId()]['affiliation'][] = [
+                'affiliation'  => $affiliation,
+                'funding'      => $funding,
+                'contribution' => $contribution
+            ];
+
+
+            $projects[$call->getId()]['totalFunding'] += $funding;
+            $projects[$call->getId()]['totalContribution'] += $contribution;
+        }
+
+        return $projects;
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @param Version $version
+     * @return bool
+     */
+    public function hasExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version): bool
+    {
+        return $this->parseExtraVariableBalanceByParentAndVersion($parent, $version) > 0;
     }
 
     /**

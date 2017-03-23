@@ -38,7 +38,7 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
         $pdf->setTemplate($this->getModuleOptions()->getOverviewVariableContributionTemplate());
         $pdf->AddPage();
         $pdf->SetMargins(10, 40, 10, true);
-        $pdf->SetFontSize(10);
+        $pdf->SetFontSize(8);
 
         $content = $this->getTwigRenderer()->render(
             'organisation/pdf/overview-extra-variable-contribution',
@@ -58,7 +58,7 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
             ]
         );
 
-        $pdf->writeHTMLCell(0, 0, 10, 40, $content);
+        $pdf->writeHTMLCell(0, 0, 10, 30, $content);
 
         return $pdf;
     }

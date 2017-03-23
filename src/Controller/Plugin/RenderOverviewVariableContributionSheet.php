@@ -40,52 +40,8 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
         $pdf->SetFontSize(8);
 
 
-        //Sort the projects per call
-        $projects = [];
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
-            $call = $affiliation->getProject()->getCall();
-            //Initialize the array
-            if (!array_key_exists($call->getId(), $projects)) {
-                $projects[$call->getId()]['affiliation'] = [];
-                $projects[$call->getId()]['call'] = $call;
-                $projects[$call->getId()]['totalFunding'] = 0;
-                $projects[$call->getId()]['totalContribution'] = 0;
-            }
+        $projects = $this->getParentService()->renderProjectsByParentInYearAndPeriod($parent, $year, $period);
 
-            $latestVersion = $this->getProjectService()->getLatestProjectVersion(
-                $affiliation->getProject(),
-                null,
-                null,
-                false,
-                false
-            );
-
-            //Skip the rest of the calculation if a project has no version
-            if (is_null($latestVersion)) {
-                continue;
-            }
-
-            $funding = $this->getVersionService()->findTotalFundingEuVersionByAffiliationAndVersion(
-                $affiliation,
-                $latestVersion
-            );
-            $contribution = $this->getAffiliationService()->parseContribution(
-                $affiliation,
-                $latestVersion,
-                $year,
-                $period
-            );
-
-            $projects[$call->getId()]['affiliation'][] = [
-                'affiliation'  => $affiliation,
-                'funding'      => $funding,
-                'contribution' => $contribution
-            ];
-
-
-            $projects[$call->getId()]['totalFunding'] += $funding;
-            $projects[$call->getId()]['totalContribution'] += $contribution;
-        }
 
         $content = $this->getTwigRenderer()->render(
             'organisation/pdf/overview-variable-contribution',

@@ -92,9 +92,9 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Check countries
-        if(!is_null($target->getCountry()) && !is_null($source->getCountry())
+        if (!is_null($target->getCountry()) && !is_null($source->getCountry())
             && ($target->getCountry()->getId() !== $source->getCountry()->getId())
-        ){
+        ) {
             $errors[] = $this->translate('txt-organisations-cant-have-different-countries');
         }
 
@@ -302,21 +302,25 @@ class MergeOrganisation extends AbstractPlugin
             $this->persist($target);
             $this->entityManager->remove($source);
             $this->entityManager->flush();
-            if($this->logger instanceof LoggerInterface){
+            if ($this->logger instanceof LoggerInterface) {
                 $this->logger->info(sprintf(
                     'Successfully merged organisation %s (%d) into %s (%d)',
-                    $source->getOrganisation(), $source->getId(), $target->getOrganisation(), $target->getId()
+                    $source->getOrganisation(),
+                    $source->getId(),
+                    $target->getOrganisation(),
+                    $target->getId()
                 ));
             }
         } catch (ORMException $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
-            if($this->logger instanceof LoggerInterface){
+            if ($this->logger instanceof LoggerInterface) {
                 $this->logger->err(sprintf(
                     '%s: %d %s',
-                    $exception->getFile(), $exception->getLine(), $exception->getMessage()
+                    $exception->getFile(),
+                    $exception->getLine(),
+                    $exception->getMessage()
                 ));
             }
-
         }
 
         return $response;

@@ -28,8 +28,8 @@ class ParentOrganisationLink extends AbstractLink
 {
     /**
      * @param Organisation|null $organisation
-     * @param string            $action
-     * @param string            $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
      */
@@ -37,12 +37,12 @@ class ParentOrganisationLink extends AbstractLink
         Organisation $organisation = null,
         $action = 'view',
         $show = 'text'
-    ) {
+    ): string {
         $this->setParentOrganisation($organisation);
         $this->setAction($action);
         $this->setShow($show);
 
-        if (! $this->hasAccess($this->getParentOrganisation(), OrganisationAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getParentOrganisation(), OrganisationAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -50,7 +50,9 @@ class ParentOrganisationLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'organisation' => $this->getParentOrganisation()->getOrganisation(),
+                'organisation'  => $this->getParentOrganisation()->getOrganisation(),
+                'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent()->getType()->getType() : '',
+                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent()->getStatus()->getStatus() : '',
             ]
         );
 
