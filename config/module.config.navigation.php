@@ -98,7 +98,7 @@ return [
                                                 'id' => \Organisation\Entity\Organisation::class,
                                             ],
                                             'routeParam' => [
-                                                'id' => 'destinationId',
+                                                'id' => 'targetId',
                                             ],
                                         ],
                                     ],

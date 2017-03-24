@@ -21,6 +21,8 @@ use Organisation\Form\AddAffiliation;
 use Organisation\Form\OrganisationFilter;
 use Organisation\Form\OrganisationMerge;
 use Zend\Http\Request;
+use Zend\Log\Logger;
+use Zend\Log\Writer\Stream;
 use Zend\Paginator\Paginator;
 use Zend\Validator\File\ImageSize;
 use Zend\View\Model\JsonModel;
@@ -329,10 +331,10 @@ class OrganisationAdminController extends OrganisationAbstractController
         $request = $this->getRequest();
         /** @var Organisation $source */
         $source = $this->getOrganisationService()->findOrganisationById($this->params('sourceId'));
-        /** @var Organisation $destination */
-        $destination = $this->getOrganisationService()->findOrganisationById($this->params('destinationId'));
+        /** @var Organisation $target */
+        $target = $this->getOrganisationService()->findOrganisationById($this->params('targetId'));
 
-        if (is_null($source) || is_null($destination)) {
+        if (is_null($source) || is_null($target)) {
             return $this->notFoundAction();
         }
 
@@ -343,7 +345,7 @@ class OrganisationAdminController extends OrganisationAbstractController
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/view',
-                    ['id' => $destination->getId()],
+                    ['id' => $target->getId()],
                     ['fragment' => 'merge']
                 );
             }
@@ -352,31 +354,41 @@ class OrganisationAdminController extends OrganisationAbstractController
             if (isset($data['swap'])) {
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/merge',
-                    ['sourceId' => $destination->getId(), 'destinationId' => $source->getId()]
+                    ['sourceId' => $target->getId(), 'targetId' => $source->getId()]
                 );
             }
 
             // Do the merge
             if (isset($data['merge'])) {
-                // Not doing anything yet!
-                $this->mergeOrganisation()->merge($source, $destination);
+                $logger = new Logger();
+                $logger->addWriter(new Stream(ini_get('error_log')));
+                $result = $this->mergeOrganisation()->merge($source, $target, $logger);
+                $logger = null; // Explicit fclose() of the writer
 
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    $this->translate('txt-organisations-have-been-successfully-merged')
-                );
+                $tab = 'general';
+                if ($result['success']) {
+                    $this->flashMessenger()->setNamespace('success')->addMessage(
+                        $this->translate('txt-organisations-have-been-successfully-merged')
+                    );
+                } else {
+                    $tab = 'merge';
+                    $this->flashMessenger()->setNamespace('error')->addMessage(
+                        $this->translate('txt-organisation-merge-failed')
+                    );
+                }
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/view',
-                    ['id' => $destination->getId()],
-                    ['fragment' => 'general']
+                    ['id' => $target->getId()],
+                    ['fragment' => $tab]
                 );
             }
         }
 
         return new ViewModel([
-            'errors'              => $this->mergeOrganisation()->checkMerge($source, $destination),
+            'errors'              => $this->mergeOrganisation()->checkMerge($source, $target),
             'source'              => $source,
-            'destination'         => $destination,
+            'target'              => $target,
             'mergeForm'           => new OrganisationMerge(),
             'organisationService' => $this->getOrganisationService(),
         ]);

@@ -8,10 +8,13 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace OrganisationTest\Controller\Plugin;
 
 use Affiliation\Entity\Affiliation;
 use Affiliation\Entity\Financial as AffiliationFinancial;
+use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -21,6 +24,7 @@ use General\Entity\Country;
 use Invoice\Entity\Invoice;
 use Invoice\Entity\Journal;
 use Invoice\Entity\Reminder;
+use Organisation\Controller\OrganisationAdminController;
 use Organisation\Controller\Plugin\MergeOrganisation;
 use Organisation\Entity\Booth;
 use Organisation\Entity\Cluster;
@@ -44,6 +48,7 @@ use Testing\Util\AbstractServiceTest;
 use Zend\I18n\Translator\Translator;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Zend\Log\Logger;
+use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
  * Class MergeOrganisationTest
@@ -119,11 +124,8 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     public function testMerge()
     {
-        $mergeOrganisation = new MergeOrganisation(
-            $this->setUpEntityManagerMock(),
-            $this->translator,
-            $this->createLoggerMock('info')
-        );
+        $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(), $this->translator);
+        $mergeOrganisation->setController($this->createControllerMock());
 
         $result = $mergeOrganisation()->merge($this->source, $this->target);
 
@@ -193,7 +195,50 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $this->assertInstanceOf(ContactOrganisation::class, $contactOrganisation);
         $this->assertSame(1, $contactOrganisation->getId());
 
-        // MORE ASSERTIONS HERE
+        /** @var Booth $booth */
+        $booth = $this->target->getOrganisationBooth()->first();
+        $this->assertInstanceOf(Booth::class, $booth);
+        $this->assertSame(1, $booth->getId());
+
+        /** @var BoothFinancial $boothFinancial */
+        $boothFinancial = $this->target->getBoothFinancial()->first();
+        $this->assertInstanceOf(BoothFinancial::class, $boothFinancial);
+        $this->assertSame(1, $boothFinancial->getId());
+
+        /** @var Partner $ideaPartner */
+        $ideaPartner = $this->target->getIdeaPartner()->first();
+        $this->assertInstanceOf(Partner::class, $ideaPartner);
+        $this->assertSame(1, $ideaPartner->getId());
+
+        /** @var Invoice $invoice */
+        $invoice = $this->target->getInvoice()->first();
+        $this->assertInstanceOf(Invoice::class, $invoice);
+        $this->assertSame(1, $invoice->getId());
+
+        /** @var Journal $journal */
+        $journal = $this->target->getJournal()->first();
+        $this->assertInstanceOf(Journal::class, $journal);
+        $this->assertSame(1, $journal->getId());
+
+        /** @var ProgramDoa $programDoa */
+        $programDoa = $this->target->getProgramDoa()->first();
+        $this->assertInstanceOf(ProgramDoa::class, $programDoa);
+        $this->assertSame(1, $programDoa->getId());
+
+        /** @var CallDoa $callDoa */
+        $callDoa = $this->target->getDoa()->first();
+        $this->assertInstanceOf(CallDoa::class, $callDoa);
+        $this->assertSame(1, $callDoa->getId());
+
+        /** @var Reminder $reminder */
+        $reminder = $this->target->getReminder()->first();
+        $this->assertInstanceOf(Reminder::class, $reminder);
+        $this->assertSame(1, $reminder->getId());
+
+        /** @var Result $result */
+        $result = $this->target->getResult()->first();
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertSame(1, $result->getId());
     }
 
     /**
@@ -203,13 +248,10 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     public function testMergeFail()
     {
-        $mergeOrganisation = new MergeOrganisation(
-            $this->setUpEntityManagerMock(true),
-            $this->translator,
-            $this->createLoggerMock('err')
-        );
+        $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(true), $this->translator);
+        $logger = $this->createLoggerMock('err');
 
-        $response = $mergeOrganisation()->merge($this->source, $this->target);
+        $response = $mergeOrganisation()->merge($this->source, $this->target, $logger);
 
         $this->assertEquals(false, $response['success']);
         $this->assertEquals('Oops!', $response['errorMessage']);
@@ -390,6 +432,33 @@ final class MergeOrganisationTest extends AbstractServiceTest
     }
 
     /**
+     * Create a controller mock object to get dummy authentication info.
+     *
+     * @return OrganisationAdminController|MockObject
+     */
+    private function createControllerMock(): MockObject
+    {
+        $contact = new Contact();
+        $contact->setId(1);
+
+        $zfcUserAuthenticationMock = $this->getMockBuilder(ZfcUserAuthentication::class)
+            ->setMethods(['getIdentity'])
+            ->getMock();
+        $zfcUserAuthenticationMock->expects($this->once())
+            ->method('getIdentity')
+            ->will($this->returnValue($contact));
+
+        $controllerMock = $this->getMockBuilder(OrganisationAdminController::class)
+            ->setMethods(['zfcUserAuthentication'])
+            ->getMock();
+        $controllerMock->expects($this->once())
+            ->method('zfcUserAuthentication')
+            ->will($this->returnValue($zfcUserAuthenticationMock));
+
+        return $controllerMock;
+    }
+
+    /**
      * Set up the translator mock object.
      *
      * @return Translator|MockObject
@@ -453,12 +522,13 @@ final class MergeOrganisationTest extends AbstractServiceTest
             [$this->identicalTo($this->source->getDoa()->first())],
             [$this->identicalTo($this->source->getReminder()->first())],
             [$this->identicalTo($this->source->getResult()->first())],
-            [$this->identicalTo($this->target)]
+            [$this->identicalTo($this->target)],
+            [$this->isInstanceOf(Log::class)]
         ];
 
         $entityManagerMock->expects($this->exactly(count($params)))->method('persist')->withConsecutive(...$params);
         $entityManagerMock->expects($this->once())->method('remove')->with($this->source);
-        $entityManagerMock->expects($this->once())->method('flush');
+        $entityManagerMock->expects($this->exactly(2))->method('flush');
 
         return $entityManagerMock;
     }

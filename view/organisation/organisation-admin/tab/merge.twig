@@ -41,7 +41,7 @@
     </div>
 
     <div class="col-md-5 col-sm-6">
-        <h2>{{ translate("txt-destination") }}</h2>
+        <h2>{{ translate("txt-target") }}</h2>
         <hr>
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-name") }}</dt>
@@ -83,7 +83,7 @@
 
 <script>
     $(function () {
-        var actionTemplate = '{{ url('zfcadmin/organisation/merge',  {'sourceId': '-src-', 'destinationId': organisation.id})|raw }}',
+        var actionTemplate = '{{ url('zfcadmin/organisation/merge',  {'sourceId': '-src-', 'targetId': organisation.id})|raw }}',
             $form = $('#organisation-merge');
         $('#btn-preview').click(function () {
             var selected = $form.find('input[name="source-main"]:checked').val(),

@@ -13,10 +13,14 @@
  * @link        http://github.com/iteaoffice/affiliation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller\Plugin;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
+use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Entity\Log;
 use Organisation\Entity\Organisation;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Log\LoggerInterface;
@@ -37,25 +41,15 @@ class MergeOrganisation extends AbstractPlugin
      * @var TranslatorInterface
      */
     private $translator;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * MergeOrganisation constructor.
      * @param EntityManagerInterface $entityManager
      * @param TranslatorInterface    $translator
-     * @param LoggerInterface|null   $logger
      */
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        TranslatorInterface    $translator,
-        LoggerInterface        $logger = null
-    ) {
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator) {
         $this->entityManager = $entityManager;
         $this->translator    = $translator;
-        $this->logger        = $logger;
     }
 
     /**
@@ -102,11 +96,12 @@ class MergeOrganisation extends AbstractPlugin
     }
 
     /**
-     * @param Organisation $source
-     * @param Organisation $target
+     * @param Organisation         $source
+     * @param Organisation         $target
+     * @param LoggerInterface|null $logger
      * @return array
      */
-    public function merge(Organisation $source, Organisation $target): array
+    public function merge(Organisation $source, Organisation $target, LoggerInterface $logger = null): array
     {
         $response = ['success' => true, 'errorMessage' => ''];
 
@@ -124,8 +119,8 @@ class MergeOrganisation extends AbstractPlugin
             if (is_null($target->getDescription())) {
                 $target->setDescription($source->getDescription());
             }
-            if (!is_null($source->getFinancial())
-                && (is_null($target->getFinancial())
+            if (!is_null($source->getFinancial()) && (
+                    is_null($target->getFinancial())
                     || empty($target->getFinancial()->getVat())
                     || ($target->getFinancial()->getVat() === $target->getFinancial()->getVat())
                 )
@@ -302,16 +297,24 @@ class MergeOrganisation extends AbstractPlugin
             $this->persist($target);
             $this->entityManager->remove($source);
             $this->entityManager->flush();
-            if($this->logger instanceof LoggerInterface){
-                $this->logger->info(sprintf(
-                    'Successfully merged organisation %s (%d) into %s (%d)',
-                    $source->getOrganisation(), $source->getId(), $target->getOrganisation(), $target->getId()
-                ));
-            }
+
+            // Log the merge in the target organisation
+            $organisationLog = new Log();
+            $organisationLog->setOrganisation($target);
+            /** @var OrganisationAbstractController $controller */
+            $controller = $this->getController();
+            $organisationLog->setContact($controller->zfcUserAuthentication()->getIdentity());
+            $organisationLog->setLog(sprintf(
+                'Merged organisation %s (%d) into %s (%d)',
+                $source->getOrganisation(), $source->getId(), $target->getOrganisation(), $target->getId()
+            ));
+            $this->persist($organisationLog);
+            $this->entityManager->flush();
+
         } catch (ORMException $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
-            if($this->logger instanceof LoggerInterface){
-                $this->logger->err(sprintf(
+            if($logger instanceof LoggerInterface){
+                $logger->err(sprintf(
                     '%s: %d %s',
                     $exception->getFile(), $exception->getLine(), $exception->getMessage()
                 ));

@@ -66,10 +66,7 @@ final class PluginFactory implements FactoryInterface
                 /** @var Translate $translateHelper */
                 $translateHelper = $container->get('ViewHelperManager')->get('translate');
 
-                $plugin = new MergeOrganisation(
-                    $entityManager,
-                    $translateHelper->getTranslator()
-                );
+                $plugin = new MergeOrganisation($entityManager, $translateHelper->getTranslator());
 
                 break;
             default:
