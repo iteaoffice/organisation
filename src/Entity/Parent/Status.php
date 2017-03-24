@@ -35,6 +35,7 @@ use Zend\Form\Annotation;
 class Status extends AbstractEntity
 {
     const STATUS_MEMBER = 1;
+    const STATUS_PENTA_DOA = 5;
     const STATUS_FREE_RIDER = 3;
     /**
      * @ORM\Column(name="status_id", type="integer", nullable=false)
