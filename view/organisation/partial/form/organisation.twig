@@ -8,7 +8,7 @@
 <fieldset>
     <legend>{{ translate("txt-organisation-information") }}</legend>
     {{ ztbformelement(organisationForm.get('organisation')) }}
-    {{ ztbformelement(form.get('description')) }}
+    {{ ztbformelement(organisationForm.get('description').get('description')) }}
     {{ ztbformelement(organisationForm.get('type')) }}
     {{ ztbformelement(organisationForm.get('country')) }}
 

@@ -13,6 +13,7 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use Organisation\Entity;
 use Zend\Form\Form;
+use Zend\Form\Element;
 
 /**
  * Class OrganisationForm
@@ -40,7 +41,7 @@ class OrganisationForm extends Form
 
         $this->add(
             [
-                'type'       => '\Zend\Form\Element\Textarea',
+                'type'       => Element\Textarea::class,
                 'name'       => 'description',
                 'attributes' => [
                     'rows' => 12,
@@ -54,7 +55,7 @@ class OrganisationForm extends Form
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\File',
+                'type'    => Element\File::class,
                 'name'    => 'file',
                 'options' => [
                     "label"      => "txt-logo",
@@ -65,7 +66,7 @@ class OrganisationForm extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Element\Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => "btn btn-primary",
@@ -75,7 +76,7 @@ class OrganisationForm extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Element\Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => "btn btn-warning",
@@ -85,7 +86,7 @@ class OrganisationForm extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Element\Submit::class,
                 'name'       => 'delete',
                 'attributes' => [
                     'class' => "btn btn-danger",

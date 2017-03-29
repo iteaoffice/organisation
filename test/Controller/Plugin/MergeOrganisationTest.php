@@ -136,8 +136,11 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $this->assertEquals(new \DateTime('2017-01-01'), $this->target->getDateCreated());
         $this->assertEquals(new \DateTime('2017-01-03'), $this->target->getDateUpdated());
         $this->assertSame(1, $this->target->getDescription()->getId());
+        $this->assertSame(2, $this->target->getDescription()->getOrganisation()->getId());
         $this->assertSame(1, $this->target->getFinancial()->getId());
+        $this->assertSame(2, $this->target->getFinancial()->getOrganisation()->getId());
         $this->assertSame(1, $this->target->getLogo()->first()->getId());
+        $this->assertSame(2, $this->target->getLogo()->first()->getOrganisation()->getId());
 
         // Collections
         /** @var Log $log */
@@ -155,10 +158,17 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $this->assertInstanceOf(Web::class, $web);
         $this->assertSame(1, $web->getId());
 
-        /** @var Note $note */
-        $note = $this->target->getNote()->first();
-        $this->assertInstanceOf(Note::class, $note);
-        $this->assertSame(1, $note->getId());
+        /** @var Note $mergeNote */
+        $mergeNote = $this->target->getNote()->first();
+        $this->assertInstanceOf(Note::class, $mergeNote);
+        $this->assertSame(1, $mergeNote->getContact()->getId());
+        $note = 'Merged organisation Organisation 1 (1) into Organisation 2 (2)';
+        $this->assertSame($note, $mergeNote->getNote());
+
+        /** @var Note $movedNote */
+        $movedNote = $this->target->getNote()->get(1);
+        $this->assertInstanceOf(Note::class, $movedNote);
+        $this->assertSame(1, $movedNote->getId());
 
         /** @var Name $name */
         $name = $this->target->getNames()->first();
@@ -267,6 +277,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
 
         $description = new Description();
         $description->setId(1);
+        $description->setOrganisation($source);
 
         $logo = new Logo();
         $logo->setId(1);
@@ -395,14 +406,16 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     private function createTarget(): Organisation
     {
+        $target = new Organisation();
+        $target->setId(2);
+
         $country = new Country();
         $country->setId(1);
 
         $financial = new Financial();
         $financial->setId(2);
+        $financial->setOrganisation($target);
 
-        $target = new Organisation();
-        $target->setId(2);
         $target->setOrganisation('Organisation 2');
         $target->setDateCreated(new \DateTime('2017-01-02'));
         $target->setDateUpdated(new \DateTime('2017-01-02'));
@@ -523,7 +536,8 @@ final class MergeOrganisationTest extends AbstractServiceTest
             [$this->identicalTo($this->source->getReminder()->first())],
             [$this->identicalTo($this->source->getResult()->first())],
             [$this->identicalTo($this->target)],
-            [$this->isInstanceOf(Log::class)]
+            [$this->isInstanceOf(Log::class)],
+            [$this->isInstanceOf(Note::class)]
         ];
 
         $entityManagerMock->expects($this->exactly(count($params)))->method('persist')->withConsecutive(...$params);

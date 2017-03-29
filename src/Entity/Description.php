@@ -27,21 +27,24 @@ class Description extends AbstractEntity
      * @ORM\Column(name="description_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Annotation\Exclude()
      *
      * @var integer
      */
     private $id;
     /**
-     * @ORM\Column(name="description", type="text", nullable=false)
+     * @ORM\Column(name="description", length=65535, type="text", nullable=false)
+     * @Annotation\Type("\Zend\Form\Element\Textarea")
+     * @Annotation\Options({"label":"txt-description","help-block":"txt-organisation-description-help-block"})
+     * @Annotation\Attributes({"rows":12})
      *
      * @var string
      */
     private $description;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="description", cascade="persist")
-     * @ORM\JoinColumns({
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="description")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false, unique=true)
-     * })
+     * @Annotation\Exclude()
      *
      * @var \Organisation\Entity\Organisation
      */
@@ -58,8 +61,9 @@ class Description extends AbstractEntity
     }
 
     /**
-     * @param $property
-     * @param $value
+     * @param string $property
+     * @param mixed $value
+     * @return void
      */
     public function __set($property, $value)
     {

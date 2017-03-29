@@ -110,9 +110,7 @@ class Organisation extends AbstractEntity
     private $parentOrganisation;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country",inversedBy="organisation", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=true)
-     * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({
      *      "target_class":"General\Entity\Country",
@@ -140,9 +138,7 @@ class Organisation extends AbstractEntity
     private $ideaPartner;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Type", inversedBy="organisation", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="type_id", referencedColumnName="type_id", nullable=true)
-     * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({
      *      "target_class":"Organisation\Entity\Type",
@@ -221,8 +217,9 @@ class Organisation extends AbstractEntity
      */
     private $log;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist","remove"}, mappedBy="organisation", fetch="EXTRA_LAZY")
-     * @Annotation\Exclude()
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist","remove"}, mappedBy="organisation")
+     * @Annotation\ComposedObject("Organisation\Entity\Description")
+     * @Annotation\Instance("Organisation\Entity\Description")
      *
      * @var \Organisation\Entity\Description
      */

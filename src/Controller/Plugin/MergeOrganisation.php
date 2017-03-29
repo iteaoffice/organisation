@@ -17,10 +17,13 @@ declare(strict_types=1);
 
 namespace Organisation\Controller\Plugin;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Entity\Log;
+use Organisation\Entity\Logo;
+use Organisation\Entity\Note;
 use Organisation\Entity\Organisation;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Log\LoggerInterface;
@@ -116,7 +119,8 @@ class MergeOrganisation extends AbstractPlugin
             if ($source->getDateUpdated() > $target->getDateUpdated()) {
                 $target->setDateUpdated($source->getDateUpdated());
             }
-            if (is_null($target->getDescription())) {
+            if (is_null($target->getDescription()) && !is_null($source->getDescription())) {
+                $source->getDescription()->setOrganisation($target);
                 $target->setDescription($source->getDescription());
             }
             if (!is_null($source->getFinancial()) && (
@@ -125,10 +129,14 @@ class MergeOrganisation extends AbstractPlugin
                     || ($target->getFinancial()->getVat() === $target->getFinancial()->getVat())
                 )
             ) {
+                $source->getFinancial()->setOrganisation($target);
                 $target->setFinancial($source->getFinancial());
             }
             if ($target->getLogo()->isEmpty()) {
-                $target->getLogo()->add($source->getLogo()->first());
+                /** @var Logo $logo */
+                $logo = $source->getLogo()->first();
+                $logo->setOrganisation($target);
+                $target->getLogo()->add($logo);
             }
 
             // Transfer log
@@ -295,20 +303,35 @@ class MergeOrganisation extends AbstractPlugin
 
             // Persist main organisation, remove the other + flush and update permissions
             $this->persist($target);
+            $sourceId = $source->getId();
             $this->entityManager->remove($source);
             $this->entityManager->flush();
+
+            // Prepare for logging
+            $message = sprintf(
+                'Merged organisation %s (%d) into %s (%d)',
+                $source->getOrganisation(),$sourceId, $target->getOrganisation(), $target->getId()
+            );
+            /** @var OrganisationAbstractController $controller */
+            $controller = $this->getController();
+            $contact = $controller->zfcUserAuthentication()->getIdentity();
 
             // Log the merge in the target organisation
             $organisationLog = new Log();
             $organisationLog->setOrganisation($target);
-            /** @var OrganisationAbstractController $controller */
-            $controller = $this->getController();
-            $organisationLog->setContact($controller->zfcUserAuthentication()->getIdentity());
-            $organisationLog->setLog(sprintf(
-                'Merged organisation %s (%d) into %s (%d)',
-                $source->getOrganisation(), $source->getId(), $target->getOrganisation(), $target->getId()
-            ));
+            $organisationLog->setContact($contact);
+            $organisationLog->setLog($message);
             $this->persist($organisationLog);
+            // Add a note to the target organisation about the merge
+            $organisationNote = new Note();
+            $organisationNote->setOrganisation($target);
+            $organisationNote->setContact($contact);
+            $organisationNote->setNote($message);
+            $notes = $target->getNote()->toArray();
+            array_unshift($notes, $organisationNote);
+            $target->setNote(new ArrayCollection($notes));
+            $this->persist($organisationNote);
+
             $this->entityManager->flush();
 
         } catch (ORMException $exception) {
