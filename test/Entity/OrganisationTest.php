@@ -7,16 +7,18 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 namespace OrganisationTest\Entity;
 
 use Organisation\Entity\Organisation;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class OrganisationTest
  *
  * @package OrganisationTest\Entity
  */
-class OrganisationTest extends \PHPUnit_Framework_TestCase
+class OrganisationTest extends TestCase
 {
     /**
      *
