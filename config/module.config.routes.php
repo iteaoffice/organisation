@@ -26,7 +26,7 @@ return [
                     'organisation-logo' => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => "/organisation-logo/[:id]-[:hash].[:ext]",
+                            'route'    => "/organisation-logo/[:id]-[:hash]-[:width].[:ext]",
                             'defaults' => [
                                 //Explicitly add the controller here as the assets are collected
                                 'controller' => Controller\OrganisationController::class,
@@ -232,7 +232,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'note' => [
+                            'note'            => [
                                 'type'          => 'Segment',
                                 'options'       => [
                                     'route'    => '/note',
@@ -243,7 +243,7 @@ return [
                                 ],
                                 'may_terminate' => false,
                                 'child_routes'  => [
-                                    'new' => [
+                                    'new'  => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/new/organisation-[:organisationId].html',
@@ -263,7 +263,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'merge' => [
+                            'merge'           => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/merge/[:sourceId]/into/[:targetId].html',
@@ -352,7 +352,7 @@ return [
                                     ],
                                 ],
                                 'child_routes' => [
-                                    'parent' => [
+                                    'parent'  => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/parent.html',

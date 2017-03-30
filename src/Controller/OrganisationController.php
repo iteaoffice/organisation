@@ -11,6 +11,7 @@
 namespace Organisation\Controller;
 
 use Organisation\Entity\Logo;
+use PHPThumb\GD;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
@@ -21,9 +22,7 @@ use Zend\View\Model\ViewModel;
 class OrganisationController extends OrganisationAbstractController
 {
     /**
-     * Show the details of 1 organisation.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return array|\Zend\Stdlib\ResponseInterface
      */
     public function logoAction()
     {
@@ -42,23 +41,32 @@ class OrganisationController extends OrganisationAbstractController
         }
 
         $file = stream_get_contents($logo->getOrganisationLogo());
+        $width = $this->params('width', null);
 
         /*
          * Check if the file is cached and if not, create it
          */
-        if (! file_exists($logo->getCacheFileName())) {
+        if (!file_exists($logo->getCacheFileName($width))) {
             /*
              * The file exists, but is it not updated?
              */
-            file_put_contents($logo->getCacheFileName(), $file);
+            file_put_contents($logo->getCacheFileName($width), $file);
+
+            //Start the resize-action based on the width
+            if (!is_null($width)) {
+                $thumb = new GD($logo->getCacheFileName($width));
+                $thumb->resize($width);
+                $thumb->save($logo->getCacheFileName($width));
+            }
         }
+
 
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
-                 ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
-                 ->addHeaderLine('Content-Length: ' . (string)strlen($file));
-        $response->setContent($file);
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Content-Type: ' . $logo->getContentType()->getContentType())
+            ->addHeaderLine('Content-Length: ' . (string)strlen(file_get_contents($logo->getCacheFileName($width))));
+        $response->setContent(file_get_contents($logo->getCacheFileName($width)));
 
         return $response;
     }
@@ -68,9 +76,9 @@ class OrganisationController extends OrganisationAbstractController
      */
     public function searchAction()
     {
-        $searchItem   = $this->getRequest()->getQuery()->get('search_item');
-        $maxResults   = $this->getRequest()->getQuery()->get('max_rows', 12);
-        $countryId    = $this->getRequest()->getQuery()->get('country');
+        $searchItem = $this->getRequest()->getQuery()->get('search_item');
+        $maxResults = $this->getRequest()->getQuery()->get('max_rows', 12);
+        $countryId = $this->getRequest()->getQuery()->get('country');
         $searchResult = $this->getOrganisationService()->searchOrganisation($searchItem, $maxResults, $countryId);
         /**
          * Include a paginator to be able to have later paginated search results in pages

@@ -15,26 +15,26 @@ use Organisation\Entity\Organisation;
 use Project\Entity\Logo;
 
 /**
- * Create a link to an organisation.
- *
- * @category    Organisation
+ * Class OrganisationLogo
+ * @package Organisation\View\Helper
  */
 class OrganisationLogo extends ImageAbstract
 {
     /**
      * @param Organisation $organisation
-     * @param null|string  $class
-     * @param bool         $silent
-     *
+     * @param null $class
+     * @param bool $silent
+     * @param null $width
      * @return string
      */
     public function __invoke(
         Organisation $organisation,
         $class = null,
-        $silent = true
-    ) {
-        $logo = $organisation->getLogo();
-        if ($logo->count() === 0) {
+        $silent = true,
+        $width = null
+    ): string {
+        $logos = $organisation->getLogo();
+        if ($logos->isEmpty()) {
             return $silent ? '' : $this->translate('txt-no-logo-available');
         }
 
@@ -43,7 +43,7 @@ class OrganisationLogo extends ImageAbstract
          *
          * @var $logo Logo
          */
-        $logo = $logo->first();
+        $logo = $logos->first();
 
         /*
          * Reset the classes
@@ -57,6 +57,10 @@ class OrganisationLogo extends ImageAbstract
         $this->addRouterParam('hash', $logo->getHash());
         $this->addRouterParam('ext', $logo->getContentType()->getExtension());
         $this->addRouterParam('id', $logo->getId());
+
+        if (!is_null($width)) {
+            $this->addRouterParam('width', $width);
+        }
 
         return $this->createImageUrl();
     }

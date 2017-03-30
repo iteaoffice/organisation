@@ -29,11 +29,11 @@ class OrganisationLink extends AbstractLink
 
     /**
      * @param Organisation $organisation
-     * @param string       $action
-     * @param string       $show
-     * @param null         $branch
-     * @param null         $page
-     * @param null         $alternativeShow
+     * @param string $action
+     * @param string $show
+     * @param null $branch
+     * @param null $page
+     * @param null $alternativeShow
      *
      * @return string
      *
@@ -47,7 +47,7 @@ class OrganisationLink extends AbstractLink
         $branch = null,
         $page = null,
         $alternativeShow = null
-    ) {
+    ): string {
         $this->setOrganisation($organisation);
         $this->setAction($action);
         $this->setShow($show);
@@ -56,7 +56,7 @@ class OrganisationLink extends AbstractLink
          * If the alternativeShow is not null, use it an otherwise take the page
          */
         $this->setAlternativeShow($alternativeShow);
-        if (! is_null($organisation)) {
+        if (!is_null($organisation)) {
             /*
              * Set the non-standard options needed to give an other link value
              */
@@ -64,17 +64,17 @@ class OrganisationLink extends AbstractLink
                 [
                     'more'             => $this->translate("txt-read-more"),
                     'name'             => $this->getOrganisationService()
-                                               ->parseOrganisationWithBranch(
-                                                   $this->getBranch(),
-                                                   $this->getOrganisation()
-                                               ),
+                        ->parseOrganisationWithBranch(
+                            $this->getBranch(),
+                            $this->getOrganisation()
+                        ),
                     'name-and-country' => sprintf(
                         "%s (%s)",
                         $this->getOrganisationService()
-                                                                  ->parseOrganisationWithBranch(
-                                                                      $this->getBranch(),
-                                                                      $this->getOrganisation()
-                                                                  ),
+                            ->parseOrganisationWithBranch(
+                                $this->getBranch(),
+                                $this->getOrganisation()
+                            ),
                         $this->getOrganisation()->getCountry()
                     ),
                     'alternativeShow'  => $this->getAlternativeShow(),
@@ -87,31 +87,16 @@ class OrganisationLink extends AbstractLink
         return $this->createLink();
     }
 
-    /**
-     * @return string
-     */
-    public function getBranch()
-    {
-        return $this->branch;
-    }
-
-    /**
-     * @param string $branch
-     */
-    public function setBranch($branch)
-    {
-        $this->branch = $branch;
-    }
 
     /**
      * @throws \Exception
      */
-    public function parseAction()
+    public function parseAction(): void
     {
-        if (in_array($this->getAction(), ['view', 'view-article'])) {
+        if (in_array($this->getAction(), ['view', 'view-article'], true)) {
             if (is_null($this->getOrganisation())) {
                 throw new \InvalidArgumentException(
-                    sprintf("OrganisationService is cannot be null for %s", $this->getAction())
+                    sprintf("Organisation is cannot be null for %s", $this->getAction())
                 );
             }
             $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
@@ -131,7 +116,7 @@ class OrganisationLink extends AbstractLink
                     sprintf(
                         $this->translate("txt-edit-organisation-%s"),
                         $this->getOrganisationService()
-                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -141,7 +126,7 @@ class OrganisationLink extends AbstractLink
                     sprintf(
                         $this->translate("txt-edit-financial-organisation-%s"),
                         $this->getOrganisationService()
-                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -155,7 +140,7 @@ class OrganisationLink extends AbstractLink
                     sprintf(
                         $this->translate("txt-add-organisation-%s-to-project"),
                         $this->getOrganisationService()
-                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -178,7 +163,7 @@ class OrganisationLink extends AbstractLink
                     sprintf(
                         $this->translate("txt-view-organisation-%s"),
                         $this->getOrganisationService()
-                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 break;
@@ -188,7 +173,7 @@ class OrganisationLink extends AbstractLink
                     sprintf(
                         $this->translate("txt-view-article-for-organisation-%s"),
                         $this->getOrganisationService()
-                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
                 $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
@@ -197,4 +182,21 @@ class OrganisationLink extends AbstractLink
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
         }
     }
+
+    /**
+     * @return string
+     */
+    public function getBranch()
+    {
+        return $this->branch;
+    }
+
+    /**
+     * @param string $branch
+     */
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
+    }
+
 }

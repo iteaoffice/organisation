@@ -85,8 +85,6 @@ class Logo extends AbstractEntity
     }
 
     /**
-     * Magic Setter.
-     *
      * @param $property
      * @param $value
      */
@@ -106,22 +104,30 @@ class Logo extends AbstractEntity
     }
 
     /**
+     * @param null $width
      * @return string
      */
-    public function getCacheFileName()
+    public function getCacheFileName($width = null): string
     {
         $cacheDir = __DIR__ . '/../../../../../public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR
-                    . ITEAOFFICE_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
+            . ITEAOFFICE_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
 
-        return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName();
+        return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName($width);
     }
 
     /**
+     * @param null $width
      * @return string
      */
-    public function getFileName(): string
+    public function getFileName($width = null): string
     {
-        return sprintf("%s-%s.%s", $this->getId(), $this->getHash(), $this->getContentType()->getExtension());
+        return sprintf(
+            '%s-%s-%s.%s',
+            $this->getId(),
+            $this->getHash(),
+            $width,
+            $this->getContentType()->getExtension()
+        );
     }
 
     /**
