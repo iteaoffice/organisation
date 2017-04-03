@@ -10,13 +10,11 @@
 >
     <testsuite name="iteaoffice/organisation">
         <directory>./test</directory>
-        <directory>./vendor/iteaoffice/testing</directory>
     </testsuite>
 
     <filter>
         <whitelist>
             <directory suffix=".php">./src</directory>
-            <directory suffix=".php">./vendor/iteaoffice/testing/src</directory>
         </whitelist>
     </filter>
 
