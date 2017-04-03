@@ -69,7 +69,7 @@ class HandleParentImport extends AbstractImportPlugin
     /**
      * @param array $keys
      */
-    public function prepareContent(array $keys = [])
+    public function prepareContent(array $keys = []):void
     {
         foreach ($this->content as $key => $content) {
             $name = $content[$this->headerKeys['parent']];

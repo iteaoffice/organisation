@@ -1,971 +1,124 @@
-Parents	Status	Type	ISO 2	VAT	contact name	email	address	city	zip	country
-AT & S Austria Technologie & Systemtechnik AG	ECSEL DoA		AU	UID ATU 29743506	Heintz Moitzi	h.voraberger@ats.net	Fabriksgasse 13	Leoben	8700	Austria
-CRYTUR spol sro	ECSEL DoA		CZ	CZ25296558	Jindrich Houzvicka	Jindrich.Houzvicka@crytur.cz	Palackélo 175	Turnov	511 01	Czech Republic
-EMC Israel Advanced Information Technologies	ECSEL DoA		IL	NL815151524B01	Hila Gilboa	hila.gilboa@emc.com	Hamad 7	Herzliya		Israel
-Fujifilm Electronic Materials NV	ECSEL DoA		BE	GB522953152	Hermann Drieghe	herman_drieghe@fujifilm-ffem.com	Keetberglaan 1A	Zwijndrecht		Belgium
-Ibermática SA	ECSEL DoA		ES	A-20038915	Miren Loyola Zuloaga		Paseo Mikeletegi 5	Donostia San Sebastian		Spain
-Institute of Physics of the Czech Academy of Sciences	ECSEL DoA		CZ	CZ68378271	Jan Ridky	secretary@fzu.cz	Na Slovance 2	Prague		Czech Republic
-JSR Micro NV	ECSEL DoA		BE	BE0429388316	 BE0429388316	bruno.roland@jsrmicro.be	Technologielaan 8	Leuven	3001	Belgium
-LLRC OG	ECSEL DoA		AU	ATU702 LO4O7	Harald Okorn-Schmidt	harald.okorn-schmidt@ llrc.at	Gerlitzenweg 10	Klagenfurt		Austria
-Noray Bioinformatics SL	ECSEL DoA		ES	695229837	Julio Font	font@noraybio.com	Parque Tecno16gico de Bizkaia	Derio	801A	Spain
-OTH Amberg-Weiden - Technical University of Applied Science	ECSEL DoA		DE	DE 814759583	Andreas Kluge	a.klug@oth-aw.de	Kaiser Wilhem Ring 23	Amberg	92224	Germany
-TOWA Europe BV	ECSEL DoA		NL	NL853236616B01	H.W.P. Claassen	h_claassen@towaeurope.com	Geograaf 14	Duiven	6921EW	Netherlands
-University of the Basque Country 	ECSEL DoA		ES	Q4818001B	Fernando Plazaola Muguruza	proyectoseuropeos@ehu.es	Barrio Sarriena s/n	Leioa	48940	Spain
-znt Sentren für Neue Technologien GmbH	ECSEL DoA		DE	DE 129 449 967	Bernhard Marsoner	Bernhard.Marsoner@znt-richter.de	Lena-Christ-Str. 2	Grunwald	82031	Germany
-AEROVIA SAS	ECSEL/ENIAC DoA		FR	FR86523585396	Ronan Le Loarer	rleloarer@aerovia.fr	C/o GSMA - Campus des Sciences	Reims Cedex 2	51687	France
-Air Liquide Electronics Systems	ECSEL/ENIAC DoA		FR	FR49421167966	Philippe Bottu	philippe.bottu@airliquide.com	8 rue des Méridiens	Echirolles Cedex	38433	France
-CEST Kompetenzzentrum für elektrochemische Oberflächentechnologie GmbH	ECSEL/ENIAC DoA		AU	ATU64395416	Alexander Balatka	alexander.balatka@cest.at	Viktor Kaplan Str. 2	Wiener Neustadt	2700	Austria
-Fläkt Woods Oy	ECSEL/ENIAC DoA		FI	FI24958758	Markku    Hevonoja	markku.hevonoja@flaktwoods.com	Kalevantie 39	Turku	20520	Finland
-Mechatronic Systemtechnik GmbH	ECSEL/ENIAC DoA		DE	ATU45875600	Walter Schober	walter.schober@mechatronic.at	Tiroler Strasse 80	Villach	A-9500	Austria
-Munisense BV	ECSEL/ENIAC DoA		NL	NL819071006B01	Hans Mulder	hans.mulder@munisense.com	Fruitweg 36	DH Leiden	2321	Austria
-PKC Electronics Oy	ECSEL/ENIAC DoA		FI	FI19156697	Jarmo Rajala	jarmo.rajala@pkcgroup.com	Pajuniityntie 43	Raahe	FI-92120 	Finland
-University of Kassel	ECSEL/ENIAC DoA		DE	DE113057055	Rolf-Dieter Postlep	sreinhar@uni-kassel.de	FB 16 IEE-EVS	Kassel	D-34122	Germany
-Vabrema BV	ECSEL/ENIAC DoA		NL	NL821209929B01	J.J. Maltha	j.j.maltha@vabrema.nl	Horsten 1	Eindhoven	5612 AX	Netherlands
-Vaisala Oyj	ECSEL/ENIAC DoA		FI	FI01244162	Liisa Aström	liisa.astrom@vaisala.com	Vanha Nurmijärventie 21	Vantaa	FI-01670	Finland
-AAE BVB	ECSEL/ENIAC DoA		NL	NL003584744B01	Manon Pijnenburg	manon.pijnenburg@aaebv.com	Grasbeemd 2	Helmond	5705 DG	Netherlands
-Aalto University	ECSEL/ENIAC DoA		FI	FI22283574	Tuija Pulkkinen	tuija.pulkkinen@aalto.fi	Dept. of Electrical Engineering and Automation	Aalto	FI-00076	Finland
-Active Technologies Srl	ECSEL/ENIAC DoA		IT	IT01594570382	Paolo Pellati	pellati t activetechnologies.it	Via Bela Bartok 29/B	Ferrara	44124	Italy
-Advance Mask Technology Center Dresden GmbH & Co KG	ECSEL/ENIAC DoA		DE	DE223348968	Thomas Schmidt	thomas.schmidt@amtc-dresden.com	Rähnitzer Allee 9	Dresden	DE-01109	Germany
-Advanced Packaging Center BV	ECSEL/ENIAC DoA		NL	NL821611203B01	Eef Boschman	eefboschman@apcenter.nl	Stenograaf 3	Duiven	6921EX	Netherlands
-AIS Automation Dresden GmbH	ECSEL/ENIAC DoA		DE	DE263814591	Dirk Sauer	dirk.sauer@ais-automation.com	Otto-Mohr Strasse 6	01237 Dresden		Germany
-AIT Austrian Institute of Technology GmbH	ECSEL/ENIAC DoA		AU	ATU14703506	Anton Plimon		Donau-City-Strasse 1	Vienna	1220	Austria
-APIX Analytics SAS	ECSEL/ENIAC DoA		FR	FR90803133933	Philippe Andreucci	philippe.andreucci@apixanalytics.com	Minatec Campus	Grenoble Cedex 9	38040	France
-Arkema France SA	ECSEL/ENIAC DoA		FR	FR32319632790	Christian Collette	christian.collette@arkema.com	420 rue d'Estienne d'Orves	Colombes Cedex	92705	France
-ARMINES	ECSEL/ENIAC DoA		FR	FR84 775 664 113	Philippe Le Bozec	philippe.le_bozec@mines-paristech.fr	60 Boulevard Saint-Michel	Paris Cedex 06	75272	France
-Aselta Nanographics SA	ECSEL/ENIAC DoA		FR	FR51518365200	Jean Mirallie	jean.mirallie@aselta.com	"7, parvis Louis Neel"	Grenoble	38000	France
-Asygn	ECSEL/ENIAC DoA		FR	FR38501914998	Daniel Saias	daniel.saias@asygn.com	445 rue Lavoisier	Montbonnot Saint Martin	38330	France
-ATRENTA France SAS	ECSEL/ENIAC DoA		FR	FR72519737951	Fahim Rahim	fahim@atrenta.com	7 parivs Louis Néel	Grenoble	38040	France
-Automotive Industry Institute (PIMOT)	ECSEL/ENIAC DoA		PL	PL5250008821	Andrzej Muszynski	a.muszynski@pimot.org.pl	Przemyslowy Instytut Motoryzacji	Warszawa	03-301 	Poland
-AVL List GmbH	ECSEL/ENIAC DoA		DE	ATU28752908	Josef Affenzeller	josef.affenzeller@avl.com	Hans-List-Platz 1	Graz	8020	Austria
-Axxicon Moulds Eindhoven BV	ECSEL/ENIAC DoA		NL	NL009670944B05	 NL009670944B05	a.dejong@axxicon.com	Ekkersrijt 7501	Son	5692 HN	Netherlands
-Benchmark Electronics BV	ECSEL/ENIAC DoA		NL	NL807680588B01	Marco Wigger	marco.wigger@bench.com	Lelyweg 10	Overijsel	7602 EA	Netherlands
-Berliner Glas KGaA	ECSEL/ENIAC DoA		DE	DE135830560	Volker Schmidt	vschmidt@berlinerglas.de	Waldkraiburger Str. 5	Berlin	12347	Germany
-BodyCap	ECSEL/ENIAC DoA		FR	FR31537927733	Fabrice  Verjus	fabrice.vergus@bodycap-medical.com	6 Rue de la Girafe	CAEN	14000	France
-Brooks Automation GmbH	ECSEL/ENIAC DoA		DE	DE217099329	David Pietrantoni	david.pletrantoni@brooks.com	Ernst-Ruska Ring 11	Jena	7745	Germany
-camLine GmbH	ECSEL/ENIAC DoA		DE	DE128218628	Georg Ruetz	georg.ruetz@camline.com	Industriering 4a	Petershausen	85238	Germany
-CCM Centre for Concepts in Mechatronics BV	ECSEL/ENIAC DoA		NL	NL005993015B01	Hans Michels	hans.michels@ccm.nl	De Pinckart 24	Nuenen	5674 CC	Netherlands
-CEZAMAT PW Spzoo	ECSEL/ENIAC DoA		PL	7010346175	Mariusz Wielec	m.wielec@cezamat.eu	ul. Polna 50	Warsaw	00-644	Poland
-CIAT	ECSEL/ENIAC DoA		FR	FR01545620114	Nicolas Chouteau	n.chouteau@ciat.fr	Comptabilité Fournisseurs	Culoz	1350	France
-Claude Bernard Lyon 1 University	ECSEL/ENIAC DoA		FR	FR6119691 7744	François-Noel Gilly	franCois-noel.gilly@univ-lyonl.fr	Laboratoire Multimatériaux et interfaces	Villeurbanne	69100	France
-CNES - Centre National d'Etudes Spatiales	ECSEL/ENIAC DoA		FR	FR49775665912	Marc Pircher		"2, Place Maurice Quentin"	Paris Cedex 01	75039	France
-COMELEC SA	ECSEL/ENIAC DoA		CH	CHE.103.961.617	Hicham DAMSIR	h.damsir@comelec.ch	Rue de Ia Paix 129.	LA CHAUX DE FONDS	CH-2301	Switzerland
-CTTC - Centre Tecnològic de Telecomunicacions de Catalunya	ECSEL/ENIAC DoA		ES	ESG62616586	Miguel Angle Lagunas Hernandez	m.a.lagunas@cttc.es	Av. Canal Olimpic S/N	Barcelona	ES-08860	Spain
-Cytocentrics Bioscience GmbH	ECSEL/ENIAC DoA		NL	DE 815 322 907	Thomas Knott		Tannenweg 22 k	Rostock	18059	Germany
-Cytocentrics BV	ECSEL/ENIAC DoA		NL	NL81379S916B01	Peter van Stiphout	stiphout@cytocentrics.nl	High tech Campus 9	Eindhoven	5656AE	Netherlands
-D4T Systems BV	ECSEL/ENIAC DoA		NL	NL821224530B01	Leon van de Logt	leon.van.de.logt@d4t-systems.com	Asterstraat 2 	Son	5691SM 	Netherlands
-Dainippon Screen Deutschland GmbH	ECSEL/ENIAC DoA		DE	DE119371681	Hans-Ulrich Rutz	u.ruetz@scrccn-dsd.de	MUndelheimer Weg 39	DUsseldorf	D-40472	Germany
-Design and Reuse SA	ECSEL/ENIAC DoA		FR	FR04413959008	Gabriele Saucier	gabriele.saucier@design-reuse.com	12 rue Ampère 	Grenoble	38000	France
-DEST sp.j	ECSEL/ENIAC DoA		PL	PL7290110053	Jeroslaw Dybowski	jd@dest.pl	Dybowski Tomczak sp.j.	Lodz	93-563	Poland
-DxO Labs SAS	ECSEL/ENIAC DoA		FR	ATU28752908	Steve Schaub	sschaub@dxo.com	3 rue Nationale	Boulogne Billancourt	92100	France
-DxO Silicon Group	ECSEL/ENIAC DoA		FR	FR45453189540	Jérome Ménière	sschaub@dxo.com	6 rue Jean Pierre Timbaud	Montigny le Bretonneaux	78180	France
-e2v Semiconductors 	ECSEL/ENIAC DoA		FR	FR24341470656	Laurent Monge	laurent.monge@e2v.com	Saint-Egrève		38521	France
-Effegi Elettronica Srl	ECSEL/ENIAC DoA		IT	IT05727680018	Piercarlo Taverna	piercarlo.taverna@effegiel.it	Via Pancalieri 37 bis	Vigone	10067 TO	Italy
-Enecsys Ltd	ECSEL/ENIAC DoA		GB	GB884445194	David White	david.white@enecsys.com	24 Hills Road	Cambridge	CB2 1JP	United Kingdom
-Entegris Cleaning Process SAS	ECSEL/ENIAC DoA		FR	FR55443186580	Oliver Prioux	olivier_prioux@entegris.com	395 rue Louis Lépine	Montpellier	34000	France
-EPFL - Ecole Polytechnique Fédérales de Lausanne	ECSEL/ENIAC DoA		CH	CH273865	Benoit Deveaud-Plédran	grants_office@epfl.ch	ELB 235 (Bâtiment ELB)	Lausanne	CH-1015	Switzerland
-Erasmus MC Rotterdam	ECSEL/ENIAC DoA		NL	NL807181997B01	Jaap Verweij	j.verweij@erasmusmc.nl	s-Gravendijkwal 230	Rotterdam	3015 CE	Netherlands
-EV Group E. Thallner GmbH	ECSEL/ENIAC DoA		AU	DE140207637	Paul Linder	p.lindner@evgroup.com	DI Erich Thallner Strasse 1	ST Florian AM INN	A-4782	Austria
-Eveon SAS	ECSEL/ENIAC DoA		FR	FR 6450967503	Vincent TEMPELAERE	vte@eveon.eu	"345, Rue Lavoisier"	Montbonnot Saint Martin	38330	France
-FEI Czech Republic sro	ECSEL/ENIAC DoA		CZ	CZ46971629	Jiri Ocadlik	jiri.ocadlik@fei.com	Vlastimila Pecha 12	Brno-Slatina	627 00	Czech Republic
-FEI Electron Optics BV	ECSEL/ENIAC DoA		NL	NL801626857B01	A.F. de Jong	Frank.de.Jong@fei.com	Building III 1-178	Eindhoven	5651 GG	Netherlands
-Ferfics Ltd	ECSEL/ENIAC DoA		IE	IE96751950	Eugene Heaney	eugene@ferfics.com	Hoffmann Park	Cork		Ireland
-FH Stralsund University of Applied Sciences	ECSEL/ENIAC DoA		DE	DE234311498	Arthur Deutschlander	Arthur.deutscglaender@fh-strasund.de	Zur Schewedenschanze 16	Strlsund	D-18436	Germany
-Focal 2.0 BV	ECSEL/ENIAC DoA		FR	N L85057 3245801	Robert Evers	Robert.evers@focal.nl	lnstitutenweg 25A	Enschede	7521 PH	Netherlands
-FOCUSSIA	ECSEL/ENIAC DoA		FR	FR22799318092	Francis    Romano	francis.romano@focussia.com	12 Avenue Guillaume Pellicier	St Mathieu de Treviers	34270	France
-Foundation for Research and Technology Hellas	ECSEL/ENIAC DoA		GR	EL090101655	Fotakis Costas	fotakis@iesl.forth.gr	N Plastira Str 100	Heraklion	70013	Greece
-Fronius International GmbH	ECSEL/ENIAC DoA		AU	ES-G20545729	Heinz Hackl	hackl.heinz@fronius.com	Günter-Fronius-Str. 1 	Thalheim/Wels	A4609	Austria
-Global TCAD Solutions GmbH	ECSEL/ENIAC DoA		DE	ATU66682468	Christian Kernstock	c.kernstock@globaltcad.com	Landhausgasse 4/la	Vienna	1010	Austria
-Guger Technologies OG	ECSEL/ENIAC DoA		AU	ATU48363202	Günter Edlinger	edlinger@gtec.at	Herbersteinstrasse 60	Graz	A-8020	Austria
-Heraeus Quarzglas GmbH & Co KG	ECSEL/ENIAC DoA		DE	DE812593070	Wolfgang Stang	wolfgang.stang@heraeus.com	Reinhard-Heraeus-Ring 29	Kleinostheim	63801	Germany
-HOP Ubiquitous SL	ECSEL/ENIAC DoA		ES	ESB73816589	Apolonia Valera Guirado	info@hopu.eu	Luis Bunuel 6	Ceuti	30562	Spain
-HQ-Dielectrics GmbH	ECSEL/ENIAC DoA		DE	DE268025856	Wilhelm Beckmann	wilhelm.beckmann@hq-dielectrics.eu	Postfach 49	Dornstadt	89156	Germany
-IBEC - Institut de Bioenginyeria de Catalunya	ECSEL/ENIAC DoA		ES	ES-G64045719	Josep Samitier	projects@ibecbarcelona.eu	c/ Baldiri Reixac 10-12	Barcelona	ES-08028	Spain
-IMS CHIPS - Institut fuer Mikroelektronik Stuttgart	ECSEL/ENIAC DoA		DE	DE147794161	Mathias lrmscher	irmscher@ims-chips.de	Allmandring 30a	Stuttgart	D-70569	Germany
-Insta Elektro GmbH	ECSEL/ENIAC DoA		DE	DE219699886	Alexander Burgbacher	a.burgbacher@insta.de	Hohe Steinert 10	Lüdenscheid	58509	Germany
-Institut National de l'Information Géographique et Forestière (IGN)	ECSEL/ENIAC DoA		FR	FR18180067019	Denis Priou	denis.priou@ensg.eu	73 avenue de Paris	Saint Mande Cedex	94165	France
-Ippon Innovation	ECSEL/ENIAC DoA		FR	FR18180067019	François Bergeret	francois.bergeret@ippon-innov.eu	4 rue Poisson	Toulouse 	31500	France
-IQE Europe Ltd	ECSEL/ENIAC DoA		GB	GB771290625	Phillip  Rasmussen	prasmussen@iqep.com	Pascal Close	 South Glamorgan	CF3 0LW Cardiff	United Kingdom
-Iquadrat Informatica SL	ECSEL/ENIAC DoA		ES	ESB61526646	David Boixade Vila	david@iquadrat.com	"Passeig Sant Joan 89, local 3"	Barcelona	ES-08009	Spain
-Irmato Industrial Solutions Eindhoven BV	ECSEL/ENIAC DoA		NL	NL821332776B01	Henny Van Doorne	hvandoorne@irmato.com	Amenstraat 17	Stramproy	6039 RA	Netherlands
-iRoC Technologies SA	ECSEL/ENIAC DoA		FR	FR47428924732	Dan Alexandrescu	dan@iroctech.com	WTC PO BOX 1510	Grenoble	38025	France
-Iszgro Diodes BV	ECSEL/ENIAC DoA		NL	NL8189.97.990.B.Ol	Theo Zoumpoulidis	t.zoumpoulidis@iszgro.com	Delftechpark 26	Delft	2628XH	Netherlands
-JENOPTIK Optical Systems GmbH	ECSEL/ENIAC DoA		DE	DE811846020	Oliver Falkenstorfer	oliver.falkenstoerfer@jenoptik.com	Goschwitzer SraBe 2'5	Jena	7745	Germany
-JOANNEUM RESEARCH Forschungsgesellschaft GmbH	ECSEL/ENIAC DoA		AU	ATU28781306	Wolfgang Pribyl	wolfgang.pribyl@joanneum.at	LeonhardstraBe 59	Graz	8010	Austria
-Johannes Kepler University Linz	ECSEL/ENIAC DoA		AU	ATU57515567	Andreas Springer	andreas.springer@jku.at	Altenbergerstrasse  69	Linz	4040	Austria
-JTAG Technologies BV	ECSEL/ENIAC DoA		NL	NL802035310B01	Peter van den Eijnden	peter@jtag.nl	Boschdijk 50	Eindhoven	5612 AN	Netherlands
-KMWE Systems Eindhoven BV	ECSEL/ENIAC DoA		NL	NL007563553B01	Edward Voncken	e.voncken@kmwe.com	Croy 11	Eindhoven	NL-5653 LC	Netherlands
-Lear Corporation GmbH	ECSEL/ENIAC DoA		DE	DE235710104	Reiner Thueroff	rthueroff@lear.com	Industriestr. 48	Kronach	96317	Germany
-LOX Technologies	ECSEL/ENIAC DoA		SK	SK2024064119	Eduard Burian	eduard.burian@gmail.com	Rusovska 7	Bratislava	85101	Slovakia
-Magillem Design Services SAS	ECSEL/ENIAC DoA		FR	FR56492681671	 Geday	contact@magillem.com	4 rue de la Pierre Levée	Paris	75011	France
-Materials Center Leoben 	ECSEL/ENIAC DoA		AU	ATU47691500	Alexandra  Purkarthofer	alexandra.purkarthofer@mcl.at	Forschung GmbH	Leoben	8700	Austria
-Medimetrics Personalized Drug Delivery BV	ECSEL/ENIAC DoA		NL	NL850720795B01	Jeffrey Shimizu	jeff.shimizu@medimetrics.com	High Tech Campus 10	Eindhoven	5656	Netherlands
-Medtronic Bakken Research BV 	ECSEL/ENIAC DoA		NL	NL8506.lJ0.340.8lll	Daniel Schobben	sjaak.deekers@medtronic.com	High Tech Campus 41-p-038	Eindhoven	565AE	Netherlands
-Micronit Microfluidics BV	ECSEL/ENIAC DoA		NL	NL809482952B01	Ronny van 't Oever	ronny.oever@micronit.com	Colosseum 15	Enschede	7521 PV	Netherlands
-Minimax GmbH & Co KG	ECSEL/ENIAC DoA		DE	DE813746399	Jan Witte	wittej@minimax.de	Industriestrasse 10/12	Bad Oldesloe	D-23840	Germany
-Mogema BV	ECSEL/ENIAC DoA		NL	NL005850897B42	Peter Zuidgeest	invoice@mogema.nl	Industrieweg 9	GS 't Harde	8084	Netherlands
-MTA Atomki - Institute for Nuclear Research	ECSEL/ENIAC DoA		HU	NL817455383B01	Fülöp Zsolt	fulop.zsolt@atomki.mta.hu	Bem tér 18/c	Debrecen	4026	Hungary
-Multi Channel Systems GmbH	ECSEL/ENIAC DoA		DE	HU15300344	Karl-Heinz Boven	boven@multichannelsystems.com	Aspenhaustrasse 21	Reutlingen	72770	Germany
-MunEDA GmbH	ECSEL/ENIAC DoA		DE	DE812498960	Harald Neubauer	harald.neubauer@muneda.com	Stefan-George-Ring 29	Munich	81929	Germany
-Murata Electronics Oy	ECSEL/ENIAC DoA		FI	DE219741262	Heikki Kuisma	heikki.kuisma@murata.com	Myllynkivenkuja 6	Vantaa	1620	Finland
-Nanium SA	ECSEL/ENIAC DoA		PT	PT503690287	Armando Tavares	finance@nanium.com	Avenida 1° de Maio 801		4485-629 Vila do Conde	Portugal
-Nanomotion Ltd	ECSEL/ENIAC DoA		IL	511708414	Shai Meltzer	shai.meltzer@nanomotion.com	Mordot Hacarmel Industrial Park	Yoknram	20692	Israel
-neoplas control GmbH	ECSEL/ENIAC DoA		DE	DE246103500	Henrik Zimmermann@neoplas-control.de		Walther-Rathenau-Str. 49a	Greifswald	17489	Germany
-Neways Technologies BV	ECSEL/ENIAC DoA		NL	NL806968242B01	Adrie van Bragt	adrie.van.bragt@neways.nl	Science Park Eindhoven 5004	Son	5692 EA	Netherlands
-Niko NV	ECSEL/ENIAC DoA		BE	BE0405045670	Jurgen Denul	jde@niko.be	Industriepark West 40	Sint-Niklaas	B-9100	Belgium
-NLR - Nationaal Lucht- en Ruimtevaart Laboratorium	ECSEL/ENIAC DoA		NL	NL002760551B01	L.W. Esselman	marcel.pielstroom@nlr.nl	Anthony Fokkerweg 2	Amsterdam	NL-1059 CM	Netherlands
-NOKIA 	ECSEL/ENIAC DoA		AG	DE147799498	Andreas Leven	aodreas.leven@alcatel-lucent.com	Lorenzstr. 10	Stuttgart	70435	Germany
-Oberthur Technologies	ECSEL/ENIAC DoA		FR	FR38340709534	Marc Bertin	m.bertin@oberthur.com	50 Quai Michelet	Levallois-Perret Cedex	92535	France
-Okmetic Oyj	ECSEL/ENIAC DoA		FI	FI05968854	Markku Tilli	markku.tilli@okmetic.com	Piitie 2	Vantaa		Finland
-OSRAM GmbH	ECSEL/ENIAC DoA		DE	DE811148275	Klaus Ziemssen	k.ziemssen@osram.com	AC 3 3	Munich	80807	Germany
-OSYPKA AG 	ECSEL/ENIAC DoA		FR	DE177655505	Achim Kitschmann	a.kitschmann@osypka.de	Earl-H-Wood-Strasse 1	Rheinfelden	D-79618	Germany
-Oxford Instruments Plasma Technology Ltd	ECSEL/ENIAC DoA		GB	GB596117025	Frazer Anderson 		"North End, Yatton"	Bristol	 BS49 4AP	United Kingdom
-PacTech GmbH	ECSEL/ENIAC DoA		DE	DE175046928	Heinrich Lüdeke	luedeke@pactech.de	Am Schlangenhorst 15-17	Nauen	14641	Germany
-Phoenix BV	ECSEL/ENIAC DoA		NL	NL811567655B01	Markus Twan Korthorst	twan.korthorst@phoenixbv.com	Hengelosestraat 705	Enschede	7521 PA	Netherlands
-Physikalisch-Technische Bundesanstalt	ECSEL/ENIAC DoA		DE	DE811240952	Manfred Gahrens	Manfred.Gahrens@ptb.de	P.O. Box 33 45	Braunschweig	38023	Germany
-Plansee SE	ECSEL/ENIAC DoA		AU	ATU32990305	Herman Walser		Metallwerk-Plansee-Str. 71	Reutte	A-6600	Austria
-Presto Engineering Europe	ECSEL/ENIAC DoA		FR	FR17512878125	Michel Villemain	michel.villemain@presto-eng.com	60 rue des Berges	Grenoble	38000	France
-Prodrive Technologies BV	ECSEL/ENIAC DoA		NL	NL807560327B01	Hans Verhagen	contact@prodrive-technologies.com	PO Box 28030	JA Eindhoven	5602	Netherlands
-Quantemol Ltd	ECSEL/ENIAC DoA		GB	GB858660090	Daniel Brown	dan@quantemol.com	Department of Physics and Astronomy	London	WC1E 6BT	United Kingdom
-R-DAS sro	ECSEL/ENIAC DoA		SK	SK2022896876	Libor Majer	libor.majer@r-das.sk	1. maja 1014/12	Zilina	SK-01010	Slovakia
-Reden BV	ECSEL/ENIAC DoA		NL	NL809742524B01	Marco Ezendam	m.ezendam@reden.nl	Twekkelerweg 263	Hengelo (Ov)	7553 LZ	Netherlands
-RSscan International NV	ECSEL/ENIAC DoA		BE	BE-0462.653.574	Friso Hagman	friso@rsscan.com	DeWeven 7	Paal	3583	Belgium
-Salland Engineering Europe BV	ECSEL/ENIAC DoA		NL	NL807408049B01	Peter  Crabbe 	peter.crabbe@salland.com	Schrevenweg 12	Zwolle	8024 HA	Netherlands
-Schneider Electric Industries SAS	ECSEL/ENIAC DoA		FR	FR04951503439	Radoslava Mitova	pascal.brosset@schneider-electric.com	37 Quai Paul Louis Merlin	Grenoble Cedex 9	38000	France
-Science and Technology BV	ECSEL/ENIAC DoA		NL	8173.52.363.8.01	Eric Zoutman	zoutman@stcorp.nl	OlofPalmestraat 14	Delft	2616 LR	Netherlands
-SEGULA Technologies Nederland BV	ECSEL/ENIAC DoA		NL	NL822203261B01	Patrick Smulders	Patrick.smulders@segulagrp.com	De Witbogt 2	Eindhoven	5652 AG	Netherlands
-SERMA Technologies SA	ECSEL/ENIAC DoA		FR	FR65380712828	Laurent Callet	l.callet@serma.com	BHT - Bâtiment 52	F-38400 Grenoble Cedex	CS20050	France
-SGS Institut Fresenius GmbH	ECSEL/ENIAC DoA		DE	DE811165451	Gerald Dallmann	gerald.dallmann@sgs.com	Königsbrücker Landstrasse 161	Dresden	D-01109	Germany
-Silex Microsystems AB	ECSEL/ENIAC DoA		SE	SE556591538501	Tomas Bauer	tomas.bauer@silex.se	PO Box 595 (bruttovagen 1)	Jarfalla	17526	Sweden
-Silvaco Europe Ltd	ECSEL/ENIAC DoA		GB	GB676653393	Diane Barnett	diane.barnett@silvaco.com	Silvaco Technology Centre	Cambridgeshire	PE27 5JL	United Kingdom
-Singulus Techologies AG	ECSEL/ENIAC DoA		DE	DE 812306520	Berthold Ocker	Berthold.Ocker@singulus.de	Hanauer Landstrasse 103	Kahl.	D-63796	Germany
-Slovak University of Technology in Bratislava	ECSEL/ENIAC DoA		SK	SK2020845222	Robert Redhammer	rector@stuba.sk	Vazovova 5	Bratislava	SK-812 43	Slovakia
-SoftKinetic Sensors SA	ECSEL/ENIAC DoA		FR	BE 0811341454	Michel Tombroff	mto@softkinetic.com	"Pleinlaan 11,"	Brussels	1050	Belgium
-Solarprint Ltd	ECSEL/ENIAC DoA		IE	IE9501102E	Liz Murphy	lmurphy@solarprint.ie	Silverstone House	Dublin 18		Ireland
-SPTS Technologies SAS	ECSEL/ENIAC DoA		GB	GB945779267	Ian Hughes	ian.hughes@orbotech	Ringland Way	Newport		United Kingdom
-SPTS Technologies SAS	ECSEL/ENIAC DoA		FR	FR6051768028600021	Perrin Patrice	patrice.perrin@orbotech.com	445 rue Lavoisier 	Montbonnot Saint Martin	388330	France
-Stiplastics SAS	ECSEL/ENIAC DoA		FR	FR32333321818	Jérôme Empereur	jerome.empereur@stiplastics.com	53 Route du Port	Beauvoir-en-Royans	38160	France
-sureCore Ltd	ECSEL/ENIAC DoA		GB	117337132	Pauly Wells	paul.wells@sure-core.com	SHEFFIELD TECHNOLOGY PARK	Shefield S1 2NS		United Kingdom
-Synopsys Switzerland LLC	ECSEL/ENIAC DoA		CH	CHE112236596MWST	Charles Watchorn 	watchorn@synopsys.com	Thurgaurestrasse 40	Zurich	CH-8050	Switzerland
-Temento Systems SAS	ECSEL/ENIAC DoA		FR	FR27402414205	Patrice Deroux-Dauphin	patrice.deroux-dauphin@temento.com	9 rue du 19 mars 1962	Echirolles	38130	France
-TIEMPO SAS	ECSEL/ENIAC DoA		FR	FR05499286011	Serge Maginot	serge.maginot@tiempo-ic.com	Bat. Viséo - Inovallée	Montbonnot Saint Martin	38330	France
-Tokyo Electron Europe Ltd 	ECSEL/ENIAC DoA		FR	FR 78481860229	Chris Kelly	chris.kelly@europe. tel com	"Les Jardins d'Entreprise, Batiment Alicante"	Meylan	38240	France
-Toppan Photomasks France SAS	ECSEL/ENIAC DoA		FR	FR17323514240	Adrian Phillips	adrian.phillips@photomask.com	Rousset Parc Club	Rousset	13106	France
-Toppan Photomasks Germany GmbH	ECSEL/ENIAC DoA		DE	DE813569488	Bettina Robel	ccountspayable.dresden@photomask.com	Raehnitzer Allee 9	Dresden	D-01109	Germany
-TP Vision Netherlands BV	ECSEL/ENIAC DoA		NL	NL850721854B01	Arne Duwaer	a.duwaer@hezelburcht.com	"High Tech Campus 5 (3,051)"	Eindhoven	5656AE	Netherlands
-Tronics Microsystems SA	ECSEL/ENIAC DoA		FR	FR76412152019	Stéphane Renard	stephane.renard@tronicsgroup.com	98 rue du Pré de l'Horme	Crolles	38926	France
-TU Berlin	ECSEL/ENIAC DoA		DE	DE811231089	Teresa Book	teresa.book@tu-berlin.de	Strasse des 17 Juni 135	Berlin	10623	Germany
-TU Wien	ECSEL/ENIAC DoA		AU	ATU37675002	Gottfried Magerl		Gusshausstr. 25/354	Vienna	1040	Austria
-TWT GmbH 	ECSEL/ENIAC DoA		DE	DE147841145	Frank Beutenmueller	frank.beutenmueller@twt-gmbh.de	Ernsthaldenstrasse 17	Stuttgart	70565	Germany
-United Technologies Research Center Ireland Ltd	ECSEL/ENIAC DoA		IE	IE9709267V	Stevo Mijanovic	mijanos1@utrc.utc.com	4th Floor Penrose Business Center	Cork	Co.	Ireland
-Universität der Bundeswehr München	ECSEL/ENIAC DoA		DE	DE 811246937	Linus Maurer	linus.maurer@unibw.de	Werner-Heisenberg-Weg 39	Neubiberg	85577	Germany
-University of Applied Sciences Zwickau	ECSEL/ENIAC DoA		DE	DE141383586	Chancellor Head of Admin	kanzler@fh-zwickau.de	Dr. Friedrichs-Ring 2a	Zwickau	DE-08056	Germany
-University of Catania	ECSEL/ENIAC DoA		ES	IT02772010878	Giacomo Pignataro	rettorato@unict.it	Piazza Università 2	Catania	95131	Italy
-"University of Debrecen, Medical And Health Science Centre, Institute of Nuclear Medicine"	ECSEL/ENIAC DoA		HU	HU15329750	Janos Szöllosi	med.unideb.hu@dote.hu	Nagyerdei körut 98	Debrecen	4032	Hungary
-University of Granada	ECSEL/ENIAC DoA		ES	ESQ1818002F	Francisco Gamiz	fgamiz@ugr.es	Cuesta del Hospicio sin	Granada	18071	Spain
-University of Innsbruck	ECSEL/ENIAC DoA		AU	ATU57495437	Ruth Breu	ruth.breu@uibk.ac.at	Institute of Computer Science	Innsbruck	6020	Austria
-University of Las Palmas de Gran Canaria for Applied Microelectronics (ULPGC-IUMA)	ECSEL/ENIAC DoA		ES	Q3518001G	Pedro Pérez-Carballo	director@iuma.ulpgc.es	Uni. of LPGC - Inst. For Applied Microelectronics	Las Palmas de Gran Canaria	35017	Spain
-University of Leeds	ECSEL/ENIAC DoA		GB	GB613451470	Martin  Hamilton	m.hamilton@leeds.ac.uk	Woodhouse Lane	Leeds	LS2 9JT	United Kingdom
-University of Pannonia	ECSEL/ENIAC DoA		HU	HU15308816	Maria  Zsiboracs Petro	rektor@uni-pannon.hu		Veszprem	H8200	Hungary
-University of Twente	ECSEL/ENIAC DoA		NL	NL002946725B01	B.J. Pals	b.j.pals@utwente.nl	Accounts Payable Department	Enschede	7500 AE	Netherlands
-Verhaert New Products & Services NV	ECSEL/ENIAC DoA		BE	BE0439039420	Koen Verhaert	koen.verhaert@verhaert.com	Hogenakkerhoekstraat 21	Kruibeke	9150	Belgium
-VSL BV	ECSEL/ENIAC DoA		NL	NL 800189620801	Nellie W. Schipper	nschipper@vsl.nl	Thijsseweg 11	DELFT	2629 JA	Netherlands
-Warsaw Univeristy of Technology	ECSEL/ENIAC DoA		PL	PL5250005834	Rajmund Bacewicz	prorektor.nauka@rekt.pw.edu.pl	Plac Politechniki 1	Warsaw	PL-00661	Poland
-Xenics NV	ECSEL/ENIAC DoA		BE	BE0473044848	Bob Grietens	ceo@xenics.com	Ambachtenlaan 44	Leuven	B-3001	Belgium
-Centre Hospitalier Universitaire Grenoble Alpes	PENTA DoA		FR	FR34263800302	Sophie Collot	scollot@chu-grenoble.fr	boulevard de Ia Chantourne BP 217 La Tranche	Grenoble	38043	France
-FLAVIA IT Management GmbH	PENTA DoA		DE	DE214987642	Jonas Kilian	jonas.kilian@flavia-it.de	Wilhelmshoher Allee 268	Kassel	34131	Germany
-IBM Nederland BV	PENTA DoA		NL	NL001475253B01	Gabriella Massaro	gtantsnl@nl.ibm.com	"Johan Huizingalaan 765,"		1066VH	Netherlands
-Kiel University 	PENTA DoA		DE	DE811317279	Alexandra Messung	ahessling@uv.uni-kiel.de	Christian-Albrechts-Platz 4	Kiel	24118	Germany
-Ulm University	PENTA DoA		DE	DE173703203	Dieter Kaufmann	kanzler@uni-ulm.de	Helmholtzstrasse 16	Ulm	89081	Germany
-3D PLUS	Free-rider		FR	FR77402523088						
-77 Elektronika Müszeripari KFT	Free-rider		HU	Please indicate a.s.a.p						
-ÅAC Microtec	Free-rider		SE							
-Advanced Laser Separation International NV	Free-rider		NL	NL809436644B01						
-AGH University of Science and Technology	Free-rider		PL	PL6750001923						
-AISMALIBAR	Free-rider		ES							
-aixACCT Systems GmbH	Free-rider		DE							
-Aldebaran Robotics	Free-rider		FR							
-AllGreenVehicles	Free-rider		NL							
-ALMA Consulting Group	Free-rider		FR							
-Altera Corporation	Free-rider		GB							
-Altis Semiconductor	Free-rider		FR							
-Amepox Microelectronics	Free-rider		PL							
-Anvosys GmbH	Free-rider		DE	EL090049627						
-"Applied Micro Electronics ""AME"" BV"	Free-rider		NL	EL090049627						
-AP-Technologies	Free-rider		DE	FR32319632790						
-ARM Ltd	Free-rider		GB							
-ART Srl	Free-rider		IT							
-Artesyn Austria GmbH&CoKG	Free-rider		AU							
-Atos Origin sae	Free-rider		ES							
-ATOTECH DEUTSCHLAND GMBH	Free-rider		DE							
-Audit Diagnostics	Free-rider		IE							
-Austrian Center of Competence in Mechatronics GmbH	Free-rider		AU							
-Avisi BV	Free-rider		NL							
-Axiom	Free-rider		NL							
-AZCOM Technology SRL	Free-rider		IT							
-AZZURRO Semiconductors AG	Free-rider		DE							
-BARCO NV	Free-rider		NL							
-Bergh Hybrid Circuits BV	Free-rider		NL	DE135830560						
-BEST electronique	Free-rider		FR							
-Biometric Technology Solutions Limited	Free-rider		IE							
-Bitron SpA	Free-rider		IT							
-BJB GmbH & CoKG	Free-rider		DE							
-BONN Hungary Electronics Ltd (BHE)	Free-rider		HU							
-British Gas Trading Ltd	Free-rider		GB							
-Bruco	Free-rider		NL							
-Budapest University	Free-rider		HU							
-CADENCE	Free-rider		DE							
-CapnaDSP Ltd	Free-rider		GB							
-Cascade MicroTech	Free-rider		DE							
-Cavendish Kinetics BV	Free-rider		NL							
-CENTRE TECNOLOGIC DE TELECOMUNICACIONS DE CATALUNYA	Free-rider		ES							
-Centro Ricerche Fiat SCpA	Free-rider		IT							
-Chalmers Tekniska Högskola AB	Free-rider		SE							
-Charité-Universitätsmedizin Berlin	Free-rider		DE							
-CIDETE INGENIEROS SL	Free-rider		ES							
-CIRTEM	Free-rider		FR							
-CIT Recycling Development AB	Free-rider		SE							
-ComHeat Microwave AB	Free-rider		SE							
-COMPAAN DESIGN BV	Free-rider		NL							
-Compel Electronics SpA	Free-rider		IT							
-CONNECT GROUP NV	Free-rider		BE							
-Conpart AS	Free-rider		NO							
-Continental Corporation	Free-rider		DE							
-Corscience GmbH & Co KG	Free-rider		DE							
-CTR Carinthian Tech Research AG	Free-rider		AU							
-CycloMedia Technology BV	Free-rider		NL							
-Czech Technical University in Prague	Free-rider		CZ							
-Dai Nippon Printing	Free-rider		IT							
-DelfMEMS	Free-rider		FR							
-DOCEA Power	Free-rider		FR							
-Dolomite Microfluidics (member of Blacktrace Group)	Free-rider		GB							
-Dolphin	Free-rider		FR							
-Dream Chip Technologies GmbH 	Free-rider		DE							
-E3/DC GmbH	Free-rider		DE							
-Easy Led Oy	Free-rider		FI							
-Eberhard Karls Universität Tübingen	Free-rider		DE							
-EBM-Papst	Free-rider		DE							
-Ecole des Mines de Saint Etienne	Free-rider		FR							
-EDF R&D	Free-rider		FR							
-Edwards Ltd	Free-rider		GB							
-eesy-id GmbH	Free-rider		DE							
-EGSTON System Electronics Eggenburg GmbH	Free-rider		AU							
-Elastic Clocks SL	Free-rider		ES							
-ElBil Norge AS	Free-rider		NO							
-Elec-Con technology GmbH	Free-rider		DE							
-Emerson	Free-rider		DE	DE140207637						
-EMOSS BV	Free-rider		NL	DE812153738						
-EnablingMNT	Free-rider		NL							
-ENCAPSULIX	Free-rider		FR							
-ENEL DISTRIBUZIONE SPA	Free-rider		IT							
-EPCOS	Free-rider		DE							
-EPIGAN NV	Free-rider		BE							
-Epyon	Free-rider		NL							
-EQUALID SOLUTIONS SL	Free-rider		ES							
-Ericsson AB	Free-rider		SE							
-ESIEE Engineering	Free-rider		FR							
-eSilicon	Free-rider		RO							
-E-T-A GmbH	Free-rider		DE							
-ETC Epitaxial technology Center srl	Free-rider		IT							
-European Batteries Oy	Free-rider		FI							
-European Space Agency	Free-rider		FR							
-EUTEMA	Free-rider		DE	NL815151524B01						
-Fachhochschule Kärnten	Free-rider		AU							
-Fachhochschule Wiener Neustadt	Free-rider		AU							
-FCI	Free-rider		FR							
-Feinmetall GmbH	Free-rider		DE							
-FH OÖ Forschungs & Entwicklungs GmbH 	Free-rider		AU							
-Fico BV	Free-rider		NL							
-Fluigent SA	Free-rider		FR							
-FMC-TECH LTD	Free-rider		IE							
-Fogale nanotech	Free-rider		FR							
-Foundation of Research and Technology Hellas	Free-rider		GR							
-Fries Research & Technology GmbH	Free-rider		DE	ES-G20588588						
-Fundacja Rozwoju Kardiochirurgii FRK	Free-rider		PL							
-Galway Tool and Mould Ltd	Free-rider		IE							
-GE Vingmed Ultrasound	Free-rider		NO							
-Global Nanotechnologies SA	Free-rider		GR							
-Green Power Technologies SL	Free-rider		ES							
-Hellenic Aerospace Industry SA	Free-rider		GR							
-Helvar Oy Ab	Free-rider		FI							
-HERA SpA	Free-rider		IT							
-HÖGANÄS AB (Publ)	Free-rider		SE							
-ICT Integrated Circuit Testing Gesellschaft für Halbleiterprüftechnik mbH	Free-rider		DE							
-INACCESS NETWORKS	Free-rider		GR							
-INESC Instituto de Engenharia de Sistemas e Computadores	Free-rider		PT							
-InfraTec GmbH Infrarotsensorik und Messtechnik	Free-rider		DE							
-INNOPHYSICS BV	Free-rider		NL							
-InnoTech Solar	Free-rider		NO							
-INOV INESC INOVACAO Instituto de Novas Tecnologia	Free-rider		PT							
-InReCon AG	Free-rider		DE							
-I-NRG BV	Free-rider		NL							
-INRIA	Free-rider		FR							
-Insa-lyon	Free-rider		FR							
-Inst of High Pressure Physics UNIPRESS	Free-rider		PL							
-Institut de Bioenginyeria de Catalunya	Free-rider		ES							
-Institut d'Electronique Fondamentale	Free-rider		FR							
-Institut für Mikrotechnik Mainz GmbH	Free-rider		DE							
-Institute of Communication and Computer Systems	Free-rider		GR							
-Institute of High Pressure Physics of the Polish Academy of Sciences	Free-rider		PL							
-"Institute of Scientific Instruments of the ASCR, vvi"	Free-rider		CZ							
-"Institute of Theoretical Electrical Engineering, Leibniz Universitaet Hannover"	Free-rider		DE							
-Instituto Aragones	Free-rider		ES							
-Instituto de Telecomunicacoes	Free-rider		PT							
-INTERDISCIPLINARY INSTITUTE FOR BROADBAND TECHNOLOGY	Free-rider		BE							
-Interuniversitair Micro-Electronica Centrum vzw	Free-rider		BE							
-INTRACOM SA TELECOM SOLUTIONS	Free-rider		GR							
-ISTITUTO PER LA MICROELETTRONICA E MICROSISTEMI	Free-rider		IT							
-Istituto PM Srl	Free-rider		IT							
-iSyst Intelligente Systeme GmbH	Free-rider		DE							
-Janssen Infectious Diseases _ Diagnotstics BVBA	Free-rider		BE							
-JLT	Free-rider		SE							
-KEMET Electronics Italia Srl	Free-rider		IT							
-Kompetenzzentrum Automobil- und Industrieelektronik GmbH	Free-rider		AU							
-Kontron	Free-rider		DE							
-Laboratoire de Microelectronique et de Physique de Semiconducteurs 	Free-rider		FR							
-LCPO	Free-rider		FR							
-LEGRAND	Free-rider		FR							
-Levitech BV	Free-rider		NL							
-Lexas Research	Free-rider		IE							
-Libelium	Free-rider		ES							
-Lifecare	Free-rider		NO							
-LPE SpA	Free-rider		IT							
-M+W Germany GmbH	Free-rider		DE							
-M+W Products GmbH	Free-rider		DE							
-Machinefabriek Otto Schouten BV	Free-rider		NL							
-MAGWEL NV	Free-rider		BE							
-Marsica Innovation and Technology Srl	Free-rider		IT							
-MASER Engineering BV	Free-rider		NL							
-Massive nv	Free-rider		BE							
-Material Recycling and Sustainability (MARAS) Drir Van Schaik	Free-rider		NL							
-Materials Innovation Institute	Free-rider		NL							
-Mat-Tech BV	Free-rider		NL							
-Max-Planck-Institut für Eisenforschung	Free-rider		DE							
-Mediso	Free-rider		HU							
-Medizinische Universitaet Graz	Free-rider		AU							
-Melexis NV	Free-rider		BE							
-Mellanox Technologies LTD - MLNX	Free-rider		IL							
-MENTOR Graphics	Free-rider		FR							
-Merkum	Free-rider		ES							
-METAIO GmbH	Free-rider		DE							
-METATRON SRL	Free-rider		IT							
-Metatronics BV	Free-rider		NL							
-Metryx Ltd	Free-rider		GB							
-METSO AUTOMATION OY	Free-rider		FI							
-Micro Turbine Technology BV	Free-rider		NL							
-microfluidic ChipShop GmbH	Free-rider		DE							
-microfluidic ChipShop GmbH	Free-rider		DE							
-MicroGaN GmbH	Free-rider		DE							
-MicroOled	Free-rider		FR							
-Micropelt GmbH	Free-rider		DE							
-MICROSHARP CORPORATION LIMITED	Free-rider		GB							
-Microspire	Free-rider		FR							
-Microwave Characterization Center SAS	Free-rider		FR							
-Midsens Oy	Free-rider		FI							
-Montanuniversität Leoben	Free-rider		AU							
-MR:COMP GmbH	Free-rider		DE							
-Multicert	Free-rider		PT							
-Nanda Technologies GmbH	Free-rider		DE							
-NanoXplore	Free-rider		FR							
-National & Kapodistrian University of Athens	Free-rider		GR							
-NATIONAL UNIVERSITY OF IRELAND MAYNOOTH	Free-rider		IE							
-Nmb-Minebea GmbH	Free-rider		DE							
-NN Industry	Free-rider		IE							
-NOVASiC SA	Free-rider		FR							
-NPL Management Limited	Free-rider		GB							
-Nxtech AS	Free-rider		NO							
-Optisort AB	Free-rider		SE							
-Optronic	Free-rider		SE							
-Österreichisches Forschungs- und Prüfzentrum Arsenal GmbH	Free-rider		AU							
-Panco GmbH	Free-rider		DE							
-PDF solutions	Free-rider		FR							
-PhoeniX Software BV	Free-rider		NL							
-Plan Optik AG	Free-rider		DE							
-Plextek Limited	Free-rider		GB							
-Plugwise BV	Free-rider		NL							
-PMB	Free-rider		FR							
-Polaris Vision Systems EU Ltd	Free-rider		GB							
-Polewall AS	Free-rider		NO							
-POLI MODEL SRL	Free-rider		IT							
-Polight	Free-rider		NO							
-POLYDIAGNOST GmbH	Free-rider		DE							
-Prisma Electronics SA	Free-rider		GR							
-Probayes	Free-rider		FR							
-Prodrive	Free-rider		GB							
-Proton World International NV	Free-rider		BE							
-PULSE Finland OY	Free-rider		FI							
-PVA TePla AG	Free-rider		DE							
-PVA TePla Analytical Systems GmbH	Free-rider		DE							
-Q-Free ASA	Free-rider		NO							
-QinetiQ	Free-rider		GB							
-Quantemol Ltd	Free-rider		GB							
-Radboud University Nijmegen	Free-rider		NL							
-Replisaurus Technologies	Free-rider		SE							
-Riber SA	Free-rider		FR							
-ROBOX	Free-rider		IT							
-Rockwool France	Free-rider		FR							
-Rudolph Technologies Europe GmbH	Free-rider		DE							
-Sabanci University	Free-rider		TR							
-Sagem Défense Sécurité SA	Free-rider		FR							
-SagivTech Ltd	Free-rider		IL							
-SARAS technology Ltd	Free-rider		GB							
-Schmid	Free-rider		DE							
-Science and Technology Facilities Council	Free-rider		GB							
-Secure-IC	Free-rider		FR							
-SEMCO ENGINEERING SA	Free-rider		FR							
-Semilev	Free-rider		DE							
-Semmelweiss University	Free-rider		HU							
-Sensonor Technologies AS	Free-rider		NO							
-Seuffer GmbH & Co KG	Free-rider		DE							
-Sick AG	Free-rider		DE							
-SICO Technology GmbH	Free-rider		AU							
-SiCrystal AG	Free-rider		DE							
-Sidel Blowing and Services	Free-rider		FR							
-SMA Solar Technology AG	Free-rider		DE							
-Smart High Tech AB	Free-rider		SE							
-SOLARTEC AG	Free-rider		DE							
-Solcalor BV	Free-rider		NL							
-SolMateS BV	Free-rider		NL							
-Sonitor Technologies AS	Free-rider		NO							
-SP	Free-rider		SE							
-SPEA SpA	Free-rider		IT							
-SPINVERSE OY	Free-rider		FI							
-Stena Technoworld AB	Free-rider		SE							
-ST-Ericsson (GRENOBLE) SAS	Free-rider		FR							
-Stichting IMEC Nederland	Free-rider		NL							
-Stichting Kempenhaeghe	Free-rider		NL							
-Stokes Bio Ltd	Free-rider		IE							
-Straatum	Free-rider		IE							
-SUPELEC	Free-rider		FR							
-SYNCOM	Free-rider		NL							
-Team Nanotec GmbH	Free-rider		DE							
-TECHNISCHE UNIVERSITAET CHEMNITZ	Free-rider		DE							
-Technische Universität Darmstadt	Free-rider		DE							
-Technische Universität of Wien - Institute of Telecommunications	Free-rider		AU							
-Technische Universität of Wien - Other Departments	Free-rider		AU							
-Technofittings	Free-rider		IT							
-Technoprobe	Free-rider		IT							
-Tecnologías Servicios Telemáticos y Sistemas SA	Free-rider		ES							
-TEKLATECH	Free-rider		DK							
-TELEFUNKEN SEMICONDUCTORS GMBH & CO KG	Free-rider		DE							
-TeleMedic Systems Limited	Free-rider		GB							
-Teletel	Free-rider		GR							
-TELIT AUTOMOTIVE SOLUTIONS SARL	Free-rider		FR							
-"TESLA, akciova spolecnost"	Free-rider		CZ							
-"The Chancellor, Masters and Scholars of the University of Cambridge"	Free-rider		GB							
-The Magstim Company Ltd	Free-rider		GB							
-The University of Glasgow	Free-rider		GB							
-The University of Newcastle upon Tyne	Free-rider		GB							
-The University of Sheffield	Free-rider		GB							
-There Corporation Ltd	Free-rider		FI							
-Theta Microelectronics SA	Free-rider		GR							
-Think Global AS	Free-rider		NO							
-TIEMPO SAS	Free-rider		FR							
-TNT-Elektronik AB	Free-rider		SE							
-Tronico SAS	Free-rider		FR							
-T-Systems Enterprise Services GmbH	Free-rider		DE							
-TTY-säätiö	Free-rider		FI							
-Tubitak	Free-rider		TR							
-ULIS SAS	Free-rider		FR							
-Umicore	Free-rider		BE							
-UNINOVA - Instituto de Desenvolvimento de Novas Tecnologias	Free-rider		PT							
-Universidad Complutense de Madrid	Free-rider		ES							
-Universidad de Sevilla	Free-rider		ES							
-Universidade do Minho	Free-rider		PT							
-UNIVERSITA CATTOLICA DEL SACRO CUORE	Free-rider		IT							
-Università degli Studi di Firenze	Free-rider		IT							
-Università degli Studi di Milano	Free-rider		IT							
-Università degli Studi di Pavia	Free-rider		IT							
-Università degli Studi Roma Tre	Free-rider		IT							
-Universitaet Karlsruhe	Free-rider		DE							
-UNIVERSITAIR MEDISCH CENTRUM UTRECHT	Free-rider		NL							
-Universität München	Free-rider		DE							
-UNIVERSITE JOSEPH FOURIER GRENOBLE 1	Free-rider		FR							
-University College Cork	Free-rider		IE							
-University College London	Free-rider		GB							
-University of Augsburg	Free-rider		DE							
-UNIVERSITY OF BRISTOL	Free-rider		GB							
-University of Catania	Free-rider		IT							
-University of Edinburgh	Free-rider		GB							
-University of Malta	Free-rider		MT							
-University of Padova	Free-rider		IT							
-University of Pavia	Free-rider		IT							
-University of Salerno	Free-rider		IT							
-University of Sussex 	Free-rider		GB							
-University POLITEHNICA of Bucharest	Free-rider		RO							
-VALEO	Free-rider		FR							
-Valopaa Oy	Free-rider		FI							
-VALTION TEKNILLINEN TUTKIMUSKESKUS	Free-rider		FI							
-VIA Electronic GmbH	Free-rider		DE							
-VISEO	Free-rider		FR							
-Vistec Electron Beam GmbH	Free-rider		DE							
-VMW Solutions Ltd	Free-rider		GB							
-Volvo	Free-rider		SE							
-VTI Technologies Oy	Free-rider		FI							
-Wacker Chemie AG	Free-rider		DE							
-WESZTA-T Industrial and Trade Ltd	Free-rider		HU							
-Whirlpool	Free-rider		SE							
-Wittenburg BV	Free-rider		NL							
-Xenia Progetti srl	Free-rider		IT							
-Xycarb Ceramics BV	Free-rider		NL							
-Zentrum Für Elektronenmikroskopie Graz 	Free-rider		AU							
-ZF Friedrichshafen AG	Free-rider		DE							
-Zimmertech AS	Free-rider		NO							
-ZMDI	Free-rider		DE							
-3E NV	IA Member		BE							
-AALBORG UNIVERSITET	IA Member		DK							
-ACADEMISCH ZIEKENHUIS LEIDEN	IA Member		NL							
-ACCIONA INFRAESTRUCTURAS SA	IA Member		ES							
-ADAMA INNOVATIONS LTD	IA Member		IE							
-ADIRA - Metal Forming Solutions SA	IA Member		PT							
-ADVANCED AUTOMOTIVE ANTENNAS SL	IA Member		ES							
-AITEK SOCIETA' PER AZIONI	IA Member		IT	DE123597183						
-AITIA INTERNATIONAL INFORMATIKAI ZARTKORUEN MUKODO RT	IA Member		HU							
-ALLIANCE POUR LES TECHNOLOGIES DE L'INFORMATIQUE	IA Member		FR							
-Alpwise	IA Member		FR							
-ALTE Visetec Oy	IA Member		FI							
-ALTEN SVERIGE AB	IA Member		SE							
-ANDRITZ AG	IA Member		AU	FR90803133933						
-ANSALDO STS SpA	IA Member		IT	511166373						
-ANTERYON BV	IA Member		NL	IT07708790154						
-ASCATRON AB	IA Member		SE							
-Atlas Copco Airpower NV	IA Member		BE	FR53333353738						
-Attolight Sàrl	IA Member		CH							
-AUTOLIV DEVELOPMENT AB	IA Member		SE							
-Autoliv Electronic SAS	IA Member		FR							
-AUTOLIV ELECTRONICS AB	IA Member		SE							
-BASF SCHWEIZ AG	IA Member		CH							
-Baumann GmbH	IA Member		DE							
-Berner&Mattner Systemtechnik GmbH	IA Member		DE							
-Bernitz Electronics GmbH	IA Member		DE							
-Brooks CCS GmbH	IA Member		DE							
-BTC EMBEDDED SYSTEMS AG	IA Member		DE							
-Bubbles and Beyond GmbH	IA Member		DE							
-CAMECA	IA Member		FR							
-CAPRES A/S	IA Member		DK							
-Cavotec Germany GmbH	IA Member		DE							
-C-CAM	IA Member		BE							
-CENTRE D ETUDES ET D EXPERTISE SUR LES RISQUES L ENVIRONNEMENT LA MOBILITE ET L AMENAGEMENT	IA Member		FR							
-CENTRO DE INNOVACION Y SOLUCIONES EMPRESARIALES Y TECNOLOGICAS SL	IA Member		ES							
-CHAMBRE DE COMMERCE ET D'INDUSTRIE DE REGION PARIS-ILE-DE-FRANCE	IA Member		FR							
-CLEARSY SAS	IA Member		FR							
-Comentor AB	IA Member		SE							
-"CONSORCIO PARA EL DISENO, CONSTRUCCION, EQUIPAMIENTO Y EXPLOTACION DE LA PLATAFORMA OCEANICA DE CANARIAS"	IA Member		ES							
-CONSORZIO INTERUNIVERSITARIO NAZIONALE PER L'INFORMATICA 	IA Member		IT							
-Creanex Oy	IA Member		FI	PT508904021						
-DAIMLER AG	IA Member		DE							
-DANFOSS A/S	IA Member		DK							
-DANMARKS TEKNISKE UNIVERSITET	IA Member		DK							
-DeepVision AB	IA Member		SE							
-DENSO AUTOMOTIVE Deutschland GmbH	IA Member		DE							
-DESISTEK ROBOTIK ELEKTRONIK YAZILIM AR-GE URDANITHIHR TICLTDSTI	IA Member		TR							
-DEUTSCHES ZENTRUM FUER LUFT - UND RAUMFAHRT EV	IA Member		DE							
-DNV GL AS	IA Member		NO							
-Dr Födisch Umweltmesstechnik AG	IA Member		DE							
-Dr Steffan Datentechnik GmbH	IA Member		AU							
-ECA Robotics	IA Member		FR							
-ECCE'LECTRO	IA Member		FR							
-ECLIPSE FOUNDATION EUROPE GMBH	IA Member		DE							
-EDC ELECTRONIC DESIGN CHEMNITZ GMBH	IA Member		DE							
-EDITAG SAS	IA Member		FR							
-ELEKTRONIKAS UN DATORZINATNU INSTITUTS	IA Member		LV							
-ELTEK AS	IA Member		NO	IT01791330309						
-ENERBEE	IA Member		FR							
-ENIAC JU	IA Member		BE							
-EUROPEAN CENTER FOR INFORMATION AND COMMUNICATION TECHNOLOGIES GMBH	IA Member		DE							
-EVIDENCE SRL	IA Member		IT							
-EVOLOGICS GMBH	IA Member		DE							
-FAGOR ARRASATE S COOP	IA Member		ES							
-FEI Czech Republic sro	IA Member		CZ							
-FEI SAS	IA Member		FR							
-FH Burgenland GmbH	IA Member		AU							
-FICOMIRRORS SA	IA Member		ES							
-FICO-TRIAD SA	IA Member		ES							
-Fleming Medical Ltd	IA Member		IE							
-Flexbright Oy	IA Member		FI							
-Focal 2.0 BV	IA Member		NL							
-FONDAZIONE BRUNO KESSLER	IA Member		IT							
-FOR OPTIMAL RENEWABLE ENERGY SYSTEMS SL 	IA Member		ES							
-Fortum Power and Heat Oy 	IA Member		FI	DE129515865						
-Freiberger Compound Materials GmbH	IA Member		DE							
-FUJITSU SEMICONDUCTOR EUROPE GMBH	IA Member		DE	FR64562113530						
-"FUNDACION PARA LA PROMOCION DE LA INNOVACION, INVESTIGACION Y DESARROLLO TECNOLOGICO EN LA INDUSTRIA DE AUTOMOCION DE GALICIA"	IA Member		ES	ES-G20545729						
-FUNDACION TECNALIA RESEARCH & INNOVATION	IA Member		ES							
-GAS NATURAL SDG SA	IA Member		ES							
-Global TCAD Solutions GmbH	IA Member		AU							
-GMV	IA Member		ES							
-GN ReSound	IA Member		DK							
-GOIZPER S COOP 	IA Member		ES							
-Gold Standard Simulations ltd	IA Member		GB							
-Greensphere Unip Lda	IA Member		PT							
-H G E	IA Member		DK							
-Havells Sylvania Lighting Belgium NV	IA Member		BE							
-Heimann Sensor GmbH	IA Member		DE							
-Hella Aglaia Mobile Vision GmbH	IA Member		DE							
-Henkel Electronic Materials (Belgium) NV	IA Member		BE							
-HI IBERIA INGENIERIA Y PROYECTOS SL	IA Member		ES							
-Hitachi Europe GmbH	IA Member		DE							
-"Hochschule Mittweida, University of Applied Sciences"	IA Member		DE							
-HONEYWELL INTERNATIONAL SRO	IA Member		CZ							
-Hottinger Baldwin Messtechnik GmbH	IA Member		AU							
-HUTCHINSON SA	IA Member		FR							
-HYPERTAC	IA Member		FR							
-IBEO AUTOMOTIVE SYSTEMS GMBH	IA Member		DE							
-ICSENSE	IA Member		BE							
-IDEAS & MOTION SRL	IA Member		IT							
-IDNEO TECHNOLOGIES SL	IA Member		ES							
-IKERLAN SCOOP	IA Member		ES							
-ILIAS Solutions	IA Member		BE							
-ILMATIETEEN LAITOS	IA Member		FI							
-IMA MATERIALFORSCHUNG UND ANWENDUNGSTECHNIK GMBH	IA Member		DE							
-IMDS Service BV	IA Member		NL							
-IMINDS VZW	IA Member		BE							
-IMMS INSTITUT FUER MIKROELEKTRONIK- UND MECHATRONIK-SYSTEME GMBH	IA Member		DE							
-Impara Srl	IA Member		IT							
-IMPRONOVA AB	IA Member		SE							
-IMS CHIPS - Institut fuer Mikroelektronik Stuttgart	IA Member		DE							
-INGELUX	IA Member		FR							
-Innoluce	IA Member		NL							
-INNOVATIVE TECHNOLOGY AND SCIENCE LIMITED - INNOTECUK	IA Member		GB							
-INSTITUT FUER AUTOMATION UND KOMMUNIKATION EV MAGDEBURG	IA Member		DE							
-INSTITUT JOZEF STEFAN	IA Member		SK							
-INSTITUTO TECNOLOGICO DE INFORMATICA	IA Member		ES							
-INSTITUTUL NATIONAL DE CERCETAREDEZVOLTARE PENTRU MICROTEHNOLOGIE 	IA Member		RO							
-INTECS SPA	IA Member		IT							
-INTEGRASYS SA	IA Member		ES							
-Intelligence Behind Things Solutions Srl	IA Member		IT							
-INTERACTIVE FULLY ELECTRICAL VEHICLES SRL	IA Member		IT							
-Intraspec Technologies	IA Member		FR							
-Inventas Trondheim AS	IA Member		NO							
-Isosilicon AS	IA Member		NO							
-IXION INDUSTRY AND AEROSPACE SL	IA Member		ES							
-JENOPTIK Optical Systems GmbH	IA Member		DE							
-JVI GmbH	IA Member		DE							
-KAI KOMPETENZZENTRUM AUTOMOBIL - UND INDUSTRIEELEKTRONIK GMBH  	IA Member		AU							
-"Kompetenzzentrum - Das Virtuelle Fahrzeug, Forschungsgesellschaft mbH"	IA Member		DE							
-KPIT MEDINI TECHNOLOGIES AG	IA Member		DE							
-KPS Medical Biotechnology and Healthcare Services Ltd	IA Member		HU							
-LANGE RESEARCH AIRCRAFT GMBH	IA Member		DE							
-Lapland UAS Ltd / LAPIN AMMATTIKORKEAKOULU OY	IA Member		FI							
-Liebherr	IA Member		DE							
-Lighting Design Collective Oy	IA Member		FI							
-LINKOPINGS UNIVERSITET	IA Member		SE							
-LINZ CENTER OF MECHATRONICS GMBH	IA Member		AU							
-LUST Hybrid technik GmbH	IA Member		DE							
-m2Xpert GmbH & Co KG	IA Member		DE							
-Maastricht Instruments	IA Member		NL							
-MAELARDALENS HOEGSKOLA	IA Member		SE							
-MAGNA STEYR ENGINEERING AG & CO KG	IA Member		AU							
-MAGNETI MARELLI SPA	IA Member		IT							
-MARITIME ROBOTICS AS	IA Member		NO							
-Masarykova univerzita	IA Member		CZ							
-MAZeT GmbH	IA Member		DE							
-MBD Offshore Power	IA Member		DK							
-MDAL SARL	IA Member		FR							
-Meyer Burger	IA Member		NL							
-MICROELETRONICA MASER SL	IA Member		ES							
-Micronic Mydata AB	IA Member		SE							
-MOBILE INDUSTRIAL ROBOTS ApS	IA Member		DK							
-MOBISOFT OY	IA Member		FI							
-Model Engineering Solutions GmbH	IA Member		DE							
-MODULIGHT OY	IA Member		FI							
-MONDRAGON-Corporation	IA Member		ES							
-Multi Channel Systems GmbH	IA Member		DE							
-Nabto ApS	IA Member		DK							
-NaMLab gGmbH	IA Member		DE							
-NanoFocus AG	IA Member		DE							
-NANOPLAS SAS	IA Member		FR							
-NAVTOR AS	IA Member		NO							
-NM Robotic GmbH	IA Member		AU							
-Nome Oy	IA Member		FI							
-NORDSON Bv	IA Member		NL							
-NORGES TEKNISK-NATURVITENSKAPELIGE UNIVERSITET NTNU	IA Member		NO							
-NORSTEL AB	IA Member		SE							
-ODENSE UNIVERSITETSHOSPITAL	IA Member		DK							
-OFFICE NATIONAL D'ETUDES ET DE RECHERCHES AEROSPATIALES	IA Member		FR							
-O-FLEXX TECHNOLOGIES GMBH	IA Member		DE							
-OJMAR SA	IA Member		ES							
-OPHTIMALIA SAS	IA Member		FR							
-Oplatek Group Oy	IA Member		FI							
-OSYPKA AG	IA Member		DE							
-PACKAGING SIP	IA Member		FR							
-Pi Lighting SARL	IA Member		CH							
-PISEO	IA Member		FR							
-PLASMETREX GMBH	IA Member		DE							
-PLURIOMICS BV	IA Member		NL							
-POLIMI: CONSORZIO NAZIONALE INTERUNIVERSITARIO PER LA NANOELETTRONICA	IA Member		IT							
-POLITECHNIKA GDANSKA	IA Member		PL							
-PRAYON SA	IA Member		BE							
-Qamcom Research and Technology AB	IA Member		SE							
-QUEST PHOTONIC DEVICES BV	IA Member		NL							
-RAPITA SYSTEMS LIMITED	IA Member		GB							
-RENAULT SAS	IA Member		FR							
-RI Research Instruments GmbH	IA Member		DE							
-RIJKSUNIVERSITEIT GRONINGEN	IA Member		NL							
-RINA SERVICES SPA	IA Member		IT							
-RO TECHNOLOGY SRL	IA Member		IT							
-ROHDE & SCHWARZ GMBH&CO KOMMANDITGESELLSCHAFT	IA Member		DE							
-ROTH & RAU BV	IA Member		NL							
-Rugged Tooling Oy	IA Member		FI							
-SafeTRANS eV	IA Member		DE							
-Safety Integrity AB	IA Member		SE							
-SC Autonomous Systems SRL	IA Member		RO							
-Schiller Automatisierungstechnik GmbH	IA Member		DE							
-SCUOLA SUPERIORE DI STUDI UNIVERSITARI E DI PERFEZIONAMENTO SANT'ANNA	IA Member		IT							
-SenseAir AB	IA Member		SE							
-serva transport systems GmbH	IA Member		DE							
-SICS Swedish ICT Västerås AB	IA Member		SE							
-Silicon Biosystems 	IA Member		IT							
-SIRRIS HET COLLECTIEF CENTRUM VAN DE TECHNOLOGISCHE INDUSTRIE	IA Member		BE							
-SKF BV	IA Member		NL							
-Sky-Watch A/S	IA Member		DK							
-SMARTRAC TECHNOLOGY Dresden GmbH 	IA Member		DE							
-SOFRADIR	IA Member		FR							
-SOFTKINETIC SENSORS NV	IA Member		BE							
-SOLBIAN ENERGIE ALTERNATIVE SRL	IA Member		IT							
-SOLEMS SA	IA Member		FR							
-Solteq Oyj	IA Member		FI							
-SONY DEUTSCHLAND GMBH	IA Member		DE							
-STICHTING HET NEDERLANDS KANKER INSTITUUT-ANTONI VAN LEEUWENHOEK ZIEKENHUIS	IA Member		NL							
-STIFTUNG FZI FORSCHUNGSZENTRUM INFORMATIK AM KARLSRUHER INSTITUT FUR TECHNOLOGIE	IA Member		DE							
-STILL GmbH	IA Member		DE							
-TeamNet World Professional Services SRL	IA Member		RO							
-TECHNICON APS	IA Member		DK							
-TECHNIKON FORSCHUNGS- UND PLANUNGSGESELLSCHAFT MBH	IA Member		AU							
-TEKEVER II AUTONOMOUS SYSTEMS LDA	IA Member		PT							
-TEKNOLOGISK INSTITUT	IA Member		DK							
-TENNECO AUTOMOTIVE EUROPE BVBA	IA Member		BE							
-The Motor Insurance Repair Research Centre (Thatcham)	IA Member		GB							
-Tieto Finland Oy	IA Member		FI							
-TOKYO ELECTRON EUROPE LIMITED	IA Member		FR							
-TORINO E-DISTRICT CONSORZIO	IA Member		IT							
-TOYOTA MOTOR EUROPE	IA Member		BE							
-Trymax Semiconductor Equipment BV	IA Member		NL							
-TTControl GmbH	IA Member		AU							
-"TTI NORTE, SL"	IA Member		ES							
-TTTECH COMPUTERTECHNIK AG	IA Member		AU							
-UAB Metis Baltic	IA Member		LT							
-UNITED MONOLITHIC SEMICONDUCTORS SAS	IA Member		FR							
-Univeristy of Southampton	IA Member		GB							
-UNIVERSIDAD CARLOS III DE MADRID	IA Member		ES							
-UNIVERSIDAD DE GRANADA	IA Member		ES							
-UNIVERSIDAD DE ZARAGOZA	IA Member		ES							
-UNIVERSIDAD POLITECNICA DE MADRID	IA Member		ES							
-UNIVERSIDADE DE AVEIRO	IA Member		PT							
-UNIVERSITA DEGLI STUDI DELL'AQUILA	IA Member		IT							
-UNIVERSITA DEGLI STUDI DI PALERMO	IA Member		IT							
-UNIVERSITA DEGLI STUDI GABRIELE D'ANNUNZIO DI CHIETI-PESCARA	IA Member		IT							
-UNIVERSITA DI PISA	IA Member		IT							
-UNIVERSITE DE BOURGOGNE	IA Member		FR							
-UNIVERSITE DE LIEGE	IA Member		BE							
-UNIVERSITE DE LORRAINE	IA Member		FR							
-UNIVERSITE FRANCOIS RABELAIS DE TOURS	IA Member		FR							
-UNIVERSITEIT MAASTRICHT	IA Member		NL							
-UNIVERSITETET I OSLO	IA Member		NO							
-"UNIVERSITY COLLEGE DUBLIN, NATIONAL UNIVERSITY OF IRELAND, DUBLIN"	IA Member		IE							
-University of Las Palmas de Gran Canaria for Applied Microelectronics (ULPGC-IUMA)	IA Member		ES							
-VECTOR FABRICS BV	IA Member		NL							
-VESTAS WIND SYSTEMS A/S	IA Member		DK							
-VILNIAUS GEDIMINO TECHNIKOS UNIVERSITETAS	IA Member		LT							
-VIRES Simulationstechnologie  GmbH	IA Member		DE							
-VL BV*VIRAGE LOGIC	IA Member		NL							
-VON ARDENNE GmbH	IA Member		DE							
-WAPICE OY	IA Member		FI							
-WATER LINKED AS	IA Member		NO							
-WHITEHEAD ALENIA SISTEMI SUBACQUEI 	IA Member		IT							
-XENON Automatisierungstechnik GmbH	IA Member		DE							
-XLAB RAZVOJ PROGRAMSKE OPREME IN SVETOVANJE DOO	IA Member		SI							
-ZENTRUM MIKROELEKTRONIK DRESDEN AG	IA Member		DE							
-ZILINSKA UNIVERZITA V ZILINE	IA Member		SK							
-24IP Law Group Munich	Member of AENEAS	Associated	DE	DE812780570	Robert Harrison	harrison@24ip.com	PO Box 33 08 65	München 	80068	Germany
-Acondicionamiento Tarrasense (LEITAT)	Member of AENEAS	B	ES	ES-G08360232	Marta Domper	mdomper@leitat.org	LEITAT Technological Center	Terrassa (Barcelona)	ES-08225	Spain
-Acreo Swedish ICT AB	Member of AENEAS	B	SE	SE556534900701	Michael Salter	Michael.Salter@acreo.se	Bredgatan 34 	 Norrköping	60221	Sweden
-Adimec Advance Image Systems BV	Member of AENEAS	A	NL	NL815416453B03	Alex de Boer	adboer@adimec.nl	Luchthavenweg 91	Eindhoven	5657EA	Netherlands
-ADR-CMP Grenoble	Member of AENEAS	B	FR	FR72779555846	René Meyzenc	meyzenc.rene@neuf.fr	155-157 Cours Berriat	Grenoble Cedex 1	38028	France
-Advanced Packaging Center BV	Member of AENEAS	A	NL	NL821611203B01	Eef Boschman	eefboschman@apcenter.nl	Stenograaf 3	Duiven	6921EX	Netherlands
-AED Engineering GmbH	Member of AENEAS	A	DE	DE248458857	Carlos Urquizar	carlos.urquizar@aed-engineering.com	Taunusstr. 51	Munich	80807	Germany
-Afore Oy	Member of AENEAS	A	FI	FI10195674	Vesa Henttonen	vesa.henttonen@afore.fi	Vakiotie 5	Lieto	21420	Finland
-Airbus DS SAS 	Member of AENEAS	C	FR	FR13414848986	Yolanda Menendez	yolanda.menendez-rodriguez@airbus.com	FACTS 1155 BKR 1155	Bremen	28361	Germany
-AIXTRON SE	Member of AENEAS	C	DE	DE123597183	Michael Heuken		Kaiserstr. 98	Herzogenrath	52134	Germany
-Alma Mater Studiorum - University of Bologna 	Member of AENEAS	B	IT	IT01131710376	Francesco Ubertini	segrettore@unibo.it	Via Zamboni 33	Bologna	40126	Italy
-AlphaSIP	Member of AENEAS	A	ES	ES-B99233587	Miguel Roncalés Poza	mroncales@alphasip.es	"CEEI Aragon, Calle maria de Luna 11, Nave 13"	Zaragoza	50018	Spain
-AMITRONICS GmbH	Member of AENEAS	A	DE	DE 200688536	Norbert Rümmler	norbert.ruemmler@amitronics.de	Am Technologiepark 10	Seefeld b. Munchen	82229	Germany
-AMO GmbH	Member of AENEAS	A	DE	DE154818567	Michael  Hornung	hornung@amo.de	Otto-Blumenthal -Str.26	Aachen	52075	Germany
-ams AG	Member of AENEAS	C	AU	ATU28560205	Martin Schrems	martin.schrems@ams.com	"Schloss Premstaetten, Tobelbader Strasse 30"	Unterpremstätten	A-8141	Austria
-Analog Devices International	Member of AENEAS	C	IE	IE9851266Q	Denis Doyle	denis.doyle@analog.com	Raheen Industrial Estate	Limercik		Ireland
-Applied Materials Israel Ltd	Member of AENEAS	C	IL	511166373	Yoram Uziel	yoram_uziel@amat.com	PO Box 286	"Mitcheldean, Gloucestershire"	GL17 0DD	United Kingdom
-Archimede Elettronica Srl	Member of AENEAS	A	IT	IT07708790154	Piero Magnaghi	italia@qlt.it 	Via Dolomiti 15	Rescaldina	20027	Italy
-Aristotle University of Thessaloniki	Member of AENEAS	B	GR	EL090049627	Fotini-Niovi Pavlidou	niovi@auth.gr	University Campus	Thessaloniki	54124	Greece
-Artemis Control AG	Member of AENEAS	A	CH	CH634013	Jost Kames	jost.kames@artemis-control.com	Seestrasse 147	Uster	8610	Switzerland
-ASM International NV	Member of AENEAS	C	NL	NL005717267B01	Hessel Sprey	hessel.sprey@asm.com	Versterkerstraat 8	Almere	1320 AE	Netherlands
-ASML Netherlands BV	Member of AENEAS	C	NL	NL007051104B01	Joost van Hees	joost.van.hees@asml.com 	c/o COCQ Datendienst GmbH	Hamburg	21003	Germany
-ASTRON Netherlands 	Member of AENEAS	B	NL	NL003447741B01	Janneke Wubs-Komdeur	wubs@astron.nl	Oude Hoogeveensedijk 4	Dwingeloo	7991 PO	Netherlands
-ASYS Automatic Systems GmbH & Co KG	Member of AENEAS	A	DE	DE146619052	Herbert Wituschek	h.wituschek@asys-micro.de	Grafenbergweg 20 	Schorndorf	D-73614	Germany
-Atmel France	Member of AENEAS	C	FR	FR53333353738	Bernard Bancelin	bernard.bancelin@atmel.com	La Chantrerie	Nantes Cedex 3	44306	France
-Audi AG	Member of AENEAS	C	DE	DE811115368	Berthold Hellenthal	berthold.hellenthal@audi.de	Ettinger Strasse	Ingolstadt	85045	Germany
-Autonomous University of Barcelona	Member of AENEAS	B	ES	Q0818002H	Antoni Montes	uisad.informatica@uab.cat	Rectorat. Edifici A. Campus UAB	Bellaterra	E-08193	Spain
-Axon Digital Design BV	Member of AENEAS	A	NL	NL802646748B01	Jan Eveleens	jan.eveleens@axon.tv	Hercules 28	Gilze	5126 RK	Netherlands
-Berliner Nanotest und Design GmbH	Member of AENEAS	A	DE	DE 813955346	Thomas Winkler	winkler@nanotest.eu	Volmerstr. 9 B	Berlin	12489	Germany
-BESI Austria GmbH	Member of AENEAS	C	AU	ATU32447901	Alastair Attard	alastair.attard@besi.com	Innstrasse 16	Radfeld	6241	Austria
-Boschman Technologies BV	Member of AENEAS	A	NL	NL812454108B01	Frank Boschman	FBoschman@boschman.nl	PO Box 129 	Duiven	6920 AC	Netherlands
-Brno University of Technology	Member of AENEAS	B	CZ	CZ00216305	Radimir Vrba	vrbar@feec.vutbr.cz	FEKT UMEL	Brno	CZ-61600	Czech Republic
-Bronkhorst High-Tech BV	Member of AENEAS	A	NL	NL801989978B01	Joost Lötters	j.c.lotters@bronkhorst.com	Nijverheidsstraat 1A	Ruurlo	7261 AK	Netherlands
-Bruker JV Israel Ltd	Member of AENEAS	C	IL	510887797	Meirav  Hemo	Meirav.Hemo@Bruker.com	P.O. Box 103	Migdal Ha'Emek	23100	Israel
-Bull SAS	Member of AENEAS	C	FR	FR87642058739	Philippe  Duluc	philippe.duluc@atos.net	Rue Jean Jaurès	LES CLAYES SOUS BOIS	78340	France
-Caeleste CVBA	Member of AENEAS	A	BE	BE0885890904	Patrick  Henckes	patrick.henckes@caeleste.be	Hendrik Consciencestraat 1 b	Mechelen	2800	Belgium
-Carl Zeiss SMT GmbH	Member of AENEAS	C	DE	DE811119999	Rainer Pforr	r.pforr@smt.zeiss.com	Rudolf-Eber-Str. 2 	Oberkochen 	73447	Germany
-Catalan Institute of Nanoscience and Nanotechnology	Member of AENEAS	B	ES	ES-G63277776	Clivia Sotomayor	clivia.sotomayor@icn2.cat	Edifici CM7 - Campus de la UAB 	Bellaterra	ES-08193	Spain
-CATENA Holding BV	Member of AENEAS	A	NL	NL009761123B01	Erik Göertz	egoertz@catena.nl	Elektronicaweg 40	Delft	2628XG 	Netherlands
-Catholic University of Louvain (UCL)	Member of AENEAS	B	BE	BE0419052272	Denis Flandre	denis.flandre@uclouvain.be	"Place du Levant, 3"	Louvain-la-Neuve 	1348	Belgium
-CATRENE	Member of AENEAS	Associated	FR	FR22412994543	Maria Andrade	invoice@aeneas-office.org	44 rue Cambronne	Paris	75015	France
-CEA-LETI	Member of AENEAS	B	FR	FR43775685019	David Holden	david.holden@cea.fr	"MINATEC Campus, 17 rue des Martyrs "	Grenoble Cedex 9	38054	France
-CISC Semiconductor GmbH	Member of AENEAS	A	AU	ATU48357807	Markus Pistauer	m.pistauer@cisc.at	Lakeside B07	Klagenfurt	9020	Austria
-CNRS	Member of AENEAS	B	FR	FR40180089013	Daniel Bensahel	Daniel.BENSAHEL@cnrs-dir.fr	Institut des Sciences de l'ingénerie de des Systèmes	Paris Cedex 16 	75794	France
-Cochlear Technology Centre - Belgium	Member of AENEAS	C	BE	BE 0863920305	Carl Van Himbeeck	CVanHimbeeck@cochlear.com	Schalienhoevedreef 201	Mechelen	2800	Belgium
-Coventor SARL	Member of AENEAS	A	FR	FR40431906833	Gerold Schröpfer	gerold.schropfer@coventor.com	3 avenue du Quebec	Villebon sur Yvette	91940	France
-Critical Manufacturing SA	Member of AENEAS	A	PT	PT508904021	Carla  Silva	carla .silva@critical manufacturing .com	"Rua Engo Frederico Ulrich, n° 265"	Moreira da Mala	4470-605	Portugal
-CSEM 	Member of AENEAS	B	CH	CH162830	Georges Kotrotsios	georges.kotrotsios@csem.ch	Jaquet-Droz 1    	Neuchâtel	CH-2002	Switzerland
-DAS Environmental Expert GmbH	Member of AENEAS	A	DE	DE140295369	Horst Reichardt	horstreichardt@das-europe.com 	Goppelner Strasse 44	Dresden	O1219	Germany
-Delft University of Technology	Member of AENEAS	B	NL	NL001569569B01	Mart Graef	m.w.m.graef@tudelft.nl	PO Box 5031	Delft	2600 GA	Netherlands
-DEMCON	Member of AENEAS	A	NL	NL814692497B01	Dennis Schipper	dennis.schipper@demcon.nl	Zutphenstraat 25	Oldenzaal	7575 EJ	Netherlands
-DSP Valley Belgium	Member of AENEAS	Associated	BE	BE0462307641	Peter Simkens	peter.simkins@dspvalley.com	Gaston Geenslaan 9	Leuven	3001	Belgium
-Dublin City University	Member of AENEAS	B	IE	IE6517957E	Declan Raftery	declan.raftery@dcu.ie	Glasnevin	Dublin 9		IRELAND
-Eagle Vision Systems BV	Member of AENEAS	A	NL	NL804435042B01	Arend  van de Stadt	a.vandestadt@eaglevision.nl	Energiestraat 16B	Naarden	1411 AT	Netherlands
-EASii IC	Member of AENEAS	A	FR	FR06389019274	Yannick Thepaut	yannick.thepaut@easii-ic.com	90 avenue Léon Blum	Grenoble	38036	France
-edacentrum eV	Member of AENEAS	Associated	DE	DE222970611	Jürgen Haase	haase@edacentrum.de	Schneiderberg 32	Hannover 	30167	Germany
-EECA	Member of AENEAS	Associated	BE	BE0422589705	Hendrik Abma	habma@eeca.be	Rue de la Duchesse 11/13	Brussels	1150	Belgium
-Eindhoven University of Technology	Member of AENEAS	B	NL	NL001956218B01	Nicole Ummelen	m.m.n.ummelen@tue.nl	P.O.Box 513	Eindhoven	5600 MB	Netherlands
-Elettra-Sinctrotrone Trieste 	Member of AENEAS	B	IT	IT00697920320	Andrea Goldoni	andrea.goldoni@elettra.trieste.it	"S.S. 14 km 163.5, AREA Science Park, Basovizza"	Trieste	34149	Italy
-Elmos Semiconductor AG	Member of AENEAS	C	DE	DE 124727295	Roland Krumm	roland.krumm@elmos.com	Heinrich-Hertz-Str. 1	Dortmund	44227	Germany
-Eurotech SpA	Member of AENEAS	C	IT	IT01791330309	Giampietro Tecchiolli	g.tecchiolli@exadron.com  	"Via Fratelli Solari, 3/a "	Amaro (UD)     	33020	Italy
-Evalan BV	Member of AENEAS	A	NL	NL815151524B01	Hendrik Schwietert	henk.schwietert@evalan.com	Sarphatistraat 638	Amsterdam	1018 AV	Netherlands
-Fabmatics GmbH	Member of AENEAS	A	DE	DE140207637	Steffen Pollack	steffen.pollack@fabmatics.com	Gostritzer Str. 61-63 	Dresden	D-01217	Germany
-Fairchild Semiconductor GmbH	Member of AENEAS	C	DE	DE812153738	Markus Walk	markus.walk@fairchildsemi.com	Einsteinring 28	Aschheim	D-85609	Germany
-FEEI 	Member of AENEAS	Associated	AU	NA	Lothar Roitner	roitner@feei.at	Mariahilfer Strasse 37-39	Vienna 	1060	Austria
-Firecomms Ltd	Member of AENEAS	A	IE	IE 6343022C	Norma Murphy	nmurphy@firecomms.com	2200 Airport Business Park	Cork	T12 X36X	Ireland
-Forschungszentrum Jülich GmbH	Member of AENEAS	B	DE	DE122624631	Siegfried Mantl	s.mantl@fz-juelich.de	Leo-Brandt-Str.	Jülich  	52425	Germany
-Fraunhofer-Gesellschaft	Member of AENEAS	B	DE	DE129515865	Joachim Pelka	Joachim.Pelka@mikroelektronik.fraunhofer.de	Hansastrasse 27C	Munich	80686	Germany
-Fresenius-Vial SAS	Member of AENEAS	C	FR	FR 57 408 720 282	Christine Cornille	christine.cornille@fresenius-kabi.com	Le grand chemin	Brezins	38590	France
-Fundación CIDETEC	Member of AENEAS	B	ES	ES-G20588588	Javier Rodriguez	jrodriguez@cidetec.es	"Parque Tecnológico de San Sebastian, Paseo Miramon 196"	San Sebastian 	20009	Spain
-Fundación TEKNIKER	Member of AENEAS	B	ES	ES-G20545729	Sabino Azcárate	sabino.azcarate@tekniker.es	"PARKE TEKNOLOGIKOA, C/ Iñaki Goenaga, 5"	Eibar	20600	Spain
-Future Horizons Ltd	Member of AENEAS	Associated	GB	GB522953152	Malcolm Penn	mpenn@futurehorizons.com	44 Bethel Road	Sevenoaks	TN13 3UE	United Kingdom
-Gemalto SA	Member of AENEAS	C	FR	FR64562113530	Christophe Dubois	Christophe.Dubois@gemalto.com	"6, rue de la Verrerie"	Meudon Cedex	92190	France
-GLOBALFOUNDRIES Dresden	Member of AENEAS	C	DE	DE223348976	Rutger Wijburg	rutger.wijburg@globalfoundries.com	Wilschdorfer Landstrasse 101	Dresden	D-01109	Germany
-Grass Valley Nederland BV	Member of AENEAS	C	NL	NL809244950B01	John de Kok	john.dekok@grassvalley.com	"F.A.O. Accounts Payable, PO Box 9"	Venlo	5900 AA	Netherlands
-Graz University of Technology	Member of AENEAS	B	AU	ATU57477929	Wolfgang Bösch	wbosch@tugraz.at	"Rechnungswesen und Finanzen, Rechbauerstrasse 12"	GRAZ	8010	Austria
-Grenoble Institute of Technology (INP)	Member of AENEAS	B	FR	FR05193819125	Brigitte Plateau	brigitte.plateau@grenoble-inp.fr	46 av. Felix Viallet  	Grenoble	38031	France
-Heliox BV	Member of AENEAS	A	NL	NL820495840B01	Mark Smidt	mark.smidt@heliox.nl	De donge 2	Best	5684 PX	Netherlands
-HSEB Dresden GmbH	Member of AENEAS	A	DE	DE140207629	Petra Döring	P.Doering@HSEB-Dresden.de	Manfred-von-Ardenne-Ring 4	Dresden	DE-01099	Germany
-I-Care Belgium	Member of AENEAS	A	BE	BE0867368951	Laurence Jacquet	Laurence.jacquet@icareweb.com	18 Rue Rene Descartes	Mons	7000	Belgium
-Icare Finland	Member of AENEAS	A	FI	FI10845023	Timo Hilden	Timo.Hilden@Icarefinland.com	Ayritie 22	Vantaa	1510	Finland
-IHP GmbH	Member of AENEAS	B	DE	DE138996546	Christian Wenger 	wenger@ihp-microelectronics.com	Im Technologiepark 25 	Frankfurt	15236	Germany
-IMEC	Member of AENEAS	B	BE	BE0425260668	Sigrid Callebert	sigrid.callebert@imec.be	Kapeldreef 75  	Leuven	3001	Belgium
-IMEL/NCSR Demokritos	Member of AENEAS	B	GR	EL090085651	Androula Nassiopoulou	A.Nassiopoulou@imel.demokritos.gr	"Terma Patriarchou Grigoriou, Aghia Paraskevi"	Athens	15310	Greece
-IMT - Institut Mines-Télécom	Member of AENEAS	B	FR	FR55180092025	Pierre Simay	pierre.simay@mines-telecom.fr	46 rue Barrault	Paris	75634 Cedex 13	France
-Infineon Technologies AG	Member of AENEAS	C	DE	DE141498777	Maria Warmuth	maria.warmuth@lsl.de	"LSL AG, Abonnementverwaltung-INFINEON 369704, Gerichtsweg 28"	Leipzig	DE-04103	Germany
-Infinitesima Ltd	Member of AENEAS	A	GB	GB779624572	Jeffrey  Lyons	jeff.lyons@infinitesima.com	"Oxford Centre for Innovation, Mill Street"	Oxford	OX2 0JX	United Kingdom
-Institute of Information Theory and Automation	Member of AENEAS	B	CZ	CZ67985556	Jan Flusser	flusser@utia.cas.cz	"Institute of Information Theory and Automation, Pod Vodarenskou vezi 4"	Prague 8	182 08	Czech Republic
-Institute of Microelectronic Applications (IMA sro)	Member of AENEAS	A	CZ	CZ45277397	Tomas Trpisovsky	tomas.trpisovsky@ima.cz	Na Valentince 1003/1 	Praha 5	150 00 	Czech Republic
-Institute of Technical Physics and Materials Science (MFA)	Member of AENEAS	B	HU	HU15327040	Istvan Barsony	barsony@mfa.kfki.hu	Konkoly-Thege Miklós út 29-33	Budapest	H-1121	Hungary
-Integrated Dynamics Engineering	Member of AENEAS	A	DE	DE113856347	Thomas Breser	thomas.breser@ideworld.com	Hermannstrasse 9 - 13	Raunheim	65479	Germany
-Integrated Systems Development SA	Member of AENEAS	A	GR	EL094502301	Constantin Papadas	papadas@isd.gr	"Atrina Center, Building B , "	Maroussi	15125	Greece
-Intel 	Member of AENEAS	C	IE	IE6545810F	Bernard Capraro	bernard.d.capraro@intel.com	"P.O. Box 58, Collinstown Industrial Park  "	Leixlip  		Ireland
-International Iberian Nanotechnology Laboratory (INL)	Member of AENEAS	B	PT	PT508633346	Lars Montelius	Lars.Montelius@inl.int	Av. Mestre José Veiga	Braga	4715-330	Portugal
-Intrinsic ID BV	Member of AENEAS	A	NL	NL819942777B01	Andre de Lege	andre.de.lege@intrinsic-id.com	High Tech Campus 9	Eindhoven	5656 AE	Netherlands
-Ion Beam Services	Member of AENEAS	A	FR	FR28342673134	Laurent Roux	laurent.roux@ion-beam-services.fr	ZI Peynier Rousset - Av. Gaston Imbert prolongée	Peynier	13790	France
-IPDiA SA	Member of AENEAS	A	FR	FR 76512603861	Olivier  Gonzalez	olivier.gonzalez@ipdia.com	2 Rue de la Girafe	Caen	14000	France
-Italian Institute of Technology (IIT)	Member of AENEAS	B	IT	IT09198791007	Roberto  Cingolani	projects@iit.it	Via Morego 30	Genova	16163	Italy
-Italian National Research Council (CNR)	Member of AENEAS	B	IT	FR40180089013	Corrado Spinella  Spinella	corrado.spinella@imm.cnr.it	Piazzale Aldo Moro 7 	Roma	IT-00185	Italy
-IU.NET 	Member of AENEAS	B	IT	IT02598581201	Enrico Sangiorgi	enrico.sangiorgi@unibo.it	Via Toffano 2   	Bologna 	40125	Italy
-Kieback&Peter GmbH & Co KG	Member of AENEAS	C	DE	HRA9371	Juergen Maass	maass@kieback-peter.de	Tempelhofer Weg 50	Berlin	12347	Germany
-KLA-Tencor Israel	Member of AENEAS	C	IL	557767043	Hadas Berkovitz	hadas.berkovitz@kla-tencor.com	"1 Lavian St. , Ramat Gavriel Industrial Park  , P.O. Box 143"	Migdal Ha'Emek	23100	Israel
-KTH Royal Institute of Technology 	Member of AENEAS	B	SE	SE202100305401	Mikael Östling	ostling@kth.se	"Dept. Of Electronic Devices and Circuits, School of ICT, Electrum 229"	Kista	16440	Sweden
-LAM Research	Member of AENEAS	C	IT	ATU26618407	Marco Ciappelli	marco.ciappelli@lamrc.com	"Viale Colleoni, 11"	Agrate Brianza - Milano	20041	Italy
-Langer EMV-Technik GmbH	Member of AENEAS	Associated	DE	DE191552300	Gunter Langer	Koenig@langer-emv.de	Nothnitzer Hang 31	Bannewitz	1728	Germany
-Leiden University Medical Center	Member of AENEAS	B	NL	NL003566213601	Nancy Koot	N.Koot@lumc.nl	Albinusdreef 2	Leiden	2333ZÁ	Netherlands
-LFoundry Srl	Member of AENEAS	C	IT	IT01465930665	Sergio Galbiati	sergio.galbiati@lfoundry.com	Via Pacinotti 7	Avezzano	67051	Italy
-Livio BALDI	Member of AENEAS	Associated	IT	NA	Livio Baldi	baldi.livio@gmail.com				Italy
-Luceda NV	Member of AENEAS	A	BE	BE0553769733	Pieter Dumon	pieter@lucedaphotonics.com	Noordlaan 21	Dendermonde	9200	Belgium
-M3 Systems SAS	Member of AENEAS	A	FR	FR03424756401	Mark Dury	dury@m3systems.eu	26 rue du Soleil Levant	Lavernose	31410	France
-MAATEL SAS	Member of AENEAS	A	FR	FR 92 306 606 583	Christine Girard	christine.girard@maatel.fr	259 rue du rocher de Lorzier	Moirans	38430	France
-Mattson Thermal Products GmbH	Member of AENEAS	C	DE	DE129275787	Johannes Keppler	johannes.keppler@mattson.com	Daimlerstrasse 10	Dornstadt	89160	Germany
-Medtronic Bakken Research Center BV	Member of AENEAS	C	NL	NL008863155B01	Daniel Schobben	daniel.schobben@medtronic.com	Fao: FSSC-AP/Postbus 2949	Heerlen	6401 DK	Netherlands
-memsstar Ltd	Member of AENEAS	A	GB	GB814478909	Keith Rutter	keith_rutter@memsstar.com	"1, Fleming Road/EH54 7BN"	Livingston	EH54 7BN	United Kingdom
-MetraLabs GmbH	Member of AENEAS	A	DE	DE214004108	Andreas Bley	Andreas.Bley@MetraLabs.com	Am Vogelherd 22	Ilmenau	98693	Germany
-Micron Semiconductor Italia Srl	Member of AENEAS	C	IT	IT05843890962	Rosino Macera	rmacera@micron.com	Via Torri Bianche 24	Vimercate (MB)	20871	Italy
-Minalogic	Member of AENEAS	Associated	FR	FR18485361133	Isabelle Gauillaume	isabelle.guillaume@minalogic.com	3 Parvis Louis Neel 	Grenoble  	38054	France
-MinDCet NV	Member of AENEAS	A	BE	BE0840120364	Mike Wens	mike@mindcet.com	Esperantolaan 4	Leuven	3001	Belgium
-Mirakonta SL	Member of AENEAS	A	ES	B-20849261	Elena Calvo	admon@mirakonta.es	"Zuatzu Kalea, 1- Local N°7 bajo (Edificio Ulia)"	San Sebastian	20018	Spain
-Morpho France	Member of AENEAS	C	FR	FR25440305282	Marie José Castel  	marie-josee.castel@morpho.com	"11, boulevard Gallieni"	Issy-les-Moulineaux	92130	France
-MRI-STaR GmbH	Member of AENEAS	A	DE	30858101745	Caroline HäuBler	research-projects@mrcomp.com	"Osterfelderstr. 22,"	Bottrop	46236	Germany
-NanoDesign Ltd	Member of AENEAS	A	SK	SK2022343873	Martin Daricek	martin.donoval@powertec.sk	Drotarska 19/a	Bratislava	81104	Slovakia
-Nat. Inst. for R&D in Microtechnologies (IMT-Bucharest)	Member of AENEAS	B	RO	RO1154	Raluca Muller	raluca.muller@imt.ro	PO -BOX 38-160	Bucharest	RO-023573	Romania
-Norsk Elektro Optikk AS	Member of AENEAS	A	NO	NO939377407	Peter Kaspersen	peter@neo.no	PO Box 384	Lorenskog	1471	Norway
-Nova Measuring Instruments Ltd	Member of AENEAS	C	IL	511812463	Shmuel Mironi	shmuel-m@novameasuring.com	"22 Einstein Street/Weizmann Science Park, Bldg. 22"	Rehovot	76100	Israel
-NXP Semiconductors Netherlands BV	Member of AENEAS	C	NL	NL800009782B01	Susanne Koenigshofer	susanne.koenigshofer@nxp.com	Dept Accounts Payable/Gerstweg 2	Nijmegen	6534 AE	Netherlands
-OFFIS eV	Member of AENEAS	B	DE	DE811582102	Wolfgang Nebel	nebel@offis.de	Escherweg 2	Oldenburg	26121	Germany
-ON Semiconductor Belgium	Member of AENEAS	C	BE	BE0477511994	Katrijn Trybou	katrijn.trybou@onsemi.com	Westerring 15	Oudenaarde	9701	Belgium
-Orange France	Member of AENEAS	C	FR	FR 89 380 129 866	Isabelle BRISORGUEIL	isabelle.brisorgueil@orange.com	Orange CSPCF Comptabilite Fournisseurs TSA 28106	Rouen Cedex	76721	France
-Pfeiffer Vacuum SAS	Member of AENEAS	C	FR	FR41085980357	Eric Taberlet	eric.taberlet@adixen.fr	"98, avenue de Brogny/BP 2069"	Annecy Cedex	74009	France
-Philips Electronics Nederland BV	Member of AENEAS	C	NL	NL001902106B01	Henk van Houten	henk.van.houten@philips.com	Research / Postbus 80071	Eindhoven	5600 KA	Netherlands
-Picosun Oy	Member of AENEAS	A	FI	FI11055816	Juhana Kostamo	juhana.kostamo@picosun.com	Masalantie 365	Masala	FI-02430	Finland
-Polish Institute of Electron Technology (ITE)	Member of AENEAS	B	PL	PL5250009111	Piotr B. Grabiec	grabiec@ite.waw.pl	al. Lotnikow 32/46   	Warsaw	02-668	Poland
-Polymer Competence Center Leoben GmbH	Member of AENEAS	B	AU	ATU54829208	Elke  Holzer	elke.holzer@pccl.at	Roseggerstrasse 12	Leoben	8700	Austria
-Polytechnic University of Catalonia	Member of AENEAS	B	ES	ES-Q0818003F	Francesc Moll	francesc.moll@upc.edu	Dept. of Electronic Engineering / C/ Jordi Girona 31 / Campus Nord Ed. C4	Barcelona	ES-08034	Spain
-Polytechnic University of Milan	Member of AENEAS	B	IT	IT04376620151	Stefano Tubaro	stefano.tubaro@polimi.it	via G. Ponzio 34/5	Milano	20133	Italy
-Polytechnic University of Turin	Member of AENEAS	B	IT	IT00518460019	Enrico Macii	enrico.macii@polito.it	"Corso Duca Degli Abruzzi, 24"	Torino	10129	Italy
-Powertec Ltd	Member of AENEAS	A	SK	SK2022742986	Martin Donoval	martin.donoval@powertec.sk	Drotarska 19/a	Bratislava	81104	Slovakia
-RECIF Technologies	Member of AENEAS	A	FR	FR09483341590	Guilhem Delpu	guilhem.delpu@recif.com	9 rue des briquetiers / BP 20096	Blagnac Cedex	31703	France
-Robert Bosch GmbH	Member of AENEAS	C	DE	DE811128135	Jutta Maier	Jutta.Maier@de.bosch.com	C/CCC-Jutta Maier / Supplier Number 97227173 / Postfach 1625	Magdeburg	39006	Germany
-RoodMicrotec Nördilingen GmbH & Co KG	Member of AENEAS	A	DE	DE181235498	Philip Nijenhuis	philip.nijenhuis@roodmicrotec.com	Oettinger Strasse 6    	Nördlingen	86720	Germany
-RWTH Aachen University	Member of AENEAS	B	de	DE121689807	Ralf Wunderlich	ralf.wunderlich@ias.rwth-aachen.de	Sommerfeldstr. 24	Aachen	52074	Germany
-Sapienza University of Rome	Member of AENEAS	B	IT	IT02133771002	Mauro Olivieri	mauro.olivieri@diet.uniroma1.it	D.I.E. - Via Eudossiana 18	Rome	IT-00184	Italy
-SEMI Europe	Member of AENEAS	Associated	BE	N/A	Ourania Georgoutsakou	gourania@semi.org	Rue de la Science 14	Brussels 	1040	Belgium
-Semikron Elektronik GmbH & Co KG	Member of AENEAS	C	DE	DE814118606	Jens Muller	jens.mueller@semikron.com	Sigmundstrasse 200	NUrnberg	90431	Germany
-Semilab Semiconductor Physics Laboratory Co Ltd	Member of AENEAS	A	HU	HU10311765	Tibor Pavelka	semilab@semilab.hu	Prielle Kornélia Str. 2	Budapest	1117	Hungary
-SemiQuarz GmbH	Member of AENEAS	A	DE	DE812553865	Ann-Dorothée Buesche	ad.buesche@semiquarz.de 	Bgm.-Neumeyr-Str. 3a	Allershausen	85391	Germany
-SenSiC AB	Member of AENEAS	A	SE	SE556737441701	Lars Hammarlund	lars.hammarlund@sensic.se	ISafjordsgatan 39b	Kista	SE-164 40	Sweden
-Sensing Tex	Member of AENEAS	A	ES	ESB65264293	Lorena Charco	lorena.charco@sensingtex.com	Passeig Fabra i Puig 474 local 2	Barcelona	8042	Spain
-sentronics metrology GmbH	Member of AENEAS	A	DE	DE248349505	Martina Bosch  	m.bosch@sentronics-metrology.de	Mallaustrasse 72 	Mannheim	68219	Germany
-SEPS Technologies AB	Member of AENEAS	A	SE	SE556713060301	Kent Bertilsson	Kent.Bertilsson@seps.se	Holmgatan 10	Sundsvall	851 70	Sweden
-SGS-TÜV Saar GmbH	Member of AENEAS	Associated	DE	DE 812 345 251	Gudrun Neumann	gudrun.neumann@sgs.com	Hofmannstrasse 50	Munich	81379	Germany
-SHT Smart High Tech AB	Member of AENEAS	A	SE	SE556077743401	Johan Liu	johan@sht-tek.com 	"Fysikgränd 3, F6127 "	Gothenburg	SE-412 96	Sweden
-Siemens AG	Member of AENEAS	C	DE	DE129274202	Joerg Zapf	joerg.zapf@siemens.com	Wittelsbacherplatz 2	Munich	80333	Germany
-SIL System Integration Laboratory GmbH	Member of AENEAS	A	DE	DE262762019	Werner John	werner.john@sysint-lab.eu 	Technologiepark 32	Paderborn	D-33100	Germany
-SILIOS Technologies	Member of AENEAS	A	DE	FR29438925232	Stéphane Tisserand	stephane.tisserand@silios.fr	Rue Gaston Imbert prolongé / ZI de Peynier-Rousset	Peynier	13790	France
-Siltronic AG	Member of AENEAS	C	DE	DE177563163	 George Schwalb	georg.schwalb@siltronic.com	Hanns-Seidel Platz 4 	München	81737	Germany
-SINANO Institute	Member of AENEAS	Associated	FR	N/A	Francis Balestra	balestra@minatec.grenoble-inp.fr	IMEP-LAHC- MINATEC 3Parvis Louis Nee	Grenoble	38016	France
-SINTEF ICT	Member of AENEAS	B	NO	948007029MVA	Ernst Kristiansen	ernst.h.kristiansen@sintef.no	PO Box 124 Blindern 	Oslo	NO-0314	Norway
-Soitec SA	Member of AENEAS	C	FR	FR57384711909	Karine Lindheimer	karine.lindheimer@soitec.com	Service Comptabilité Fournisseur / Parc Technologique des Fontaines	Bernin	38190	France
-Sorama BV	Member of AENEAS	A	FR	NL822876784B01	Rick Scholte	rick.scholte@sorama.eu	Torenalle~	Eindhoven	5617BC	Netherlands
-Sorin CRM	Member of AENEAS	C	FR	FR30309786481	Renzo Dal Molin	renzo.dalmolin@sorin.com	"4 rue Réaumur, parc Noveos"	Clamart	92140	France
-Sound Intelligence BV	Member of AENEAS	A	NL	NL821594990B01	Derek van der Vorst	derek. vandervorst@soundintel.com	Maanlander 14N	Amersfoort	3824MP	Netherlands
-Spanish National Research Council (CSIC)	Member of AENEAS	B	ES	ES-Q2818002D	Gemma  Martinez	gemma.martinez@imb-cnm.csic.es	Vice-Presidency for international affairs / C/ Serrano 117	Madrid	28006	Spain
-spring techno GmbH & Co KG	Member of AENEAS	A	DE	DE272852390	Elke Pelikan	e.pelikan@springtechno.com	Hermann-K6hi·Str. 7	Bremen	28199	Germany
-STMicroelectronics International NV	Member of AENEAS	C	CH	CH150924444	Gérard Matheron	gerard.matheron@st.com	Succursale de Plan-les-Ouates / Chemin du Champ-des-Filles 39	Plan-les-Ouates GE	1228	Switzerland
-SUSS MicroTec AG	Member of AENEAS	C	DE	DE192123619	Margarete Zoberbier	margarete.zoberbier@suss.com 	Schleissheimer Str. 90 	Garching	85748	Germany
-SYSTEMA GmbH	Member of AENEAS	A	DE	DE159607786	Manfred Austen	Manfred.Austen@systemagmbh.de	Manfred-Von-Ardenne-Ring 6	Dresden	1099	Germany
-Technobis Fibre Technologies BV	Member of AENEAS	A	NL	NL817109717B01	Ellen Schipper	pim.kat@technobis.com	Pyrieststraat 2	Alkmaar	1812 SC	Netherlands
-Technolution BV	Member of AENEAS	A	NL	NL007781465B01	Dave Marples	dave.marples@technolution.eu	Zuidelijk Halfrond 1	Gouda	2801 DD	Netherlands
-Thales Research & Technology France	Member of AENEAS	C	FR	FR01383470937	Bertrand Demotes-Mainard	bertrand.demotes-mainard@thalesgroup.com	Research & Technology / Campus Polytechinque / 1 avenue Augustin Fresnel	Palaiseau Cedex	91767	France
-TNO 	Member of AENEAS	B	NL	NL002875718B01	Rogier Verberk	rogier.verberk@tno.nl	Accounts Payable / PO Box 96829	The Hague	2509 JE	Netherlands
-TopGaN Spzoo	Member of AENEAS	A	PL	PL5272354708	Michal Leszczynski	mike@unipress.waw.pl	29/37 Sokolowska Street	Warsaw	PO-01-142	Poland
-TU Dresden	Member of AENEAS	B	DE	DE188369991	Sven Kreigenfeld	sven.kreigenfeld@tu-dresden.de	Helmholtzstrasse 10	Dresden	1069	Germany
-TU Ilmenau	Member of AENEAS	B	DE	DE195822483	Peter Scharff	rektor@tu-ilmenau.de	Ehrenbergstrasse 29	Ilmenau	98693	Germany
-Tyndall National Institute	Member of AENEAS	B	IE	IE0006286E	Aidan Otoole	aidan.otoole@tyndall.ie	< Lee Maltings > / Dyke Parade	Cork		Ireland
-University of Calabria	Member of AENEAS	B	IT	IT80003950781	Pietro Pantano	pietro.pantano@unical.it	Via Pietro Bucci/ Cubo 7/11 B	Arcavacata di Rende	87036	Italy
-University of Cantabria	Member of AENEAS	B	ES	ES-Q3918001C	Angelo Pazos Carro	vr.investigacion@unican.es	Vicerrectorado de Investigación y Transferencia del Conocimiento  / Pabellón de Gobierno / Avda de los Castros s/n	Santander	39005	Spain
-University of Erlangen-Nuremberg	Member of AENEAS	B	DE	DE132507686	Lothar Frey	lothar.frey@iisb.fraunhofer.de	Lehrstuhl Elektronische Bauelemente	Erlangen	91058	Germany
-University of Klagenfurt 	Member of AENEAS	B	AU	ATU 37868802	Siegfried  Susitz	siegfried.susitz@aau.at	Universitaetsstrasse 65-67	Klagenfurt	9020	Austria
-University of Leuven	Member of AENEAS	B	BE	BE0419052173	Patricia Waege	patricia.waege@esat.kuleuven.be	"UZ-Leuven, MIRC Herestraat 49- bus 7003"	Leuven	3000	Belgium
-University of Milano-Bicocca	Member of AENEAS	B	IT	IT12621570154	Riccardo Borgoni	riccardo.borgoni@unimib.it	"Dept. DEMS, Economia, Metodi Quantitavi e Strategie di Impresa / P.zza dell'Ateneo Nuovo 1"	Milano	20126	Italy
-University of Modena	Member of AENEAS	B	IT	IT00427620364	Luca Larcher	luca.larcher@unimore.it	"VIA UNIVERSITA', 4"	Modena	41100	Italy
-University of Patras	Member of AENEAS	B	GR	EL998219694	Vassilis Anastassopoulos	vassilis@physics.upatras.gr	"Electronics Laboratory, Dept. of Physics "	Rion Patras	GR-26500	Greece
-University of Perugia	Member of AENEAS	B	IT	IT00448820548	Giuseppe Saccomandi	giuseppe.saccomandi@unipg.it	via G. Duranti 93	Perugia	6125	Italy
-Uppsala University	Member of AENEAS	B	SE	SE202100293201	Anders Rydberg	anders.rydberg@angstrom.uu.se 	Department of Engineering Sciences / Div. Solid State Electronics /Box 534	Uppsala	SE-75121	Sweden
-VDL Enabling Technologies Group	Member of AENEAS	C	NL	NL006300686B01	Guustaaf Savenije	guustaaf.savenije@vdletg.com	Hoevenweg1	Eindhoven	5652AW	Netherlands
-VDMA eV	Member of AENEAS	Associated	DE	VR 4278	Eric Maiser	eric.maiser@vdma.org	Lyoner Str. 18   	Frankfurt am Main	60528	Germany
-Vereniging High Tech NL	Member of AENEAS	Associated	NL	NL819977718B01	Willem Endhoven	willem.endhoven@hightechnl.nl	High Tech Campus  69	Eindhoven	5656 AG	Netherlands
-Vilnius University	Member of AENEAS	B	LT	LT119508113	Mangirdas Malinauskas	mangirdas.malinauskas@ff.vu.lt	Sauletekio avenue 9	Vilnuis	LT-10222	Lithuania
-VTT Technical Research	Member of AENEAS	B	FI	FI26473754	Jyrki Kiihamäki	jyrki.kiihamaki@vtt.fi	P.O.Box 8003	Ostolaskut	FI-00071	Finland
-X-FAB Semiconductor Foundries AG	Member of AENEAS	C	DE	DE 285 362 803	Herwig Doellefeld	herwig.doellefeld@xfab.com	Haarbergstrasse 67	Erfurt	99097	Germany
-Zemsania SL	Member of AENEAS	C	ES	B63130074	Raul Nicasi Gomez	rnicasi@zemsania.com	Carrer Pallars 193-205 Planta 11	Barcelona	8005	Spain
+Parent	Type	Status	ISO 2	VAT	First name	Middle Name	Last Name	email	address	city	zip	country
+AT & S Austria Technologie & Systemtechnik AG	ECSEL DoA 	Other	AU	UID ATU 29743506	Heintz		Moitzi	h.voraberger@ats.net	Fabriksgasse 13	Leoben	8700	AU
+CRYTUR spol sro	ECSEL DoA 	Other	CZ	CZ25296558	Jindrich		Houzvicka	Jindrich.Houzvicka@crytur.cz	Palackélo 175	Turnov	511 01	CZ
+EMC Israel Advanced Information Technologies	ECSEL DoA 	Other	IL	NL815151524B01	Hila		Gilboa	hila.gilboa@emc.com	Hamad 7	Herzliya		IL
+Fujifilm Electronic Materials NV	ECSEL DoA 	Other	BE	GB522953152	Hermann		Drieghe	herman_drieghe@fujifilm-ffem.com	Keetberglaan 1A	Zwijndrecht		BE
+Ibermática SA	ECSEL DoA 	Other	ES	ESA20038915	Itzia	Cuenca	Zuloaga	ia.cuenca@ibermatica.com	Paseo Mikeletegi 5	Donostia San Sebastian		ES
+Institute of Physics of the Czech Academy of Sciences	ECSEL DoA 	Other	CZ	CZ68378271	Jan	Ridky		secretary@fzu.cz	Na Slovance 2	Prague		CZ
+JSR Micro NV	ECSEL DoA 	Other	BE	BE0429388316				bruno.roland@jsrmicro.be	Technologielaan 8	Leuven	3001	BE
+LLRC OG	ECSEL DoA 	Other	AU	ATU702 LO4O7	Harald		Okorn-Schmidt	harald.okorn-schmidt@llrc.at	Gerlitzenweg 10	Klagenfurt		AU
+Noray Bioinformatics SL	ECSEL DoA 	Other	ES	695229837	Julio		Font	font@noraybio.com	Parque Tecno16gico de Bizkaia	Derio	801A	ES
+OTH Amberg-Weiden - Technical University of Applied Science	ECSEL DoA 	Other	DE	DE 814759583	Andreas		Kluge	a.klug@oth-aw.de	Kaiser Wilhem Ring 23	Amberg	92224	DE
+TOWA Europe BV	ECSEL DoA 	Other	NL	NL853236616B01	H.W.P.		Claassen	h_claassen@towaeurope.com	Geograaf 14	Duiven	6921EW	NL
+University of the Basque Country 	ECSEL DoA 	Other	ES	Q4818001B	Fernando	Plazaola	Muguruza	proyectoseuropeos@ehu.es	Barrio Sarriena s/n	Leioa	48940	ES
+znt Sentren für Neue Technologien GmbH	ECSEL DoA 	Other	DE	DE 129 449 967	Bernhard	Marsoner		Bernhard.Marsoner@znt-richter.de	Lena-Christ-Str. 2	Grunwald	82031	DE
+AEROVIA SAS	ENIAC/ECSEL DoA	Other	FR	FR86523585396	Ronan		Le Loarer	rleloarer@aerovia.fr	C/o GSMA - Campus des Sciences	Reims Cedex 2	51687	FR
+Air Liquide Electronics Systems	ENIAC/ECSEL DoA	Other	FR	FR49421167966	Philippe		Bottu	philippe.bottu@airliquide.com	8 rue des Méridiens	Echirolles Cedex	38433	FR
+CEST Kompetenzzentrum für elektrochemische Oberflächentechnologie GmbH	ENIAC/ECSEL DoA	Other	AU	ATU64395416	Alexander		Balatka	alexander.balatka@cest.at	Viktor Kaplan Str. 2	Wiener Neustadt	2700	AU
+Fläkt Woods Oy	ENIAC/ECSEL DoA	Other	FI	FI24958758	Markku		Hevonoja	markku.hevonoja@flaktwoods.com	Kalevantie 39	Turku	20520	FI
+Mechatronic Systemtechnik GmbH	ENIAC/ECSEL DoA	Other	DE	ATU45875600	Walter		Schober	walter.schober@mechatronic.at	Tiroler Strasse 80	Villach	A-9500	AU
+Munisense BV	ENIAC/ECSEL DoA	Other	NL	NL819071006B01	Hans		Mulder	hans.mulder@munisense.com	Fruitweg 36	DH Leiden	2321	AU
+PKC Electronics Oy	ENIAC/ECSEL DoA	Other	FI	FI19156697	Jarmo		Rajala	jarmo.rajala@pkcgroup.com	Pajuniityntie 43	Raahe	FI-92120 	FI
+University of Kassel	ENIAC/ECSEL DoA	Other	DE	DE113057055	Rolf-Dieter		Postlep	sreinhar@uni-kassel.de	FB 16 IEE-EVS	Kassel	D-34122	DE
+Vabrema BV	ENIAC/ECSEL DoA	Other	NL	NL821209929B01	J.J.		Maltha	j.j.maltha@vabrema.nl	Horsten 1	Eindhoven	5612 AX	NL
+Vaisala Oyj	ENIAC/ECSEL DoA	Other	FI	FI01244162	Liisa		Aström	liisa.astrom@vaisala.com	Vanha Nurmijärventie 21	Vantaa	FI-01670	FI
+AAE BVB	ENIAC/ECSEL DoA 	Other	NL	NL003584744B01	Manon		Pijnenburg	manon.pijnenburg@aaebv.com	Grasbeemd 2	Helmond	5705 DG	NL
+Aalto University	ENIAC/ECSEL DoA 	Other	FI	FI22283574	Tuija		Pulkkinen	tuija.pulkkinen@aalto.fi	Dept. of Electrical Engineering and Automation	Aalto	FI-00076	FI
+Advance Mask Technology Center Dresden GmbH & Co KG	ENIAC/ECSEL DoA 	Other	DE	DE223348968	Thomas		Schmidt	thomas.schmidt@amtc-dresden.com	Rähnitzer Allee 9	Dresden	DE-01109	DE
+Advanced Packaging Center BV	ENIAC/ECSEL DoA 	Other	NL	NL821611203B01	Eef		Boschman	eefboschman@apcenter.nl	Stenograaf 3	Duiven	6921EX	NL
+AIS Automation Dresden GmbH	ENIAC/ECSEL DoA 	Other	DE	DE263814591	Dirk		Sauer	dirk.sauer@ais-automation.com	Otto-Mohr Strasse 6	01237 Dresden		DE
+AIT Austrian Institute of Technology GmbH	ENIAC/ECSEL DoA 	Other	AU	ATU14703506	Eva-Maria	Pasler	Plimon	eva.pasler@ait.ac.at	Donau-City-Strasse 1	Vienna	1220	AU
+APIX Analytics SAS	ENIAC/ECSEL DoA 	Other	FR	FR90803133933	Philippe		Andreucci	philippe.andreucci@apixanalytics.com	Minatec Campus	Grenoble Cedex 9	38040	FR
+Arkema France SA	ENIAC/ECSEL DoA 	Other	FR	FR32319632790	Christian		Collette	christian.collette@arkema.com	420 rue d'Estienne d'Orves	Colombes Cedex	92705	FR
+ARMINES	ENIAC/ECSEL DoA 	Other	FR	FR84 775 664 113	Philippe		Le Bozec	philippe.le_bozec@mines-paristech.fr	60 Boulevard Saint-Michel	Paris Cedex 06	75272	FR
+Aselta Nanographics SA	ENIAC/ECSEL DoA 	Other	FR	FR51518365200	Jean		Mirallie	jean.mirallie@aselta.com	7, parvis Louis Neel	Grenoble	38000	FR
+Asygn	ENIAC/ECSEL DoA 	Other	FR	FR38501914998	Daniel		Saias	daniel.saias@asygn.com	445 rue Lavoisier	Montbonnot Saint Martin	38330	FR
+ATRENTA France SAS	ENIAC/ECSEL DoA 	Other	FR	FR72519737951	Fahim		Rahim	fahim@atrenta.com	7 parivs Louis Néel	Grenoble	38040	FR
+Automotive Industry Institute (PIMOT)	ENIAC/ECSEL DoA 	Other	PL	PL5250008821	Andrzej		Muszynski	a.muszynski@pimot.org.pl	Przemyslowy Instytut Motoryzacji	Warszawa	03-301 	PL
+AVL List GmbH	ENIAC/ECSEL DoA 	Other	DE	ATU28752908	Josef		Affenzeller	josef.affenzeller@avl.com	Hans-List-Platz 1	Graz	8020	DE
+Axxicon Moulds Eindhoven BV	ENIAC/ECSEL DoA 	Other	NL	NL009670944B05	#REF!			a.dejong@axxicon.com	Ekkersrijt 7501	Son	5692 HN	NL
+Benchmark Electronics BV	ENIAC/ECSEL DoA 	Other	NL	NL807680588B01	Marco		Wigger	marco.wigger@bench.com	Lelyweg 10	Overijsel	7602 EA	NL
+Berliner Glas KGaA	ENIAC/ECSEL DoA 	Other	DE	DE135830560	Volker		Schmidt	vschmidt@berlinerglas.de	Waldkraiburger Str. 5	Berlin	12347	DE
+BodyCap	ENIAC/ECSEL DoA 	Other	FR	FR31537927733	Fabrice		Verjus	fabrice.vergus@bodycap-medical.com	6 Rue de la Girafe	CAEN	14000	FR
+Brooks Automation GmbH	ENIAC/ECSEL DoA 	Other	DE	DE217099329	David		Pietrantoni	david.pletrantoni@brooks.com	Ernst-Ruska Ring 11	Jena	7745	DE
+camLine GmbH	ENIAC/ECSEL DoA 	Other	DE	DE128218628	Georg		Ruetz	georg.ruetz@camline.com	Industriering 4a	Petershausen	85238	DE
+CCM Centre for Concepts in Mechatronics BV	ENIAC/ECSEL DoA 	Other	NL	NL005993015B01	Hans		Michels	hans.michels@ccm.nl	De Pinckart 24	Nuenen	5674 CC	NL
+CEZAMAT PW Spzoo	ENIAC/ECSEL DoA 	Other	PL	7010346175	Mariusz		Wielec	m.wielec@cezamat.eu	ul. Polna 50	Warsaw	00-644	PO
+CIAT	ENIAC/ECSEL DoA 	Other	FR	FR01545620114	Nicolas		Chouteau	n.chouteau@ciat.fr	Comptabilité Fournisseurs	Culoz	1350	FR
+Claude Bernard Lyon 1 University	ENIAC/ECSEL DoA 	Other	FR	FR6119691 7744	François-Noel		Gilly	franCois-noel.gilly@univ-lyonl.fr	Laboratoire Multimatériaux et interfaces	Villeurbanne	69100	FR
+CNES - Centre National d'Etudes Spatiales	ENIAC/ECSEL DoA 	Other	FR	FR49775665912	Francis 	Pressecq	Pircher	francis.pressecq@cnes.fr	2, Place Maurice Quentin	Paris Cedex 01	75039	FR
+COMELEC SA	ENIAC/ECSEL DoA 	Other	CH	CHE.103.961.617	Hicham		DAMSIR	h.damsir@comelec.ch	Rue de Ia Paix 129.	LA CHAUX DE FONDS	CH-2301	CH
+CTTC - Centre Tecnològic de Telecomunicacions de Catalunya	ENIAC/ECSEL DoA 	Other	ES	ESG62616586	Miguel Angle	Lagunas	Hernandez	m.a.lagunas@cttc.es	Av. Canal Olimpic S/N	Barcelona	ES-08860	ES
+Cytocentrics Bioscience GmbH	ENIAC/ECSEL DoA 	Other	DE	DE 815 322 907	Thomas		Knott	t.knott@cytocentrics.de	Tannenweg 22 k	Rostock	18059	DE
+Cytocentrics BV	ENIAC/ECSEL DoA 	Other	NL	NL81379S916B01	Peter	van	Stiphout	stiphout@cytocentrics.nl	High tech Campus 9	Eindhoven	5656AE	NL
+D4T Systems BV	ENIAC/ECSEL DoA 	Other	NL	NL821224530B01	Leon	van	de Logt	leon.van.de.logt@d4t-systems.com	Asterstraat 2 	Son	5691SM 	NL
+Dainippon Screen Deutschland GmbH	ENIAC/ECSEL DoA 	Other	DE	DE119371681	Hans-Ulrich		Rutz	u.ruetz@scrccn-dsd.de	MUndelheimer Weg 39	DUsseldorf	D-40472	DE
+Design and Reuse SA	ENIAC/ECSEL DoA 	Other	FR	FR04413959008	Gabriele		Saucier	gabriele.saucier@design-reuse.com	12 rue Ampère 	Grenoble	38000	FR
+DEST sp.j	ENIAC/ECSEL DoA 	Other	PL	PL7290110053	Jeroslaw		Dybowski	jd@dest.pl	Dybowski Tomczak sp.j.	Lodz	93-563	PL
+DxO Labs SAS	ENIAC/ECSEL DoA 	Other	FR	ATU28752908	Steve		Schaub	sschaub@dxo.com	3 rue Nationale	Boulogne Billancourt	92100	FR
+DxO Silicon Group	ENIAC/ECSEL DoA 	Other	FR	FR45453189540	Jérome		Ménière	sschaub@dxo.com	6 rue Jean Pierre Timbaud	Montigny le Bretonneaux	78180	FR
+e2v Semiconductors 	ENIAC/ECSEL DoA 	Other	FR	FR24341470656	Laurent		Monge	laurent.monge@e2v.com	Saint-Egrève		38521	FR
+Effegi Elettronica Srl	ENIAC/ECSEL DoA 	Other	IT	IT05727680018	Piercarlo		Taverna	piercarlo.taverna@effegiel.it	Via Pancalieri 37 bis	Vigone	10067 TO	IT
+Enecsys Ltd	ENIAC/ECSEL DoA 	Other	GB	GB884445194	David		White	david.white@enecsys.com	24 Hills Road	Cambridge	CB2 1JP	GB
+Entegris Cleaning Process SAS	ENIAC/ECSEL DoA 	Other	FR	FR55443186580	Oliver		Prioux	olivier_prioux@entegris.com	395 rue Louis Lépine	Montpellier	34000	FR
+EPFL - Ecole Polytechnique Fédérales de Lausanne	ENIAC/ECSEL DoA 	Other	CH	CH273865	Benoit		Deveaud-Plédran	grants_office@epfl.ch	ELB 235 (Bâtiment ELB)	Lausanne	CH-1015	CH
+Erasmus MC Rotterdam	ENIAC/ECSEL DoA 	Other	NL	NL807181997B01	Jaap		Verweij	j.verweij@erasmusmc.nl	s-Gravendijkwal 230	Rotterdam	3015 CE	NL
+EV Group E. Thallner GmbH	ENIAC/ECSEL DoA 	Other	AU	DE140207637	Paul		Linder	p.lindner@evgroup.com	DI Erich Thallner Strasse 1	ST Florian AM INN	A-4782	AU
+Eveon SAS	ENIAC/ECSEL DoA 	Other	FR	FR 6450967503	Vincent		TEMPELAERE	vte@eveon.eu	345, Rue Lavoisier	Montbonnot Saint Martin	38330	FR
+FEI Czech Republic sro	ENIAC/ECSEL DoA 	Other	CZ	CZ46971629	Jiri		Ocadlik	jiri.ocadlik@fei.com	Vlastimila Pecha 12	Brno-Slatina	627 00	CZ
+FEI Electron Optics BV	ENIAC/ECSEL DoA 	Other	NL	NL801626857B01	A.F.		de Jong	Frank.de.Jong@fei.com	Building III 1-178	Eindhoven	5651 GG	NL
+Ferfics Ltd	ENIAC/ECSEL DoA 	Other	IE	IE96751950	Eugene		Heaney	eugene@ferfics.com	Hoffmann Park	Cork		IE
+FH Stralsund University of Applied Sciences	ENIAC/ECSEL DoA 	Other	DE	DE234311498	Arthur		Deutschlander	Arthur.deutscglaender@fh-strasund.de	Zur Schewedenschanze 16	Strlsund	D-18436	DE
+Focal 2.0 BV	ENIAC/ECSEL DoA 	Other	FR	N L85057 3245801	Robert		Evers	Robert.evers@focal.nl	lnstitutenweg 25A	Enschede	7521 PH	NL
+FOCUSSIA	ENIAC/ECSEL DoA 	Other	FR	FR22799318092	Francis		Romano	francis.romano@focussia.com	12 Avenue Guillaume Pellicier	St Mathieu de Treviers	34270	FR
+Foundation for Research and Technology Hellas	ENIAC/ECSEL DoA 	Other	GR	EL090101655	Fotakis		Costas	fotakis@iesl.forth.gr	N Plastira Str 100	Heraklion	70013	GR
+Fronius International GmbH	ENIAC/ECSEL DoA 	Other	AU	ES-G20545729	Heinz		Hackl	hackl.heinz@fronius.com	Günter-Fronius-Str. 1 	Thalheim/Wels	A4609	AU
+Global TCAD Solutions GmbH	ENIAC/ECSEL DoA 	Other	DE	ATU66682468	Christian		Kernstock	c.kernstock@globaltcad.com	Landhausgasse 4/la	Vienna	1010	AU
+Guger Technologies OG	ENIAC/ECSEL DoA 	Other	AU	ATU48363202	Günter		Edlinger	edlinger@gtec.at	Herbersteinstrasse 60	Graz	A-8020	AU
+Heraeus Quarzglas GmbH & Co KG	ENIAC/ECSEL DoA 	Other	DE	DE812593070	Wolfgang		Stang	wolfgang.stang@heraeus.com	Reinhard-Heraeus-Ring 29	Kleinostheim	63801	DE
+HOP Ubiquitous SL	ENIAC/ECSEL DoA 	Other	ES	ESB73816589	Apolonia	Valera	Guirado	info@hopu.eu	Luis Bunuel 6	Ceuti	30562	ES
+HQ-Dielectrics GmbH	ENIAC/ECSEL DoA 	Other	DE	DE268025856	Wilhelm		Beckmann	wilhelm.beckmann@hq-dielectrics.eu	Postfach 49	Dornstadt	89156	DE
+IBEC - Institut de Bioenginyeria de Catalunya	ENIAC/ECSEL DoA 	Other	ES	ES-G64045719	Josep		Samitier	projects@ibecbarcelona.eu	c/ Baldiri Reixac 10-12	Barcelona	ES-08028	ES
+IMS CHIPS - Institut fuer Mikroelektronik Stuttgart	ENIAC/ECSEL DoA 	Other	DE	DE147794161	Mathias		lrmscher	irmscher@ims-chips.de	Allmandring 30a	Stuttgart	D-70569	DE
+Insta Elektro GmbH	ENIAC/ECSEL DoA 	Other	DE	DE219699886	Alexander		Burgbacher	a.burgbacher@insta.de	Hohe Steinert 10	Lüdenscheid	58509	DE
+Institut National de l'Information Géographique et Forestière (IGN)	ENIAC/ECSEL DoA 	Other	FR	FR18180067019	Denis		Priou	denis.priou@ensg.eu	73 avenue de Paris	Saint Mande Cedex	94165	FR
+Ippon Innovation	ENIAC/ECSEL DoA 	Other	FR	FR18180067019	François		Bergeret	francois.bergeret@ippon-innov.eu	4 rue Poisson	Toulouse 	31500	FR
+IQE Europe Ltd	ENIAC/ECSEL DoA 	Other	GB	GB771290625	Phillip		Rasmussen	prasmussen@iqep.com	Pascal Close	 South Glamorgan	CF3 0LW Cardiff	GB
+Iquadrat Informatica SL	ENIAC/ECSEL DoA 	Other	ES	ESB61526646	David	Boixade	Vila	david@iquadrat.com	Passeig Sant Joan 89, local 3	Barcelona	ES-08009	ES
+Irmato Industrial Solutions Eindhoven BV	ENIAC/ECSEL DoA 	Other	NL	NL821332776B01	Henny	Van	Doorne	hvandoorne@irmato.com	Amenstraat 17	Stramproy	6039 RA	NL
+iRoC Technologies SA	ENIAC/ECSEL DoA 	Other	FR	FR47428924732	Dan		Alexandrescu	dan@iroctech.com	WTC PO BOX 1510	Grenoble	38025	FR
+Iszgro Diodes BV	ENIAC/ECSEL DoA 	Other	NL	NL8189.97.990.B.Ol	Theo		Zoumpoulidis	t.zoumpoulidis@iszgro.com	Delftechpark 26	Delft	2628XH	NL
+JENOPTIK Optical Systems GmbH	ENIAC/ECSEL DoA 	Other	DE	DE811846020	Oliver		Falkenstorfer	oliver.falkenstoerfer@jenoptik.com	Goschwitzer SraBe 2'5	Jena	7745	GE
+JOANNEUM RESEARCH Forschungsgesellschaft GmbH	ENIAC/ECSEL DoA 	Other	AU	ATU28781306	Wolfgang		Pribyl	wolfgang.pribyl@joanneum.at	LeonhardstraBe 59	Graz	8010	AU
+Johannes Kepler University Linz	ENIAC/ECSEL DoA 	Other	AU	ATU57515567	Andreas		Springer	andreas.springer@jku.at	Altenbergerstrasse  69	Linz	4040	AU
+JTAG Technologies BV	ENIAC/ECSEL DoA 	Other	NL	NL802035310B01	Peter	van	den	peter@jtag.nl	Boschdijk 50	Eindhoven	5612 AN	NL
+KMWE Systems Eindhoven BV	ENIAC/ECSEL DoA 	Other	NL	NL007563553B01	Edward		Voncken	e.voncken@kmwe.com	Croy 11	Eindhoven	NL-5653 LC	NL
+Lear Corporation GmbH	ENIAC/ECSEL DoA 	Other	DE	DE235710104	Reiner		Thueroff	rthueroff@lear.com	Industriestr. 48	Kronach	96317	DE
+LOX Technologies	ENIAC/ECSEL DoA 	Other	SK	SK2024064119	Eduard		Burian	eduard.burian@gmail.com	Rusovska 7	Bratislava	85101	SK
+Magillem Design Services SAS	ENIAC/ECSEL DoA 	Other	FR	FR56492681671			Geday	contact@magillem.com	4 rue de la Pierre Levée	Paris	75011	FR
+Materials Center Leoben 	ENIAC/ECSEL DoA 	Other	AU	ATU47691500	Alexandra		Purkarthofer	alexandra.purkarthofer@mcl.at	Forschung GmbH	Leoben	8700	AU
+Medimetrics Personalized Drug Delivery BV	ENIAC/ECSEL DoA 	Other	NL	NL850720795B01	Jeffrey		Shimizu	jeff.shimizu@medimetrics.com	High Tech Campus 10	Eindhoven	5656	NL
+Medtronic Bakken Research BV 	ENIAC/ECSEL DoA 	Other	NL	NL8506.lJ0.340.8lll	Daniel		Schobben	sjaak.deekers@medtronic.com	High Tech Campus 41-p-038	Eindhoven	565AE	NL
+Micronit Microfluidics BV	ENIAC/ECSEL DoA 	Other	NL	NL809482952B01	Ronny	van	t Oever	ronny.oever@micronit.com	Colosseum 15	Enschede	7521 PV	NL
+Minimax GmbH & Co KG	ENIAC/ECSEL DoA 	Other	DE	DE813746399	Jan		Witte	wittej@minimax.de	Industriestrasse 10/12	Bad Oldesloe	D-23840	DE
+Mogema BV	ENIAC/ECSEL DoA 	Other	NL	NL005850897B42	Peter		Zuidgeest	invoice@mogema.nl	Industrieweg 9	GS 't Harde	8084	NL
+MTA Atomki - Institute for Nuclear Research	ENIAC/ECSEL DoA 	Other	HU	NL817455383B01	Fülöp		Zsolt	fulop.zsolt@atomki.mta.hu	Bem tér 18/c	Debrecen	4026	HU
+Multi Channel Systems GmbH	ENIAC/ECSEL DoA 	Other	DE	HU15300344	Karl-Heinz		Boven	boven@multichannelsystems.com	Aspenhaustrasse 21	Reutlingen	72770	DE
+MunEDA GmbH	ENIAC/ECSEL DoA 	Other	DE	DE812498960	Harald		Neubauer	harald.neubauer@muneda.com	Stefan-George-Ring 29	Munich	81929	DE
+Murata Electronics Oy	ENIAC/ECSEL DoA 	Other	FI	DE219741262	Heikki		Kuisma	heikki.kuisma@murata.com	Myllynkivenkuja 6	Vantaa	1620	FI
+Nanium SA	ENIAC/ECSEL DoA 	Other	PT	PT503690287	Armando		Tavares	finance@nanium.com	Avenida 1° de Maio 801		4485-629 Vila do Conde	PT
+Nanomotion Ltd	ENIAC/ECSEL DoA 	Other	IL	511708414	Shai		Meltzer	shai.meltzer@nanomotion.com	Mordot Hacarmel Industrial Park	Yoknram	20692	IL
+neoplas control GmbH	ENIAC/ECSEL DoA 	Other	DE	DE246103500	Henrik		Zimmermann	henrik.zimmermann@neoplas-control.de	Walther-Rathenau-Str. 49a	Greifswald	17489	DE
+Neways Technologies BV	ENIAC/ECSEL DoA 	Other	NL	NL806968242B01	Adrie	van	Bragt	adrie.van.bragt@neways.nl	Science Park Eindhoven 5004	Son	5692 EA	NL
+Niko NV	ENIAC/ECSEL DoA 	Other	BE	BE0405045670	Jurgen		Denul	jde@niko.be	Industriepark West 40	Sint-Niklaas	B-9100	BE
+NLR - Nationaal Lucht- en Ruimtevaart Laboratorium	ENIAC/ECSEL DoA 	Other	NL	NL002760551B01	L.W.		Esselman	marcel.pielstroom@nlr.nl	Anthony Fokkerweg 2	Amsterdam	NL-1059 CM	NL
+NOKIA 	ENIAC/ECSEL DoA 	Other	AG	DE147799498	Andreas		Leven	aodreas.leven@alcatel-lucent.com	Lorenzstr. 10	Stuttgart	70435	AG
+Oberthur Technologies	ENIAC/ECSEL DoA 	Other	FR	FR38340709534	Marc		Bertin	m.bertin@oberthur.com	50 Quai Michelet	Levallois-Perret Cedex	92535	FR
+Okmetic Oyj	ENIAC/ECSEL DoA 	Other	FI	FI05968854	Markku		Tilli	markku.tilli@okmetic.com	Piitie 2	Vantaa		FI
+OSRAM GmbH	ENIAC/ECSEL DoA 	Other	DE	DE811148275	Klaus		Ziemssen	k.ziemssen@osram.com	AC 3 3	Munich	80807	DE
+OSYPKA AG 	ENIAC/ECSEL DoA 	Other	FR	DE177655505	Achim		Kitschmann	a.kitschmann@osypka.de	Earl-H-Wood-Strasse 1	Rheinfelden	D-79618	FR
+Oxford Instruments Plasma Technology Ltd	ENIAC/ECSEL DoA 	Other	GB	GB596117025	Mike	Cooke	Anderson	mike.cooke@oxinst.com	North End, Yatton	Bristol	 BS49 4AP	GB
+PacTech GmbH	ENIAC/ECSEL DoA 	Other	DE	DE175046928	Heinrich		Lüdeke	luedeke@pactech.de	Am Schlangenhorst 15-17	Nauen	14641	DE
+Phoenix BV	ENIAC/ECSEL DoA 	Other	NL	NL811567655B01	Markus	Twan	Korthorst	twan.korthorst@phoenixbv.com	Hengelosestraat 705	Enschede	7521 PA	NL
+Physikalisch-Technische Bundesanstalt	ENIAC/ECSEL DoA 	Other	DE	DE811240952	Manfred		Gahrens	Manfred.Gahrens@ptb.de	P.O. Box 33 45	Braunschweig	38023	DE
+Plansee SE	ENIAC/ECSEL DoA 	Other	AU	ATU32990305	Tobias	Mrotzek	Walser	tobias.mrotzek@plansee.com	Metallwerk-Plansee-Str. 71	Reutte	A-6600	AU
