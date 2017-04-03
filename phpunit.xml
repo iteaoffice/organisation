@@ -10,6 +10,7 @@
 >
     <testsuite name="iteaoffice/organisation">
         <directory>./test</directory>
+        <directory>./vendor/iteaoffice/testing</directory>
     </testsuite>
 
     <filter>
