@@ -3,14 +3,15 @@
 
 {{ form().openTag(form)|raw }}
 
-{% set financialForm = form.get('financial') %}
+{% set financialForm = form.get('organisation_entity_financial') %}
 
+{{ ztbformelement(financialForm.get('id')) }}
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{ translate("txt-debtor-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ organisationService.parseDebtorNumber() }}</p>
+        <p class="form-control-static">{{ organisationService.parseDebtorNumber(organisation) }}</p>
     </div>
 </div>
 
@@ -18,7 +19,7 @@
     <label class="col-sm-3 control-label">{{ translate("txt-credit-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ organisationService.parseCreditNumber() }}</p>
+        <p class="form-control-static">{{ organisationService.parseCreditNumber(organisation) }}</p>
     </div>
 </div>
 
@@ -30,9 +31,10 @@
     <label class="col-sm-3 control-label">{{ translate("txt-vat-status") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static"><span id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
+        <p class="form-control-static"><span
+                    id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
                 ({{ financial.dateVat|string_date }})</span>
-        <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i></p>
+            {#<i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i></p>#}
     </div>
 </div>
 
@@ -40,6 +42,7 @@
 {{ ztbformelement(financialForm.get('omitContact')) }}
 {{ ztbformelement(financialForm.get('iban')) }}
 {{ ztbformelement(financialForm.get('bic')) }}
+{{ ztbformelement(financialForm.get('supplierNumber')) }}
 {{ ztbformelement(financialForm.get('requiredPurchaseOrder')) }}
 {{ ztbformelement(financialForm.get('email')) }}
 

@@ -35,8 +35,7 @@
             <tbody>
             {% for organisation in paginator.getCurrentItems() %}
                 <tr>
-                    {% set organisationService = organisationServiceProxy(organisation) %}
-                    <td>{{ organisationLink(organisationService,'view','name') }}</td>
+                    <td>{{ organisationLink(organisation,'view','name') }}</td>
                     <td>{{ countryLink(organisation.country,'view','name') }}</td>
                     <td>{{ organisation.type }}</td>
                 </tr>
@@ -49,21 +48,21 @@
 
 <script type="text/javascript">
     $("#organisationSearch").on('submit', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    url: 'organisation/search',
-                    data: {
-                        max_rows: 12,
-                        search_item: $("#search").val()
-                    },
-                    success: function (data) {
-                        $("#organisation-list").html(data);
-                        $("#throbber").remove();
-                    },
-                    error: function (event, ui) {
-                        alert("Search Failed");
-                    }
-                });
-            }
+            e.preventDefault();
+            $.ajax({
+                url: 'organisation/search',
+                data: {
+                    max_rows: 12,
+                    search_item: $("#search").val()
+                },
+                success: function (data) {
+                    $("#organisation-list").html(data);
+                    $("#throbber").remove();
+                },
+                error: function (event, ui) {
+                    alert("Search Failed");
+                }
+            });
+        }
     );
 </script>

@@ -1,0 +1,194 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-merge-organisation-%s")|format(target)) %}
+
+{% do mergeForm.prepare() %}
+
+{{ form().openTag(mergeForm)|raw }}
+<h1>{{ translate("txt-merge-organisation-%s")|format(target) }}</h1>
+<p>{{ translate("txt-merge-organisation-explanation") }}</p>
+{{ ztbformelement(mergeForm.get('swap')) }}
+
+{% if errors|length > 0 %}
+    <div class="alert alert-danger">
+        <strong>{{ translate("txt-organisations-cannot-be-merged-because") }}</strong>
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-5 col-sm-6">
+        <h2>{{ translate("txt-source") }}</h2>
+        <hr>
+        <h3>{{ translate("txt-general") }}</h3>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-name") }}</dt>
+            <dd>{{ organisationLink(source, 'view-admin') }} {{ organisationLink(source, 'edit', 'icon') }}</dd>
+            <dt>{{ translate("txt-description") }}</dt>
+            <dd>{{ source.description|raw }}</dd>
+            <dt>{{ translate("txt-organisation-type") }}</dt>
+            <dd>{{ source.type }}</dd>
+            <dt>{{ translate("txt-country") }}</dt>
+            <dd>{{ source.country }}</dd>
+            <dt>{{ translate("txt-contacts") }}</dt>
+            <dd>{{ organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
+                )
+            </dd>
+            <dt>{{ translate("txt-projects") }}</dt>
+            <dd>{{ organisationService.getAffiliationCount(source, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
+            <dt>{{ translate("txt-websites") }}</dt>
+            {% for web in source.web %}
+                <dd><a href="{{ web.web }}">{{ web.web }}</a></dd>
+            {% else %}
+                <dd>{{ translate("txt-no-website-known") }}</dd>
+            {% endfor %}
+
+            {% if source.getDateCreated() %}
+                <dt>{{ translate("txt-date-created") }}</dt>
+                <dd>{{ source.getDateCreated()|string_date }}</dd>
+            {% endif %}
+            {% if source.getDateUpdated() %}
+                <dt>{{ translate("txt-last-update") }}</dt>
+                <dd>{{ source.getDateUpdated()|string_date }}</dd>
+            {% endif %}
+        </dl>
+        <h3>{{ translate("txt-financial") }}</h3>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-debtor-number") }}</dt>
+            <dd>{{ organisationService.parseDebtorNumber(source) }}</dd>
+            <dt>{{ translate("txt-credit-number") }}</dt>
+            <dd>{{ organisationService.parseCreditNumber(source) }}</dd>
+        {% set financial = source.financial %}
+        {% if financial %}
+            <dt>{{ translate("txt-vat-number") }}</dt>
+            <dd>{{ financial.vat }}
+                (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
+                    - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
+                <i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i>
+            </dd>
+            <dt>{{ translate("txt-vat-type") }}</dt>
+            {% for vatType in financial.vatType %}
+                <dd>{{ vatType.type }}</dd>
+            {% else %}
+                <dd>{{ translate("txt-no-vat-enforcement") }}</dd>
+            {% endfor %}
+            <dt>{{ translate("txt-omit-contact-on-invoice") }}</dt>
+            <dd>{{ translate(financial.getOmitContact(true)) }}</dd>
+            <dt>{{ translate("txt-invoice-via-email") }}</dt>
+            <dd>{{ translate(financial.getEmail(true)) }}</dd>
+            <dt>{{ translate("txt-require-purchace-order") }}</dt>
+            <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
+            <dt>{{ translate("txt-iban") }}</dt>
+            <dd>{{ financial.iban }}</dd>
+            <dt>{{ translate("txt-bic") }}</dt>
+            <dd>{{ financial.bic }}</dd>
+            <dt>{{ translate("txt-supplier-number") }}</dt>
+            <dd>{{ financial.supplierNumber }}</dd>
+            <dt>{{ translate("txt-amount-of-invoices") }}</dt>
+            <dd>
+                <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ source.invoice.count() }}</a>
+            </dd>
+        </dl>
+        {% else %}
+            </dl>
+            {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(source))|raw }}
+        {% endif %}
+    </div>
+
+    <div class="col-md-2 hidden-sm hidden-xs text-center" style="margin-top:200px;">
+        <h2><i class="fa fa-arrow-circle-right fa-2x"></i></h2>
+    </div>
+    <div class="hidden-lg hidden-md hidden-sm text-center">
+        <h2><i class="fa fa-arrow-circle-down fa-2x"></i></h2>
+    </div>
+
+    <div class="col-md-5 col-sm-6">
+        <h2>{{ translate("txt-target") }}</h2>
+        <hr>
+        <h3>{{ translate("txt-general") }}</h3>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-name") }}</dt>
+            <dd>{{ organisationLink(target, 'view-admin') }} {{ organisationLink(target, 'edit', 'icon') }}</dd>
+            <dt>{{ translate("txt-description") }}</dt>
+            <dd>{{ target.description|raw }}</dd>
+            <dt>{{ translate("txt-organisation-type") }}</dt>
+            <dd>{{ target.type }}</dd>
+            <dt>{{ translate("txt-country") }}</dt>
+            <dd>{{ target.country }}</dd>
+            <dt>{{ translate("txt-contacts") }}</dt>
+            <dd>{{ organisationService.getContactCount(target, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
+                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(target, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
+                )
+            </dd>
+            <dt>{{ translate("txt-projects") }}</dt>
+            <dd>{{ organisationService.getAffiliationCount(target, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
+            <dt>{{ translate("txt-websites") }}</dt>
+            {% for web in target.web %}
+                <dd><a href="{{ web.web }}">{{ web.web }}</a></dd>
+            {% else %}
+                <dd>{{ translate("txt-no-website-known") }}</dd>
+            {% endfor %}
+
+            {% if target.getDateCreated() %}
+                <dt>{{ translate("txt-date-created") }}</dt>
+                <dd>{{ target.getDateCreated()|string_date }}</dd>
+            {% endif %}
+            {% if target.getDateUpdated() %}
+                <dt>{{ translate("txt-last-update") }}</dt>
+                <dd>{{ target.getDateUpdated()|string_date }}</dd>
+            {% endif %}
+        </dl>
+        <h3>{{ translate("txt-financial") }}</h3>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-debtor-number") }}</dt>
+            <dd>{{ organisationService.parseDebtorNumber(target) }}</dd>
+            <dt>{{ translate("txt-credit-number") }}</dt>
+            <dd>{{ organisationService.parseCreditNumber(target) }}</dd>
+            {% set financial = target.financial %}
+            {% if financial %}
+            <dt>{{ translate("txt-vat-number") }}</dt>
+            <dd>{{ financial.vat }}
+                (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
+                    - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
+                <i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i>
+            </dd>
+            <dt>{{ translate("txt-vat-type") }}</dt>
+            {% for vatType in financial.vatType %}
+                <dd>{{ vatType.type }}</dd>
+            {% else %}
+                <dd>{{ translate("txt-no-vat-enforcement") }}</dd>
+            {% endfor %}
+            <dt>{{ translate("txt-omit-contact-on-invoice") }}</dt>
+            <dd>{{ translate(financial.getOmitContact(true)) }}</dd>
+            <dt>{{ translate("txt-invoice-via-email") }}</dt>
+            <dd>{{ translate(financial.getEmail(true)) }}</dd>
+            <dt>{{ translate("txt-require-purchace-order") }}</dt>
+            <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
+            <dt>{{ translate("txt-iban") }}</dt>
+            <dd>{{ financial.iban }}</dd>
+            <dt>{{ translate("txt-bic") }}</dt>
+            <dd>{{ financial.bic }}</dd>
+            <dt>{{ translate("txt-supplier-number") }}</dt>
+            <dd>{{ financial.supplierNumber }}</dd>
+            <dt>{{ translate("txt-amount-of-invoices") }}</dt>
+            <dd>
+                <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ target.invoice.count() }}</a>
+            </dd>
+        </dl>
+            {% else %}
+                </dl>
+                {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(target))|raw }}
+            {% endif %}
+    </div>
+</div>
+<hr>
+{% if errors|length == 0 %}
+    {{ ztbformelement(mergeForm.get('merge')) }}
+{% endif %}
+
+{{ ztbformelement(mergeForm.get('cancel')) }}
+{{ form().closeTag()|raw }}

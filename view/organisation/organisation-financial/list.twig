@@ -30,7 +30,7 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-striped">
+            <table class="table table-hover table-striped table-condensed">
                 <thead>
                 <tr>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate('txt-organisation')} %}</a></th>
@@ -48,15 +48,14 @@
                 </tfoot>
                 <tbody>
                 {% for financial in paginator.getCurrentItems() %}
-                    {% set organisationService = organisationServiceProxy(financial.organisation) %}
                     <tr>
-                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }} {{ organisationLink(organisationService, 'edit-financial', 'icon') }}</td>
-                        <td>{{ organisationService.organisation.country.iso3 }}</td>
-                        <td>{{ organisationService.organisation.getType().type }}</td>
+                        <td>{{ organisationLink(financial.organisation, 'view-admin', 'name') }} {{ organisationLink(financial.organisation, 'edit-financial', 'icon') }}</td>
+                        <td>{{ financial.organisation.country.iso3 }}</td>
+                        <td>{{ financial.organisation.getType().type }}</td>
                         <td>{{ financial.vat }}</td>
                         <td id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
                             ({{ financial.dateVat|string_date }})
-                        <td><i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i></td>
+                        <td><i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i></td>
                         {#<td>{% for type in financial.vatType %}{{ type }}{% endfor %}</td>#}
                         <td>{{ translate(financial.getOmitContact(true)) }}</td>
                         <td>{{ translate(financial.getEmail(true)) }}</td>

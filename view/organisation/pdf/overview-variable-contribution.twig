@@ -1,0 +1,60 @@
+<style>
+    table.table > tr > th {
+        background-color: #ffffcc;
+        font-weight: bold;
+    }
+
+    .footer > th {
+        border-top: 1px solid #0066cc;
+    }
+
+    .header > th {
+        border-bottom: 1px solid #0066cc;
+    }
+</style>
+
+<p style="text-align: center"><strong>Annex 1 - Overview of {{ year }} Variable Contribution for ECSEL
+        Project(s)</strong></p>
+
+{% for project in projects if project.totalContribution > 0 %}
+    <table class="table" width="555" cellpadding="1">
+        <tr class="header">
+            <th width="70">ECSEL project name</th>
+            <th width="365">Partner Name</th>
+            <th width="60">Max. Possible Funding</th>
+            <th width="60">{{ year }} Variable Contribution<sup>*</sup></th>
+        </tr>
+        {% for affiliation in project.affiliation %}
+            <tr>
+                <td width="70">{{ affiliation.affiliation.project }}</td>
+                <td width="365">{{ affiliation.affiliation.organisation }}</td>
+                <td width="60" align="right">{{ affiliation.funding|parse_funding }}</td>
+                <td width="60" align="right">{{ affiliation.contribution|parse_funding }}</td>
+            </tr>
+        {% endfor %}
+        <tr class="footer">
+            <th colspan="2">Sum call {{ project.call }} = {{ project.totalContribution|parse_funding }}</th>
+            <th align="right">{{ project.totalFunding|parse_funding }}</th>
+            <th align="right">{{ project.totalContribution|parse_funding }}</th>
+        </tr>
+    </table>
+    <small><sup>*</sup> {{ invoiceFactor }}% of Maximum Possible Funding / {{ membershipFactor * 3 }}</small>
+    <p></p>
+{% endfor %}
+
+
+<div style="text-align: center">
+    <strong>Summary of Annex 1</strong><br>
+
+    <p>Totals for {{ year }} AENEAS Variable Contribution</p>
+
+    {% for project in projects if project.totalContribution > 0 %}
+        Sum {{ project.call }}: {{ project.totalContribution|parse_funding }}<br>
+    {% endfor %}
+
+    <p><strong>Total Amount due by {{ parent }} equals {{ parentService.parseTotal(parent, year,
+            period)|parse_funding }}</strong>
+
+    <p>{{ year }} variable contribution = {{ invoiceFactor }} % / 3 years * Number of memberships ({{ membershipFactor }})</p>
+
+</div>

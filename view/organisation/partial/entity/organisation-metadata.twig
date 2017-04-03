@@ -2,13 +2,13 @@
     <h2>{{ translate("txt-organisation-information") }}</h2>
     <dl class="dl-horizontal dl-horizontal-narrow">
         <dt>{{ translate("txt-type") }}</dt>
-        <dd>{{ organisationService.organisation.type }}</dd>
+        <dd>{{ organisation.type }}</dd>
         <dt>{{ translate("txt-country") }}</dt>
-        <dd>{{ countryFlag(organisationService.organisation.country, 15) }}
-            {{ countryLink(organisationService.organisation.country,'view', 'name') }}</dd>
+        <dd>{{ countryFlag(organisation.country, 15) }}
+            {{ countryLink(organisation.country,'view', 'name') }}</dd>
         <dt>{{ translate("txt-website") }}</dt>
-        {% for web in organisationService.organisation.web %}
-            <dd>{{ web|raw }}</dd>
+        {% for web in organisation.web %}
+            <dd><a href="http://{{ web }}">{{ web }}</a></dd>
         {% endfor %}
     </dl>
 </div>

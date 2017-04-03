@@ -1,7 +1,7 @@
 <h2>{{ translate("txt-project") }}</h2>
 
-{% if organisationService.organisation.affiliation.count() > 0 %}
-    <table class="table table-hover table-striped">
+{% if not affiliations.isEmpty() %}
+    <table class="table table-hover table-striped table-condensed">
         <thead>
         <tr>
             <th>{{ translate("txt-project") }}</th>
@@ -12,29 +12,53 @@
             <th>{{ translate("txt-technical-contact") }}</th>
         </tr>
         </thead>
-        {% for affiliation in organisationService.organisation.affiliation %}
-            {% set projectService = projectServiceProxy(affiliation.project) %}
-            <tr {% if projectService.project.contact.id == affiliation.contact.id %}class="success"
+        {% for affiliation in affiliations %}
+
+            <tr {% if affiliation.project.contact.id == affiliation.contact.id %}class="success"
                 {% endif %}{% if affiliation.dateEnd %}class="danger"{% endif %}>
-                <td>{{ projectLink(projectService,'view-admin','name') }}
-                    {{ projectLink(projectService,'view-community','icon') }}
-
-
+                <td>{{ projectLink(affiliation.project,'view-admin','name') }}
+                    {{ projectLink(affiliation.project,'view-community','icon') }}
                 </td>
                 <td>
                     {{ affiliationLink(affiliation,'view-admin','name') }}
                     {{ affiliationLink(affiliation,'view-community','icon') }}
                 </td>
                 <td>{{ affiliation.branch }}</td>
-                <td>{{ projectService.parseStatus() }}</td>
+                <td>{{ projectService.parseStatus(affiliation.project) }}</td>
                 <td>{% if affiliation.dateEnd %}{{ translate("txt-deactivated-on-%s")|format(affiliation.dateEnd|date('d-m-Y')) }}{% else %}{{ translate("txt-yes") }}{% endif %}</td>
-                <td>{{ contactLink(affiliation.contact,'view-admin') }} {% if projectService.project.contact.id == affiliation.contact.id %}({{ translate("txt-pl") }}){% endif %}</td>
+                <td>{{ contactLink(affiliation.contact,'view-admin') }} {% if affiliation.project.contact.id == affiliation.contact.id %}({{ translate("txt-pl") }}){% endif %}</td>
             </tr>
 
         {% endfor %}
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-%s-is-not-active-in-a-project"))|format(organisationService.organisation)|raw }}
+    {{ ztbalert().info(translate("txt-%s-is-not-active-in-a-project"))|format(organisation)|raw }}
 {% endif %}
 
-{{ organisationLink(organisationService,'add-affiliation','button') }}
+{{ organisationLink(organisation,'add-affiliation','button') }}
+
+<h3>{{ translate("txt-result-as-for-organisation") }}</h3>
+{% if organisation.result.count() > 0 %}
+    <table class="table table-hover table-striped table-condensed">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-result") }}</th>
+            <th>{{ translate("txt-contact") }}</th>
+            <th>{{ translate("txt-type") }}</th>
+            <th>{{ translate("txt-date") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for result in organisation.result %}
+            <tr>
+                <td>{{ resultLink(result,'view','name') }} {{ resultLink(result,'download','icon') }} {{ resultLink(result,'edit','icon') }}</td>
+                <td>{{ contactLink(result.contact,'view-admin','name') }}</td>
+                <td>{{ result.type }}</td>
+                <td>{{ result.dateCreated|string_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-results-has-been-created-for-%s")|format(project.parseFullName()))|raw }}
+{% endif %}

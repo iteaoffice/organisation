@@ -2,20 +2,19 @@
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-debtor-number") }}</dt>
-    <dd>{{ organisationService.parseDebtorNumber() }}</dd>
+    <dd>{{ organisationService.parseDebtorNumber(organisation) }}</dd>
     <dt>{{ translate("txt-credit-number") }}</dt>
-    <dd>{{ organisationService.parseCreditNumber() }}</dd>
+    <dd>{{ organisationService.parseCreditNumber(organisation) }}</dd>
 </dl>
-{% set financial = organisationService.organisation.financial %}
-
+{% set financial = organisation.financial %}
 
     {% if financial %}
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-vat-number") }}</dt>
             <dd>{{ financial.vat }}
                 (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
-                - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
-                <i class="fa fa-refresh checkVat" rel="{{ financial.id }}"></i>
+                    - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
+                <i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i>
             </dd>
             <dt>{{ translate("txt-vat-type") }}</dt>
             {% for vatType in financial.vatType %}
@@ -29,16 +28,22 @@
             <dd>{{ translate(financial.getEmail(true)) }}</dd>
             <dt>{{ translate("txt-require-purchace-order") }}</dt>
             <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
+            <dt>{{ translate("txt-iban") }}</dt>
+            <dd>{{ financial.iban }}</dd>
+            <dt>{{ translate("txt-bic") }}</dt>
+            <dd>{{ financial.bic }}</dd>
+            <dt>{{ translate("txt-supplier-number") }}</dt>
+            <dd>{{ financial.supplierNumber }}</dd>
             <dt>{{ translate("txt-amount-of-invoices") }}</dt>
             <dd>
-                <a href="{{ url('zfcadmin/organisation/view',{'id': organisationService.organisation.id}) }}#invoices">{{ organisationService.organisation.invoice.count() }}</a>
+                <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ organisation.invoice.count() }}</a>
             </dd>
         </dl>
     {% else %}
-        {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisationService.organisation))|raw }}
+        {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisation))|raw }}
     {% endif %}
 
-{{ organisationLink(organisationService,'edit-financial','button') }}
+{{ organisationLink(organisation,'edit-financial','button') }}
 
 
 <script type="text/javascript">

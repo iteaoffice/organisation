@@ -3,35 +3,35 @@
     <h3>{{ translate("txt-organisation-project-list") }}</h3>
 
     <div class="row">
-    {% for projectService in projects %}
+    {% for project in projects %}
         <div class="col-xs-3">
 
             <div class="thumbnail contact-box contact-box-large">
 
                 <div class="information-box-header clearfix">
-                    {{ projectService.project.number }}
+                    {{ project.number }}
                     <h3 class="information-box-title">
-                        {{ projectLink(projectService,'view','name-without-number') }}
+                        {{ projectLink(project,'view','name-without-number') }}
                     </h3>
                 </div>
 
                 <div class="information-box-image">
-                    <span></span>
-                    {{ projectLogo(projectService, 'img-rounded') }}
+                    <div class="center-block">
+                        {{ projectLogo(project, 100) }}
+                    </div>
                 </div>
 
                 <dl>
                     <dt>{{ translate("txt-program-call") }}</dt>
-                    <dd>{{ callLink(projectService.project.call,'view-list') }}</dd>
+                    <dd>{{ callLink(project.call,'view-list') }}</dd>
                     <dt>{{ translate("txt-status") }}</dt>
-                    <dd>{{ projectService.parseStatus() }}</dd>
+                    <dd>{{ projectService.parseStatus(project) }}</dd>
                     <dt>{{ translate("txt-project-leader") }}</dt>
-                    {% set contactService = contactServiceProxy(projectService.project.contact) %}
-                    <dd>{{ contactService.parseFullname() }}</dd>
+                    <dd>{{ project.contact.parseFullname() }}</dd>
                 </dl>
             </div>
         </div>
-        {% if loop.index is divisibleby(4) %}
+        {% if loop.index is divisible by(4) %}
             </div>
             <div class="row">
         {% endif %}

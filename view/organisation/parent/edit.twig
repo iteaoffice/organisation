@@ -1,0 +1,54 @@
+{% do headLink().appendStylesheet(
+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+) %}
+
+
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-edit-parent")) %}
+
+<h1>{{ translate("txt-edit-parent") }}</h1>
+
+{% do form.prepare() %}
+{% do form.setAttribute('class','form-horizontal') %}
+
+{{ form().openTag(form)|raw }}
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-parent") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ parentLink(parent,'view','parent') }}</p>
+    </div>
+</div>
+
+{% set parent = form.get('organisation_entity_oparent') %}
+
+{{ ztbformelement(parent.get('id')) }}
+{{ ztbformelement(parent.get('type')) }}
+{{ ztbformelement(parent.get('status')) }}
+{{ ztbformelement(parent.get('epossMemberType')) }}
+{{ ztbformelement(parent.get('artemisiaMemberType')) }}
+{{ organisationformelement(parent.get('organisation')) }}
+{{ contactformelement(parent.get('contact')) }}
+{{ ztbformelement(parent.get('dateEnd')) }}
+
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {% if form.has('delete') %}
+            {{ ztbformelement(form.get('delete')) }}
+        {% endif %}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+
+
+<script type="text/javascript">
+    $('input[type=date]').datepicker({
+        sliderAccessArgs: {touchonly: false},
+        dateFormat: 'yy-mm-dd'
+    });
+</script>

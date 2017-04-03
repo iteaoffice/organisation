@@ -11,10 +11,10 @@
             <tbody>
             {% for organisation in paginator.getCurrentItems() %}
                 <tr>
-                    {% set organisationService = organisationService.setOrganisationId(organisation['id']) %}
-                    <td>{{ organisationLink(organisationService,'view','name') }}</td>
-                    <td>{{ countryLink(organisationService.organisation.country,'view','name') }}</td>
-                    <td>{{ organisationService.organisation.type }}</td>
+                    {% set organisation = organisationService.findOrganisationById(organisation['id']) %}
+                    <td>{{ organisationLink(organisation,'view','name') }}</td>
+                    <td>{{ countryLink(organisation.country,'view','name') }}</td>
+                    <td>{{ organisation.type }}</td>
                 </tr>
             {% endfor %}
             </tbody>

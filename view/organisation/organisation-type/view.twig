@@ -1,0 +1,15 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-view-organisation-type-%s")|format(type)) %}
+
+<h1>{{ translate("txt-view-organisation-type-%s")|format(type) }} {{ organisationTypeLink(type, 'edit','button') }}</h1>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-type") }}</dt>
+    <dd>{{ type.type }}</dd>
+    <dt>{{ translate("txt-description") }}</dt>
+    <dd>{{ type.description }}</dd>
+    <dt>{{ translate("txt-invoice") }}</dt>
+    <dd>{{ translate(type.getInvoice(true)) }}</dd>
+    <dt>{{ translate("txt-amount-of-organisations") }}</dt>
+    <dd>{{ translate(type.organisation.count()) }}</dd>
+</dl>

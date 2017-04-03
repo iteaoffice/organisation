@@ -16,7 +16,7 @@
 
     <div class="col-md-9">
 
-        <h1>{{ translate("txt-organisation-list") }}</h1>
+        <h1>{{ translate("txt-organisation-list") }} {{ organisationLink(null,'new','button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -30,14 +30,14 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-striped">
+            <table class="table table-hover table-striped table-condensed">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'contacts', 'text': translate('txt-contacts')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'projects', 'text': translate('txt-projects')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th colspan="2">{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
+                    <th>{{ translate('txt-contacts') }}</th>
+                    <th>{{ translate('txt-projects') }}</th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate('txt-type')} %}</th>
                     <th>{{ translate("txt-actions") }}</th>
                 </tr>
                 </thead>
@@ -45,14 +45,19 @@
                 </tfoot>
                 <tbody>
                 {% for organisation in paginator.getCurrentItems() %}
-                    {% set organisationService = organisationServiceProxy(organisation) %}
-                    <tr>
-                        <td>{{ organisationLink(organisationService, 'view-admin', 'name') }}</td>
-                        <td>{{ organisation.country }}</td>
-                        <td>{{ organisationService.getContactCount(constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
-                        <td>{{ organisationService.getAffiliationCount(constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
+                    <tr {% if organisation.parent %}class="info"{% endif %}>
+                        <td>{% if organisation.parent %}<i class="fa fa-angle-double-up"
+                                                           aria-hidden="true"></i>{% endif %}</td>
+                        <td>{{ organisationLink(organisation, 'view-admin', 'name') }}
+                            {% if organisation.parent %}
+                                {{ parentLink(organisation.parent,'view','icon') }}
+                            {% endif %}
+                        </td>
+                        <td>{{ countryLink(organisation.country,'view-admin','name') }}</td>
+                        <td>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
+                        <td>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
                         <td>{{ organisation.getType().type }}</td>
-                        <td>{{ organisationLink(organisationService, 'edit', 'icon') }}</td>
+                        <td>{{ organisationLink(organisation, 'edit', 'icon') }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

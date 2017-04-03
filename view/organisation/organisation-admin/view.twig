@@ -1,5 +1,5 @@
-{% do headTitle().append(organisationService.organisation.organisation) %}
-<h1>{{ organisationService.organisation }}, {{ organisationService.organisation.country }}</h1>
+{% do headTitle().append(organisation.organisation) %}
+<h1>{{ organisation }}, {{ organisation.country }}</h1>
 
 <div role="tabpanel">
     <!-- Nav tabs -->
@@ -14,12 +14,14 @@
                                    data-toggle="tab">{{ translate("txt-contact") }}</a></li>
         <li role="presentation"><a href="#project" aria-controls="project" role="tab"
                                    data-toggle="tab">{{ translate("txt-project") }}</a></li>
+        <li role="presentation"><a href="#parent" aria-controls="parent" role="tab"
+                                   data-toggle="tab">{{ translate("txt-parent") }}</a></li>
         <li role="presentation"><a href="#doa" aria-controls="doa" role="tab"
                                    data-toggle="tab">{{ translate("txt-doa") }}</a></li>
-        <li role="presentation"><a href="#cluster" aria-controls="cluster" role="tab"
-                                   data-toggle="tab">{{ translate("txt-cluster") }}</a></li>
         <li role="presentation"><a href="#note" aria-controls="general" role="tab"
-                                   data-toggle="tab">{{ translate("txt-note") }}</a></li>
+                                   data-toggle="tab">{{ translate("txt-notes") }}</a></li>
+        <li role="presentation"><a href="#merge" aria-controls="general" role="tab"
+                                   data-toggle="tab">{{ translate("txt-merge") }}</a></li>
 
     </ul>
     <!-- Tab panes -->
@@ -35,10 +37,12 @@
         <div role="tabpanel" class="tab-pane"
              id="project">{% include 'organisation/organisation-admin/tab/project' %}</div>
         <div role="tabpanel" class="tab-pane"
+             id="parent">{% include 'organisation/organisation-admin/tab/parent' %}</div>
+        <div role="tabpanel" class="tab-pane"
              id="doa">{% include 'organisation/organisation-admin/tab/doa' %}</div>
         <div role="tabpanel" class="tab-pane"
-             id="cluster">{% include 'organisation/organisation-admin/tab/cluster' %}</div>
-        <div role="tabpanel" class="tab-pane"
              id="note">{% include 'organisation/organisation-admin/tab/note' %}</div>
+        <div role="tabpanel" class="tab-pane"
+             id="merge">{% include 'organisation/organisation-admin/tab/merge' %}</div>
     </div>
 </div>
