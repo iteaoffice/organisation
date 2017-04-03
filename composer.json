@@ -25,14 +25,14 @@
     "zendframework/zendframework": "~3.0"
   },
   "require-dev": {
-    "iteaoffice/testing": "dev-master",
-    "iteaoffice/contact": "dev-develop",
-    "iteaoffice/general": "dev-develop",
-    "iteaoffice/program": "dev-develop",
-    "iteaoffice/affiliation": "dev-develop",
-    "iteaoffice/project": "dev-develop",
-    "iteaoffice/event": "dev-develop",
-    "iteaoffice/invoice": "dev-develop"
+    "iteaoffice/testing": "^1.1",
+    "iteaoffice/contact": "^3.1",
+    "iteaoffice/general": "^3.1",
+    "iteaoffice/program": "^3.1",
+    "iteaoffice/affiliation": "^3.1",
+    "iteaoffice/project": "^3.1",
+    "iteaoffice/event": "^3.1",
+    "iteaoffice/invoice": "^3.1"
   },
   "autoload": {
     "psr-4": {
@@ -46,8 +46,8 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "2.0-dev",
-      "dev-develop": "2.1-dev"
+      "dev-master": "3.0.x-dev",
+      "dev-develop": "3.1-dev"
     }
   }
 }
