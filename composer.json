@@ -2,7 +2,7 @@
   "name": "iteaoffice/organisation",
   "type": "library",
   "license": "proprietary",
-  "description": "General code for organisations",
+  "description": "Code to manage organisations",
   "keywords": [
     "organisation"
   ],
@@ -25,7 +25,14 @@
     "zendframework/zendframework": "~3.0"
   },
   "require-dev": {
-    "iteaoffice/testing": "dev-master"
+    "iteaoffice/testing": "dev-master",
+    "iteaoffice/contact": "dev-develop",
+    "iteaoffice/general": "dev-develop",
+    "iteaoffice/program": "dev-develop",
+    "iteaoffice/affiliation": "dev-develop",
+    "iteaoffice/project": "dev-develop",
+    "iteaoffice/event": "dev-develop",
+    "iteaoffice/invoice": "dev-develop"
   },
   "autoload": {
     "psr-4": {
