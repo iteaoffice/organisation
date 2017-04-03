@@ -79,8 +79,8 @@ class OrganisationAdminController extends OrganisationAbstractController
         $filterPlugin = $this->getInvoiceFilter();
 
         $invoiceQuery = $this->getInvoiceService()->findEntitiesFiltered(
-             Invoice::class,
-             array_merge($filterPlugin->getFilter(), ['organisation' => [$organisation->getId()]])
+            Invoice::class,
+            array_merge($filterPlugin->getFilter(), ['organisation' => [$organisation->getId()]])
         );
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
@@ -205,7 +205,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                 $organisation = $form->getData();
                 $organisation->getDescription()->setOrganisation($organisation);
                 // Remove an empty description
-                if(empty($organisation->getDescription()->getDescription())){
+                if (empty($organisation->getDescription()->getDescription())) {
                     $this->getOrganisationService()->removeEntity($organisation->getDescription());
                     $organisation->setDescription(null);
                 }
@@ -359,7 +359,7 @@ class OrganisationAdminController extends OrganisationAbstractController
             if (isset($data['merge'])) {
                 $logPath = ini_get('error_log');
                 $logger = null;
-                if(!empty($logPath)){
+                if (!empty($logPath)) {
                     $logger = new Logger();
                     $logger->addWriter(new Stream($logPath));
                     $result = $this->mergeOrganisation()->merge($source, $target, $logger);

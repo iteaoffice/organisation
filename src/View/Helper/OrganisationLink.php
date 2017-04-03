@@ -198,5 +198,4 @@ class OrganisationLink extends AbstractLink
     {
         $this->branch = $branch;
     }
-
 }

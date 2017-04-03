@@ -50,7 +50,8 @@ class MergeOrganisation extends AbstractPlugin
      * @param EntityManagerInterface $entityManager
      * @param TranslatorInterface    $translator
      */
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator) {
+    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    {
         $this->entityManager = $entityManager;
         $this->translator    = $translator;
     }
@@ -310,7 +311,10 @@ class MergeOrganisation extends AbstractPlugin
             // Prepare for logging
             $message = sprintf(
                 'Merged organisation %s (%d) into %s (%d)',
-                $source->getOrganisation(),$sourceId, $target->getOrganisation(), $target->getId()
+                $source->getOrganisation(),
+                $sourceId,
+                $target->getOrganisation(),
+                $target->getId()
             );
             /** @var OrganisationAbstractController $controller */
             $controller = $this->getController();
@@ -333,10 +337,9 @@ class MergeOrganisation extends AbstractPlugin
             $this->persist($organisationNote);
 
             $this->entityManager->flush();
-
         } catch (ORMException $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
-            if($logger instanceof LoggerInterface){
+            if ($logger instanceof LoggerInterface) {
                 $logger->err(sprintf(
                     '%s: %d %s',
                     $exception->getFile(),
