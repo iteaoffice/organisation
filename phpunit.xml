@@ -16,6 +16,7 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./src</directory>
+            <directory suffix=".php">./vendor/iteaoffice/testing/src</directory>
         </whitelist>
     </filter>
 
