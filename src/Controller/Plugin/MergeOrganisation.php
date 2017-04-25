@@ -133,7 +133,7 @@ class MergeOrganisation extends AbstractPlugin
                 $source->getFinancial()->setOrganisation($target);
                 $target->setFinancial($source->getFinancial());
             }
-            if ($target->getLogo()->isEmpty()) {
+            if ($target->getLogo()->isEmpty() && !$source->getLogo()->isEmpty()) {
                 /** @var Logo $logo */
                 $logo = $source->getLogo()->first();
                 $logo->setOrganisation($target);
@@ -329,6 +329,7 @@ class MergeOrganisation extends AbstractPlugin
             // Add a note to the target organisation about the merge
             $organisationNote = new Note();
             $organisationNote->setOrganisation($target);
+            $organisationNote->setSource('auto');
             $organisationNote->setContact($contact);
             $organisationNote->setNote($message);
             $notes = $target->getNote()->toArray();
