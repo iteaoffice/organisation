@@ -91,24 +91,40 @@ class ParentService extends AbstractService
 
         //If the organisation is already a parent
         if (!is_null($organisation->getParent())) {
-            if (!is_null(
-                $parentOrganisation = $this->findParentOrganisationInParentByOrganisation(
-                    $organisation->getParent(),
-                    $organisation
-                )
-            )
-            ) {
-                return $parentOrganisation;
-            } else {
-                //we have the parent now, but cannot find the organisation, so we create it.
-                $parentOrganisation = new Entity\Parent\Organisation();
-                $parentOrganisation->setOrganisation($organisation);
-                $parentOrganisation->setParent($organisation->getParent());
-                $parentOrganisation->setContact($contact);
-                $this->newEntity($parentOrganisation);
+            $parentOrganisation = $this->findParentOrganisationInParentByOrganisation($organisation->getParent(), $organisation);
 
+            if (!is_null($parentOrganisation)) {
                 return $parentOrganisation;
             }
+
+            //we have the parent now, but cannot find the organisation, so we create it.
+            $parentOrganisation = new Entity\Parent\Organisation();
+            $parentOrganisation->setOrganisation($organisation);
+            $parentOrganisation->setParent($organisation->getParent());
+            $parentOrganisation->setContact($contact);
+            $this->newEntity($parentOrganisation);
+
+            return $parentOrganisation;
+        }
+
+        //If the organisation has already a parent
+        if (!is_null($organisation->getParentOrganisation())) {
+            $parent = $organisation->getParentOrganisation()->getParent();
+
+            $parentOrganisation = $this->findParentOrganisationInParentByOrganisation($parent, $organisation);
+
+            if (!is_null($parentOrganisation)) {
+                return $parentOrganisation;
+            }
+
+            //we have the parent now, but cannot find the organisation, so we create it.
+            $parentOrganisation = new Entity\Parent\Organisation();
+            $parentOrganisation->setOrganisation($organisation);
+            $parentOrganisation->setParent($parent);
+            $parentOrganisation->setContact($contact);
+            $this->newEntity($parentOrganisation);
+
+            return $parentOrganisation;
         }
 
         //We have no parent so create it all
