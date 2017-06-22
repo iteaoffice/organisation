@@ -11,7 +11,6 @@
 namespace Organisation\Controller;
 
 use Affiliation\Entity\Affiliation;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Invoice\Entity\Invoice;
@@ -26,6 +25,7 @@ use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
 use Zend\Paginator\Paginator;
 use Zend\Validator\File\ImageSize;
+use Zend\Validator\File\MimeType;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
@@ -40,10 +40,10 @@ class OrganisationAdminController extends OrganisationAbstractController
      */
     public function listAction()
     {
-        $page              = $this->params()->fromRoute('page', 1);
-        $filterPlugin      = $this->getOrganisationFilter();
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
         $organisationQuery = $this->getOrganisationService()
-                                  ->findEntitiesFiltered(Organisation::class, $filterPlugin->getFilter());
+            ->findEntitiesFiltered(Organisation::class, $filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
@@ -75,7 +75,7 @@ class OrganisationAdminController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $page         = $this->params()->fromRoute('page', 1);
+        $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getInvoiceFilter();
 
         $invoiceQuery = $this->getInvoiceService()->findEntitiesFiltered(
@@ -137,15 +137,16 @@ class OrganisationAdminController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (! empty($fileData['file']['name'])) {
+                if (!empty($fileData['file']['name'])) {
                     $logo = new Logo();
                     $logo->setOrganisation($organisation);
                     $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));
                     $imageSizeValidator = new ImageSize();
                     $imageSizeValidator->isValid($fileData['file']);
-                    $logo->setContentType(
-                        $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
-                    );
+
+                    $fileTypeValidator = new MimeType();
+                    $fileTypeValidator->isValid($fileData['file']);
+                    $logo->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
                     $logo->setLogoExtension($logo->getContentType()->getExtension());
                     $organisation->getLogo()->add($logo);
                 }
@@ -180,7 +181,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
         $form = $this->getFormService()->prepare($organisation, $organisation, $data);
 
-        if (! $this->getOrganisationService()->canDeleteOrganisation($organisation)) {
+        if (!$this->getOrganisationService()->canDeleteOrganisation($organisation)) {
             $form->remove('delete');
         }
 
@@ -212,9 +213,9 @@ class OrganisationAdminController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (! empty($fileData['file']['name'])) {
+                if (!empty($fileData['file']['name'])) {
                     $logo = $organisation->getLogo()->first();
-                    if (! $logo) {
+                    if (!$logo) {
                         // Create a new logo element
                         $logo = new Logo();
                         $logo->setOrganisation($organisation);
@@ -222,9 +223,10 @@ class OrganisationAdminController extends OrganisationAbstractController
                     $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));
                     $imageSizeValidator = new ImageSize();
                     $imageSizeValidator->isValid($fileData['file']);
-                    $logo->setContentType(
-                        $this->getGeneralService()->findContentTypeByContentTypeName($fileData['file']['type'])
-                    );
+
+                    $fileTypeValidator = new MimeType();
+                    $fileTypeValidator->isValid($fileData['file']);
+                    $logo->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
                     $logo->setLogoExtension($logo->getContentType()->getExtension());
                     $organisation->getLogo()->add($logo);
 
@@ -283,12 +285,12 @@ class OrganisationAdminController extends OrganisationAbstractController
 
                 $project = $this->getProjectService()->findProjectById((int)$formData['project']);
                 $contact = $this->getContactService()->findContactById((int)$formData['contact']);
-                $branch  = $formData['branch'];
+                $branch = $formData['branch'];
 
                 $affiliation = new Affiliation();
                 $affiliation->setProject($project);
                 $affiliation->setOrganisation($organisation);
-                if (! empty($branch)) {
+                if (!empty($branch)) {
                     $affiliation->setBranch($branch);
                 }
                 $affiliation->setContact($contact);
@@ -296,13 +298,13 @@ class OrganisationAdminController extends OrganisationAbstractController
                 $this->getAffiliationService()->newEntity($affiliation);
 
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
-                             $organisation,
-                             $project
-                         )
-                     );
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
+                            $organisation,
+                            $project
+                        )
+                    );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/view',

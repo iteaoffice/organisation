@@ -14,6 +14,7 @@ use Organisation\Entity;
 use Organisation\Form\ParentDoa;
 use Organisation\Form\UploadParentDoa;
 use Zend\Validator\File\FilesSize;
+use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -58,10 +59,10 @@ class ParentDoaController extends OrganisationAbstractController
                 $fileSizeValidator->isValid($fileData['file']);
                 $doa = new Entity\Parent\Doa();
                 $doa->setSize($fileSizeValidator->size);
-                $doa->setContentType(
-                    $this->getGeneralService()
-                         ->findContentTypeByContentTypeName($fileData['file']['type'])
-                );
+
+                $fileTypeValidator = new MimeType();
+                $fileTypeValidator->isValid($fileData['file']);
+                $doa->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
 
                 $doa->setContact($this->getContactService()->findContactById((int)$data['contact']));
                 if ($dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
@@ -75,12 +76,12 @@ class ParentDoaController extends OrganisationAbstractController
                 $doaObject->setDoa($doa);
                 $this->getParentService()->newEntity($doaObject);
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             $this->translate("txt-doa-for-parent-%s-has-been-uploaded"),
-                             $parent->getOrganisation()
-                         )
-                     );
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-doa-for-parent-%s-has-been-uploaded"),
+                            $parent->getOrganisation()
+                        )
+                    );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -150,7 +151,7 @@ class ParentDoaController extends OrganisationAbstractController
                     /*
                      * Replace the content of the object
                      */
-                    if (! $doa->getObject()->isEmpty()) {
+                    if (!$doa->getObject()->isEmpty()) {
                         $doa->getObject()->first()->setObject(
                             file_get_contents($fileData['file']['tmp_name'])
                         );
@@ -167,10 +168,10 @@ class ParentDoaController extends OrganisationAbstractController
                     $fileSizeValidator = new FilesSize(PHP_INT_MAX);
                     $fileSizeValidator->isValid($fileData['file']);
                     $doa->setSize($fileSizeValidator->size);
-                    $doa->setContentType(
-                        $this->getGeneralService()
-                             ->findContentTypeByContentTypeName($fileData['file']['type'])
-                    );
+
+                    $fileTypeValidator = new MimeType();
+                    $fileTypeValidator->isValid($fileData['file']);
+                    $doa->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
                 }
 
 
@@ -185,12 +186,12 @@ class ParentDoaController extends OrganisationAbstractController
                 $this->getParentService()->updateEntity($doa);
 
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             $this->translate("txt-doa-for-parent-%s-has-been-uploaded"),
-                             $doa->getParent()->getOrganisation()
-                         )
-                     );
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-doa-for-parent-%s-has-been-uploaded"),
+                            $doa->getParent()->getOrganisation()
+                        )
+                    );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -224,18 +225,18 @@ class ParentDoaController extends OrganisationAbstractController
         /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
-        $object   = $doa->getObject()->first()->getObject();
+        $object = $doa->getObject()->first()->getObject();
         $response = $this->getResponse();
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-                 ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
-                     'Content-Disposition',
-                     'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
-                 )
-                 ->addHeaderLine("Pragma: public")->addHeaderLine(
-                     'Content-Type: ' . $doa->getContentType()->getContentType()
-                 )->addHeaderLine('Content-Length: '
-                                                                                            . $doa->getSize());
+            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine(
+                'Content-Disposition',
+                'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
+            )
+            ->addHeaderLine("Pragma: public")->addHeaderLine(
+                'Content-Type: ' . $doa->getContentType()->getContentType()
+            )->addHeaderLine('Content-Length: '
+                . $doa->getSize());
 
         return $this->response;
     }

@@ -38,6 +38,7 @@ class Status extends AbstractEntity
     const STATUS_APPLICANT = 2;
     const STATUS_FREE_RIDER = 3;
     const STATUS_PENTA_DOA = 5;
+    const STATUS_DOA_IA_MEMBER = 9;
 
     /**
      * @ORM\Column(name="status_id", type="integer", nullable=false)

@@ -29,7 +29,7 @@ class GetFilter extends AbstractOrganisationPlugin
      */
     public function __invoke()
     {
-        $encodedFilter = urldecode($this->getRouteMatch()->getParam('encodedFilter'));
+        $encodedFilter = urldecode((string) $this->getRouteMatch()->getParam('encodedFilter'));
 
         $order     = $this->getRequest()->getQuery('order');
         $direction = $this->getRequest()->getQuery('direction');

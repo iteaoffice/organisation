@@ -20,22 +20,15 @@ use Organisation\Acl\Assertion\Type as TypeAssertion;
 use Organisation\Entity\Type;
 
 /**
- * Create a link to an document.
- *
- * @category  Type
- *
- * @author    Johan van der Heide < johan . van . der . heide@itea3 . org >
- * @copyright Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
- * @license   https://itea3.org/license.txt proprietary
- *
- * @link      https://itea3.org
+ * Class TypeLink
+ * @package Organisation\View\Helper
  */
 class TypeLink extends AbstractLink
 {
     /**
      * @param Type|null $type
-     * @param string    $action
-     * @param string    $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
      */
@@ -43,12 +36,12 @@ class TypeLink extends AbstractLink
         Type $type = null,
         $action = 'view',
         $show = 'text'
-    ) {
+    ): string {
         $this->setType($type);
         $this->setAction($action);
         $this->setShow($show);
 
-        if (! $this->hasAccess($this->getType(), TypeAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getType(), TypeAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -56,7 +49,8 @@ class TypeLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'type' => $this->getType(),
+                'type'        => $this->getType()->getType(),
+                'description' => $this->getType()->getDescription(),
             ]
         );
 
@@ -66,7 +60,7 @@ class TypeLink extends AbstractLink
     /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':

@@ -18,7 +18,7 @@ use Contact\Entity\Contact;
 use Contact\Service\ContactService;
 use Organisation\Service\OrganisationService;
 use Zend\Http\Request;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Router\Http\RouteMatch;
 use Zend\Permissions\Acl\Assertion\AssertionInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

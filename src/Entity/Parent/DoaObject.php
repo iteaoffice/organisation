@@ -128,7 +128,7 @@ class DoaObject extends AbstractEntity
     }
 
     /**
-     * @param resource $object
+     * @param string $object
      *
      * @return DoaObject
      */
