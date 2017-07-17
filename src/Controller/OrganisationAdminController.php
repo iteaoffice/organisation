@@ -90,7 +90,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $invoiceFilter = new InvoiceFilter();
+        $invoiceFilter = new InvoiceFilter($this->getInvoiceService());
         $invoiceFilter->setData(['filter' => $filterPlugin->getFilter()]);
 
         $mergeForm = new OrganisationMerge($this->getEntityManager(), $organisation);
