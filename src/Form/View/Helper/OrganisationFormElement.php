@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 Jield BV (http://jield.nl)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form\View\Helper;
 
 use Zend\Form\Element\Select;

@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
@@ -213,12 +215,12 @@ class Financial extends AbstractEntity
      */
     public function __construct()
     {
-        $this->vatStatus             = self::VAT_STATUS_UNCHECKED;
-        $this->omitContact           = self::NO_OMIT_CONTACT;
+        $this->vatStatus = self::VAT_STATUS_UNCHECKED;
+        $this->omitContact = self::NO_OMIT_CONTACT;
         $this->requiredPurchaseOrder = self::NO_REQUIRED_PURCHASE_ORDER;
-        $this->email                 = self::EMAIL_DELIVERY;
-        $this->vatType               = new Collections\ArrayCollection();
-        $this->reminder              = new Collections\ArrayCollection();
+        $this->email = self::EMAIL_DELIVERY;
+        $this->vatType = new Collections\ArrayCollection();
+        $this->reminder = new Collections\ArrayCollection();
     }
 
     /**

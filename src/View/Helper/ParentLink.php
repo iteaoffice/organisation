@@ -14,6 +14,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Organisation\Acl\Assertion\OParent as ParentAssertion;
@@ -29,11 +31,11 @@ class ParentLink extends AbstractLink
 {
     /**
      * @param Entity\OParent|null $parent
-     * @param string              $action
-     * @param string              $show
-     * @param Organisation|null   $organisation
-     * @param null                $year
-     * @param null                $period
+     * @param string $action
+     * @param string $show
+     * @param Organisation|null $organisation
+     * @param null $year
+     * @param null $period
      *
      * @return string
      */
@@ -49,10 +51,16 @@ class ParentLink extends AbstractLink
         $this->setAction($action);
         $this->setShow($show);
         $this->setOrganisation($organisation);
-        $this->setYear($year);
-        $this->setPeriod($period);
 
-        if (! $this->hasAccess($this->getParent(), ParentAssertion::class, $this->getAction())) {
+        if (!is_null($year)) {
+            $this->setYear((int)$year);
+        }
+
+        if (!is_null($period)) {
+            $this->setPeriod((int)$period);
+        }
+
+        if (!$this->hasAccess($this->getParent(), ParentAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -73,7 +81,7 @@ class ParentLink extends AbstractLink
     /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':
@@ -95,10 +103,6 @@ class ParentLink extends AbstractLink
             case 'edit':
                 $this->setRouter('zfcadmin/parent/edit');
                 $this->setText(sprintf($this->translate('txt-edit-parent-%s'), $this->getParent()));
-                break;
-            case 'edit-financial':
-                $this->setRouter('zfcadmin/parent/edit-financial');
-                $this->setText(sprintf($this->translate('txt-edit-financial-%s'), $this->getParent()));
                 break;
             case 'add-organisation':
                 $this->setRouter('zfcadmin/parent/add-organisation');

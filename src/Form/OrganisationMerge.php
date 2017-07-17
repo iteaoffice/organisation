@@ -8,13 +8,15 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
 use Organisation\Entity\Organisation;
 use Organisation\Repository\Organisation as OrganisationRepository;
-use Zend\Form\Form;
 use Zend\Form\Element;
+use Zend\Form\Form;
 
 /**
  * Class OrganisationMerge
@@ -26,7 +28,7 @@ class OrganisationMerge extends Form
     /**
      * OrganisationMerge constructor.
      * @param EntityManager $entityManager
-     * @param Organisation  $destination
+     * @param Organisation $destination
      */
     public function __construct(EntityManager $entityManager = null, Organisation $destination = null)
     {
@@ -52,10 +54,10 @@ class OrganisationMerge extends Form
         }
 
         $this->add([
-            'type'       => Element\Radio::class,
-            'name'       => 'source-main',
+            'type'    => Element\Radio::class,
+            'name'    => 'source-main',
             'options' => [
-                'label' => '',
+                'label'         => '',
                 'value_options' => $mainSuggestions
             ],
         ]);
@@ -64,7 +66,7 @@ class OrganisationMerge extends Form
             'type'       => Element\Select::class,
             'name'       => 'source-search',
             'attributes' => [
-                'id'    => 'source-search',
+                'id' => 'source-search',
             ],
         ]);
 

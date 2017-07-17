@@ -14,6 +14,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity\Parent;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -42,7 +44,7 @@ class Financial extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\OParent", inversedBy="financial", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="financial", cascade="persist")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      * })

@@ -12,6 +12,8 @@
  * @license     https://itea3.org/license.txt proprietary
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Organisation\Acl\Assertion\Parent\Status as ParentStatusAssertion;
@@ -26,8 +28,8 @@ class ParentStatusLink extends AbstractLink
 {
     /**
      * @param Entity\Parent\Status|null $parentStatus
-     * @param string                    $action
-     * @param string                    $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
      */
@@ -40,7 +42,7 @@ class ParentStatusLink extends AbstractLink
         $this->setAction($action);
         $this->setShow($show);
 
-        if (! $this->hasAccess($this->getParentStatus(), ParentStatusAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getParentStatus(), ParentStatusAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -58,7 +60,7 @@ class ParentStatusLink extends AbstractLink
     /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':

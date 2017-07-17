@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 use Organisation\Controller;
 
 return [
@@ -266,7 +267,7 @@ return [
                             'merge'           => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/merge/[:sourceId]/into/[:targetId].html',
+                                    'route'    => '/merge/[:sourceId]/into/[:destinationId].html',
                                     'defaults' => [
                                         'action' => 'merge',
                                     ],
@@ -334,7 +335,7 @@ return [
                         ],
                         'may_terminate' => false,
                         'child_routes'  => [
-                            'list'   => [
+                            'list'                                     => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
@@ -343,7 +344,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'import' => [
+                            'import'                                   => [
                                 'type'         => 'Literal',
                                 'options'      => [
                                     'route'    => '/import',
@@ -372,7 +373,45 @@ return [
                                     ],
                                 ],
                             ],
-
+                            'financial'                                => [
+                                'type'         => 'Literal',
+                                'options'      => [
+                                    'route'    => '/financial',
+                                    'defaults' => [
+                                        'action'     => 'not-found',
+                                        'controller' => Controller\ParentFinancialController::class
+                                    ],
+                                ],
+                                'child_routes' => [
+                                    'new'  => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/new/parent-[:parentId].html',
+                                            'defaults' => [
+                                                'action' => 'new',
+                                            ],
+                                        ],
+                                    ],
+                                    'view' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/view/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'view',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                             'new'                                      => [
                                 'type'    => 'Segment',
                                 'options' => [
@@ -397,15 +436,6 @@ return [
                                     'route'    => '/add-organisation/[:id][/organisation-:organisationId].html',
                                     'defaults' => [
                                         'action' => 'add-organisation',
-                                    ],
-                                ],
-                            ],
-                            'edit-financial'                           => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/edit-financial/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'edit-financial',
                                     ],
                                 ],
                             ],

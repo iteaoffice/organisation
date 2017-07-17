@@ -12,6 +12,8 @@
  *
  * @link        http://github.com/iteaoffice/main for the canonical source repository
  */
+declare(strict_types=1);
+
 namespace Organisation\Factory;
 
 use Interop\Container\ContainerInterface;
@@ -27,8 +29,8 @@ class ModuleOptionsFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null|null    $options
+     * @param string $requestedName
+     * @param array|null|null $options
      *
      * @return mixed
      */

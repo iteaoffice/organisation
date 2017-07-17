@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;

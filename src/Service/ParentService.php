@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Service;
 
 use Contact\Entity\Contact;
@@ -91,7 +93,10 @@ class ParentService extends AbstractService
 
         //If the organisation is already a parent
         if (!is_null($organisation->getParent())) {
-            $parentOrganisation = $this->findParentOrganisationInParentByOrganisation($organisation->getParent(), $organisation);
+            $parentOrganisation = $this->findParentOrganisationInParentByOrganisation(
+                $organisation->getParent(),
+                $organisation
+            );
 
             if (!is_null($parentOrganisation)) {
                 return $parentOrganisation;
@@ -365,6 +370,24 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     * @return int
+     */
+    public function parseMembershipFactor(Entity\OParent $parent): int
+    {
+        $amountOfMemberships = 1;
+
+        if ($parent->getArtemisiaMemberType() !== Entity\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER) {
+            $amountOfMemberships++;
+        }
+        if ($parent->getEpossMemberType() !== Entity\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER) {
+            $amountOfMemberships++;
+        }
+
+        return $amountOfMemberships;
+    }
+
+    /**
+     * @param Entity\OParent $parent
      * @param int $year
      * @param int $period
      * @return array
@@ -449,25 +472,6 @@ class ParentService extends AbstractService
     }
 
     /**
-     * @param Entity\OParent $parent
-     * @return int
-     */
-    public function parseMembershipFactor(Entity\OParent $parent): int
-    {
-        $amountOfMemberships = 1;
-
-        if ($parent->getArtemisiaMemberType() !== Entity\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER) {
-            $amountOfMemberships++;
-        }
-        if ($parent->getEpossMemberType() !== Entity\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER) {
-            $amountOfMemberships++;
-        }
-
-        return $amountOfMemberships;
-    }
-
-
-    /**
      * Calculate the amount of contribution due by the parent
      *
      * @param Entity\OParent $parent
@@ -537,13 +541,13 @@ class ParentService extends AbstractService
      *
      * @return Contact
      */
-    public function getFinancialContact(Entity\OParent $parent)
+    public function getFinancialContact(Entity\OParent $parent): ?Contact
     {
-        if (!is_null($parent->getFinancial())) {
-            return $parent->getFinancial()->getContact();
-        } else {
-            return null;
+        if ($parent->getFinancial()->count() === 1) {
+            return $parent->getFinancial()->first()->getContact();
         }
+
+        return null;
     }
 
     /**
@@ -551,9 +555,9 @@ class ParentService extends AbstractService
      * @param int $year
      * @param int $period
      *
-     * @return Entity\Parent\Invoice[]|Collection
+     * @return Entity\Parent\Invoice[]|Collection|iterable
      */
-    public function findParentInvoiceByParentYearAndPeriod(Entity\OParent $parent, int $year, int $period)
+    public function findParentInvoiceByParentYearAndPeriod(Entity\OParent $parent, int $year, int $period): iterable
     {
         //Cast to int as some values can originate form templates (== twig > might be string)
         $year = (int)$year;
@@ -568,27 +572,47 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     * @param int $year
+     * @param int $period
      *
-     * @return array
+     * @return Entity\Parent\Invoice[]|Collection|iterable
      */
-    public function canCreateInvoice(Entity\OParent $parent)
+    public function findParentExtraInvoiceByParentYearAndPeriod(
+        Entity\OParent $parent,
+        int $year,
+        int $period
+    ): iterable {
+        //Cast to int as some values can originate form templates (== twig > might be string)
+        $year = (int)$year;
+        $period = (int)$period;
+
+        return $parent->getInvoiceExtra()->filter(
+            function (Entity\Parent\InvoiceExtra $invoiceExtra) use ($period, $year) {
+                return $invoiceExtra->getPeriod() === $period && $invoiceExtra->getYear() === $year;
+            }
+        );
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     *
+     * @return ArrayCollection
+     */
+    public function canCreateInvoice(Entity\OParent $parent): ArrayCollection
     {
         $errors = [];
         switch (true) {
-            case is_null($parent->getFinancial()):
+            case empty($parent->getFinancial()):
                 $errors[] = 'No financial organisation (parent financial) set for this parent';
                 break;
             case !is_null($parent->getDateEnd()):
                 $errors[] = 'Parent is de-activated';
                 break;
-            case is_null($parent->getFinancial()->getOrganisation()->getFinancial()):
-                $errors[] = 'No financial information set for this organisation';
-                break;
-            case is_null($parent->getFinancial()->getContact()):
-                $errors[] = 'No financial contact set for this organisation';
+            case !empty($parent->getFinancial()) && $parent->getFinancial()->count() !== 1:
+                $errors[] = 'More than 1 financial organisation known';
                 break;
         }
 
-        return $errors;
+        return new ArrayCollection($errors);
     }
 }

@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,9 +27,9 @@ use Zend\View\Model\ViewModel;
 class OrganisationFinancialController extends OrganisationAbstractController
 {
     /**
-     *
+     * @return ViewModel
      */
-    public function listAction()
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();

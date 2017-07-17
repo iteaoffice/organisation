@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
@@ -154,10 +156,10 @@ class OParent extends AbstractEntity
      */
     private $artemisiaMemberType;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Parent\Financial", cascade={"persist","remove"}, mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Financial", cascade={"persist","remove"}, mappedBy="parent")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\Financial
+     * @var \Organisation\Entity\Parent\Financial[]|Collections\ArrayCollection
      */
     private $financial;
     /**
@@ -221,6 +223,13 @@ class OParent extends AbstractEntity
      */
     private $invoice;
     /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\InvoiceExtra", cascade={"persist"}, mappedBy="parent")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection()
+     */
+    private $invoiceExtra;
+    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Doa", cascade={"persist"}, mappedBy="parent")
      * @Annotation\Exclude()
      *
@@ -228,13 +237,14 @@ class OParent extends AbstractEntity
      */
     private $doa;
 
-
     /**
      * Class constructor.
      */
     public function __construct()
     {
         $this->invoice = new Collections\ArrayCollection();
+        $this->financial = new Collections\ArrayCollection();
+        $this->invoiceExtra = new Collections\ArrayCollection();
         $this->parentOrganisation = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
         $this->epossMemberType = self::EPOSS_MEMBER_TYPE_NO_MEMBER;
@@ -429,24 +439,24 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return Financial
+     * @return Collections\ArrayCollection|Financial[]|iterable
      */
-    public function getFinancial()
+    public function getFinancial(): iterable
     {
         return $this->financial;
     }
 
     /**
-     * @param Financial $financial
-     *
+     * @param Collections\ArrayCollection|Financial[] $financial
      * @return OParent
      */
-    public function setFinancial(Financial $financial): OParent
+    public function setFinancial($financial): OParent
     {
         $this->financial = $financial;
 
         return $this;
     }
+
 
     /**
      * @return Organisation
@@ -584,6 +594,25 @@ class OParent extends AbstractEntity
     public function setInvoice($invoice)
     {
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Parent\InvoiceExtra[]
+     */
+    public function getInvoiceExtra()
+    {
+        return $this->invoiceExtra;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Parent\InvoiceExtra[] $invoiceExtra
+     * @return OParent
+     */
+    public function setInvoiceExtra($invoiceExtra)
+    {
+        $this->invoiceExtra = $invoiceExtra;
 
         return $this;
     }

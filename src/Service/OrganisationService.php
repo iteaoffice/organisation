@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Service;
 
 use Affiliation\Entity\Affiliation;
@@ -39,11 +41,11 @@ class OrganisationService extends AbstractService
      *
      * @return string
      */
-    public static function determineBranch(string $givenName, string $organisation)
+    public static function determineBranch(string $givenName, string $organisation): string
     {
         //when the names are identical
         if ($givenName === $organisation) {
-            return null;
+            return '';
         }
 
         /** When the name is not found in the organisation */
@@ -143,8 +145,8 @@ class OrganisationService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
-     * @param string              $organisationName
-     * @param Project             $project
+     * @param string $organisationName
+     * @param Project $project
      *
      * @return mixed|null|Entity\Name
      */
@@ -177,7 +179,7 @@ class OrganisationService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
-     * @param int                 $which
+     * @param int $which
      *
      * @return int
      */
@@ -191,7 +193,7 @@ class OrganisationService extends AbstractService
                     case AffiliationService::WHICH_ONLY_ACTIVE:
                         return is_null($affiliation->getDateEnd());
                     case AffiliationService::WHICH_ONLY_INACTIVE:
-                        return ! is_null($affiliation->getDateEnd());
+                        return !is_null($affiliation->getDateEnd());
                     default:
                         return true;
                 }
@@ -201,7 +203,7 @@ class OrganisationService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
-     * @param int                 $which
+     * @param int $which
      *
      * @return int
      */
@@ -217,7 +219,7 @@ class OrganisationService extends AbstractService
                     case ContactService::WHICH_ONLY_ACTIVE:
                         return is_null($contactOrganisation->getContact()->getDateEnd());
                     case ContactService::WHICH_ONLY_EXPIRED:
-                        return ! is_null($contactOrganisation->getContact()->getDateEnd());
+                        return !is_null($contactOrganisation->getContact()->getDateEnd());
                     default:
                         return true;
                 }
@@ -230,7 +232,7 @@ class OrganisationService extends AbstractService
      *
      * @return Query
      */
-    public function findOrganisationFinancialList($filter)
+    public function findOrganisationFinancialList($filter): Query
     {
         /** @var Repository\Financial $repository */
         $repository = $this->getEntityManager()->getRepository(Entity\Financial::class);
@@ -305,8 +307,8 @@ class OrganisationService extends AbstractService
      * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
      *
      * @param Country $country
-     * @param bool    $onlyActiveProject
-     * @param bool    $onlyActivePartner
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -332,8 +334,9 @@ class OrganisationService extends AbstractService
         $branches = ['' => (string)$organisation->getOrganisation()];
 
         foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
-            $branches[$contactOrganisation->getBranch()]
-                = $this->parseOrganisationWithBranch($contactOrganisation->getBranch(), $organisation);
+            $branch = $contactOrganisation->getBranch();
+
+            $branches[$branch] = $this->parseOrganisationWithBranch($branch, $organisation);
         }
 
         return array_unique($branches);
@@ -345,34 +348,31 @@ class OrganisationService extends AbstractService
      *
      * @return string
      */
-    public function parseOrganisationWithBranch(
-        $branch,
-        Entity\Organisation $organisation
-    ) {
-        return self::parseBranch($branch, $organisation);
+    public function parseOrganisationWithBranch(string $branch = null, Entity\Organisation $organisation): string
+    {
+        return self::parseBranch((string)$branch, $organisation);
     }
 
     /**
-     * @param $branch
-     * @param $organisation
-     *
+     * @param string $branch
+     * @param Entity\Organisation $organisation
      * @return string
      */
-    public static function parseBranch($branch, $organisation): string
+    public static function parseBranch(string $branch = null, Entity\Organisation $organisation): string
     {
-        if (strpos($branch, '!') === 0) {
+        if (is_string($branch) && strpos($branch, '!') === 0) {
             return substr($branch, 1);
         }
 
-        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
+        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . (string)$organisation . ' ${3}', $branch));
     }
 
     /**
      * Find a country based on three criteria: Name, CountryObject and the email address.
      *
-     * @param string  $name
+     * @param string $name
      * @param Country $country
-     * @param string  $emailAddress
+     * @param string $emailAddress
      *
      * @return Entity\Organisation[]
      */
@@ -388,10 +388,10 @@ class OrganisationService extends AbstractService
     }
 
     /**
-     * @param string  $name
+     * @param string $name
      * @param Country $country
-     * @param int     $typeId
-     * @param string  $email
+     * @param int $typeId
+     * @param string $email
      *
      * @return Entity\Organisation
      */
@@ -417,7 +417,7 @@ class OrganisationService extends AbstractService
         $organisationWeb->setMain(Entity\Web::MAIN);
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
-        if (! in_array($organisation->getWeb(), ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'])) {
+        if (!in_array($organisation->getWeb(), ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'])) {
             $this->newEntity($organisationWeb);
         }
 
@@ -437,9 +437,9 @@ class OrganisationService extends AbstractService
     /**
      * Find a country based on three criteria: Name, CountryObject.
      *
-     * @param string  $name
+     * @param string $name
      * @param Country $country
-     * @param bool    $onlyMain
+     * @param bool $onlyMain
      *
      * @return Entity\Organisation
      */
@@ -453,7 +453,7 @@ class OrganisationService extends AbstractService
 
 
     /**
-     * @param Meeting    $meeting
+     * @param Meeting $meeting
      * @param Parameters $search
      *
      * @return Entity\Organisation[]
@@ -472,7 +472,7 @@ class OrganisationService extends AbstractService
      * Produce a list of organisations for a project (only active).
      *
      * @param Project $project
-     * @param bool    $onlyActiveProject
+     * @param bool $onlyActiveProject
      *
      * @return Entity\Organisation[]
      */
@@ -502,7 +502,7 @@ class OrganisationService extends AbstractService
      * Checks if the affiliation has a DOA.
      *
      * @param Entity\Organisation $organisation
-     * @param Program             $program
+     * @param Program $program
      *
      * @return bool
      */

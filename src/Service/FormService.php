@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Service;
 
 use Organisation\Entity\AbstractEntity;
@@ -43,23 +45,23 @@ class FormService extends AbstractService
     }
 
     /**
-     * @param null                $className
+     * @param null $className
      * @param AbstractEntity|null $entity
-     * @param bool                $bind
+     * @param bool $bind
      *
      * @return array|object|CreateObject
      */
     public function getForm($className = null, AbstractEntity $entity = null, bool $bind = true): Form
     {
-        if (! is_null($className) && is_null($entity)) {
+        if (!is_null($className) && is_null($entity)) {
             $entity = new $className();
         }
 
-        if (! is_object($entity)) {
+        if (!is_object($entity)) {
             throw new \InvalidArgumentException("No entity created given");
         }
 
-        $formName   = 'Organisation\\Form\\' . $entity->get('entity_name') . 'Form';
+        $formName = 'Organisation\\Form\\' . $entity->get('entity_name') . 'Form';
         $filterName = 'Organisation\\InputFilter\\' . $entity->get('entity_name') . 'Filter';
 
 
@@ -67,7 +69,7 @@ class FormService extends AbstractService
          * The filter and the form can dynamically be created by pulling the form from the serviceManager
          * if the form or filter is not give in the serviceManager we will create it by default
          */
-        if (! $this->getServiceLocator()->has($formName)) {
+        if (!$this->getServiceLocator()->has($formName)) {
             $form = new CreateObject($this->getEntityManager(), new $entity());
         } else {
             $form = $this->getServiceLocator()->get($formName);

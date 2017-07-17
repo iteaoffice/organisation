@@ -1,0 +1,60 @@
+<h3>{{ translate("txt-financial-information") }} {{ parentFinancialLink(null, 'new','button', parent) }}</h3>
+
+{% for financial in parent.financial %}
+
+    {% if loop.first %}
+        <p>{{ translate("txt-parent-has-%s-financial-organisations")|format(parent.financial.count()) }}</p>
+    {% endif %}
+
+    <dl class="dl-horizontal">
+        <dt>{{ translate("txt-billing-organisation") }}</dt>
+        <dd>{{ organisationLink(financial.organisation,'view-admin','name') }}</dd>
+        <dt>{{ translate("txt-country") }}</dt>
+        <dd>{{ countryLink(financial.organisation.country,'view-admin', 'name') }}</dd>
+        <dt>{{ translate("txt-financial-contact") }}</dt>
+        <dd>{{ contactLink(financial.contact, 'view-admin','name') }}</dd>
+
+
+        <dt>{{ translate("txt-address-label") }}</dt>
+        <dd>{{ organisationService.parseOrganisationWithBranch(financial.branch, financial.organisation) }}</dd>
+
+        {% if financial.organisation.financial.omitContact == constant("Organisation\\Entity\\Financial::NO_OMIT_CONTACT") %}
+            <dd>{{ contactService.parseAttention(financial.contact) }} {{ financial.contact.parseFullName() }}</dd>
+        {% endif %}
+
+        {% if contact.department %}
+            <dd>{{ contact.department }}</dd>
+        {% endif %}
+
+        {% set financialAddress = contactService.getFinancialAddress(financial.contact) %}
+        <dd>{{ financialAddress.address }}</dd>
+        <dd>{{ financialAddress.zipcode }} {{ financialAddress.city }}</dd>
+        <dd>{{ financialAddress.country|upper }}</dd>
+
+        <dt>{{ translate('txt-vat-number') }}</dt>
+        {% if financial.organisation.financial.vat %}
+            <dd>{{ financial.organisation.financial.vat }}</dd>
+        {% else %}
+            <dd>{{ translate("txt-no-finanical-organisation-for-%s")|format(financial.organisation) }}</dd>
+        {% endif %}
+
+
+        <dt>{{ translate("txt-preferred-delivery") }}</dt>
+        {% if parent.organisation.financial.email == constant("Organisation\\Entity\\Financial::EMAIL_DELIVERY") %}
+            <dd>{{ translate("txt-by-email-to-%s")|format(financial.contact.email) }}</dd>
+        {% else %}
+            <dd>{{ translate("txt-by-postal-mail") }}</dd>
+        {% endif %}
+
+
+    </dl>
+
+    {{ parentFinancialLink(financial, 'edit','button') }}
+
+    {% if not loop.last %}
+        <hr>
+    {% endif %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(parent))|raw }}
+{% endfor %}
+

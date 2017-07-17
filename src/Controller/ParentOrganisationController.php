@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use Affiliation\Entity\Affiliation;
@@ -35,19 +37,19 @@ class ParentOrganisationController extends OrganisationAbstractController
     {
         /** @var Entity\Parent\Organisation $organisation */
         $organisation = $this->getParentService()
-                             ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
+            ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
 
         if (is_null($organisation)) {
             return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare($organisation, $organisation, $data);
         $form->get($organisation->get('underscore_entity_name'))->get('contact')
-             ->injectContact($organisation->getContact());
+            ->injectContact($organisation->getContact());
         $form->get($organisation->get('underscore_entity_name'))->get('organisation')
-             ->injectOrganisation($organisation->getOrganisation());
+            ->injectOrganisation($organisation->getOrganisation());
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -84,7 +86,7 @@ class ParentOrganisationController extends OrganisationAbstractController
     {
         /** @var Entity\Parent\Organisation $organisation */
         $organisation = $this->getParentService()
-                             ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
+            ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
 
         if (is_null($organisation)) {
             return $this->notFoundAction();
@@ -100,13 +102,13 @@ class ParentOrganisationController extends OrganisationAbstractController
     {
         /** @var Entity\Parent\Organisation $parentOrganisation */
         $parentOrganisation = $this->getParentService()
-                                   ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
+            ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
 
         if (is_null($parentOrganisation)) {
             return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = new Form\AddAffiliation($this->getProjectService(), $parentOrganisation);
         $form->setData($data);
@@ -114,11 +116,11 @@ class ParentOrganisationController extends OrganisationAbstractController
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()
-                            ->toRoute(
-                                'zfcadmin/parent/organisation/view',
-                                ['id' => $parentOrganisation->getId()],
-                                ['fragment' => 'project']
-                            );
+                    ->toRoute(
+                        'zfcadmin/parent/organisation/view',
+                        ['id' => $parentOrganisation->getId()],
+                        ['fragment' => 'project']
+                    );
             }
 
             if ($form->isValid()) {
@@ -128,13 +130,13 @@ class ParentOrganisationController extends OrganisationAbstractController
                 $project = $this->getProjectService()->findProjectById((int)$formData['project']);
                 /** @var Contact $contact */
                 $contact = $this->getContactService()->findContactById((int)$formData['contact']);
-                $branch  = $formData['branch'];
+                $branch = $formData['branch'];
 
                 $affiliation = new Affiliation();
                 $affiliation->setProject($project);
                 $affiliation->setOrganisation($parentOrganisation->getOrganisation());
                 $affiliation->setParentOrganisation($parentOrganisation);
-                if (! empty($branch)) {
+                if (!empty($branch)) {
                     $affiliation->setBranch($branch);
                 }
                 $affiliation->setContact($contact);
@@ -142,13 +144,13 @@ class ParentOrganisationController extends OrganisationAbstractController
                 $this->getAffiliationService()->newEntity($affiliation);
 
                 $this->flashMessenger()->setNamespace('success')
-                     ->addMessage(
-                         sprintf(
-                             $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
-                             $parentOrganisation,
-                             $project
-                         )
-                     );
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-organisation-%s-has-successfully-been-added-to-project-%s"),
+                            $parentOrganisation,
+                            $project
+                        )
+                    );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/affiliation/view',

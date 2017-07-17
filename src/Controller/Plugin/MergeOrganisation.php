@@ -15,6 +15,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 namespace Organisation\Controller\Plugin;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,12 +50,12 @@ class MergeOrganisation extends AbstractPlugin
     /**
      * MergeOrganisation constructor.
      * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface    $translator
+     * @param TranslatorInterface $translator
      */
     public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
-        $this->translator    = $translator;
+        $this->translator = $translator;
     }
 
     /**
@@ -100,8 +102,17 @@ class MergeOrganisation extends AbstractPlugin
     }
 
     /**
-     * @param Organisation         $source
-     * @param Organisation         $target
+     * @param string $string
+     * @return string
+     */
+    private function translate(string $string): string
+    {
+        return $this->translator->translate($string);
+    }
+
+    /**
+     * @param Organisation $source
+     * @param Organisation $target
      * @param LoggerInterface|null $logger
      * @return array
      */
@@ -351,15 +362,6 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         return $response;
-    }
-
-    /**
-     * @param string $string
-     * @return string
-     */
-    private function translate(string $string): string
-    {
-        return $this->translator->translate($string);
     }
 
     /**

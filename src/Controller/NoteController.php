@@ -8,22 +8,12 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
-use Affiliation\Entity\Affiliation;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use Invoice\Entity\Invoice;
-use Invoice\Form\InvoiceFilter;
-use Organisation\Entity\Logo;
 use Organisation\Entity\Note;
-use Organisation\Entity\Organisation;
-use Organisation\Form\AddAffiliation;
-use Organisation\Form\OrganisationFilter;
 use Zend\Http\Request;
-use Zend\Paginator\Paginator;
-use Zend\Validator\File\ImageSize;
-use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**

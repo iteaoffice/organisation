@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Acl\Assertion;
 
 use Organisation\Entity\Organisation as OrganisationEntity;
@@ -27,10 +29,10 @@ class Organisation extends AssertionAbstract
      * $role, $organisation, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param Acl                                  $acl
-     * @param RoleInterface                        $role
+     * @param Acl $acl
+     * @param RoleInterface $role
      * @param ResourceInterface|OrganisationEntity $organisation
-     * @param string                               $privilege
+     * @param string $privilege
      *
      * @return bool
      */
@@ -43,7 +45,7 @@ class Organisation extends AssertionAbstract
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (! $organisation instanceof OrganisationEntity && ! is_null($id)) {
+        if (!$organisation instanceof OrganisationEntity && !is_null($id)) {
             $organisation = $this->getOrganisationService()->findOrganisationById($id);
         }
 

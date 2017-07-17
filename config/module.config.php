@@ -7,6 +7,7 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 use Organisation\Acl;
 use Organisation\Controller;
 use Organisation\Factory;
@@ -32,6 +33,7 @@ $config = [
             Controller\ParentTypeController::class            => Controller\Factory\ControllerFactory::class,
             Controller\ParentDoaController::class             => Controller\Factory\ControllerFactory::class,
             Controller\ParentStatusController::class          => Controller\Factory\ControllerFactory::class,
+            Controller\ParentFinancialController::class       => Controller\Factory\ControllerFactory::class,
         ],
     ],
     'controller_plugins' => [
@@ -68,6 +70,7 @@ $config = [
             'parentStatusLink'                  => View\Helper\ParentStatusLink::class,
             'parentDoaLink'                     => View\Helper\ParentDoaLink::class,
             'parentTypeLink'                    => View\Helper\ParentTypeLink::class,
+            'parentFinancialLink'               => View\Helper\ParentFinancialLink::class,
             'overviewVariableContribution'      => View\Helper\OverviewVariableContribution::class,
             'overviewExtraVariableContribution' => View\Helper\OverviewExtraVariableContribution::class,
         ],
@@ -84,6 +87,7 @@ $config = [
             View\Helper\ParentTypeLink::class                    => View\Factory\ViewHelperFactory::class,
             View\Helper\ParentStatusLink::class                  => View\Factory\ViewHelperFactory::class,
             View\Helper\ParentDoaLink::class                     => View\Factory\ViewHelperFactory::class,
+            View\Helper\ParentFinancialLink::class               => View\Factory\ViewHelperFactory::class,
             View\Helper\ParentOrganisationLink::class            => View\Factory\ViewHelperFactory::class,
             View\Helper\OverviewVariableContribution::class      => View\Factory\ViewHelperFactory::class,
             View\Helper\OverviewExtraVariableContribution::class => View\Factory\ViewHelperFactory::class,
@@ -114,6 +118,7 @@ $config = [
             Acl\Assertion\Type::class                            => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\Note::class                            => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\OParent::class                         => Acl\Factory\AssertionFactory::class,
+            Acl\Assertion\Parent\Financial::class                => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\Parent\Doa::class                      => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\Parent\Type::class                     => Acl\Factory\AssertionFactory::class,
             Acl\Assertion\Parent\Status::class                   => Acl\Factory\AssertionFactory::class,
@@ -124,6 +129,7 @@ $config = [
             Navigation\Invokable\Parent\OrganisationLabel::class => Navigation\Factory\NavigationInvokableFactory::class,
             Navigation\Invokable\Parent\TypeLabel::class         => Navigation\Factory\NavigationInvokableFactory::class,
             Navigation\Invokable\Parent\DoaLabel::class          => Navigation\Factory\NavigationInvokableFactory::class,
+            Navigation\Invokable\Parent\FinancialLabel::class    => Navigation\Factory\NavigationInvokableFactory::class,
             Navigation\Invokable\Parent\StatusLabel::class       => Navigation\Factory\NavigationInvokableFactory::class,
 
         ],

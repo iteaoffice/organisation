@@ -14,6 +14,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Organisation\Acl\Assertion\Note as NoteAssertion;
@@ -32,10 +34,10 @@ class NoteLink extends AbstractLink
     private $note;
 
     /**
-     * @param Note|null         $note
+     * @param Note|null $note
      * @param Organisation|null $organisation
-     * @param string            $action
-     * @param string            $show
+     * @param string $action
+     * @param string $show
      * @return string
      */
     public function __invoke(Note $note = null, Organisation $organisation = null, $action = 'edit', $show = 'icon')
@@ -45,7 +47,7 @@ class NoteLink extends AbstractLink
         $this->setAction($action);
         $this->setShow($show);
 
-        if (! $this->hasAccess($this->getNote(), NoteAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getNote(), NoteAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -57,9 +59,32 @@ class NoteLink extends AbstractLink
     }
 
     /**
+     * @return Note
+     */
+    public function getNote(): Note
+    {
+        if (is_null($this->note)) {
+            $this->note = new Note();
+        }
+
+        return $this->note;
+    }
+
+    /**
+     * @param Note|null $note
+     * @return NoteLink
+     */
+    public function setNote(Note $note = null): NoteLink
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
+    /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':
@@ -76,26 +101,5 @@ class NoteLink extends AbstractLink
                     sprintf('%s is an incorrect action for %s', $this->getAction(), __CLASS__)
                 );
         }
-    }
-
-    /**
-     * @return Note
-     */
-    public function getNote(): Note
-    {
-        if (is_null($this->note)) {
-            $this->note = new Note();
-        }
-        return $this->note;
-    }
-
-    /**
-     * @param Note|null $note
-     * @return NoteLink
-     */
-    public function setNote(Note $note = null): NoteLink
-    {
-        $this->note = $note;
-        return $this;
     }
 }

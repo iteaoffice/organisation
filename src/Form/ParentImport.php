@@ -13,6 +13,8 @@
  * @link        https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Zend\Form\Form;

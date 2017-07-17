@@ -14,12 +14,14 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity\Parent;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use DoctrineORMModule\Proxy\__CG__\Project\Entity\Fee;
 use Organisation\Entity\AbstractEntity;
+use Project\Entity\Fee;
 use Zend\Form\Annotation;
 
 /**

@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
@@ -31,7 +33,7 @@ class TypeLabel extends AbstractNavigationInvokable
      *
      * @return void
      */
-    public function __invoke(Mvc $page)
+    public function __invoke(Mvc $page): void
     {
         if ($this->getEntities()->containsKey(Type::class)) {
             /** @var Type $organisation */

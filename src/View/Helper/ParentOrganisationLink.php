@@ -14,6 +14,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Organisation\Acl\Assertion\Parent\Organisation as OrganisationAssertion;
@@ -62,7 +64,7 @@ class ParentOrganisationLink extends AbstractLink
     /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'add-affiliation':

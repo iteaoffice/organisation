@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -32,10 +34,10 @@ class ParentStatusController extends OrganisationAbstractController
      */
     public function listAction()
     {
-        $page              = $this->params()->fromRoute('page', 1);
-        $filterPlugin      = $this->getOrganisationFilter();
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
         $organisationQuery = $this->getParentService()
-                                  ->findEntitiesFiltered(Entity\Parent\Status::class, $filterPlugin->getFilter());
+            ->findEntitiesFiltered(Entity\Parent\Status::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -65,7 +67,7 @@ class ParentStatusController extends OrganisationAbstractController
      */
     public function newAction()
     {
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare(Entity\Parent\Status::class, null, $data);
         $form->remove('delete');
@@ -107,7 +109,7 @@ class ParentStatusController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare($parentStatus, $parentStatus, $data);
         $form->setAttribute('class', 'form-horizontal');

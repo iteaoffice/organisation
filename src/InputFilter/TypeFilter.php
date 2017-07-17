@@ -13,9 +13,13 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;
+use DoctrineModule\Validator\UniqueObject;
+use Organisation\Entity\Type;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -49,6 +53,15 @@ class TypeFilter extends InputFilter
                             'encoding' => 'UTF-8',
                             'min'      => 1,
                             'max'      => 255,
+                        ],
+                    ],
+                    [
+                        'name'    => UniqueObject::class,
+                        'options' => [
+                            'object_repository' => $entityManager->getRepository(Type::class),
+                            'object_manager'    => $entityManager,
+                            'use_context'       => true,
+                            'fields'            => 'type',
                         ],
                     ],
                 ],

@@ -22,25 +22,25 @@
             <tr>
                 <td colspan="4">{{ translate("txt-total-eligible-funding-by-free-riders-for-project") }}</td>
                 <td>
-                    <span class="pull-right">{{ versionService.findTotalFundingVersionByFreeRidersInVersion(version)|parse_funding }}</span>
+                    <span class="pull-right">{{ versionService.findTotalFundingVersionByFreeRidersInVersion(version)|round_currency }}</span>
                 </td>
             </tr>
             <tr>
                 <td colspan="4">{{ translate("txt-total-eligible-funding-by-parent-%s")|format(parent) }}</td>
                 <td>
-                    <span class="pull-right">{{ versionService.findTotalFundingVersionByParentAndVersion(parent, version)|parse_funding }}</span>
+                    <span class="pull-right">{{ versionService.findTotalFundingVersionByParentAndVersion(parent, version)|round_currency }}</span>
                 </td>
             </tr>
             <tr>
                 <td colspan="4">{{ translate("txt-total-eligible-funding-c-chambers-for-project") }}</td>
                 <td>
-                    <span class="pull-right">{{ versionService.findTotalFundingVersionByCChambersInVersion(version)|parse_funding }}</span>
+                    <span class="pull-right">{{ versionService.findTotalFundingVersionByCChambersInVersion(version)|round_currency }}</span>
                 </td>
             </tr>
             <tr>
                 <td colspan="4">{{ translate("txt-extra-variable-contribution-for-project") }}</td>
                 <td>
-                    <span class="pull-right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|parse_funding }}</span>
+                    <span class="pull-right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|round_currency }}</span>
                 </td>
             </tr>
             </tfoot>
@@ -52,7 +52,7 @@
                     <td>{{ affiliation.parentOrganisation.parent.type }}</td>
                     <td>{{ affiliation.parentOrganisation.parent.status }}</td>
                     <td>
-                        <span class="pull-right">{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version)|parse_funding }}</span>
+                        <span class="pull-right">{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version)|round_currency }}</span>
                     </td>
                 </tr>
             {% endfor %}
@@ -71,14 +71,14 @@
         <th>{{ translate("txt-parent-name") }}</th>
         <th>{{ translate("txt-parent-type") }}</th>
         <th>{{ translate("txt-parent-status") }}</th>
-        <th><span class="pull-right">{{ translate("txt-maximum-eligible-funding") }}</span></th>
+        <th><span class="pull-right">{{ translate("txt-extra-variable-contribution-funding") }}</span></th>
     </tr>
     </thead>
     <tfoot>
     <tr>
         <th colspan="4">{{ translate("txt-total-extra-%s-contribution-in-year-%s")|format(parent, year) }}</th>
         <th>
-            <span class="pull-right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent)|parse_funding }}</span>
+            <span class="pull-right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent)|round_currency }}</span>
         </th>
     </tr>
     </tfoot>
@@ -95,7 +95,7 @@
                 <td>{{ parent.type }}</td>
                 <td>{{ parent.status }}</td>
                 <td>
-                    <span class="pull-right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|parse_funding }}</span>
+                    <span class="pull-right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|round_currency }}</span>
                 </td>
             </tr>
         {% endif %}

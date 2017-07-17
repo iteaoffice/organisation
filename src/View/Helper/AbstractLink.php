@@ -9,6 +9,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use BjyAuthorize\Controller\Plugin\IsAllowed;
@@ -74,6 +76,10 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $parent;
     /**
+     * @var Entity\Parent\Financial
+     */
+    protected $financial;
+    /**
      * @var Entity\Parent\Organisation
      */
     protected $parentOrganisation;
@@ -136,7 +142,7 @@ abstract class AbstractLink extends AbstractViewHelper
     /**
      *
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         $this->action = null;
     }
@@ -150,6 +156,9 @@ abstract class AbstractLink extends AbstractViewHelper
             case 'icon':
             case 'button':
                 switch ($this->getAction()) {
+                    case 'new':
+                        $this->addLinkContent('<i class="fa fa-plus"></i>');
+                        break;
                     case 'edit':
                     case 'edit-financial':
                         $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
@@ -251,6 +260,22 @@ abstract class AbstractLink extends AbstractViewHelper
     }
 
     /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+    }
+
+    /**
      * @param $classes
      *
      * @return $this
@@ -265,22 +290,6 @@ abstract class AbstractLink extends AbstractViewHelper
         }
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    /**
-     * @param string $text
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
     }
 
     /**
@@ -583,6 +592,30 @@ abstract class AbstractLink extends AbstractViewHelper
     public function setDoa(Entity\Parent\Doa $doa = null): AbstractLink
     {
         $this->doa = $doa;
+
+        return $this;
+    }
+
+    /**
+     * @return Entity\Parent\Financial
+     */
+    public function getFinancial(): Entity\Parent\Financial
+    {
+        if (is_null($this->financial)) {
+            $this->financial = new Entity\Parent\Financial();
+        }
+
+        return $this->financial;
+    }
+
+    /**
+     * @param Entity\Parent\Financial $financial
+     *
+     * @return AbstractLink
+     */
+    public function setFinancial(Entity\Parent\Financial $financial = null): AbstractLink
+    {
+        $this->financial = $financial;
 
         return $this;
     }

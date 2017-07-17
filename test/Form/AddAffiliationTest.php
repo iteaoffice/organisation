@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace OrganisationTest\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -47,22 +49,22 @@ class AddAffiliationTest extends AbstractFormTest
         $entityManager = $this->getEntityManagerMock();
 
         $projectServiceMock = $this->getMockBuilder(ProjectService::class)
-                                   ->setMethods([
-                                       'findProjectByParentOrganisation',
-                                       'findAllProjects',
-                                   ])
-                                   ->getMock();
+            ->setMethods([
+                'findProjectByParentOrganisation',
+                'findAllProjects',
+            ])
+            ->getMock();
 
         $projectServiceMock->expects($this->exactly(1))
-                           ->method('findProjectByParentOrganisation')
-                           ->with(
-                               $this->identicalTo($parentOrganisation)
-                           )
-                           ->will($this->returnValue([$project]));
+            ->method('findProjectByParentOrganisation')
+            ->with(
+                $this->identicalTo($parentOrganisation)
+            )
+            ->will($this->returnValue([$project]));
 
         $projectServiceMock->expects($this->exactly(1))
-                           ->method('findAllProjects')
-                           ->will($this->returnValue(new Query($entityManager)));
+            ->method('findAllProjects')
+            ->will($this->returnValue(new Query($entityManager)));
 
         $addAffiliation = new AddAffiliation($projectServiceMock, $parentOrganisation);
 

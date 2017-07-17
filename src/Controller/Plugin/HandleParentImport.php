@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller\Plugin;
 
 use Contact\Entity\Address;
@@ -69,7 +71,7 @@ class HandleParentImport extends AbstractImportPlugin
     /**
      * @param array $keys
      */
-    public function prepareContent(array $keys = []):void
+    public function prepareContent(array $keys = []): void
     {
         foreach ($this->content as $key => $content) {
             $name = $content[$this->headerKeys['parent']];
@@ -139,49 +141,6 @@ class HandleParentImport extends AbstractImportPlugin
     }
 
     /**
-     * @param Organisation $organisation
-     * @param Country $country
-     * @param Contact $contact
-     * @param array $content
-     *
-     * @return OParent
-     */
-    public function handleParentInformation(
-        Organisation $organisation,
-        Country $country,
-        Contact $contact,
-        array $content
-    ): OParent {
-        //If we find the organisation and the organisation is a parent, just return it
-        if (!is_null($organisation->getParent())) {
-            $parent = $organisation->getParent();
-        } else {
-            $parent = new OParent();
-            $parent->setContact($contact);
-            $parent->setOrganisation($organisation);
-        }
-
-        $parentType = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
-        if (is_null($parentType)) {
-            $parentType = $this->getParentService()->findEntityById(ParentType::class, ParentType::TYPE_OTHER);
-        }
-        $parent->setType($parentType);
-
-        $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
-        $parent->setStatus($status);
-
-        $parent->setArtemisiaMemberType(OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER);
-        $parent->setEpossMemberType(OParent::EPOSS_MEMBER_TYPE_NO_MEMBER);
-
-        $parent->setContact($contact);
-
-        //Add the parent to the organisation
-        $organisation->setParent($parent);
-
-        return $parent;
-    }
-
-    /**
      * @param array $content
      * @return Contact
      */
@@ -241,6 +200,48 @@ class HandleParentImport extends AbstractImportPlugin
         return $contact;
     }
 
+    /**
+     * @param Organisation $organisation
+     * @param Country $country
+     * @param Contact $contact
+     * @param array $content
+     *
+     * @return OParent
+     */
+    public function handleParentInformation(
+        Organisation $organisation,
+        Country $country,
+        Contact $contact,
+        array $content
+    ): OParent {
+        //If we find the organisation and the organisation is a parent, just return it
+        if (!is_null($organisation->getParent())) {
+            $parent = $organisation->getParent();
+        } else {
+            $parent = new OParent();
+            $parent->setContact($contact);
+            $parent->setOrganisation($organisation);
+        }
+
+        $parentType = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
+        if (is_null($parentType)) {
+            $parentType = $this->getParentService()->findEntityById(ParentType::class, ParentType::TYPE_OTHER);
+        }
+        $parent->setType($parentType);
+
+        $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
+        $parent->setStatus($status);
+
+        $parent->setArtemisiaMemberType(OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER);
+        $parent->setEpossMemberType(OParent::EPOSS_MEMBER_TYPE_NO_MEMBER);
+
+        $parent->setContact($contact);
+
+        //Add the parent to the organisation
+        $organisation->setParent($parent);
+
+        return $parent;
+    }
 
     /**
      * validate the data

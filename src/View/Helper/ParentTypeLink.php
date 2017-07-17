@@ -14,6 +14,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Organisation\Acl\Assertion\Parent\Type as ParentTypeAssertion;
@@ -28,8 +30,8 @@ class ParentTypeLink extends AbstractLink
 {
     /**
      * @param Entity\Parent\Type|null $parentType
-     * @param string                  $action
-     * @param string                  $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
      */
@@ -42,7 +44,7 @@ class ParentTypeLink extends AbstractLink
         $this->setAction($action);
         $this->setShow($show);
 
-        if (! $this->hasAccess($this->getParentType(), ParentTypeAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getParentType(), ParentTypeAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -60,7 +62,7 @@ class ParentTypeLink extends AbstractLink
     /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':

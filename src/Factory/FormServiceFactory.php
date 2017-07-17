@@ -12,6 +12,8 @@
  *
  * @link        http://github.com/iteaoffice/main for the canonical source repository
  */
+declare(strict_types=1);
+
 namespace Organisation\Factory;
 
 use Doctrine\ORM\EntityManager;
@@ -28,8 +30,8 @@ class FormServiceFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null|null    $options
+     * @param string $requestedName
+     * @param array|null|null $options
      *
      * @return FormService
      */

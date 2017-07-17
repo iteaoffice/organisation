@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use DragonBe\Vies\Vies;
@@ -25,7 +27,7 @@ class JsonController extends OrganisationAbstractController
     public function getBranchesAction()
     {
         $organisationId = (int)$this->getEvent()->getRequest()->getPost()->get('organisationId');
-        $organisation   = $this->getOrganisationService()->findOrganisationById($organisationId);
+        $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
 
         if (is_null($organisation)) {
             return $this->notFoundAction();
@@ -36,10 +38,10 @@ class JsonController extends OrganisationAbstractController
 
         $branches = [];
         foreach ($options as $key => $branch) {
-            $branchValue          = [];
+            $branchValue = [];
             $branchValue['value'] = $key;
             $branchValue['label'] = $branch;
-            $branches[]           = $branchValue;
+            $branches[] = $branchValue;
         }
 
         return new JsonModel($branches);
@@ -61,7 +63,7 @@ class JsonController extends OrganisationAbstractController
         }
 
         //Overrule the vat when a VAT number is sent via the URL
-        if (! is_null($this->getEvent()->getRequest()->getPost()->get('vat'))) {
+        if (!is_null($this->getEvent()->getRequest()->getPost()->get('vat'))) {
             $vat = $this->getEvent()->getRequest()->getPost()->get('vat');
         } else {
             $vat = $financial->getVat();

@@ -12,6 +12,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Options;
 
 /**
@@ -31,6 +33,7 @@ interface OrganisationOptionsInterface
      * @return OrganisationOptionsInterface
      */
     public function setUseOrganisationMap($useOrganisationMap);
+
     /**
      * @param $countryColor
      *
@@ -42,6 +45,7 @@ interface OrganisationOptionsInterface
      * @return string
      */
     public function getCountryColor();
+
     /**
      * Returns the assigned hex color of the country map.
      *
@@ -50,6 +54,7 @@ interface OrganisationOptionsInterface
      * @return ModuleOptions
      */
     public function setCountryColorFaded($countryColorFaded);
+
     /**
      * Returns the assigned hex color of the country map.
      *
@@ -68,10 +73,12 @@ interface OrganisationOptionsInterface
      * @return ModuleOptions
      */
     public function setOverviewVariableContributionTemplate($overviewVariableContributionTemplate);
+
     /**
      * @return string
      */
     public function getOverviewExtraVariableContributionTemplate();
+
     /**
      * @param string $overviewExtraVariableContributionTemplate
      *

@@ -8,12 +8,13 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
 use Organisation\Entity;
 use Zend\Form\Form;
-use Zend\Form\Element;
 
 /**
  * Class OrganisationForm
@@ -41,21 +42,7 @@ class OrganisationForm extends Form
 
         $this->add(
             [
-                'type'       => Element\Textarea::class,
-                'name'       => 'description',
-                'attributes' => [
-                    'rows' => 12,
-                ],
-                'options'    => [
-                    "label"      => "txt-description",
-                    "help-block" => _("txt-organisation-description-help-block"),
-                ],
-            ]
-        );
-
-        $this->add(
-            [
-                'type'    => Element\File::class,
+                'type'    => '\Zend\Form\Element\File',
                 'name'    => 'file',
                 'options' => [
                     "label"      => "txt-logo",
@@ -66,7 +53,7 @@ class OrganisationForm extends Form
 
         $this->add(
             [
-                'type'       => Element\Submit::class,
+                'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => "btn btn-primary",
@@ -76,7 +63,7 @@ class OrganisationForm extends Form
         );
         $this->add(
             [
-                'type'       => Element\Submit::class,
+                'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => "btn btn-warning",
@@ -86,7 +73,7 @@ class OrganisationForm extends Form
         );
         $this->add(
             [
-                'type'       => Element\Submit::class,
+                'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'delete',
                 'attributes' => [
                     'class' => "btn btn-danger",

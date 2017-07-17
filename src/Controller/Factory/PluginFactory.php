@@ -14,6 +14,8 @@
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller\Factory;
 
 use Affiliation\Service\AffiliationService;
@@ -54,8 +56,7 @@ final class PluginFactory implements FactoryInterface
     public function __invoke(
         ContainerInterface $container,
         $requestedName,
-        array
-        $options = null
+        array $options = null
     ): AbstractPlugin {
 
         /** @var EntityManager $entityManager */
@@ -66,7 +67,10 @@ final class PluginFactory implements FactoryInterface
                 /** @var Translate $translateHelper */
                 $translateHelper = $container->get('ViewHelperManager')->get('translate');
 
-                $plugin = new MergeOrganisation($entityManager, $translateHelper->getTranslator());
+                $plugin = new MergeOrganisation(
+                    $entityManager,
+                    $translateHelper->getTranslator()
+                );
 
                 break;
             default:

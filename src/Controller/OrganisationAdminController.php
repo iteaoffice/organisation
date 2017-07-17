@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use Affiliation\Entity\Affiliation;
@@ -88,7 +90,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $invoiceFilter = new InvoiceFilter($this->getInvoiceService());
+        $invoiceFilter = new InvoiceFilter();
         $invoiceFilter->setData(['filter' => $filterPlugin->getFilter()]);
 
         $mergeForm = new OrganisationMerge($this->getEntityManager(), $organisation);
@@ -266,7 +268,7 @@ class OrganisationAdminController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = new AddAffiliation($this->getProjectService(), $organisation);
         $form->setData($data);

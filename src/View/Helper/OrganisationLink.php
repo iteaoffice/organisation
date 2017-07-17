@@ -9,6 +9,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\Organisation;
@@ -87,6 +89,21 @@ class OrganisationLink extends AbstractLink
         return $this->createLink();
     }
 
+    /**
+     * @return string
+     */
+    public function getBranch()
+    {
+        return $this->branch;
+    }
+
+    /**
+     * @param string $branch
+     */
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
+    }
 
     /**
      * @throws \Exception
@@ -181,21 +198,5 @@ class OrganisationLink extends AbstractLink
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getBranch()
-    {
-        return $this->branch;
-    }
-
-    /**
-     * @param string $branch
-     */
-    public function setBranch($branch)
-    {
-        $this->branch = $branch;
     }
 }

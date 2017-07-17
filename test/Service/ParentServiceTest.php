@@ -13,11 +13,11 @@
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace OrganisationTest\Service;
 
-use Contact\Entity\Contact;
 use Organisation\Entity;
-use Organisation\Repository;
 use Organisation\Service\ParentService;
 use Testing\Util\AbstractServiceTest;
 

@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
@@ -32,7 +34,7 @@ class CreateObject extends Form
     /**
      * CreateObject constructor.
      *
-     * @param EntityManager  $entityManager
+     * @param EntityManager $entityManager
      * @param AbstractEntity $object
      */
     public function __construct(EntityManager $entityManager, AbstractEntity $object)

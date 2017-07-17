@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Navigation\Invokable;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
@@ -32,7 +34,7 @@ class OrganisationLabel extends AbstractNavigationInvokable
      *
      * @return void
      */
-    public function __invoke(Mvc $page)
+    public function __invoke(Mvc $page): void
     {
         if ($this->getEntities()->containsKey(Organisation::class)) {
             /** @var Organisation $organisation */
@@ -41,8 +43,8 @@ class OrganisationLabel extends AbstractNavigationInvokable
                 $page->getParams(),
                 ['id' => $organisation->getId()]
             ));
-            $label = (string) $organisation;
-        // Get organisation from note
+            $label = (string)$organisation;
+            // Get organisation from note
         } elseif ($this->getEntities()->containsKey(Note::class)) {
             /** @var Note $note */
             $note = $this->getEntities()->get(Note::class);
@@ -50,7 +52,7 @@ class OrganisationLabel extends AbstractNavigationInvokable
                 $page->getParams(),
                 ['id' => $note->getOrganisation()->getId()]
             ));
-            $label = (string) $note->getOrganisation();
+            $label = (string)$note->getOrganisation();
         } else {
             $label = $this->translate('txt-nav-view');
         }

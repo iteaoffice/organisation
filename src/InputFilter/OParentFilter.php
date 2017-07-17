@@ -13,9 +13,10 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\InputFilter;
 
-use Doctrine\ORM\EntityManager;
 use Zend\InputFilter\InputFilter;
 
 /**
@@ -26,11 +27,9 @@ use Zend\InputFilter\InputFilter;
 class OParentFilter extends InputFilter
 {
     /**
-     * ParentFilter constructor.
-     *
-     * @param EntityManager $entityManager
+     * OParentFilter constructor.
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct()
     {
         $inputFilter = new InputFilter();
 

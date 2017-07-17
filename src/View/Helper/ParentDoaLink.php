@@ -9,6 +9,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Organisation\Acl\Assertion\Parent\Doa as DoaAssertion;
@@ -23,9 +25,9 @@ use Organisation\Entity\Parent\Doa;
 class ParentDoaLink extends AbstractLink
 {
     /**
-     * @param Doa     $doa
-     * @param string  $action
-     * @param string  $show
+     * @param Doa $doa
+     * @param string $action
+     * @param string $show
      * @param OParent $parent
      *
      * @return string
@@ -44,7 +46,7 @@ class ParentDoaLink extends AbstractLink
                 'name' => $this->getDoa(),
             ]
         );
-        if (! $this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -59,7 +61,7 @@ class ParentDoaLink extends AbstractLink
      *
      * @throws \Exception
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'upload':

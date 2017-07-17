@@ -13,15 +13,13 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
-use Contact\Entity\Address;
-use Contact\Entity\AddressType;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use General\Entity\Country;
 use Organisation\Entity;
-use Organisation\Entity\Financial;
 use Organisation\Form;
 use Zend\Paginator\Paginator;
 use Zend\Session\Container;
@@ -36,7 +34,7 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function listAction()
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
@@ -71,14 +69,14 @@ class ParentController extends OrganisationAbstractController
      *
      * @return \Zend\View\Model\ViewModel
      */
-    public function newAction()
+    public function newAction(): ViewModel
     {
         $organisation = null;
         if (!is_null($this->params('organisationId'))) {
             $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $parent = new Entity\OParent();
         $form = $this->getFormService()->prepare($parent, null, $data);
@@ -141,7 +139,7 @@ class ParentController extends OrganisationAbstractController
             $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = new Form\AddOrganisation();
 
@@ -216,7 +214,7 @@ class ParentController extends OrganisationAbstractController
 
         $currentParentType = $parent->getType()->getId();
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
         $form = $this->getFormService()->prepare($parent, $parent, $data);
 
         $form->get($parent->get('underscore_entity_name'))->get('contact')->injectContact($parent->getContact());
@@ -281,7 +279,7 @@ class ParentController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $year = date("Y");
+        $year = (int)date('Y');
 
         return new ViewModel(
             [
@@ -291,122 +289,6 @@ class ParentController extends OrganisationAbstractController
                 'year'                => $year,
                 'invoiceFactor'       => $this->getParentService()->parseInvoiceFactor($parent, $year),
                 'membershipFactor'    => $this->getParentService()->parseMembershipFactor($parent),
-            ]
-        );
-    }
-
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
-    public function editFinancialAction()
-    {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
-
-        if (is_null($parent)) {
-            return $this->notFoundAction();
-        }
-
-        $formData = [
-            'preferredDelivery' => \Organisation\Entity\Financial::EMAIL_DELIVERY,
-            'omitContact'       => \Organisation\Entity\Financial::OMIT_CONTACT,
-        ];
-
-        $financialAddress = null;
-
-        $form = new Form\Financial($parent, $this->getGeneralService(), $this->getOrganisationService());
-
-        if (!is_null($parent->getFinancial())) {
-            $branch = $parent->getFinancial()->getBranch();
-            $formData['organisationFinancial'] = $parent->getFinancial()->getOrganisation()->getFinancial()->getId();
-            $formData['attention'] = $parent->getFinancial()->getContact()->getDisplayName();
-            $formData['contact'] = $parent->getFinancial()->getContact()->getId();
-            $form->get('contact')->injectContact($parent->getFinancial()->getContact());
-
-            if (!is_null(
-                $financialAddress = $this->getContactService()->getFinancialAddress(
-                    $parent->getFinancial()
-                        ->getContact()
-                )
-            )
-            ) {
-                $formData['address'] = $financialAddress->getAddress();
-                $formData['zipCode'] = $financialAddress->getZipCode();
-                $formData['city'] = $financialAddress->getCity();
-                $formData['country'] = $financialAddress->getCountry()->getId();
-            }
-        }
-
-        $data = array_merge($formData, $this->getRequest()->getPost()->toArray());
-
-        $form->setData($data);
-
-
-        if ($this->getRequest()->isPost() && $form->isValid()) {
-            $formData = $form->getData();
-
-            /** @var Financial $financialOrganisation */
-            $financialOrganisation = $this->getOrganisationService()
-                ->findEntityById(Financial::class, $formData['organisationFinancial']);
-
-            /**
-             *
-             * Update the parentFinancial
-             */
-            $parentFinancial = $parent->getFinancial();
-            if (is_null($parentFinancial)) {
-                $parentFinancial = new Entity\Parent\Financial();
-                $parentFinancial->setParent($parent);
-            }
-            $parentFinancial->setContact($this->getContactService()->findContactById($formData['contact']));
-            $parentFinancial->setOrganisation($financialOrganisation->getOrganisation());
-            $parentFinancial->setBranch($formData['branch']);
-            $this->getParentService()->updateEntity($parentFinancial);
-
-            /*
-             * save the financial address
-             */
-
-            if (is_null(
-                $financialAddress = $this->getContactService()->getFinancialAddress($parentFinancial->getContact())
-            )) {
-                $financialAddress = new Address();
-                $financialAddress->setContact($parent->getFinancial()->getContact());
-                /**
-                 * @var $addressType AddressType
-                 */
-                $addressType = $this->getContactService()
-                    ->findEntityById(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
-                $financialAddress->setType($addressType);
-            }
-            $financialAddress->setAddress($formData['address']);
-            $financialAddress->setZipCode($formData['zipCode']);
-            $financialAddress->setCity($formData['city']);
-            /**
-             * @var Country $country
-             */
-            $country = $this->getGeneralService()->findEntityById(Country::class, $formData['country']);
-            $financialAddress->setCountry($country);
-            $this->getContactService()->updateEntity($financialAddress);
-            $this->flashMessenger()->setNamespace('success')
-                ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-updated"), $parent));
-
-            return $this->redirect()->toRoute(
-                'zfcadmin/parent/view',
-                [
-                    'id' => $parent->getId(),
-                ],
-                [
-                    'fragment' => 'financial',
-                ]
-            );
-        }
-
-        return new ViewModel(
-            [
-                'parent'         => $parent,
-                'parentService'  => $this->getParentService(),
-                'projectService' => $this->getProjectService(),
-                'form'           => $form,
             ]
         );
     }
@@ -437,7 +319,7 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
-     * @return array|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface|ViewModel
      */
     public function overviewVariableContributionPdfAction()
     {
@@ -472,9 +354,9 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function overviewExtraVariableContributionAction()
+    public function overviewExtraVariableContributionAction(): ViewModel
     {
         $parent = $this->getParentService()->findParentById($this->params('id'));
 
@@ -496,7 +378,7 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
-     * @return array|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface|ViewModel
      */
     public function overviewExtraVariableContributionPdfAction()
     {
@@ -533,7 +415,7 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function ImportParentAction()
+    public function importParentAction()
     {
         set_time_limit(0);
 
@@ -581,7 +463,7 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function ImportProjectAction()
+    public function importProjectAction()
     {
         set_time_limit(0);
 

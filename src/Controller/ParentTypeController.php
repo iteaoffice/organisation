@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -32,10 +34,10 @@ class ParentTypeController extends OrganisationAbstractController
      */
     public function listAction()
     {
-        $page              = $this->params()->fromRoute('page', 1);
-        $filterPlugin      = $this->getOrganisationFilter();
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
         $organisationQuery = $this->getParentService()
-                                  ->findEntitiesFiltered(Entity\Parent\Type::class, $filterPlugin->getFilter());
+            ->findEntitiesFiltered(Entity\Parent\Type::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -43,7 +45,7 @@ class ParentTypeController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentTypeFilter($this->getParentService());
+        $form = new Form\ParentTypeFilter();
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -65,7 +67,7 @@ class ParentTypeController extends OrganisationAbstractController
      */
     public function newAction()
     {
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare(Entity\Parent\Type::class, null, $data);
         $form->remove('delete');
@@ -107,7 +109,7 @@ class ParentTypeController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare($parentType, $parentType, $data);
         $form->setAttribute('class', 'form-horizontal');

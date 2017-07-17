@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use Affiliation\Service\AffiliationService;
@@ -22,8 +24,9 @@ use Invoice\Service\InvoiceService;
 use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Controller\Plugin\HandleParentAndProjectImport;
 use Organisation\Controller\Plugin\HandleParentImport;
-use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
 use Organisation\Controller\Plugin\MergeOrganisation;
+use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
+use Organisation\Controller\Plugin\RenderOverviewExtraVariableContributionSheet;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
@@ -42,7 +45,8 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      IsAllowed isAllowed($resource, $action)
  * @method      InvoiceFilterPlugin getInvoiceFilter()
  * @method      OrganisationFilterPlugin getOrganisationFilter()
- * @method      RenderOverviewVariableContributionSheet renderOverviewVariableContributionSheet()
+ * @method      RenderOverviewVariableContributionSheet renderOverviewVariableContributionSheet($parent, $year, $period)
+ * @method      RenderOverviewExtraVariableContributionSheet renderOverviewExtraVariableContributionSheet($parent, $year, $period)
  * @method      HandleParentAndProjectImport handleParentAndProjectImport($fileData, $keys, $doImport)
  * @method      HandleParentImport handleParentImport($fileData, $keys, $doImport)
  * @method      MergeOrganisation mergeOrganisation()

@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller\Plugin;
 
 use Affiliation\Entity\Affiliation;
@@ -239,6 +241,40 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         }
 
         return true;
+    }
+
+    /**
+     * @param array $content
+     *
+     * @return Status|object
+     */
+    public function parseStatus(array $content): Status
+    {
+        $isMember = $content[$this->headerKeys['Member AENEAS']] === '1';
+        $PENTADoa = $content[$this->headerKeys['AENEAS PENTA DoA']] === '1';
+        $ENIACDoa = $content[$this->headerKeys['AENEAS ENIAC DoA']] === '1';
+        $ecselDoa = !empty($content[$this->headerKeys['AENEAS ECSEL DoA before 27/2/16']]) || !empty($content[$this->headerKeys['AENEAS ECSEL DoA after 27/2/16']]);
+        $artemisiaMember = $content[$this->headerKeys['Member ARTEMISIA']] === '1';
+        $epossMember = $content[$this->headerKeys['Member EPOSS']] === '1';
+        $freeRider = $content[$this->headerKeys['free-rider']] === '1';
+
+        //Derive the member type
+        switch (true) {
+            case $isMember:
+                return $this->getParentService()->findEntityById(Status::class, self::STATUS_MEMBER);
+            case $PENTADoa:
+                return $this->getParentService()->findEntityById(Status::class, self::STATUS_PENTA_DOA);
+            case $ENIACDoa:
+                return $this->getParentService()->findEntityById(Status::class, self::STATUS_ECSEL_ENIAC_DOA);
+            case $ecselDoa:
+                return $this->getParentService()->findEntityById(Status::class, self::STATUS_ECSEL_DOA);
+            case $freeRider:
+                return $this->getParentService()->findEntityById(Status::class, self::STATUS_FEE_RIDER);
+            case $artemisiaMember:
+            case $epossMember:
+            default:
+                return $this->getParentService()->findEntityById(Status::class, self::STATUS_IA_MEMBER);
+        }
     }
 
     /**
@@ -501,40 +537,6 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         $organisation->setParent($parent);
 
         return $parent;
-    }
-
-    /**
-     * @param array $content
-     *
-     * @return Status|object
-     */
-    public function parseStatus(array $content): Status
-    {
-        $isMember = $content[$this->headerKeys['Member AENEAS']] === '1';
-        $PENTADoa = $content[$this->headerKeys['AENEAS PENTA DoA']] === '1';
-        $ENIACDoa = $content[$this->headerKeys['AENEAS ENIAC DoA']] === '1';
-        $ecselDoa = !empty($content[$this->headerKeys['AENEAS ECSEL DoA before 27/2/16']]) || !empty($content[$this->headerKeys['AENEAS ECSEL DoA after 27/2/16']]);
-        $artemisiaMember = $content[$this->headerKeys['Member ARTEMISIA']] === '1';
-        $epossMember = $content[$this->headerKeys['Member EPOSS']] === '1';
-        $freeRider = $content[$this->headerKeys['free-rider']] === '1';
-
-        //Derive the member type
-        switch (true) {
-            case $isMember:
-                return $this->getParentService()->findEntityById(Status::class, self::STATUS_MEMBER);
-            case $PENTADoa:
-                return $this->getParentService()->findEntityById(Status::class, self::STATUS_PENTA_DOA);
-            case $ENIACDoa:
-                return $this->getParentService()->findEntityById(Status::class, self::STATUS_ECSEL_ENIAC_DOA);
-            case $ecselDoa:
-                return $this->getParentService()->findEntityById(Status::class, self::STATUS_ECSEL_DOA);
-            case $freeRider:
-                return $this->getParentService()->findEntityById(Status::class, self::STATUS_FEE_RIDER);
-            case $artemisiaMember:
-            case $epossMember:
-            default:
-                return $this->getParentService()->findEntityById(Status::class, self::STATUS_IA_MEMBER);
-        }
     }
 
     /**

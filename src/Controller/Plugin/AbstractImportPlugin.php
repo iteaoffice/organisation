@@ -8,9 +8,12 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller\Plugin;
 
 use General\Entity\Country;
+use Organisation\Entity;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
@@ -53,7 +56,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
      */
     protected $parents = [];
     /**
-     * @var ParentOrganisation[]
+     * @var Entity\Parent\Organisation[]
      */
     protected $parentOrganisation = [];
     /**
@@ -61,7 +64,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
      */
     protected $importedParents = [];
     /**
-     * @var ParentOrganisation[]
+     * @var Entity\Parent\Organisation[]
      */
     protected $importedParentOrganisation = [];
 
@@ -88,8 +91,6 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
 
     /**
      * @param $data
-     *
-     * @return void
      */
     abstract public function setData(string $data);
 
@@ -97,6 +98,14 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
      * With this function we will do some basic testing to see if the least amount of information is available.
      */
     abstract public function validateData();
+
+    /**
+     * @return bool
+     */
+    public function hasErrors(): bool
+    {
+        return count($this->errors) > 0;
+    }
 
     /**
      * @param array $keys
@@ -124,15 +133,6 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
         $this->getEntityManager()->persist($organisation);
 
         return $organisation;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function hasErrors(): bool
-    {
-        return count($this->errors) > 0;
     }
 
     /**
@@ -239,9 +239,8 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
         return $this;
     }
 
-
     /**
-     * @return ParentOrganisation[]
+     * @return Entity\Parent\Organisation[]
      */
     public function getParentOrganisation(): array
     {
@@ -249,7 +248,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
     }
 
     /**
-     * @param ParentOrganisation[] $parentOrganisation
+     * @param Entity\Parent\Organisation[] $parentOrganisation
      *
      * @return AbstractImportPlugin
      */
@@ -289,7 +288,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
     }
 
     /**
-     * @return ParentOrganisation[]
+     * @return Entity\Parent\Organisation[]
      */
     public function getImportedParentOrganisation(): array
     {
@@ -297,7 +296,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
     }
 
     /**
-     * @param ParentOrganisation[] $importedParentOrganisation
+     * @param Entity\Parent\Organisation[] $importedParentOrganisation
      *
      * @return AbstractImportPlugin
      */

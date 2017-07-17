@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Acl\Factory;
 
 use Admin\Service\AdminService;
@@ -33,8 +35,8 @@ final class AssertionFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface|ServiceLocatorInterface $container
-     * @param string                                     $requestedName
-     * @param array|null                                 $options
+     * @param string $requestedName
+     * @param array|null $options
      *
      * @return AssertionAbstract
      */

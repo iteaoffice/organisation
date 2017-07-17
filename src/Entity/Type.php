@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
@@ -86,7 +88,7 @@ class Type extends AbstractEntity implements ResourceInterface
      * @Annotation\Attributes({"array":"invoiceTemplates"})
      * @Annotation\Attributes({"label":"txt-invoice"})
      *
-     * @var \int
+     * @var int
      */
     private $invoice;
     /**
@@ -110,7 +112,7 @@ class Type extends AbstractEntity implements ResourceInterface
     public function __construct()
     {
         $this->organisation = new Collections\ArrayCollection();
-        $this->meetingCost  = new Collections\ArrayCollection();
+        $this->meetingCost = new Collections\ArrayCollection();
     }
 
     /**

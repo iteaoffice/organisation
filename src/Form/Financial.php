@@ -13,11 +13,14 @@
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
+use Contact\Entity\Contact;
 use General\Entity\Country;
 use General\Service\GeneralService;
-use Organisation\Entity\Financial as FinancialOrganisation;
+use Organisation\Entity;
 use Organisation\Entity\OParent;
 use Organisation\Service\OrganisationService;
 use Zend\Form\Form;
@@ -32,8 +35,8 @@ class Financial extends Form
     /**
      * Financial constructor.
      *
-     * @param OParent             $parent
-     * @param GeneralService      $generalService
+     * @param OParent $parent
+     * @param GeneralService $generalService
      * @param OrganisationService $organisationService
      */
     public function __construct(
@@ -53,14 +56,16 @@ class Financial extends Form
 
         $financialOrganisationValueOptions = [];
 
-        /** @var \Organisation\Entity\Financial $financial */
+        /** @var Financial $financial */
         foreach ($organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
-                                ->getArrayResult() as $financial) {
-            $financialOrganisationValueOptions[$financial['id']] = sprintf(
-                "%s (%s)",
-                $financial['organisation']['organisation'],
-                $financial['vat']
-            );
+                     ->getArrayResult() as $financialOrganisation) {
+            $financialOrganisationValueOptions[$financialOrganisation['id']] =
+
+                sprintf(
+                    '%s (VAT: %s)',
+                    $financialOrganisation['organisation']['organisation'],
+                    $financialOrganisation['vat']
+                );
         }
 
         asort($financialOrganisationValueOptions);
@@ -72,6 +77,7 @@ class Financial extends Form
                 'options'    => [
                     'value_options' => $financialOrganisationValueOptions,
                     'label'         => _("txt-financial-organisation-name"),
+                    'help-block'    => _("txt-parent-financial-financial-organisation-name-help-block"),
                 ],
                 'attributes' => [
                     'class' => 'form-control',
@@ -93,15 +99,16 @@ class Financial extends Form
             ]
         );
 
-        $financialContactValueOptions[$parent->getContact()->getId()]
-            = $parent->getContact()->getFormName();
+        $financialContactValueOptions[$parent->getContact()->getId()] = $parent->getContact()->getFormName();
         /**
          * Add the contacts from the organisations
          */
         foreach ($parent->getParentOrganisation() as $parentOrganisation) {
             foreach ($parentOrganisation->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
-                $financialContactValueOptions[$contactOrganisation->getContact()->getId()]
-                    = $contactOrganisation->getContact()->getFormName();
+                /** @var Contact $contact */
+                $contact = $contactOrganisation->getContact();
+
+                $financialContactValueOptions[$contact->getId()] = $contact->getFormName();
             }
         }
 
@@ -121,13 +128,13 @@ class Financial extends Form
                 ],
             ]
         );
-        $organisationFinancial = new FinancialOrganisation();
+
         $this->add(
             [
                 'type'       => 'Zend\Form\Element\Radio',
                 'name'       => 'omitContact',
                 'options'    => [
-                    'value_options' => \Organisation\Entity\Financial::getOmitContactTemplates(),
+                    'value_options' => Entity\Financial::getOmitContactTemplates(),
                     'label'         => _("txt-omit-contact"),
                 ],
                 'attributes' => [
@@ -196,7 +203,7 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Radio',
                 'name'       => 'preferredDelivery',
                 'options'    => [
-                    'value_options' => \Organisation\Entity\Financial::getEmailTemplates(),
+                    'value_options' => Entity\Financial::getEmailTemplates(),
                     'label'         => _("txt-preferred-delivery"),
                 ],
                 'attributes' => [
@@ -211,6 +218,16 @@ class Financial extends Form
                 'attributes' => [
                     'class' => "btn btn-primary",
                     'value' => _("txt-update"),
+                ],
+            ]
+        );
+        $this->add(
+            [
+                'type'       => 'Zend\Form\Element\Submit',
+                'name'       => 'delete',
+                'attributes' => [
+                    'class' => "btn btn-danger",
+                    'value' => _("txt-delete"),
                 ],
             ]
         );

@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Service;
 
 use Affiliation\Service\AffiliationService;
@@ -89,7 +91,7 @@ abstract class AbstractService implements ServiceInterface
     public function findEntitiesFiltered($entity, $filter): Query
     {
         return $this->getEntityManager()->getRepository($entity)
-                    ->findFiltered($filter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
+            ->findFiltered($filter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
     }
 
     /**

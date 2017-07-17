@@ -8,8 +8,11 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
+use Contact\Entity\ContactOrganisation;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -22,6 +25,7 @@ use Zend\Form\Annotation;
  * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
+ * @Annotation\Instance("Organisation\Entity\Organisation")
  */
 class Organisation extends AbstractEntity
 {
@@ -38,6 +42,7 @@ class Organisation extends AbstractEntity
      * @ORM\Column(name="organisation", type="string", length=60, nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation-name","help-block":"txt-organisation-name-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-organisation-placeholder"})
      *
      * @var string
      */
@@ -219,7 +224,6 @@ class Organisation extends AbstractEntity
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\ComposedObject("Organisation\Entity\Description")
-     * @Annotation\Instance("Organisation\Entity\Description")
      *
      * @var \Organisation\Entity\Description
      */
@@ -1094,6 +1098,7 @@ class Organisation extends AbstractEntity
     public function setIctOrganisation($ictOrganisation)
     {
         $this->ictOrganisation = $ictOrganisation;
+
         return $this;
     }
 }

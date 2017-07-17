@@ -12,6 +12,8 @@
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
  */
+declare(strict_types=1);
+
 namespace Organisation\Controller\Factory;
 
 use Affiliation\Service\AffiliationService;
@@ -39,8 +41,8 @@ final class ControllerFactory implements FactoryInterface
 {
     /**
      * @param ContainerInterface $container
-     * @param string             $requestedName
-     * @param array|null         $options
+     * @param string $requestedName
+     * @param array|null $options
      *
      * @return OrganisationAbstractController
      */

@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/parent for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Repository;
 
 use Doctrine\ORM\EntityRepository;

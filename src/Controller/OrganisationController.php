@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller;
 
 use Organisation\Entity\Logo;
@@ -22,7 +24,7 @@ use Zend\View\Model\ViewModel;
 class OrganisationController extends OrganisationAbstractController
 {
     /**
-     * @return array|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface|ViewModel
      */
     public function logoAction()
     {

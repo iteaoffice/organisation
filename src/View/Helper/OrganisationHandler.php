@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use Content\Entity\Content;
@@ -68,11 +70,11 @@ class OrganisationHandler extends AbstractViewHelper
                  */
                 $organisationLink = $this->getHelperPluginManager()->get('organisationLink');
                 $this->getHelperPluginManager()->get('headmeta')
-                     ->setProperty('og:type', $this->translate("txt-organisation"));
+                    ->setProperty('og:type', $this->translate("txt-organisation"));
                 $this->getHelperPluginManager()->get('headmeta')
-                     ->setProperty('og:title', $this->getOrganisation()->getOrganisation());
+                    ->setProperty('og:title', $this->getOrganisation()->getOrganisation());
                 $this->getHelperPluginManager()->get('headmeta')
-                     ->setProperty('og:url', $organisationLink($this->getOrganisation(), 'view', 'social'));
+                    ->setProperty('og:url', $organisationLink($this->getOrganisation(), 'view', 'social'));
 
                 return $this->parseOrganisation($this->getOrganisation());
             case 'organisation_list':
@@ -151,7 +153,7 @@ class OrganisationHandler extends AbstractViewHelper
                 case 'docRef':
                     $docRef = $this->findParamValueFromContent($content, $parameter);
 
-                    if (! is_null($docRef)) {
+                    if (!is_null($docRef)) {
                         $this->setOrganisationByDocRef($docRef);
                     }
                     break;
@@ -161,7 +163,7 @@ class OrganisationHandler extends AbstractViewHelper
 
     /**
      * @param Content $content
-     * @param Param   $param
+     * @param Param $param
      *
      * @return null|string
      */
@@ -169,13 +171,13 @@ class OrganisationHandler extends AbstractViewHelper
     {
         //Hardcoded is always first,If it cannot be found, try to find it from the docref (rule 2)
         foreach ($content->getContentParam() as $contentParam) {
-            if ($contentParam->getParameter() === $param && ! empty($contentParam->getParameterId())) {
+            if ($contentParam->getParameter() === $param && !empty($contentParam->getParameterId())) {
                 return $contentParam->getParameterId();
             }
         }
 
         //Try first to see if the param can be found from the route (rule 1)
-        if (! is_null($this->getRouteMatch()->getParam($param->getParam()))) {
+        if (!is_null($this->getRouteMatch()->getParam($param->getParam()))) {
             return $this->getRouteMatch()->getParam($param->getParam());
         }
 
@@ -242,7 +244,7 @@ class OrganisationHandler extends AbstractViewHelper
     public function parseOrganisation(Organisation $organisation): string
     {
         return $this->getRenderer()
-                    ->render('organisation/partial/entity/organisation', ['organisation' => $organisation]);
+            ->render('organisation/partial/entity/organisation', ['organisation' => $organisation]);
     }
 
     /**
@@ -255,7 +257,7 @@ class OrganisationHandler extends AbstractViewHelper
     public function parseOrganisationList($page): string
     {
         $organisationQuery = $this->getOrganisationService()->findOrganisations(true, true);
-        $paginator         = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
@@ -302,7 +304,7 @@ class OrganisationHandler extends AbstractViewHelper
     public function parseOrganisationMetadata(Organisation $organisation): string
     {
         return $this->getRenderer()
-                    ->render('organisation/partial/entity/organisation-metadata', ['organisation' => $organisation]);
+            ->render('organisation/partial/entity/organisation-metadata', ['organisation' => $organisation]);
     }
 
     /**
@@ -360,7 +362,7 @@ class OrganisationHandler extends AbstractViewHelper
     public function parseOrganisationTitle(Organisation $organisation): string
     {
         return $this->getRenderer()
-                    ->render('organisation/partial/entity/organisation-title', ['organisation' => $organisation]);
+            ->render('organisation/partial/entity/organisation-title', ['organisation' => $organisation]);
     }
 
     /**
@@ -371,7 +373,7 @@ class OrganisationHandler extends AbstractViewHelper
     public function parseOrganisationInfo(Organisation $organisation): string
     {
         return $this->getRenderer()
-                    ->render('organisation/partial/entity/organisation-info', ['organisation' => $organisation]);
+            ->render('organisation/partial/entity/organisation-info', ['organisation' => $organisation]);
     }
 
     /**
@@ -388,7 +390,7 @@ class OrganisationHandler extends AbstractViewHelper
         foreach ($organisation->getClusterMember() as $cluster) {
             $countries[] = $cluster->getOrganisation()->getCountry();
         }
-        $options    = $this->getModuleOptions();
+        $options = $this->getModuleOptions();
         $mapOptions = [
             'clickable' => true,
             'colorMin'  => $options->getCountryColorFaded(),
@@ -420,6 +422,6 @@ class OrganisationHandler extends AbstractViewHelper
     public function parseOrganisationLogo(Organisation $organisation): string
     {
         return $this->getRenderer()
-                    ->render('organisation/partial/entity/organisation-logo', ['organisation' => $organisation]);
+            ->render('organisation/partial/entity/organisation-logo', ['organisation' => $organisation]);
     }
 }
