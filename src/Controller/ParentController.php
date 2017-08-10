@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -296,7 +296,7 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function overviewVariableContributionAction()
+    public function overviewVariableContributionAction(): ViewModel
     {
         $parent = $this->getParentService()->findParentById($this->params('id'));
 
@@ -305,12 +305,10 @@ class ParentController extends OrganisationAbstractController
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
 
         return new ViewModel(
             [
                 'year'          => $year,
-                'period'        => $period,
                 'parent'        => $parent,
                 'invoiceFactor' => $this->getParentService()->parseInvoiceFactor($parent, $year)
 
@@ -330,20 +328,17 @@ class ParentController extends OrganisationAbstractController
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
 
-
-        $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $year, $period);
+        $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $year);
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
             ->addHeaderLine(
                 'Content-Disposition',
                 'attachment; filename="' . sprintf(
-                    "overview_variable_contribution_%s_%s_%sH.pdf",
+                    "overview_variable_contribution_%s_%s.pdf",
                     $parent->getOrganisation()->getDocRef(),
-                    $year,
-                    $period
+                    $year
                 ) . '"'
             )
             ->addHeaderLine('Content-Type: application/pdf')
@@ -365,12 +360,10 @@ class ParentController extends OrganisationAbstractController
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
 
         return new ViewModel(
             [
                 'year'   => $year,
-                'period' => $period,
                 'parent' => $parent,
 
             ]
@@ -389,20 +382,17 @@ class ParentController extends OrganisationAbstractController
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
 
-
-        $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $year, $period);
+        $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $year);
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
             ->addHeaderLine(
                 'Content-Disposition',
                 'attachment; filename="' . sprintf(
-                    "overview_extra_variable_contribution_%s_%s_%sH.pdf",
+                    "overview_extra_variable_contribution_%s_%s.pdf",
                     $parent->getOrganisation()->getDocRef(),
-                    $year,
-                    $period
+                    $year
                 ) . '"'
             )
             ->addHeaderLine('Content-Type: application/pdf')

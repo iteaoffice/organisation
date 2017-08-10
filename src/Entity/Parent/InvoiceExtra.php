@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -40,12 +40,6 @@ class InvoiceExtra extends AbstractEntity
      * @var integer
      */
     private $id;
-    /**
-     * @ORM\Column(name="period", type="integer", nullable=false)
-     *
-     * @var integer
-     */
-    private $period;
     /**
      * @ORM\Column(name="year", type="integer", nullable=false)
      *
@@ -145,27 +139,7 @@ class InvoiceExtra extends AbstractEntity
     /**
      * @return int
      */
-    public function getPeriod()
-    {
-        return $this->period;
-    }
-
-    /**
-     * @param int $period
-     *
-     * @return InvoiceExtra
-     */
-    public function setPeriod(int $period): InvoiceExtra
-    {
-        $this->period = $period;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear():?int
     {
         return $this->year;
     }

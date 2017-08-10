@@ -41,7 +41,7 @@ class Organisation extends AssertionAbstract
         RoleInterface $role = null,
         ResourceInterface $organisation = null,
         $privilege = null
-    ) {
+    ): bool {
         $this->setPrivilege($privilege);
         $id = $this->getId();
 

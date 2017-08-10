@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -29,17 +29,14 @@ class OverviewVariableContribution extends AbstractViewHelper
     /**
      * @param OParent $parent
      * @param int $year
-     * @param int $period
-     *
      * @return string
      */
-    public function __invoke(OParent $parent, $year, $period): string
+    public function __invoke(OParent $parent, int $year): string
     {
         return $this->getRenderer()->render(
             'organisation/partial/overview-variable-contribution',
             [
                 'year'               => $year,
-                'period'             => $period,
                 'parent'             => $parent,
                 'contactService'     => $this->getContactService(),
                 'versionService'     => $this->getVersionService(),

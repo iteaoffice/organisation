@@ -20,41 +20,46 @@
             </thead>
             <tfoot>
             <tr>
-                <td colspan="4">{{ translate("txt-total-eligible-funding-by-free-riders-for-project") }}</td>
-                <td>
+                <th colspan="4">{{ translate("txt-total-eligible-funding-by-free-riders-for-project") }}</th>
+                <th>
                     <span class="pull-right">{{ versionService.findTotalFundingVersionByFreeRidersInVersion(version)|round_currency }}</span>
-                </td>
+                </th>
             </tr>
             <tr>
-                <td colspan="4">{{ translate("txt-total-eligible-funding-by-parent-%s")|format(parent) }}</td>
-                <td>
+                <th colspan="4">{{ translate("txt-total-eligible-funding-by-parent-%s")|format(parent) }}</th>
+                <th>
                     <span class="pull-right">{{ versionService.findTotalFundingVersionByParentAndVersion(parent, version)|round_currency }}</span>
-                </td>
+                </th>
             </tr>
             <tr>
-                <td colspan="4">{{ translate("txt-total-eligible-funding-c-chambers-for-project") }}</td>
-                <td>
+                <th colspan="4">{{ translate("txt-total-eligible-funding-c-chambers-for-project") }}</th>
+                <th>
                     <span class="pull-right">{{ versionService.findTotalFundingVersionByCChambersInVersion(version)|round_currency }}</span>
-                </td>
+                </th>
             </tr>
             <tr>
-                <td colspan="4">{{ translate("txt-extra-variable-contribution-for-project") }}</td>
-                <td>
+                <th colspan="4">{{ translate("txt-extra-variable-contribution-for-project") }}</th>
+                <th>
                     <span class="pull-right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|round_currency }}</span>
-                </td>
+                </th>
             </tr>
             </tfoot>
             <tbody>
             {% for affiliation in affiliationService.findAffiliationByProjectAndWhichAndCriterion(project, constant("Organisation\\Entity\\OParent::CRITERION_FREE_RIDER"), constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE") ) %}
-                <tr>
-                    <td>{{ affiliation.parentOrganisation.parent.organisation }}</td>
-                    <td>{{ affiliation.parentOrganisation.parent.organisation.country.iso3 }}</td>
-                    <td>{{ affiliation.parentOrganisation.parent.type }}</td>
-                    <td>{{ affiliation.parentOrganisation.parent.status }}</td>
-                    <td>
-                        <span class="pull-right">{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version)|round_currency }}</span>
-                    </td>
-                </tr>
+
+                {% set totalFunding = versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version) %}
+
+                {% if totalFunding > 0 %}
+                    <tr>
+                        <td>{{ affiliation.parentOrganisation.parent.organisation }}</td>
+                        <td>{{ affiliation.parentOrganisation.parent.organisation.country.iso3 }}</td>
+                        <td>{{ affiliation.parentOrganisation.parent.type }}</td>
+                        <td>{{ affiliation.parentOrganisation.parent.status }}</td>
+                        <td>
+                            <span class="pull-right">{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version)|round_currency }}</span>
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>

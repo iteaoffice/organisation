@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -27,11 +27,10 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
 {
     /**
      * @param OParent $parent
-     * @param $year
-     * @param $period
+     * @param int $year
      * @return OrganisationPdf
      */
-    public function __invoke(OParent $parent, $year, $period): OrganisationPdf
+    public function __invoke(OParent $parent, int $year): OrganisationPdf
     {
         /**
          * @var $pdf OrganisationPdf|\TCPDF
@@ -42,14 +41,13 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
         $pdf->SetFontSize(8);
 
 
-        $projects = $this->getParentService()->renderProjectsByParentInYearAndPeriod($parent, $year, $period);
+        $projects = $this->getParentService()->renderProjectsByParentInYear($parent, $year);
 
 
         $content = $this->getTwigRenderer()->render(
             'organisation/pdf/overview-variable-contribution',
             [
                 'year'               => $year,
-                'period'             => $period,
                 'parent'             => $parent,
                 'membershipFactor'   => $this->getParentService()->parseMembershipFactor($parent),
                 'contactService'     => $this->getContactService(),

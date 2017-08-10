@@ -1,6 +1,6 @@
 {% do headTitle().append(translate("txt-overview-variable-contribution-for-parent-%s-in-year-%s")|format(parent, year)) %}
 
 <h1>{{ translate("txt-overview-variable-contribution-for-parent-%s-in-year-%s")|format(parent, year) }}
-    {{ parentLink(parent, 'overview-variable-contribution-pdf','icon',null, year,period) }}</h1>
+    {{ parentLink(parent, 'overview-variable-contribution-pdf','icon',null, year) }}</h1>
 
-{{ overviewVariableContribution(parent,year,period) }}
+{{ overviewVariableContribution(parent,year) }}

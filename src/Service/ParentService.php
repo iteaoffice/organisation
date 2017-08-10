@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -36,7 +36,7 @@ class ParentService extends AbstractService
      *
      * @return null|Entity\OParent|object
      */
-    public function findParentById($id)
+    public function findParentById($id): ?Entity\OParent
     {
         return $this->findEntityById(Entity\OParent::class, $id);
     }
@@ -46,7 +46,7 @@ class ParentService extends AbstractService
      *
      * @return null|Entity\Parent\Status|object
      */
-    public function findParentStatusByName(string $name)
+    public function findParentStatusByName(string $name):?Entity\Parent\Status
     {
         return $this->getEntityManager()->getRepository(Entity\Parent\Status::class)->findOneBy(['status' => $name]);
     }
@@ -56,7 +56,7 @@ class ParentService extends AbstractService
      *
      * @return null|Entity\Parent\Type|object
      */
-    public function findParentTypeByName(string $name)
+    public function findParentTypeByName(string $name):?Entity\Parent\Type
     {
         return $this->getEntityManager()->getRepository(Entity\Parent\Type::class)->findOneBy(['type' => $name]);
     }
@@ -159,12 +159,12 @@ class ParentService extends AbstractService
      * @param Entity\OParent $parent
      * @param Entity\Organisation $organisation
      *
-     * @return null|\Organisation\Entity\Parent\Organisation
+     * @return null|Entity\Parent\Organisation
      */
     public function findParentOrganisationInParentByOrganisation(
         Entity\OParent $parent,
         Entity\Organisation $organisation
-    ) {
+    ):?Entity\Parent\Organisation {
         foreach ($parent->getParentOrganisation() as $parentOrganisation) {
             if ($parentOrganisation->getOrganisation() === $organisation) {
                 return $parentOrganisation;
@@ -176,11 +176,9 @@ class ParentService extends AbstractService
 
     /**
      * @param $parent
-     *
-     * @return float|int
-     * @throws \Exception
+     * @return float
      */
-    public function parseTotalFundedByParent($parent)
+    public function parseTotalFundedByParent($parent): float
     {
         //Go over each affiliation and sum up what has been paid already
         $totalFunded = 0;
@@ -194,7 +192,7 @@ class ParentService extends AbstractService
             }
         }
 
-        return $totalFunded;
+        return (float)$totalFunded;
     }
 
     /**
@@ -203,7 +201,7 @@ class ParentService extends AbstractService
      * @return float|int
      * @throws \Exception
      */
-    public function parseTotalFundingEuByParent($parent)
+    public function parseTotalFundingEuByParent($parent): float
     {
         //Go over each affiliation and sum up what has been paid already
         $totalFunded = 0;
@@ -217,7 +215,7 @@ class ParentService extends AbstractService
             }
         }
 
-        return $totalFunded;
+        return (float)$totalFunded;
     }
 
     /**
@@ -229,27 +227,23 @@ class ParentService extends AbstractService
      *
      * @return float;
      */
-    public function parseContributionPaid(Entity\OParent $parent, int $year, int $period)
+    public function parseContributionPaid(Entity\OParent $parent, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contributionPaid = 0;
         foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
-            $contributionPaid += $this->getAffiliationService()->parseContributionPaid($affiliation, $year, $period);
+            $contributionPaid += $this->getAffiliationService()->parseContributionPaid($affiliation, $year);
         }
 
-        return $contributionPaid;
+        return (float)$contributionPaid;
     }
 
     /**
-     * Calculate the amount of contribution due by the parent
-     *
      * @param Entity\OParent $parent
      * @param int $year
-     * @param int $period
-     *
-     * @return float;
+     * @return float
      */
-    public function parseContributionDue(Entity\OParent $parent, int $year, int $period): float
+    public function parseContributionDue(Entity\OParent $parent, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contributionDue = 0;
@@ -259,23 +253,19 @@ class ParentService extends AbstractService
 
             if (!is_null($latestVersion)) {
                 $contributionDue += $this->getAffiliationService()
-                    ->parseContributionDue($affiliation, $latestVersion, $year, $period);
+                    ->parseContributionDue($affiliation, $latestVersion, $year);
             }
         }
 
-        return $contributionDue;
+        return (float)$contributionDue;
     }
 
     /**
-     * Calculate the amount of contribution due by the parent
-     *
      * @param Entity\OParent $parent
      * @param int $year
-     * @param int $period
-     *
-     * @return float;
+     * @return float
      */
-    public function parseContribution(Entity\OParent $parent, int $year, int $period): float
+    public function parseContribution(Entity\OParent $parent, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contribution = 0;
@@ -285,11 +275,11 @@ class ParentService extends AbstractService
 
             if (!is_null($latestVersion)) {
                 $contribution += $this->getAffiliationService()
-                    ->parseContribution($affiliation, $latestVersion, $year, $period);
+                    ->parseContribution($affiliation, $latestVersion, $year);
             }
         }
 
-        return $contribution;
+        return (float)$contribution;
     }
 
     /**
@@ -315,7 +305,7 @@ class ParentService extends AbstractService
             }
         }
 
-        return $contributionBalance;
+        return (float)$contributionBalance;
     }
 
     /**
@@ -337,7 +327,7 @@ class ParentService extends AbstractService
             }
         }
 
-        return $balanceTotal;
+        return round($balanceTotal, 0);
     }
 
     /**
@@ -389,10 +379,9 @@ class ParentService extends AbstractService
     /**
      * @param Entity\OParent $parent
      * @param int $year
-     * @param int $period
      * @return array
      */
-    public function renderProjectsByParentInYearAndPeriod(Entity\OParent $parent, int $year, int $period): array
+    public function renderProjectsByParentInYear(Entity\OParent $parent, int $year): array
     {
         //Sort the projects per call
         $projects = [];
@@ -426,8 +415,7 @@ class ParentService extends AbstractService
             $contribution = $this->getAffiliationService()->parseContribution(
                 $affiliation,
                 $latestVersion,
-                $year,
-                $period
+                $year
             );
 
             $projects[$call->getId()]['affiliation'][] = [
@@ -472,20 +460,22 @@ class ParentService extends AbstractService
     }
 
     /**
-     * Calculate the amount of contribution due by the parent
-     *
      * @param Entity\OParent $parent
      * @param int $year
-     * @param int $period
-     *
-     * @return float;
+     * @param array|null $includeAffiliations
+     * @return float
      */
-    public function parseTotal(Entity\OParent $parent, int $year, int $period): float
+    public function parseTotal(Entity\OParent $parent, int $year, array $includeAffiliations = null): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contributionTotal = 0;
 
         foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+            //Skip the affiliations which are not in the $include affilations table
+            if (!is_null($includeAffiliations) && !in_array($affiliation, $includeAffiliations, true)) {
+                continue;
+            }
+
             $latestVersion = $this->getProjectService()
                 ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
 
@@ -493,13 +483,13 @@ class ParentService extends AbstractService
                 $contributionTotal += $this->getAffiliationService()->parseTotal(
                     $affiliation,
                     $latestVersion,
-                    $year,
-                    $period
+                    $year
                 );
             }
         }
 
-        return $contributionTotal;
+        //Parent invoices are always rounded on 2 digits
+        return round($contributionTotal, 0);
     }
 
     /**
@@ -537,6 +527,17 @@ class ParentService extends AbstractService
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function findParentsForExtraInvoicing(): ArrayCollection
+    {
+        /** @var Repository\OParent $repository */
+        $repository = $this->getEntityManager()->getRepository(Entity\OParent::class);
+
+        return new ArrayCollection($repository->findParentsForExtraInvoicing());
+    }
+
+    /**
      * @param Entity\OParent $parent
      *
      * @return Contact
@@ -553,19 +554,14 @@ class ParentService extends AbstractService
     /**
      * @param Entity\OParent $parent
      * @param int $year
-     * @param int $period
      *
      * @return Entity\Parent\Invoice[]|Collection|iterable
      */
-    public function findParentInvoiceByParentYearAndPeriod(Entity\OParent $parent, int $year, int $period): iterable
+    public function findParentInvoiceByParentYear(Entity\OParent $parent, int $year): iterable
     {
-        //Cast to int as some values can originate form templates (== twig > might be string)
-        $year = (int)$year;
-        $period = (int)$period;
-
         return $parent->getInvoice()->filter(
-            function (Entity\Parent\Invoice $invoice) use ($period, $year) {
-                return $invoice->getPeriod() === $period && $invoice->getYear() === $year;
+            function (Entity\Parent\Invoice $invoice) use ($year) {
+                return $invoice->getYear() === $year;
             }
         );
     }
@@ -573,32 +569,42 @@ class ParentService extends AbstractService
     /**
      * @param Entity\OParent $parent
      * @param int $year
-     * @param int $period
      *
      * @return Entity\Parent\Invoice[]|Collection|iterable
      */
-    public function findParentExtraInvoiceByParentYearAndPeriod(
+    public function findParentExtraInvoiceByParentYear(
         Entity\OParent $parent,
-        int $year,
-        int $period
+        int $year
     ): iterable {
-        //Cast to int as some values can originate form templates (== twig > might be string)
-        $year = (int)$year;
-        $period = (int)$period;
-
         return $parent->getInvoiceExtra()->filter(
-            function (Entity\Parent\InvoiceExtra $invoiceExtra) use ($period, $year) {
-                return $invoiceExtra->getPeriod() === $period && $invoiceExtra->getYear() === $year;
+            function (Entity\Parent\InvoiceExtra $invoiceExtra) use ($year) {
+                return $invoiceExtra->getYear() === $year;
             }
         );
     }
 
     /**
      * @param Entity\OParent $parent
+     * @param int $year
      *
+     * @return Entity\Parent\Invoice[]|Collection|iterable
+     */
+    public function findAllParentExtraInvoiceByParentYear(
+        Entity\OParent $parent,
+        int $year
+    ): iterable {
+        return array_merge(
+            $this->findParentInvoiceByParentYear($parent, $year)->toArray(),
+            $this->findParentExtraInvoiceByParentYear($parent, $year)->toArray()
+        );
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @param bool $autoGenerate
      * @return ArrayCollection
      */
-    public function canCreateInvoice(Entity\OParent $parent): ArrayCollection
+    public function canCreateInvoice(Entity\OParent $parent, $autoGenerate = false): ArrayCollection
     {
         $errors = [];
         switch (true) {
@@ -608,8 +614,15 @@ class ParentService extends AbstractService
             case !is_null($parent->getDateEnd()):
                 $errors[] = 'Parent is de-activated';
                 break;
-            case !empty($parent->getFinancial()) && $parent->getFinancial()->count() !== 1:
+            case !$autoGenerate && !empty($parent->getFinancial()) && $parent->getFinancial()->count() !== 1:
                 $errors[] = 'More than 1 financial organisation known';
+                break;
+            default:
+                foreach ($parent->getFinancial() as $financial) {
+                    if (is_null($financial->getOrganisation()->getFinancial())) {
+                        $errors[] = sprintf("%s has no financial information", $financial->getOrganisation());
+                    }
+                }
                 break;
         }
 

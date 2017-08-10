@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -25,7 +25,8 @@ use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * @category    Parent
+ * Class ParentTypeController
+ * @package Organisation\Controller
  */
 class ParentTypeController extends OrganisationAbstractController
 {
@@ -61,9 +62,7 @@ class ParentTypeController extends OrganisationAbstractController
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
     public function newAction()
     {
@@ -97,9 +96,7 @@ class ParentTypeController extends OrganisationAbstractController
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return ViewModel
      */
     public function editAction()
     {

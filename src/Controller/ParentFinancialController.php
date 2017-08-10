@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -130,7 +130,7 @@ class ParentFinancialController extends OrganisationAbstractController
                 $this->getContactService()->updateEntity($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(sprintf(
-                        $this->translate("txt-parent-%s-has-successfully-been-created"),
+                        $this->translate("txt-financial-organisation-for-parent-%s-has-successfully-been-created"),
                         $financial->getParent()
                     ));
 

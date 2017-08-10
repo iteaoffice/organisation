@@ -11,7 +11,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -77,10 +77,6 @@ class ParentFinancialLink extends AbstractLink
             case 'edit':
                 $this->setRouter('zfcadmin/parent/financial/edit');
                 $this->setText(sprintf($this->translate('txt-edit-parent-financial-%s'), $this->getFinancial()));
-                break;
-            case 'view':
-                $this->setRouter('zfcadmin/parent/financial/view');
-                $this->setText(sprintf($this->translate('txt-view-parent-financial-%s'), $this->getFinancial()));
                 break;
             default:
                 throw new \InvalidArgumentException(

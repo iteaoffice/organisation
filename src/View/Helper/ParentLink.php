@@ -11,7 +11,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -34,9 +34,7 @@ class ParentLink extends AbstractLink
      * @param string $action
      * @param string $show
      * @param Organisation|null $organisation
-     * @param null $year
-     * @param null $period
-     *
+     * @param int|null $year
      * @return string
      */
     public function __invoke(
@@ -44,21 +42,13 @@ class ParentLink extends AbstractLink
         $action = 'view',
         $show = 'text',
         Organisation $organisation = null,
-        $year = null,
-        $period = null
+        int $year = null
     ): string {
         $this->setParent($parent);
         $this->setAction($action);
         $this->setShow($show);
         $this->setOrganisation($organisation);
-
-        if (!is_null($year)) {
-            $this->setYear((int)$year);
-        }
-
-        if (!is_null($period)) {
-            $this->setPeriod((int)$period);
-        }
+        $this->setYear($year);
 
         if (!$this->hasAccess($this->getParent(), ParentAssertion::class, $this->getAction())) {
             return '';
@@ -66,8 +56,7 @@ class ParentLink extends AbstractLink
 
         $this->addRouterParam('id', $this->getParent()->getId());
         $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
-        $this->addRouterParam('year', $year);
-        $this->addRouterParam('period', $period);
+        $this->addRouterParam('year', $this->getYear());
 
         $this->setShowOptions(
             [
@@ -112,9 +101,8 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/overview-variable-contribution');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-variable-contribution-for-parent-in-%s-%s'),
-                        $this->getYear(),
-                        $this->getPeriod()
+                        $this->translate('txt-overview-variable-contribution-for-parent-in-%s'),
+                        $this->getYear()
                     )
                 );
                 break;
@@ -122,9 +110,8 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/overview-variable-contribution-pdf');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-variable-contribution-for-parent-in-%s-%s-pdf'),
-                        $this->getYear(),
-                        $this->getPeriod()
+                        $this->translate('txt-overview-variable-contribution-for-parent-in-%s-pdf'),
+                        $this->getYear()
                     )
                 );
                 break;
@@ -132,9 +119,8 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/overview-extra-variable-contribution');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-extra-variable-contribution-for-parent-in-%s-%s'),
-                        $this->getYear(),
-                        $this->getPeriod()
+                        $this->translate('txt-overview-extra-variable-contribution-for-parent-in-%s'),
+                        $this->getYear()
                     )
                 );
                 break;
@@ -142,9 +128,8 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/overview-extra-variable-contribution-pdf');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-extra-variable-contribution-for-parent-in-%s-%s-pdf'),
-                        $this->getYear(),
-                        $this->getPeriod()
+                        $this->translate('txt-overview-extra-variable-contribution-for-parent-in-%s-pdf'),
+                        $this->getYear()
                     )
                 );
                 break;
@@ -155,16 +140,6 @@ class ParentLink extends AbstractLink
             case 'view':
                 $this->setRouter('zfcadmin/parent/view');
                 $this->setText(sprintf($this->translate('txt-view-parent-%s'), $this->getParent()));
-                break;
-            case 'view-public':
-                $this->addRouterParam('docRef', $this->getParent()->getId());
-                $this->setRouter('route-parent_entity_parent');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-view-parent-%s"),
-                        $this->getParent()
-                    )
-                );
                 break;
             default:
                 throw new \InvalidArgumentException(

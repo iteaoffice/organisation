@@ -92,7 +92,7 @@ class OParent extends EntityRepository
     /**
      * @return array
      */
-    public function findActiveParents()
+    public function findActiveParents(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
@@ -105,7 +105,7 @@ class OParent extends EntityRepository
     /**
      * @return array
      */
-    public function findParentsForInvoicing()
+    public function findParentsForInvoicing(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
@@ -115,6 +115,36 @@ class OParent extends EntityRepository
         //Limit on parent types which have a fee
         $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
         $queryBuilder->join('organisation_entity_parent_status.projectFee', 'project_entity_fee');
+
+        $queryBuilder->addOrderBy('organisation_entity_parent.status', 'ASC');
+        $queryBuilder->addOrderBy('organisation_entity_parent.type', 'DESC');
+
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function findParentsForExtraInvoicing(): array
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_parent');
+        $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
+
+        //Limit on parent types which have a fee
+        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
+        $queryBuilder->join('organisation_entity_parent_status.projectFee', 'project_entity_fee');
+
+        $queryBuilder->join('organisation_entity_parent.type', 'organisation_entity_parent_type');
+        $queryBuilder->andWhere('organisation_entity_parent_type.id = :type');
+
+        $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_C_CHAMBER);
+
+        $queryBuilder->addOrderBy('organisation_entity_parent.status', 'ASC');
+        $queryBuilder->addOrderBy('organisation_entity_parent.type', 'DESC');
+
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -127,7 +157,7 @@ class OParent extends EntityRepository
      *
      * @return QueryBuilder
      */
-    public function limitFreeRiders(QueryBuilder $queryBuilder)
+    public function limitFreeRiders(QueryBuilder $queryBuilder): QueryBuilder
     {
         //Select projects based on a type
         $subSelect = $this->_em->createQueryBuilder();

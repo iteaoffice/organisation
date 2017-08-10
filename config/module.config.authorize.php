@@ -51,7 +51,6 @@ return [
                 ['route' => 'zfcadmin/parent/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/financial/edit', 'roles' => [Access::ACCESS_OFFICE]],
-                ['route' => 'zfcadmin/parent/financial/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/financial/new', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/add-organisation', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/overview-variable-contribution', 'roles' => [Access::ACCESS_OFFICE]],

@@ -37,6 +37,7 @@
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
                     <th>{{ translate('txt-contacts') }}</th>
                     <th>{{ translate('txt-projects') }}</th>
+                    <th>{{ translate('txt-parent') }}</th>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate('txt-type')} %}</th>
                     <th>{{ translate("txt-actions") }}</th>
                 </tr>
@@ -56,6 +57,11 @@
                         <td>{{ countryLink(organisation.country,'view-admin','name') }}</td>
                         <td>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
                         <td>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
+                        <td>
+                            {% if organisation.parentOrganisation %}
+                                {{ parentLink(organisation.parentOrganisation.parent,'view','parent') }}
+                            {% endif %}
+                        </td>
                         <td>{{ organisation.getType().type }}</td>
                         <td>{{ organisationLink(organisation, 'edit', 'icon') }}</td>
                     </tr>

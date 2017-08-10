@@ -10,7 +10,7 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
@@ -31,7 +31,7 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
      * @param $period
      * @return OrganisationPdf|\TCPDF
      */
-    public function __invoke(OParent $parent, $year, $period): OrganisationPdf
+    public function __invoke(OParent $parent, int $year): OrganisationPdf
     {
         /**
          * @var $pdf OrganisationPdf|\TCPDF
@@ -46,7 +46,6 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
             'organisation/pdf/overview-extra-variable-contribution',
             [
                 'year'               => $year,
-                'period'             => $period,
                 'parent'             => $parent,
                 'contactService'     => $this->getContactService(),
                 'versionService'     => $this->getVersionService(),

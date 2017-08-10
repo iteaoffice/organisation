@@ -19,8 +19,8 @@
             <tr>
                 <td>{{ affiliation.project }}</td>
                 <td>{{ affiliation.organisation }}</td>
-                <td>{{ versionService.findTotalFundingEuVersionByAffiliationAndVersion(affiliation, latestVersion)|parse_funding }}</td>
-                <td>{{ affiliationService.parseContribution(affiliation, latestVersion, year, period)|parse_funding }}</td>
+                <td>{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, latestVersion)|round_currency }}</td>
+                <td>{{ affiliationService.parseContribution(affiliation, latestVersion, year)|round_currency }}</td>
             </tr>
         {% endif %}
     {% endfor %}
@@ -29,13 +29,13 @@
     <tr>
         <th colspan="2" class="text-right">
             {{ translate("txt-total") }}</th>
-        <th style="border-top: 2px solid black;">{{ parentService.parseTotalFundingEuByParent(parent, year, period)|parse_funding }}</th>
-        <th style="border-top: 2px solid black;">{{ parentService.parseContribution(parent, year, period)|parse_funding }}</th>
+        <th style="border-top: 2px solid black;">{{ parentService.parseTotalFundedByParent(parent, year)|round_currency }}</th>
+        <th style="border-top: 2px solid black;">{{ parentService.parseContribution(parent, year)|round_currency }}</th>
     </tr>
     </tfoot>
 </table>
 
-<h4>{{ translate("txt-upcoming-invoice-of-%s-period-%s")|format(year,period) }}</h4>
+<h4>{{ translate("txt-upcoming-invoice-of-%s")|format(year) }}</h4>
 
 <table class="table table-hover table-striped table-condensed">
     <thead>
@@ -49,14 +49,14 @@
     <tr>
         <th colspan="2" class="text-right">
             {{ translate("txt-total-due-by-%s-variable-contribution-for-projects")|format(parent) }}</th>
-        <th style="border-top: 2px solid black;">{{ parentService.parseTotal(parent, year, period)|parse_funding }}</th>
+        <th style="border-top: 2px solid black;">{{ parentService.parseTotal(parent, year)|round_currency }}</th>
     </tr>
     </tfoot>
     <tbody>
     <tr>
-        <td>{{ year }}-{{ period }}</td>
+        <td>{{ year }}</td>
         <td>{{ translate("txt-variable-contribution-for-%s-projects")|format(year) }}</td>
-        <td>{{ parentService.parseContribution(parent, year, period)|parse_funding }}</td>
+        <td>{{ parentService.parseContribution(parent, year)|round_currency }}</td>
     </tr>
     </tbody>
 </table>
@@ -80,10 +80,10 @@
         {% if invoiceService.isSent(parentInvoice.invoice) %}
             <tr>
                 <td>{{ parentInvoice.invoice.invoiceNr }} {{ invoiceLink(parentInvoice.invoice,'download','icon') }}</td>
-                <td>{{ parentInvoice.year }}-{{ parentInvoice.period }}H</td>
+                <td>{{ parentInvoice.year }}</td>
                 <td>{{ parentInvoice.invoice.dateSent|date("d-m-Y") }}</td>
-                <td>{{ invoiceService.parseSumAmount(parentInvoice.invoice)|parse_funding }}</td>
-                <td>{{ invoiceService.parseTotal(parentInvoice.invoice)|parse_funding }}</td>
+                <td>{{ invoiceService.parseSumAmount(parentInvoice.invoice)|round_currency }}</td>
+                <td>{{ invoiceService.parseTotal(parentInvoice.invoice)|round_currency }}</td>
                 <td>{% if parentInvoice.invoice.bookingDate %}{{ parentInvoice.invoice.bookingDate|date("d-m-Y") }}{% endif %}</td>
             </tr>
         {% endif %}
