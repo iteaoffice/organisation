@@ -34,7 +34,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 final class AssertionFactory implements FactoryInterface
 {
     /**
-     * @param ContainerInterface|ServiceLocatorInterface $container
+     * @param ContainerInterface $container
      * @param string $requestedName
      * @param array|null $options
      *

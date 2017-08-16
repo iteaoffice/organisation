@@ -11,11 +11,15 @@
     {% if financial %}
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-vat-number") }}</dt>
-            <dd>{{ financial.vat }}
-                (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
-                    - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
-                <i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i>
-            </dd>
+            {% if financial.vat %}
+                <dd>{{ financial.vat }}
+                    (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
+                        - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
+                    <i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i>
+                </dd>
+            {% else %}
+                <dd>{{ translate("txt-no-VAT-number-known") }}</dd>
+            {% endif %}
             <dt>{{ translate("txt-vat-type") }}</dt>
             {% for vatType in financial.vatType %}
                 <dd>{{ vatType.type }}</dd>

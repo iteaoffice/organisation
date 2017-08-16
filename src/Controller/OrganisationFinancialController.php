@@ -69,7 +69,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
 
         $data = array_merge(
             [
-                'vatType' => $financial->getVatType()->count() === 0 ? VatType::VAT_TYPE_LOCAL : $financial->getVatType()->first()->getId(),
+                'vatType' => $financial->getVatType()->count() === 0 ? 0 : $financial->getVatType()->first()->getId(),
             ],
             $this->getRequest()->getPost()->toArray()
         );

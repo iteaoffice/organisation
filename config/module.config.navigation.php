@@ -148,30 +148,18 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'parent-financial'                     => [
-                                        'label'   => _("txt-parent-financial"),
-                                        'route'   => 'zfcadmin/parent/financial/view',
+                                    'edit-parent-financial'                => [
+                                        'label'   => _("txt-edit-parent-financial"),
+                                        'route'   => 'zfcadmin/parent/financial/edit',
                                         'visible' => false,
                                         'params'  => [
-                                            'entities' => [
+                                            'entities'   => [
                                                 'id' => Organisation\Entity\Parent\Financial::class,
                                             ],
-                                        ],
-                                        'pages'   => [
-                                            'edit' => [
-                                                'label'   => _("txt-edit-parent-financial"),
-                                                'route'   => 'zfcadmin/parent/financial/edit',
-                                                'visible' => false,
-                                                'params'  => [
-                                                    'entities'   => [
-                                                        'id' => Organisation\Entity\Parent\Financial::class,
-                                                    ],
-                                                    'invokables' => [
-                                                        Organisation\Navigation\Invokable\Parent\FinancialLabel::class,
-                                                    ],
-                                                ],
+                                            'invokables' => [
+                                                Organisation\Navigation\Invokable\Parent\FinancialLabel::class,
                                             ],
-                                        ]
+                                        ],
                                     ],
                                     'new-parent-financial'                 => [
                                         'label'   => _("txt-new-parent-financial"),
