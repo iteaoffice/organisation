@@ -36,7 +36,7 @@ class Organisation extends EntityRepository
      *
      * @return Query
      */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select([
@@ -108,17 +108,27 @@ class Organisation extends EntityRepository
         return $queryBuilder->getQuery();
     }
 
+    public function findDuplicateOrganisations()
+    {
+        //SELECT organisation FROM organisation HAVING (SELECT COUNT(organisation2.organisation_id) FROM organisation as organisation2 WHERE organisation2.organisation LIKE CONCAT("%", organisation.organisation, "%")) > 1;
+
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+    }
 
     /**
      * @param array $filter
      *
      * @return Query
      */
-    public function findActiveOrganisationWithoutFinancial(array $filter)
+    public function findActiveOrganisationWithoutFinancial(array $filter): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        $queryBuilder->join('organisation_entity_organisation.type', 'organisation_entity_type');
 
         //Make a second sub-select to cancel out organisations which have a financial organisation
         $subSelect2 = $this->_em->createQueryBuilder();
@@ -177,6 +187,12 @@ class Organisation extends EntityRepository
                 break;
             case 'name':
                 $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
+                break;
+            case 'country':
+                $queryBuilder->addOrderBy('general_entity_country.iso3', $direction);
+                break;
+            case 'type':
+                $queryBuilder->addOrderBy('organisation_entity_type.type', $direction);
                 break;
             default:
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
@@ -358,7 +374,7 @@ class Organisation extends EntityRepository
      *
      * @return array
      */
-    public function findOrganisationForProfileEditByContact(Contact $contact)
+    public function findOrganisationForProfileEditByContact(Contact $contact): array
     {
         $organisations = [];
         //Start with your own organisation

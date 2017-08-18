@@ -115,12 +115,25 @@ class OrganisationService extends AbstractService
      *
      * @return Query
      */
-    public function findActiveOrganisationWithoutFinancial($filter)
+    public function findActiveOrganisationWithoutFinancial($filter): Query
     {
         /** @var Repository\Organisation $repository */
         $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
         return $repository->findActiveOrganisationWithoutFinancial($filter);
+    }
+
+    /**
+     * @param $filter
+     *
+     * @return Query
+     */
+    public function findDuplicateOrganisations($filter): Query
+    {
+        /** @var Repository\Organisation $repository */
+        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+
+        return $repository->findDuplicateOrganisations($filter);
     }
 
     /**
@@ -148,13 +161,13 @@ class OrganisationService extends AbstractService
      * @param string $organisationName
      * @param Project $project
      *
-     * @return mixed|null|Entity\Name
+     * @return null|Entity\Name
      */
     public function findOrganisationNameByNameAndProject(
         Entity\Organisation $organisation,
         string $organisationName,
         Project $project
-    ) {
+    ):?Entity\Name {
         foreach ($organisation->getNames() as $name) {
             if ($name->getName() === $organisationName && $name->getProject() === $project) {
                 return $name;
@@ -169,7 +182,7 @@ class OrganisationService extends AbstractService
      *
      * @return Entity\Organisation[]
      */
-    public function findOrganisationForProfileEditByContact(Contact $contact)
+    public function findOrganisationForProfileEditByContact(Contact $contact): array
     {
         /** @var Repository\Organisation $repository */
         $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
@@ -183,7 +196,7 @@ class OrganisationService extends AbstractService
      *
      * @return int
      */
-    public function getAffiliationCount(Entity\Organisation $organisation, $which = AffiliationService::WHICH_ALL)
+    public function getAffiliationCount(Entity\Organisation $organisation, $which = AffiliationService::WHICH_ALL): int
     {
         return ($organisation->getAffiliation()->filter(
             function (
@@ -207,7 +220,7 @@ class OrganisationService extends AbstractService
      *
      * @return int
      */
-    public function getContactCount(Entity\Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE)
+    public function getContactCount(Entity\Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE): int
     {
         return ($organisation->getContactOrganisation()->filter(
             function (

@@ -27,8 +27,7 @@ use Zend\Form\Form;
 
 /**
  * Class Financial
- *
- * @package Parent\Form
+ * @package Organisation\Form
  */
 class Financial extends Form
 {
@@ -59,13 +58,20 @@ class Financial extends Form
         /** @var Financial $financial */
         foreach ($organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
                      ->getArrayResult() as $financialOrganisation) {
-            $financialOrganisationValueOptions[$financialOrganisation['id']] =
+            $country = $financialOrganisation['organisation']['country'];
 
-                sprintf(
-                    '%s (VAT: %s)',
-                    $financialOrganisation['organisation']['organisation'],
-                    $financialOrganisation['vat']
-                );
+            if (!array_key_exists($country['id'], $financialOrganisationValueOptions)) {
+                $financialOrganisationValueOptions[$country['id']] = [
+                    'label'   => $country['country'],
+                    'options' => []
+                ];
+            }
+
+            $financialOrganisationValueOptions[$country['id']]['options'][$financialOrganisation['id']] = sprintf(
+                '%s (VAT: %s)',
+                $financialOrganisation['organisation']['organisation'],
+                $financialOrganisation['vat']
+            );
         }
 
         asort($financialOrganisationValueOptions);

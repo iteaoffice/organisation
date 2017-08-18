@@ -29,9 +29,10 @@ class Financial extends EntityRepository
     public function findOrganisationFinancialList(array $filter): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('financial', 'organisation');
+        $queryBuilder->select('financial', 'organisation', 'country');
         $queryBuilder->from(Entity\Financial::class, 'financial');
         $queryBuilder->join('financial.organisation', 'organisation');
+        $queryBuilder->join('organisation.country', 'country');
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
@@ -96,7 +97,7 @@ class Financial extends EntityRepository
                 );
                 break;
             default:
-                $queryBuilder->addOrderBy('financial.id', $direction);
+                $queryBuilder->addOrderBy('organisation.organisation', $direction);
         }
 
         return $queryBuilder->getQuery();

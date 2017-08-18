@@ -23,6 +23,9 @@ use General\Entity\Country;
 use Organisation\Entity;
 use Organisation\Form;
 use Zend\View\Model\ViewModel;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Zend\Paginator\Paginator;
 
 /**
  * @category    Parent
@@ -55,7 +58,6 @@ class ParentFinancialController extends OrganisationAbstractController
             $this->getOrganisationService()
         );
 
-        $formData['organisationFinancial'] = $parent->getOrganisation()->getFinancial()->getId();
         $formData['attention'] = $parent->getContact()->getDisplayName();
         $formData['contact'] = $parent->getContact()->getId();
         $form->get('contact')->injectContact($parent->getContact());
@@ -287,6 +289,38 @@ class ParentFinancialController extends OrganisationAbstractController
                 'parentService'  => $this->getParentService(),
                 'projectService' => $this->getProjectService(),
                 'form'           => $form,
+            ]
+        );
+    }
+
+    /**
+     * @return ViewModel
+     */
+    public function noFinancialAction()
+    {
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
+        $parentQuery = $this->getParentService()
+            ->findActiveParentWithoutFinancial($filterPlugin->getFilter());
+
+        $paginator
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+
+        $form = new Form\ParentFilter($this->getParentService());
+
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
+
+        return new ViewModel(
+            [
+                'paginator'           => $paginator,
+                'form'                => $form,
+                'encodedFilter'       => urlencode($filterPlugin->getHash()),
+                'order'               => $filterPlugin->getOrder(),
+                'direction'           => $filterPlugin->getDirection(),
+                'organisationService' => $this->getOrganisationService(),
             ]
         );
     }

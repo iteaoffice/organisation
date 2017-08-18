@@ -1,7 +1,5 @@
 {% do headTitle().append(translate("txt-organisation-financial-list")) %}
 
-{{ form().closeTag()|raw }}
-
 {% do form.prepare() %}
 
 {{ form().openTag(form)|raw }}
@@ -33,11 +31,11 @@
             <table class="table table-hover table-striped table-condensed">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
                     <th>{{ translate("txt-contacts") }}</th>
                     <th>{{ translate("txt-projects") }}</th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
                     <th>{{ translate("txt-actions") }}</th>
                 </tr>
                 </thead>

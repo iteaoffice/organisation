@@ -111,19 +111,9 @@ return [
                             ],
                         ],
                     ],
-                    'financial-organisation-list' => [
-                        'label' => _("txt-nav-financial-organisation-list"),
-                        'order' => 20,
-                        'route' => 'zfcadmin/organisation/financial/list',
-                    ],
-                    'financial-check'             => [
-                        'label' => _("txt-nav-financial-check"),
-                        'order' => 30,
-                        'route' => 'zfcadmin/organisation/financial/no-financial',
-                    ],
                     'parent-list'                 => [
                         'label' => _("txt-nav-parent-list"),
-                        'order' => 50,
+                        'order' => 20,
                         'route' => 'zfcadmin/parent/list',
                         'pages' => [
                             'parent-view'    => [
@@ -281,10 +271,15 @@ return [
                             ],
                         ],
                     ],
+                    'financial-organisation-list' => [
+                        'label' => _("txt-nav-financial-organisation-list"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/financial/list',
+                    ],
 
                 ],
             ],
-            'management'   => [
+            'config'       => [
                 'pages' => [
                     'organisation-type-list' => [
                         'label' => _("txt-organisation-type-list"),
@@ -388,8 +383,32 @@ return [
                             ],
                         ],
                     ],
-                ],
+                ]
             ],
+            'tools'        => [
+                'pages' => [
+                    'list-duplicate-organisations' => [
+                        'label' => _("txt-nav-list-duplicate-organisations"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/list-duplicate',
+                    ],
+                    'financial-check'              => [
+                        'label' => _("txt-nav-financial-check"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/financial/no-financial',
+                    ],
+                    'parent-financial-check'       => [
+                        'label' => _("txt-nav-parent-financial-check"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/parent/financial/no-financial',
+                    ],
+                    'parent-list-no-member'        => [
+                        'label' => _("txt-nav-parent-list-no-member-no-doa"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/parent/list-no-member',
+                    ],
+                ]
+            ]
         ],
     ],
 ];
