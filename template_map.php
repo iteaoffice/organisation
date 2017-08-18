@@ -59,6 +59,7 @@ return array(
     'organisation/organisation-admin/new'                       => __DIR__ . '//view/organisation/organisation-admin/new.twig',
     'organisation/organisation-admin/merge'                     => __DIR__ . '//view/organisation/organisation-admin/merge.twig',
     'organisation/organisation-admin/view'                      => __DIR__ . '//view/organisation/organisation-admin/view.twig',
+    'organisation/organisation-admin/list-duplicate'            => __DIR__ . '//view/organisation/organisation-admin/list-duplicate.twig',
     'organisation/organisation-admin/tab/financial'             => __DIR__ . '//view/organisation/organisation-admin/tab/financial.twig',
     'organisation/organisation-admin/tab/doa'                   => __DIR__ . '//view/organisation/organisation-admin/tab/doa.twig',
     'organisation/organisation-admin/tab/contact'               => __DIR__ . '//view/organisation/organisation-admin/tab/contact.twig',

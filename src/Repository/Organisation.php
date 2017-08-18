@@ -108,13 +108,68 @@ class Organisation extends EntityRepository
         return $queryBuilder->getQuery();
     }
 
-    public function findDuplicateOrganisations()
+    /**
+     * @param array $filter
+     * @return Query
+     */
+    public function findDuplicateOrganisations(array $filter): Query
     {
-        //SELECT organisation FROM organisation HAVING (SELECT COUNT(organisation2.organisation_id) FROM organisation as organisation2 WHERE organisation2.organisation LIKE CONCAT("%", organisation.organisation, "%")) > 1;
+        //Make a subselect to match the organisations on itself
+        $subSelect2 = $this->_em->createQueryBuilder();
+        $subSelect2->select('COUNT(organisation_entity_organisation2.id)');
+        $subSelect2->from(Entity\Organisation::class, 'organisation_entity_organisation2');
+        $subSelect2->where('organisation_entity_organisation.country = organisation_entity_organisation2.country');
+        $subSelect2->andWhere(
+            $subSelect2->expr()->like('organisation_entity_organisation2.organisation',
+                $subSelect2->expr()->concat(
+                    $subSelect2->expr()->literal('%'),
+                    'organisation_entity_organisation.organisation',
+                    $subSelect2->expr()->literal('%'))
+            )
+        );
 
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->select('organisation_entity_organisation organisation',
+            '(' . $subSelect2->getDQL() . ') amount');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        $queryBuilder->having('amount > 1');
+
+
+        if (array_key_exists('type', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in('organisation_entity_organisation.type', implode($filter['type'], ', '))
+            );
+        }
+
+        $direction = Criteria::ASC;
+        if (isset($filter['direction'])
+            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)) {
+            $direction = strtoupper($filter['direction']);
+        }
+
+        switch ($filter['order']) {
+            case 'amount':
+                $queryBuilder->addOrderBy('amount', $direction);
+                break;
+            case 'name':
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
+                $queryBuilder->addOrderBy('general_entity_country.country', $direction);
+                break;
+            case 'country':
+                $queryBuilder->addOrderBy('general_entity_country.country', $direction);
+                $queryBuilder->orderBy('organisation_entity_organisation.organisation', $direction);
+                break;
+            case 'type':
+                $queryBuilder->addOrderBy('organisation_entity_type.type', $direction);
+                break;
+            default:
+                $queryBuilder->orderBy('general_entity_country.iso3', 'ASC');
+                $queryBuilder->orderBy('organisation_entity_organisation.organisation', 'ASC');
+
+        }
+
+        return $queryBuilder->getQuery();
     }
 
     /**

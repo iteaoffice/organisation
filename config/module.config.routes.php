@@ -277,7 +277,7 @@ return [
                             'merge'           => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/merge/[:sourceId]/into/[:destinationId].html',
+                                    'route'    => '/merge/[:sourceId]/into/[:targetId].html',
                                     'defaults' => [
                                         'action' => 'merge',
                                     ],

@@ -293,7 +293,7 @@ class OrganisationService extends AbstractService
     /**
      * @return Entity\Type[]
      */
-    public function findOrganisationTypes()
+    public function findOrganisationTypes(): array
     {
         return $this->getEntityManager()->getRepository(Entity\Type::class)->findBy([], ['type' => 'ASC']);
     }

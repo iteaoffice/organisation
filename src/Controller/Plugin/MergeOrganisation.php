@@ -15,8 +15,6 @@
 
 declare(strict_types=1);
 
-declare(strict_types=1);
-
 namespace Organisation\Controller\Plugin;
 
 use Doctrine\Common\Collections\ArrayCollection;
