@@ -13,11 +13,13 @@ declare(strict_types=1);
 namespace OrganisationTest\Controller\Plugin;
 
 use Affiliation\Entity\Affiliation;
+use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use General\Entity\Country;
+use Organisation\Controller\OrganisationAdminController;
 use Organisation\Controller\Plugin\MergeOrganisation;
 use Organisation\Entity\Booth;
 use Organisation\Entity\Financial;
@@ -33,6 +35,8 @@ use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Program\Entity\Technology;
 use Testing\Util\AbstractServiceTest;
 use Zend\I18n\Translator\Translator;
+use Zend\Stdlib\DispatchableInterface;
+use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
  * Class MergeOrganisationTest
@@ -58,6 +62,92 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $this->source = $this->createSource();
         $this->target = $this->createTarget();
         $this->translator = $this->setUpTranslatorMock();
+    }
+
+    /**
+     * Test the basic __invoke magic method returning the plugin instance
+     *
+     * @covers \Organisation\Controller\Plugin\MergeOrganisation::__invoke
+     * @covers \Organisation\Controller\Plugin\MergeOrganisation::__construct
+     */
+    public function testInvoke()
+    {
+        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->translator);
+        $instance = $mergeOrganisation();
+        $this->assertSame($mergeOrganisation, $instance);
+    }
+
+    /**
+     * Test the pre-merge checks
+     *
+     * @covers \Organisation\Controller\Plugin\MergeOrganisation::checkMerge
+     */
+    public function testCheckMerge()
+    {
+        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->translator);
+
+        // Set up some merge-preventing circumstances
+        $this->source->getFinancial()->setVat('NL123');
+        $this->target->getFinancial()->setVat('NL456');
+        $this->source->setParent(new OParent());
+        $this->target->setParent(new OParent());
+        $otherCountry = new Country();
+        $otherCountry->setId(2);
+        $this->source->setCountry($otherCountry);
+
+        // Run the merge check
+        $errors = $mergeOrganisation()->checkMerge($this->source, $this->target);
+
+        $this->assertEquals(true, in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
+        $this->assertEquals(true, in_array('txt-organisations-cant-both-be-parents', $errors));
+        $this->assertEquals(true, in_array('txt-organisations-cant-have-different-countries', $errors));
+    }
+
+    /**
+     * Test the actual merge
+     *
+     * @covers \Organisation\Controller\Plugin\MergeOrganisation::merge
+     */
+    public function testMerge()
+    {
+        /** @var DispatchableInterface $controllerMock */
+        $controllerMock = $this->setUpControllerMock();
+        $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(), $this->translator);
+        $mergeOrganisation->setController($controllerMock);
+
+        $result = $mergeOrganisation()->merge($this->source, $this->target);
+
+        $this->assertEquals(true, $result['success']);
+        $this->assertEquals('', $result['errorMessage']);
+        $this->assertEquals($this->source->getDateCreated(), $this->target->getDateCreated());
+        $this->assertEquals($this->source->getDateUpdated(), $this->target->getDateUpdated());
+
+        // MORE ASSERTIONS HERE
+    }
+
+    /**
+     * Test a failing merge
+     *
+     * @covers \Organisation\Controller\Plugin\MergeOrganisation::merge
+     */
+    public function testMergeFail()
+    {
+        $entityManagerMock = $this->setUpEntityManagerMock(true);
+
+        /** @var MockObject|MergeOrganisation $mergeOrganisationMock */
+        $mergeOrganisationMock = $this->getMockBuilder(MergeOrganisation::class)
+            ->setConstructorArgs([$entityManagerMock, $this->translator])
+            ->setMethods(['logException'])
+            ->getMock();
+        // When logging is enabled again set $this->never() to $this->once()
+        $mergeOrganisationMock->expects($this->never())
+            ->method('logException')
+            ->with($this->isInstanceOf(ORMException::class));
+
+        $response = $mergeOrganisationMock()->merge($this->source, $this->target);
+
+        $this->assertEquals(false, $response['success']);
+        $this->assertEquals('Oops!', $response['errorMessage']);
     }
 
     /**
@@ -171,61 +261,31 @@ final class MergeOrganisationTest extends AbstractServiceTest
     }
 
     /**
-     * Test the basic __invoke magic method returning the plugin instance
+     * Set up the translator mock object.
      *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::__invoke
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::__construct
+     * @return Translator|MockObject
      */
-    public function testInvoke()
+    private function setUpControllerMock(): MockObject
     {
-        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->translator);
-        $instance = $mergeOrganisation();
-        $this->assertSame($mergeOrganisation, $instance);
-    }
+        $contact = new Contact();
+        $contact->setId(1);
 
-    /**
-     * Test the pre-merge checks
-     *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::checkMerge
-     */
-    public function testCheckMerge()
-    {
-        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->translator);
+        $zfcUserAuthenticationMock = $this->getMockBuilder(ZfcUserAuthentication::class)
+            ->setMethods(['getIdentity'])
+            ->getMock();
+        $zfcUserAuthenticationMock->expects($this->once())
+            ->method('getIdentity')
+            ->will($this->returnValue($contact));
 
-        // Set up some merge-preventing circumstances
-        $this->source->getFinancial()->setVat('NL123');
-        $this->target->getFinancial()->setVat('NL456');
-        $this->source->setParent(new OParent());
-        $this->target->setParent(new OParent());
-        $otherCountry = new Country();
-        $otherCountry->setId(2);
-        $this->source->setCountry($otherCountry);
+        $controllerMock = $this->getMockBuilder(OrganisationAdminController::class)
+            ->setMethods(['zfcUserAuthentication'])
+            ->getMock();
 
-        // Run the merge check
-        $errors = $mergeOrganisation()->checkMerge($this->source, $this->target);
+        $controllerMock->expects($this->once())
+            ->method('zfcUserAuthentication')
+            ->will($this->returnValue($zfcUserAuthenticationMock));
 
-        $this->assertEquals(true, in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-both-be-parents', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-have-different-countries', $errors));
-    }
-
-    /**
-     * Test the actual merge
-     *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::merge
-     */
-    public function testMerge()
-    {
-        $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(), $this->translator);
-
-        $result = $mergeOrganisation()->merge($this->source, $this->target);
-
-        $this->assertEquals(true, $result['success']);
-        $this->assertEquals('', $result['errorMessage']);
-        $this->assertEquals($this->source->getDateCreated(), $this->target->getDateCreated());
-        $this->assertEquals($this->source->getDateUpdated(), $this->target->getDateUpdated());
-
-        // MORE ASSERTIONS HERE
+        return $controllerMock;
     }
 
     /**
@@ -234,7 +294,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
      *
      * @return EntityManager|MockObject
      */
-    private function setUpEntityManagerMock($throwException = false): MockObject
+    private function setUpEntityManagerMock(bool $throwException = false): MockObject
     {
         $entityManagerMock = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
@@ -262,37 +322,15 @@ final class MergeOrganisationTest extends AbstractServiceTest
             [$this->identicalTo($this->source->getIctOrganisation()->first())],
             [$this->identicalTo($this->source->getContactOrganisation()->first())],
             [$this->identicalTo($this->source->getOrganisationBooth()->first())],
-            [$this->identicalTo($this->target)]
+            [$this->identicalTo($this->target)],
+            [$this->isInstanceOf(Log::class)],
+            [$this->isInstanceOf(Note::class)],
         ];
 
         $entityManagerMock->expects($this->exactly(count($params)))->method('persist')->withConsecutive(...$params);
         $entityManagerMock->expects($this->once())->method('remove')->with($this->source);
-        $entityManagerMock->expects($this->once())->method('flush');
+        $entityManagerMock->expects($this->exactly(2))->method('flush');
 
         return $entityManagerMock;
-    }
-
-    /**
-     * Test a failing merge
-     *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::merge
-     */
-    public function testMergeFail()
-    {
-        $entityManagerMock = $this->setUpEntityManagerMock(true);
-
-        /** @var MockObject|MergeOrganisation $mergeOrganisationMock */
-        $mergeOrganisationMock = $this->getMockBuilder(MergeOrganisation::class)
-            ->setConstructorArgs([$entityManagerMock, $this->translator])
-            ->setMethods(['logException'])
-            ->getMock();
-        $mergeOrganisationMock->expects($this->once())
-            ->method('logException')
-            ->with($this->isInstanceOf(ORMException::class));
-
-        $response = $mergeOrganisationMock()->merge($this->source, $this->target);
-
-        $this->assertEquals(false, $response['success']);
-        $this->assertEquals('Oops!', $response['errorMessage']);
     }
 }

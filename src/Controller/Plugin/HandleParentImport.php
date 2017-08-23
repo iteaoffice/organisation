@@ -15,6 +15,7 @@ namespace Organisation\Controller\Plugin;
 use Contact\Entity\Address;
 use Contact\Entity\AddressType;
 use Contact\Entity\Contact;
+use Doctrine\Common\Collections\ArrayCollection;
 use General\Entity\Country;
 use General\Entity\Gender;
 use General\Entity\Title;
@@ -78,7 +79,7 @@ class HandleParentImport extends AbstractImportPlugin
             $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
             $parentCountry = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['iso 2']]);
 
-            //Try to find the parent organisation
+            // Try to find the parent organisation
             $organisation = $this->getOrganisationService()->findOrganisationByNameCountry(
                 $name,
                 $parentCountry,
@@ -92,7 +93,7 @@ class HandleParentImport extends AbstractImportPlugin
                 );
             }
 
-            //Find the contact
+            // Find the contact
             $contact = $this->handleContactInformation($content);
 
             $parent = $this->handleParentInformation(
@@ -101,15 +102,6 @@ class HandleParentImport extends AbstractImportPlugin
                 $contact,
                 $content
             );
-
-            //Create the financial information
-            if (is_null($financial = $parent->getFinancial())) {
-                $financial = new \Organisation\Entity\Parent\Financial();
-                $financial->setParent($parent);
-            }
-
-            $financial->setOrganisation($organisation);
-
 
             if (is_null($financialOrganisation = $organisation->getFinancial())) {
                 $financialOrganisation = new Financial();
@@ -122,18 +114,26 @@ class HandleParentImport extends AbstractImportPlugin
 
             $organisation->setFinancial($financialOrganisation);
 
-            $financial->setOrganisation($organisation);
-            $financial->setContact($contact);
+            // Create the financial information
+            $financialCollection = $parent->getFinancial();
+            if ($financialCollection->isEmpty()) {
+                $financial = new \Organisation\Entity\Parent\Financial();
+                $financial->setParent($parent);
+                $financialCollection = new ArrayCollection([$financial]);
+            }
 
-            $parent->setFinancial($financial);
-            //Only persist when the key is given
+            $financialCollection->first()->setOrganisation($organisation);
+            $financialCollection->first()->setContact($contact);
+
+            $parent->setFinancial($financialCollection);
+
+            // Only persist when the key is given
             if (in_array($key, $keys, false)) {
                 $this->getEntityManager()->persist($parent);
                 $this->getEntityManager()->flush($parent);
 
                 $this->importedParents[] = $parent;
             }
-
 
             /** Add the parent to the parents array */
             $this->parents[$key] = $parent;

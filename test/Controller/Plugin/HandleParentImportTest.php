@@ -157,7 +157,6 @@ class HandleParentImportTest extends AbstractServiceTest
 
         $this->handleParentImport->setParentService($parentService);
 
-
         /** @var OrganisationService $organisationService */
         $organisationService = $this->getMockBuilder(OrganisationService::class)
             ->setMethods(['findOrganisationByNameCountry', 'findEntityById'])
@@ -189,10 +188,7 @@ class HandleParentImportTest extends AbstractServiceTest
             ->will($this->returnValue(new AddressType()));
 
         $this->handleParentImport->setContactService($contactService);
-
-
         $this->handleParentImport->validateData();
-
         $this->handleParentImport->prepareContent();
 
         $this->assertEmpty($this->handleParentImport->getErrors());

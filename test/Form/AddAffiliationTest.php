@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace OrganisationTest\Service;
+namespace OrganisationTest\Form;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
@@ -40,7 +40,7 @@ class AddAffiliationTest extends AbstractFormTest
      */
     public function testCanCreateAddAffiliationForm()
     {
-        return $this->markTestIncomplete('Not fixed yet, need to configure the mock builde');
+        return $this->markTestIncomplete('Not fixed yet, need to configure the mock builder');
         $parentOrganisation = new Organisation();
 
         $project = new Project();
