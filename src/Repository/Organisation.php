@@ -47,10 +47,14 @@ class Organisation extends EntityRepository
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
         $queryBuilder->join('organisation_entity_organisation.type', 'organisation_entity_type');
+        $queryBuilder->leftJoin('organisation_entity_organisation.financial', 'organisation_entity_financial');
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like')
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'),
+                    $queryBuilder->expr()->like('organisation_entity_financial.vat', ':like')
+                )
             );
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }

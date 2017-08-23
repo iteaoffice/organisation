@@ -531,6 +531,19 @@ class OrganisationService extends AbstractService
     }
 
     /**
+     * @param Entity\Organisation $organisation
+     * @return bool
+     */
+    public function hasValidVat(Entity\Organisation $organisation): bool {
+        if (is_null($organisation->getFinancial()))
+        {
+            return false;
+        }
+
+        return $organisation->getFinancial()->getVatStatus() === Entity\Financial::VAT_STATUS_VALID;
+    }
+
+    /**
      * Search for organisations based on a search-item.
      *
      * @param      $searchItem

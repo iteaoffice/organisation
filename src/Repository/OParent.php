@@ -41,14 +41,19 @@ class OParent extends EntityRepository
         $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_parent.type', 'parent_entity_type');
         $queryBuilder->leftJoin('organisation_entity_parent.status', 'parent_entity_status');
+        $queryBuilder->leftJoin('organisation_entity_parent.financial', 'parent_entity_financial');
+        $queryBuilder->leftJoin('parent_entity_financial.organisation', 'organisation_entity_financial_organisation');
+        $queryBuilder->leftJoin('organisation_entity_financial_organisation.financial', 'organisation_entity_financial_organisation_financial');
         $queryBuilder->join('organisation_entity_parent.contact', 'contact_entity_contact');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
 
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()
-                    ->like('organisation_entity_organisation.organisation', ':like')
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'),
+                    $queryBuilder->expr()->like('organisation_entity_financial_organisation_financial.vat', ':like')
+                )
             );
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }
@@ -147,14 +152,14 @@ class OParent extends EntityRepository
         if (array_key_exists('type', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in('organisation_entity_organisation.type', $filter['type'])
+                    ->in('organisation_entity_parent.type', $filter['type'])
             );
         }
 
         if (array_key_exists('status', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in('organisation_entity_organisation.type', $filter['status'])
+                    ->in('organisation_entity_parent.status', $filter['status'])
             );
         }
 

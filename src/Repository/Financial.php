@@ -36,8 +36,10 @@ class Financial extends EntityRepository
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()
-                    ->like('organisation.organisation', ':like')
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->like('organisation.organisation', ':like'),
+                    $queryBuilder->expr()->like('financial.vat', ':like')
+                )
             );
             $queryBuilder->setParameter(
                 'like',
