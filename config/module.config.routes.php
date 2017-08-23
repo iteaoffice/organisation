@@ -135,6 +135,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'list-duplicate'  => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/list/duplicate[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list-duplicate',
+                                    ],
+                                ],
+                            ],
                             'new'             => [
                                 'type'    => 'Segment',
                                 'options' => [
@@ -267,7 +277,7 @@ return [
                             'merge'           => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/merge/[:sourceId]/into/[:destinationId].html',
+                                    'route'    => '/merge/[:sourceId]/into/[:targetId].html',
                                     'defaults' => [
                                         'action' => 'merge',
                                     ],
@@ -344,6 +354,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'list-no-member'                           => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list/no-member-doa[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list-no-member',
+                                    ],
+                                ],
+                            ],
                             'import'                                   => [
                                 'type'         => 'Literal',
                                 'options'      => [
@@ -383,7 +402,7 @@ return [
                                     ],
                                 ],
                                 'child_routes' => [
-                                    'new'  => [
+                                    'new'          => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/new/parent-[:parentId].html',
@@ -392,12 +411,21 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'edit' => [
+                                    'edit'         => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/edit/[:id].html',
                                             'defaults' => [
                                                 'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'no-financial' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/no-financial.html',
+                                            'defaults' => [
+                                                'action' => 'no-financial',
                                             ],
                                         ],
                                     ],

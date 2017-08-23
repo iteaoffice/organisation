@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Organisation\Repository;
 
+use Affiliation\Entity\Affiliation;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -32,7 +33,7 @@ class OParent extends EntityRepository
      *
      * @return Query
      */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
@@ -103,6 +104,167 @@ class OParent extends EntityRepository
     }
 
     /**
+     * @param array $filter
+     * @return Query
+     */
+    public function findActiveParentWithoutFinancial(array $filter): Query
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_parent');
+        $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
+
+        $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
+        $queryBuilder->join('organisation_entity_parent.type', 'organisation_entity_parent_type');
+
+        //Make a second sub-select to cancel out organisations which have a financial organisation
+        $subSelect2 = $this->_em->createQueryBuilder();
+        $subSelect2->select('financialParent');
+        $subSelect2->from(Entity\Parent\Financial::class, 'organisation_entity_parent_financial');
+        $subSelect2->join('organisation_entity_parent_financial.parent', 'financialParent');
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()
+                ->notIn('organisation_entity_parent', $subSelect2->getDQL())
+        );
+
+        //Exclude the free-riders
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()
+                ->notIn('organisation_entity_parent_status.id', [Entity\Parent\Status::STATUS_FREE_RIDER])
+        );
+
+        if (array_key_exists('search', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->like('organisation_entity_organisation.organisation', ':like')
+            );
+            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+        }
+
+        if (array_key_exists('type', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->in('organisation_entity_organisation.type', $filter['type'])
+            );
+        }
+
+        if (array_key_exists('status', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->in('organisation_entity_organisation.type', $filter['status'])
+            );
+        }
+
+        $direction = 'ASC';
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+            $direction = strtoupper($filter['direction']);
+        }
+
+        switch ($filter['order']) {
+            case 'lastUpdate':
+                $queryBuilder->addOrderBy('organisation_entity_organisation.lastUpdate', $direction);
+                break;
+            case 'name':
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
+                break;
+            case 'country':
+                $queryBuilder->addOrderBy('general_entity_country.iso3', $direction);
+                break;
+            case 'type':
+                $queryBuilder->addOrderBy('organisation_entity_parent_type.type', $direction);
+                break;
+            case 'status':
+                $queryBuilder->addOrderBy('organisation_entity_parent_status.status', $direction);
+                break;
+            default:
+                $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+    /**
+     * @param array $filter
+     * @return Query
+     */
+    public function findActiveParentWhichAreNoMember(array $filter): Query
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_parent');
+        $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
+
+        $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
+        $queryBuilder->join('organisation_entity_parent.type', 'organisation_entity_parent_type');
+
+        //Make a second sub-select to cancel out organisations which have a financial organisation
+        $subSelect2 = $this->_em->createQueryBuilder();
+        $subSelect2->select('projectParent');
+        $subSelect2->from(Affiliation::class, 'affiliation_entity_affiliation');
+        $subSelect2->join('affiliation_entity_affiliation.parentOrganisation', 'organisation_entity_parent_organisation');
+        $subSelect2->join('organisation_entity_parent_organisation.parent', 'projectParent');
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()
+                ->in('organisation_entity_parent', $subSelect2->getDQL())
+        );
+
+        //Exclude the free-riders
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()
+                ->notIn('organisation_entity_parent_status.id', [Entity\Parent\Status::STATUS_MEMBER])
+        );
+
+        if (array_key_exists('search', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->like('organisation_entity_organisation.organisation', ':like')
+            );
+            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+        }
+
+        if (array_key_exists('type', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()
+                    ->in('organisation_entity_organisation.type', implode($filter['type'], ', '))
+            );
+        }
+
+        $direction = 'ASC';
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+            $direction = strtoupper($filter['direction']);
+        }
+
+        switch ($filter['order']) {
+            case 'lastUpdate':
+                $queryBuilder->addOrderBy('organisation_entity_organisation.lastUpdate', $direction);
+                break;
+            case 'name':
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
+                break;
+            case 'country':
+                $queryBuilder->addOrderBy('general_entity_country.iso3', $direction);
+                break;
+            case 'type':
+                $queryBuilder->addOrderBy('organisation_entity_parent_type.type', $direction);
+                break;
+            case 'status':
+                $queryBuilder->addOrderBy('organisation_entity_parent_status.status', $direction);
+                break;
+            default:
+                $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
+        }
+
+        return $queryBuilder->getQuery();
+    }
+
+
+    /**
      * @return array
      */
     public function findParentsForInvoicing(): array
@@ -133,14 +295,7 @@ class OParent extends EntityRepository
         $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
         $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
 
-        //Limit on parent types which have a fee
-        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
-        $queryBuilder->join('organisation_entity_parent_status.projectFee', 'project_entity_fee');
-
-        $queryBuilder->join('organisation_entity_parent.type', 'organisation_entity_parent_type');
-        $queryBuilder->andWhere('organisation_entity_parent_type.id = :type');
-
-        $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_C_CHAMBER);
+        $queryBuilder = $this->limitCChambers($queryBuilder);
 
         $queryBuilder->addOrderBy('organisation_entity_parent.status', 'ASC');
         $queryBuilder->addOrderBy('organisation_entity_parent.type', 'DESC');
@@ -185,7 +340,7 @@ class OParent extends EntityRepository
      *
      * @return QueryBuilder
      */
-    public function limitCChambers(QueryBuilder $queryBuilder)
+    public function limitCChambers(QueryBuilder $queryBuilder): QueryBuilder
     {
         //Select projects based on a type
         $subSelect = $this->_em->createQueryBuilder();

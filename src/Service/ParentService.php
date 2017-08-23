@@ -20,6 +20,7 @@ namespace Organisation\Service;
 use Contact\Entity\Contact;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Query;
 use Organisation\Entity;
 use Organisation\Repository;
 use Project\Entity\Version\Version;
@@ -78,6 +79,30 @@ class ParentService extends AbstractService
     public function parentCanBeDeleted(Entity\OParent $parent): bool
     {
         return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty();
+    }
+
+    /**
+     * @param array $filter
+     * @return Query
+     */
+    public function findActiveParentWhichAreNoMember(array $filter): Query
+    {
+        /** @var Repository\OParent $repository */
+        $repository = $this->getEntityManager()->getRepository(Entity\OParent::class);
+
+        return $repository->findActiveParentWhichAreNoMember($filter);
+    }
+
+    /**
+     * @param array $filter
+     * @return Query
+     */
+    public function findActiveParentWithoutFinancial(array $filter): Query
+    {
+        /** @var Repository\OParent $repository */
+        $repository = $this->getEntityManager()->getRepository(Entity\OParent::class);
+
+        return $repository->findActiveParentWithoutFinancial($filter);
     }
 
     /**
@@ -219,13 +244,9 @@ class ParentService extends AbstractService
     }
 
     /**
-     * Calculate the amount of contribution paid by the parent
-     *
      * @param Entity\OParent $parent
      * @param int $year
-     * @param int $period
-     *
-     * @return float;
+     * @return float
      */
     public function parseContributionPaid(Entity\OParent $parent, int $year): float
     {
@@ -354,7 +375,7 @@ class ParentService extends AbstractService
             return (float)0;
         }
 
-        return (float)(0.015 * $sumOfFreeRiders * $sumOfFundingByCChamber) / (3 * $amountOfMemberships
+        return (0.015 * $sumOfFreeRiders * $sumOfFundingByCChamber) / (3 * $amountOfMemberships
                 * $sumOfFundingByCChambers);
     }
 
@@ -620,7 +641,15 @@ class ParentService extends AbstractService
             default:
                 foreach ($parent->getFinancial() as $financial) {
                     if (is_null($financial->getOrganisation()->getFinancial())) {
-                        $errors[] = sprintf("%s has no financial information", $financial->getOrganisation());
+                        $errors[] = sprintf('%s has no financial information', $financial->getOrganisation());
+                    }
+
+                    if (!is_null($financial->getOrganisation()->getFinancial()) && empty($financial->getOrganisation()->getFinancial()->getVat())) {
+                        $errors[] = sprintf('%s has no VAT number', $financial->getOrganisation());
+                    }
+
+                    if (!is_null($financial->getOrganisation()->getFinancial()) && !empty($financial->getOrganisation()->getFinancial()->getVat()) && $financial->getOrganisation()->getFinancial()->getVatStatus() !== Entity\Financial::VAT_STATUS_VALID) {
+                        $errors[] = sprintf('%s has an unvalidated VAT number', $financial->getOrganisation());
                     }
                 }
                 break;

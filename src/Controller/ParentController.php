@@ -65,6 +65,39 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
+     * @return ViewModel
+     */
+    public function listNoMemberAction(): ViewModel
+    {
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
+        $parentQuery = $this->getParentService()
+            ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
+
+        $paginator
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+
+        $form = new Form\ParentFilter($this->getParentService());
+
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
+
+        return new ViewModel(
+            [
+                'paginator'           => $paginator,
+                'form'                => $form,
+                'encodedFilter'       => urlencode($filterPlugin->getHash()),
+                'order'               => $filterPlugin->getOrder(),
+                'direction'           => $filterPlugin->getDirection(),
+                'organisationService' => $this->getOrganisationService(),
+                'contactService'      => $this->getContactService()
+            ]
+        );
+    }
+
+    /**
      * Create a new template.
      *
      * @return \Zend\View\Model\ViewModel

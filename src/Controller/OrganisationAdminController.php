@@ -67,6 +67,35 @@ class OrganisationAdminController extends OrganisationAbstractController
     }
 
     /**
+     * @return ViewModel
+     */
+    public function listDuplicateAction()
+    {
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
+        $organisationQuery = $this->getOrganisationService()
+            ->findDuplicateOrganisations($filterPlugin->getFilter());
+
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+
+        $form = new OrganisationFilter($this->getOrganisationService());
+
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
+
+        return new ViewModel([
+            'paginator'           => $paginator,
+            'form'                => $form,
+            'encodedFilter'       => urlencode($filterPlugin->getHash()),
+            'organisationService' => $this->getOrganisationService(),
+            'order'               => $filterPlugin->getOrder(),
+            'direction'           => $filterPlugin->getDirection(),
+        ]);
+    }
+
+    /**
      * @return array|ViewModel
      */
     public function viewAction()

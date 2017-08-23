@@ -7,8 +7,33 @@
 
 {{ form().openTag(form)|raw }}
 
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-parent") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ parentLink(parent,'view', 'parent') }} ({{ parent.organisation.country }})</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-parent-type") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ parent.type }}</p>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{ translate("txt-parent-status") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static">{{ parent.status }}</p>
+    </div>
+</div>
+
+
 <fieldset>
-    <legend>{{ translate("txt-organisation") }}</legend>
+    <legend>{{ translate("txt-financial-organisation") }}</legend>
     {{ ztbformelement(form.get('organisationFinancial')) }}
     {{ ztbformelement(form.get('branch')) }}
     {{ contactformelement(form.get('contact')) }}
