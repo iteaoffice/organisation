@@ -47,6 +47,7 @@ return [
                 ['route' => 'zfcadmin/organisation/note/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/list', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/list-no-member', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/parent/list-no-member-export', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/import/parent', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/import/project', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/new', 'roles' => [Access::ACCESS_OFFICE]],

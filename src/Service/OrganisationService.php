@@ -534,9 +534,9 @@ class OrganisationService extends AbstractService
      * @param Entity\Organisation $organisation
      * @return bool
      */
-    public function hasValidVat(Entity\Organisation $organisation): bool {
-        if (is_null($organisation->getFinancial()))
-        {
+    public function hasValidVat(Entity\Organisation $organisation): bool
+    {
+        if (is_null($organisation->getFinancial())) {
             return false;
         }
 

@@ -20,6 +20,7 @@ namespace Organisation\Form;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Organisation\Entity;
 use Organisation\Service\ParentService;
+use Program\Entity\Program;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
@@ -92,6 +93,28 @@ class ParentFilter extends Form
                     'inline'         => true,
                     'object_manager' => $parentService->getEntityManager(),
                     'label'          => _("txt-type"),
+                ],
+            ]
+        );
+
+        $filterFieldset->add(
+            [
+                'type'    => EntityMultiCheckbox::class,
+                'name'    => 'program',
+                'options' => [
+                    'target_class'   => Program::class,
+                    'find_method'    => [
+                        'name'   => 'findBy',
+                        'params' => [
+                            'criteria' => [],
+                            'orderBy'  => [
+                                'program' => 'ASC',
+                            ],
+                        ],
+                    ],
+                    'inline'         => true,
+                    'object_manager' => $parentService->getEntityManager(),
+                    'label'          => _("txt-program"),
                 ],
             ]
         );

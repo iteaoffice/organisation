@@ -98,6 +98,91 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
+     * @return \Zend\Http\PhpEnvironment\Response|\Zend\Stdlib\ResponseInterface
+     */
+    public function listNoMemberExportAction()
+    {
+        $filterPlugin = $this->getOrganisationFilter();
+        $parentQuery = $this->getParentService()
+            ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
+
+        /** @var Entity\OParent[] $parents */
+        $parents = $parentQuery->getResult();
+
+        // Open the output stream
+        $fh = fopen('php://output', 'wb');
+
+
+        ob_start();
+
+        fputcsv(
+            $fh,
+            [
+                'id',
+                'name',
+                'country',
+                'iso3',
+                'type',
+                'status',
+                'projects',
+                'contact',
+                'email',
+                'street and number',
+                'zip',
+                'city',
+                'country',
+            ]
+        );
+
+        if (!empty($parents)) {
+            foreach ($parents as $parent) {
+                $projects = [];
+                foreach ($parent->getParentOrganisation() as $parentOrganisation) {
+                    foreach ($parentOrganisation->getAffiliation() as $affiliation) {
+                        $projects[] = $affiliation->getProject()->parseFullName();
+                    }
+                }
+
+                $address = $this->getContactService()->getMailAddress($parent->getContact());
+
+                fputcsv(
+                    $fh,
+                    [
+                        $parent->getId(),
+                        $parent->getOrganisation()->getOrganisation(),
+                        $parent->getOrganisation()->getCountry()->getCountry(),
+                        $parent->getOrganisation()->getCountry()->getIso3(),
+                        $parent->getType()->getType(),
+                        $parent->getStatus()->getStatus(),
+                        implode($projects, ';'),
+                        $parent->getContact()->parseFullName(),
+                        $parent->getContact()->getEmail(),
+                        !is_null($address) ? $address->getAddress() : '',
+                        !is_null($address) ? $address->getZipCode() : '',
+                        !is_null($address) ? $address->getCity() : '',
+                        !is_null($address) ? $address->getCountry()->getCountry() : '',
+                    ]
+                );
+            }
+        }
+
+        $string = ob_get_clean();
+
+        $string = mb_convert_encoding($string, 'UTF-16LE', 'UTF8');
+
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine('Content-Type', 'text/csv');
+        $headers->addHeaderLine('Content-Disposition', "attachment; filename=\"exoport-members-with-are-no-member-and-have-no-doa.csv\"");
+        $headers->addHeaderLine('Accept-Ranges', 'bytes');
+        $headers->addHeaderLine('Content-Length', strlen($string));
+
+        $response->setContent($string);
+
+        return $response;
+    }
+
+    /**
      * Create a new template.
      *
      * @return \Zend\View\Model\ViewModel

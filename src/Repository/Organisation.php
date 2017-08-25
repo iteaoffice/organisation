@@ -124,17 +124,21 @@ class Organisation extends EntityRepository
         $subSelect2->from(Entity\Organisation::class, 'organisation_entity_organisation2');
         $subSelect2->where('organisation_entity_organisation.country = organisation_entity_organisation2.country');
         $subSelect2->andWhere(
-            $subSelect2->expr()->like('organisation_entity_organisation2.organisation',
+            $subSelect2->expr()->like(
+                'organisation_entity_organisation2.organisation',
                 $subSelect2->expr()->concat(
                     $subSelect2->expr()->literal('%'),
                     'organisation_entity_organisation.organisation',
-                    $subSelect2->expr()->literal('%'))
+                    $subSelect2->expr()->literal('%')
+                )
             )
         );
 
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('organisation_entity_organisation organisation',
-            '(' . $subSelect2->getDQL() . ') amount');
+        $queryBuilder->select(
+            'organisation_entity_organisation organisation',
+            '(' . $subSelect2->getDQL() . ') amount'
+        );
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
         $queryBuilder->having('amount > 1');
@@ -170,7 +174,6 @@ class Organisation extends EntityRepository
             default:
                 $queryBuilder->orderBy('general_entity_country.iso3', 'ASC');
                 $queryBuilder->orderBy('organisation_entity_organisation.organisation', 'ASC');
-
         }
 
         return $queryBuilder->getQuery();

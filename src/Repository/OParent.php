@@ -43,7 +43,10 @@ class OParent extends EntityRepository
         $queryBuilder->leftJoin('organisation_entity_parent.status', 'parent_entity_status');
         $queryBuilder->leftJoin('organisation_entity_parent.financial', 'parent_entity_financial');
         $queryBuilder->leftJoin('parent_entity_financial.organisation', 'organisation_entity_financial_organisation');
-        $queryBuilder->leftJoin('organisation_entity_financial_organisation.financial', 'organisation_entity_financial_organisation_financial');
+        $queryBuilder->leftJoin(
+            'organisation_entity_financial_organisation.financial',
+            'organisation_entity_financial_organisation_financial'
+        );
         $queryBuilder->join('organisation_entity_parent.contact', 'contact_entity_contact');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
 
@@ -207,12 +210,21 @@ class OParent extends EntityRepository
         $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
         $queryBuilder->join('organisation_entity_parent.type', 'organisation_entity_parent_type');
 
-        //Make a second sub-select to cancel out organisations which have a financial organisation
+        //Make a second subselect to filter on parents which are active in projects
         $subSelect2 = $this->_em->createQueryBuilder();
         $subSelect2->select('projectParent');
         $subSelect2->from(Affiliation::class, 'affiliation_entity_affiliation');
-        $subSelect2->join('affiliation_entity_affiliation.parentOrganisation', 'organisation_entity_parent_organisation');
+        $subSelect2->join(
+            'affiliation_entity_affiliation.parentOrganisation',
+            'organisation_entity_parent_organisation'
+        );
         $subSelect2->join('organisation_entity_parent_organisation.parent', 'projectParent');
+        $subSelect2->join('affiliation_entity_affiliation.project', 'project_entity_project');
+        $subSelect2->join('project_entity_project.call', 'program_entity_call');
+
+        if (array_key_exists('program', $filter)) {
+            $subSelect2->andWhere($queryBuilder->expr()->in('program_entity_call.program', $filter['program']));
+        }
 
         $queryBuilder->andWhere(
             $queryBuilder->expr()

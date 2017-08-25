@@ -363,6 +363,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'list-no-member-export'                    => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list/no-member-doa-export[/f-:encodedFilter].csv',
+                                    'defaults' => [
+                                        'action' => 'list-no-member-export',
+                                    ],
+                                ],
+                            ],
                             'import'                                   => [
                                 'type'         => 'Literal',
                                 'options'      => [
