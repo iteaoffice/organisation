@@ -359,7 +359,7 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setType(Parent\Type $type): OParent
+    public function setType(parent\Type $type): OParent
     {
         $this->type = $type;
 
@@ -379,7 +379,7 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setStatus(Parent\Status $status): OParent
+    public function setStatus(parent\Status $status): OParent
     {
         $this->status = $status;
 

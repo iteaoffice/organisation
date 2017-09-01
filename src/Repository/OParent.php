@@ -317,7 +317,6 @@ class OParent extends EntityRepository
         $queryBuilder->addOrderBy('organisation_entity_parent.status', 'ASC');
         $queryBuilder->addOrderBy('organisation_entity_parent.type', 'DESC');
 
-
         return $queryBuilder->getQuery()->getResult();
     }
 

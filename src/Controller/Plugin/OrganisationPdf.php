@@ -17,10 +17,12 @@ declare(strict_types=1);
 
 namespace Organisation\Controller\Plugin;
 
+use setasign\Fpdi\TcpdfFpdi;
+
 /**
  * Class PDF.
  */
-class OrganisationPdf extends \FPDI
+class OrganisationPdf extends TcpdfFpdi
 {
     /**
      * "Remembers" the template id of the imported page.
