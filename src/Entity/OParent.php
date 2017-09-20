@@ -165,6 +165,7 @@ class OParent extends AbstractEntity
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="parent", cascade={"persist"})
      * @ORM\JoinColumns({
+     *
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      * })
      * @Annotation\Type("Organisation\Form\Element\Organisation")
