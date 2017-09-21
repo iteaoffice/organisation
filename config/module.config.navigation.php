@@ -46,6 +46,16 @@ return [
                                             ],
                                         ],
                                     ],
+                                    'manage-web'            => [
+                                        'label'   => _('txt-nav-manage-web'),
+                                        'route'   => 'zfcadmin/organisation/manage-web',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
                                     'financial'       => [
                                         'label'   => _('txt-nav-edit-financial'),
                                         'route'   => 'zfcadmin/organisation/financial/edit',

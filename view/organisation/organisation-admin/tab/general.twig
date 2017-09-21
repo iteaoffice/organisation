@@ -5,10 +5,12 @@
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-name") }}</dt>
             <dd>{{ organisation.organisation }}</dd>
+            <dt>{{ translate("txt-organisation-on-public-website") }}</dt>
+            <dd>{{ organisationLink(organisation,'view','name') }}</dd>
             <dt>{{ translate("txt-description") }}</dt>
             <dd>{{ organisation.description|raw }}</dd>
             <dt>{{ translate("txt-organisation-type") }}</dt>
-            <dd>{{ organisation.type }}</dd>
+            <dd>{{ organisationTypeLink(organisation.type,'view','description') }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
             <dd>{{ organisation.country }}</dd>
             <dt>{{ translate("txt-contacts") }}</dt>
@@ -18,9 +20,9 @@
             </dd>
             <dt>{{ translate("txt-projects") }}</dt>
             <dd>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
-            <dt>{{ translate("txt-websites") }}</dt>
+            <dt>{{ translate("txt-websites") }} {{ organisationLink(organisation, 'manage-web', 'icon') }}</dt>
             {% for web in organisation.web %}
-                <dd><a href="{{ web.web }}">{{ web.web }}</a></dd>
+                <dd><a href="{{ web.web }}">{{ web.web }}</a> {% if web.isMain %}<i class="fa fa-help fa-thumb-tack" title="{{ translate("txt-website-is-main") }}"></i>{% endif %}</dd>
             {% else %}
                 <dd>{{ translate("txt-no-website-known") }}</dd>
             {% endfor %}

@@ -19,13 +19,17 @@ use Invoice\Entity\Invoice;
 use Invoice\Form\InvoiceFilter;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
+use Organisation\Entity\Web;
 use Organisation\Form\AddAffiliation;
+use Organisation\Form\ManageWeb;
 use Organisation\Form\OrganisationFilter;
 use Organisation\Form\OrganisationMerge;
+use Zend\Form\Fieldset;
 use Zend\Http\Request;
 use Zend\Log\Logger;
 use Zend\Log\Writer\Stream;
 use Zend\Paginator\Paginator;
+use Zend\Stdlib\ArrayUtils;
 use Zend\Validator\File\ImageSize;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\JsonModel;
@@ -40,7 +44,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function listAction()
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
@@ -69,7 +73,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function listDuplicateAction()
+    public function listDuplicateAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
@@ -96,9 +100,9 @@ class OrganisationAdminController extends OrganisationAbstractController
     }
 
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
@@ -282,6 +286,101 @@ class OrganisationAdminController extends OrganisationAbstractController
             'organisation' => $organisation,
             'form'         => $form,
         ]);
+    }
+
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Exception
+     */
+    public function manageWebAction()
+    {
+        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
+
+        if (is_null($organisation)) {
+            return $this->notFoundAction();
+        }
+
+
+        $form = new ManageWeb($organisation);
+        //Prepare an array for population
+        $population = [];
+        foreach ($organisation->getWeb() as $web) {
+            $population['webFieldset'][$web->getId()] = ['delete' => ''];
+
+            /** @var Fieldset $webFieldset */
+            $webFieldset = $form->get('webFieldset');
+
+            //inject the existing webs in the array
+            foreach ($webFieldset as $webId => $webElement) {
+                if ($webId === $web->getId()) {
+                    $webElement->get('web')->setValue($web->getWeb());
+                    $webElement->get('main')->setValue((int) $web->getMain());
+                }
+            }
+        }
+
+        $data = ArrayUtils::merge($population, $this->getRequest()->getPost()->toArray(), true);
+
+
+        $form->setInputFilter(new \Organisation\InputFilter\ManageWeb($organisation));
+        $form->setData($data);
+
+        if ($this->getRequest()->isPost()) {
+            if (isset($data['cancel'])) {
+                return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $this->params('id')]);
+            }
+
+            /**
+             *
+             */
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                if (isset($data['webFieldset']) && is_array($data['webFieldset'])) {
+                    foreach ($data['webFieldset'] as $webId => $information) {
+                        /**
+                         * //Find the corresponding web
+                         *
+                         * @var $web Web
+                         */
+                        $web = $this->getOrganisationService()->findEntityById(Web::class, $webId);
+
+                        if (isset($information['delete']) && $information['delete'] === '1') {
+                            $this->getOrganisationService()->removeEntity($web);
+                        } else {
+                            $web->setOrganisation($organisation);
+                            $web->setWeb($information['web']);
+                            $web->setMain((int)$information['main']);
+                            $this->getOrganisationService()->updateEntity($web);
+                        }
+                    }
+                }
+
+                //Handle the new web (if provided)
+                if (!empty($data['web'])) {
+                    $web = new Web();
+                    $web->setOrganisation($organisation);
+                    $web->setWeb($data['web']);
+                    $web->setMain((int)$data['main']);
+
+                    $this->getOrganisationService()->newEntity($web);
+                }
+
+                if (isset($data['submit'])) {
+                    return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $this->params('id')]);
+                }
+
+                return $this->redirect()->toRoute('zfcadmin/organisation/manage-web', ['id' => $this->params('id')]);
+            }
+        }
+
+        return new ViewModel(
+            [
+                'organisationService' => $this->getOrganisationService(),
+                'organisation'        => $organisation,
+                'form'           => $form,
+            ]
+        );
     }
 
 

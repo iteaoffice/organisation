@@ -391,8 +391,20 @@ class Organisation extends EntityRepository
      *
      * @return Entity\Organisation[]|null
      */
-    public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress)
+    public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress): array
     {
+        /*
+                * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
+                */
+        $validateEmail = new EmailAddress();
+        $validateEmail->isValid($emailAddress);
+        $hostname = $validateEmail->hostname;
+
+        //Skip this function when we have yahoo, hotmail or gmail
+        if (in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
+            return [];
+        }
+
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->distinct('organisation_entity_organisation.id');
@@ -403,20 +415,16 @@ class Organisation extends EntityRepository
         $subSelect->select('organisation_entity_web_organisation');
         $subSelect->from(Entity\Web::class, 'organisation_entity_web');
         $subSelect->join('organisation_entity_web.organisation', 'organisation_entity_web_organisation');
-        $subSelect->andWhere('organisation_entity_web.web LIKE :domain');
+        $subSelect->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain'),
+                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain2')
+            )
+        );
 
-        //Make a second sub-select to cancel out organisations without a domain
-        $subSelect2 = $this->_em->createQueryBuilder();
-        $subSelect2->select('organisation_entity_web_organisation2');
-        $subSelect2->from(Entity\Web::class, 'organisation_entity_web2');
-        $subSelect2->join('organisation_entity_web2.organisation', 'organisation_entity_web_organisation2');
 
-        /*
-         * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
-         */
-        $validateEmail = new EmailAddress();
-        $validateEmail->isValid($emailAddress);
-        $queryBuilder->setParameter('domain', "%" . $validateEmail->hostname . "%");
+        $queryBuilder->setParameter('domain', 'http://' . $hostname);
+        $queryBuilder->setParameter('domain2', 'https://' . $hostname);
         //We want a match on the email address
         $queryBuilder->andWhere(
             $queryBuilder->expr()->in('organisation_entity_organisation.id', $subSelect->getDQL())
@@ -427,6 +435,7 @@ class Organisation extends EntityRepository
          */
         $queryBuilder->andWhere('organisation_entity_organisation.country = ?3');
         $queryBuilder->setParameter(3, $country->getId());
+
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -462,12 +471,23 @@ class Organisation extends EntityRepository
     }
 
     /**
-     * @param         $emailAddress
-     *
-     * @return Entity\Organisation[]|null
+     * @param string $emailAddress
+     * @return array
      */
-    public function findOrganisationByEmailAddress($emailAddress)
+    public function findOrganisationByEmailAddress(string $emailAddress): array
     {
+        /**
+         * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
+         */
+        $validateEmail = new EmailAddress();
+        $validateEmail->isValid($emailAddress);
+        $hostname = $validateEmail->hostname;
+
+        //Skip this function when we have yahoo, hotmail or gmail
+        if (in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
+            return [];
+        }
+
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->distinct('organisation_entity_organisation.id');
@@ -485,17 +505,17 @@ class Organisation extends EntityRepository
         $subSelect->select('organisation_entity_web_organisation');
         $subSelect->from(Entity\Web::class, 'organisation_entity_web');
         $subSelect->join('organisation_entity_web.organisation', 'organisation_entity_web_organisation');
-        $subSelect->andWhere('organisation_entity_web.web LIKE :domain');
+
         $subSelect->andWhere(
-            $queryBuilder->expr()->notIn('organisation_entity_web.web', ['gmail.com', 'hotmail.com', 'yahoo.com'])
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain'),
+                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain2')
+            )
         );
 
-        /**
-         * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
-         */
-        $validateEmail = new EmailAddress();
-        $validateEmail->isValid($emailAddress);
-        $queryBuilder->setParameter('domain', "%" . $validateEmail->hostname . "%");
+        $queryBuilder->setParameter('domain', 'http://' . $hostname);
+        $queryBuilder->setParameter('domain2', 'https://' . $hostname);
+
         //We want a match on the email address
         $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_organisation.id', $subSelect->getDQL()));
 
@@ -510,11 +530,14 @@ class Organisation extends EntityRepository
      * @param string $name
      * @param Country $country
      * @param bool $onlyMain
-     *
-     * @return Entity\Organisation|null
+     * @return null|Entity\Organisation
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findOrganisationByNameCountry(string $name, Country $country, bool $onlyMain = true)
-    {
+    public function findOrganisationByNameCountry(
+        string $name,
+        Country $country,
+        bool $onlyMain = true
+    ):?Entity\Organisation {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->distinct('organisation_entity_organisation.id');
@@ -555,7 +578,7 @@ class Organisation extends EntityRepository
      *
      * @return Entity\Organisation[]
      */
-    public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search)
+    public function findOrganisationByMeetingAndDescriptionSearch(Meeting $meeting, Parameters $search): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation', 'partial l.{id}', 'partial ct.{id,extension}');
@@ -614,7 +637,7 @@ class Organisation extends EntityRepository
      * @param Entity\Organisation $organisation
      * @return Entity\Organisation[]
      */
-    public function findMergeCandidatesFor(Entity\Organisation $organisation)
+    public function findMergeCandidatesFor(Entity\Organisation $organisation): array
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->select('o');

@@ -70,6 +70,7 @@ return array(
     'organisation/organisation-admin/tab/invoices'              => __DIR__ . '//view/organisation/organisation-admin/tab/invoices.twig',
     'organisation/organisation-admin/tab/parent'                => __DIR__ . '//view/organisation/organisation-admin/tab/parent.twig',
     'organisation/organisation-admin/list'                      => __DIR__ . '//view/organisation/organisation-admin/list.twig',
+    'organisation/organisation-admin/manage-web'                => __DIR__ . '//view/organisation/organisation-admin/manage-web.twig',
     'organisation/organisation-admin/add-affiliation'           => __DIR__ . '//view/organisation/organisation-admin/add-affiliation.twig',
     'organisation/note/edit'                                    => __DIR__ . '//view/organisation/note/edit.twig',
     'organisation/note/new'                                     => __DIR__ . '//view/organisation/note/new.twig',

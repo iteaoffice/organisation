@@ -22,6 +22,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
+use Project\Entity\Version\Version;
 
 /**
  * @category    Parent
@@ -221,6 +222,22 @@ class OParent extends EntityRepository
         $subSelect2->join('organisation_entity_parent_organisation.parent', 'projectParent');
         $subSelect2->join('affiliation_entity_affiliation.project', 'project_entity_project');
         $subSelect2->join('project_entity_project.call', 'program_entity_call');
+        $subSelect2->andWhere($subSelect2->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
+
+        //The project should at least have an approved FPP
+        //Select projects based on a type
+        $subSelect = $this->_em->createQueryBuilder();
+        $subSelect->select('activeProject.id');
+        $subSelect->from(Version::class, 'activeProjectVersion');
+        $subSelect->join('activeProjectVersion.project', 'activeProject');
+        $subSelect->where('activeProjectVersion.approved = :approved');
+        $subSelect->andWhere('activeProjectVersion.versionType = :versionType');
+
+        $subSelect2->andWhere($queryBuilder->expr()->in('project_entity_project', $subSelect->getDQL()));
+
+        $queryBuilder->setParameter('approved', Version::STATUS_APPROVED);
+        $queryBuilder->setParameter('versionType', \Project\Entity\Version\Type::TYPE_FPP);
+
 
         if (array_key_exists('program', $filter)) {
             $subSelect2->andWhere($queryBuilder->expr()->in('program_entity_call.program', $filter['program']));
@@ -234,7 +251,11 @@ class OParent extends EntityRepository
         //Exclude the free-riders
         $queryBuilder->andWhere(
             $queryBuilder->expr()
-                ->notIn('organisation_entity_parent_status.id', [Entity\Parent\Status::STATUS_MEMBER])
+                ->notIn('organisation_entity_parent_status.id', [
+                    Entity\Parent\Status::STATUS_MEMBER,
+                    Entity\Parent\Status::STATUS_ECSEL_ENIAC_DOA,
+                    Entity\Parent\Status::STATUS_PENTA_DOA
+                ])
         );
 
         if (array_key_exists('search', $filter)) {

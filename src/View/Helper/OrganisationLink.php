@@ -137,6 +137,16 @@ class OrganisationLink extends AbstractLink
                     )
                 );
                 break;
+            case 'manage-web':
+                $this->setRouter('zfcadmin/organisation/manage-web');
+                $this->setText(
+                    sprintf(
+                        $this->translate("txt-manage-web-organisation-%s"),
+                        $this->getOrganisationService()
+                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
+                    )
+                );
+                break;
             case 'edit-financial':
                 $this->setRouter('zfcadmin/organisation/financial/edit');
                 $this->setText(

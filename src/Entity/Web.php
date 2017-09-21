@@ -24,6 +24,18 @@ class Web extends AbstractEntity
 {
     const NOT_MAIN = 0;
     const MAIN = 1;
+
+    /**
+     * Templates for the internal templates.
+     *
+     * @var array
+     */
+    protected static $mainTemplates
+        = [
+            self::NOT_MAIN => 'txt-not-main-web-address',
+            self::MAIN     => 'txt-main-web-address',
+        ];
+
     /**
      * @ORM\Column(name="web_id", type="integer", nullable=false)
      * @ORM\Id
@@ -93,6 +105,22 @@ class Web extends AbstractEntity
     public function __isset($property)
     {
         return isset($this->$property);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMain(): bool
+    {
+        return $this->main === self::MAIN;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getMainTemplates(): array
+    {
+        return self::$mainTemplates;
     }
 
     /**

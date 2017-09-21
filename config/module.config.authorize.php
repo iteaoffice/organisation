@@ -32,6 +32,7 @@ return [
                 ['route' => 'zfcadmin/organisation/list-duplicate', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/organisation/new', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/organisation/edit', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/organisation/manage-web', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/organisation/merge', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/organisation/add-affiliation', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/organisation/view', 'roles' => [Access::ACCESS_OFFICE]],

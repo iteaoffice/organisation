@@ -172,6 +172,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'manage-web'            => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/manage-web/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'manage-web',
+                                    ],
+                                ],
+                            ],
                             'add-affiliation' => [
                                 'type'    => 'Segment',
                                 'options' => [

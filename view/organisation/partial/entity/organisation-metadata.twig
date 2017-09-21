@@ -8,7 +8,7 @@
             {{ countryLink(organisation.country,'view', 'name') }}</dd>
         <dt>{{ translate("txt-website") }}</dt>
         {% for web in organisation.web %}
-            <dd><a href="http://{{ web }}">{{ web }}</a></dd>
+            <dd><a href="{{ web }}">{{ web }}</a></dd>
         {% endfor %}
     </dl>
 </div>

@@ -393,7 +393,7 @@ class OrganisationService extends AbstractService
         $name,
         Country $country,
         $emailAddress
-    ) {
+    ): array {
         /** @var Repository\Organisation $repository */
         $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
 
@@ -426,11 +426,11 @@ class OrganisationService extends AbstractService
         $validateEmail->isValid($email);
         $organisationWeb = new Entity\Web();
         $organisationWeb->setOrganisation($organisation);
-        $organisationWeb->setWeb($validateEmail->hostname);
+        $organisationWeb->setWeb('http://' . $validateEmail->hostname);
         $organisationWeb->setMain(Entity\Web::MAIN);
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
-        if (!in_array($organisation->getWeb(), ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'])) {
+        if (!in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
             $this->newEntity($organisationWeb);
         }
 
@@ -519,7 +519,7 @@ class OrganisationService extends AbstractService
      *
      * @return bool
      */
-    public function hasDoaForProgram(Entity\Organisation $organisation, Program $program)
+    public function hasDoaForProgram(Entity\Organisation $organisation, Program $program): bool
     {
         foreach ($organisation->getProgramDoa() as $doa) {
             if ($doa->getProgram()->getId() === $program->getId()) {

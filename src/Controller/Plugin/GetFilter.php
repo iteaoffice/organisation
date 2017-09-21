@@ -37,7 +37,7 @@ class GetFilter extends AbstractOrganisationPlugin
         $direction = $this->getRequest()->getQuery('direction');
 
         // Take the filter from the URL
-        $filter = unserialize(base64_decode($encodedFilter));
+        $filter = (array) json_decode(base64_decode($encodedFilter));
 
         // If the form is submitted, refresh the URL
         if ($this->getRequest()->isGet() && !is_null($this->getRequest()->getQuery('submit'))) {
@@ -103,6 +103,6 @@ class GetFilter extends AbstractOrganisationPlugin
      */
     public function getHash()
     {
-        return base64_encode(serialize($this->filter));
+        return base64_encode(json_encode($this->filter));
     }
 }
