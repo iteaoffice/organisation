@@ -572,11 +572,11 @@ class Organisation extends AbstractEntity
     }
 
     /**
-     * @param \Organisation\Entity\OParent $parent
+     * @param \Organisation\Entity\OParent|null $parent
      *
      * @return Organisation
      */
-    public function setParent(\Organisation\Entity\OParent $parent): Organisation
+    public function setParent(?\Organisation\Entity\OParent $parent): Organisation
     {
         $this->parent = $parent;
 
@@ -612,11 +612,11 @@ class Organisation extends AbstractEntity
     }
 
     /**
-     * @param \Organisation\Entity\Parent\Organisation
+     * @param \Organisation\Entity\Parent\Organisation|null
      *
      * @return Organisation
      */
-    public function setParentOrganisation($parentOrganisation)
+    public function setParentOrganisation(?\Organisation\Entity\Parent\Organisation $parentOrganisation)
     {
         $this->parentOrganisation = $parentOrganisation;
 
