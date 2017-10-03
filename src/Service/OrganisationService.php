@@ -50,7 +50,7 @@ class OrganisationService extends AbstractService
 
         /** When the name is not found in the organisation */
         if (strpos($givenName, $organisation) === false) {
-            return sprintf("!%s", $givenName);
+            return sprintf('!%s', $givenName);
         }
 
         return str_replace($organisation, '~', $givenName);

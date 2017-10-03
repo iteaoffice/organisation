@@ -337,7 +337,6 @@ class MergeOrganisation extends AbstractPlugin
             $target->setNote(new ArrayCollection($notes));
             $this->entityManager->persist($organisationNote);
             $this->entityManager->flush();
-
         } catch (ORMException $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
             if ($logger instanceof LoggerInterface) {

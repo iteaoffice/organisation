@@ -46,31 +46,21 @@ abstract class ImageAbstract extends AbstractViewHelper
     protected $lightBox = false;
 
     /**
-     * This function produces the link in the end.
-     *
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function createImageUrl()
+    public function createImageUrl(): string
     {
         /**
          * @var Url $url
          */
         $url = $this->getHelperPluginManager()->get('url');
-        /**
-         * @var array $config
-         */
-        $config = $this->getServiceManager()->get('Config');
 
-        $cdn = null;
-        if (isset($config['cdn']) && $config['cdn']['enable']) {
-            $cdn = $config['cdn']['address'];
-        }
-
-        $imageUrl = '<img src="%s%s" id="%s" class="%s">';
+        $imageUrl = '<img src="%s" id="%s" class="%s">';
 
         $image = sprintf(
             $imageUrl,
-            $cdn,
             $url($this->router, $this->routerParams),
             $this->imageId,
             implode(' ', $this->classes)
@@ -78,9 +68,9 @@ abstract class ImageAbstract extends AbstractViewHelper
 
         if (!$this->lightBox) {
             return $image;
-        } else {
-            return '<a href="' . $url($this->router, $this->routerParams) . '" data-lightbox="itea">' . $image . '</a>';
         }
+
+        return '<a href="' . $url($this->router, $this->routerParams) . '" data-lightbox="itea">' . $image . '</a>';
     }
 
     /**

@@ -15,6 +15,7 @@ namespace Organisation\View\Helper;
 
 use Organisation\Entity\Organisation;
 use Project\Entity\Logo;
+use Zend\View\Helper\Url;
 
 /**
  * Class OrganisationLogo
@@ -27,13 +28,17 @@ class OrganisationLogo extends ImageAbstract
      * @param null $class
      * @param bool $silent
      * @param null $width
+     * @param bool $onlyUrl
      * @return string
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(
         Organisation $organisation,
         $class = null,
         $silent = true,
-        $width = null
+        $width = null,
+        $onlyUrl = false
     ): string {
         $logos = $organisation->getLogo();
         if ($logos->isEmpty()) {
@@ -62,6 +67,14 @@ class OrganisationLogo extends ImageAbstract
 
         if (!is_null($width)) {
             $this->addRouterParam('width', $width);
+        }
+
+        if ($onlyUrl) {
+            /**
+             * @var Url $url
+             */
+            $url = $this->getHelperPluginManager()->get('url');
+            return $url($this->getRouter(), $this->getRouterParams());
         }
 
         return $this->createImageUrl();
