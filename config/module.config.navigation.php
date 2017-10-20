@@ -212,7 +212,7 @@ return [
                                                 'id' => Organisation\Entity\Parent\Organisation::class,
                                             ],
                                             'invokables' => [
-                                                Organisation\Navigation\Invokable\OrganisationLabel::class,
+                                                Organisation\Navigation\Invokable\Parent\OrganisationLabel::class,
                                             ],
                                         ],
                                         'pages'   => [

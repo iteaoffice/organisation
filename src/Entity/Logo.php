@@ -27,10 +27,6 @@ use Zend\Form\Annotation;
 class Logo extends AbstractEntity
 {
     /**
-     *
-     */
-    const HASH_KEY = '49fksdr80sdf83409jsadvkljasruwasef';
-    /**
      * @ORM\Column(name="logo_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -105,32 +101,6 @@ class Logo extends AbstractEntity
         return isset($this->$property);
     }
 
-    /**
-     * @param null $width
-     * @return string
-     */
-    public function getCacheFileName($width = null): string
-    {
-        $cacheDir = __DIR__ . '/../../../../../public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR
-            . ITEAOFFICE_HOST . DIRECTORY_SEPARATOR . 'organisation-logo';
-
-        return $cacheDir . DIRECTORY_SEPARATOR . $this->getFileName($width);
-    }
-
-    /**
-     * @param null $width
-     * @return string
-     */
-    public function getFileName($width = null): string
-    {
-        return sprintf(
-            '%s-%s-%s.%s',
-            $this->getId(),
-            $this->getHash(),
-            $width,
-            $this->getContentType()->getExtension()
-        );
-    }
 
     /**
      * @return mixed
@@ -141,22 +111,13 @@ class Logo extends AbstractEntity
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
      */
     public function setId($id)
     {
         $this->id = $id;
     }
 
-    /**
-     * Although an alternative does not have a clear hash, we can create one based on the id;.
-     *
-     * @return string
-     */
-    public function getHash(): string
-    {
-        return hash('sha512', $this->id . self::HASH_KEY);
-    }
 
     /**
      * @return \General\Entity\ContentType

@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-edit-parent-organisation")) %}
 
-<h1>{{ translate("txt-edit-parent-organisation") }}</h1>
+<h1 class="display-4">{{ translate("txt-edit-parent-organisation") }}</h1>
 
 {% do form.prepare() %}
 {% do form.setAttribute('class','form-horizontal') %}
@@ -19,7 +19,9 @@
 <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
-        {{ ztbformelement(form.get('delete')) }}
+        {% if form.has('delete') %}
+            {{ ztbformelement(form.get('delete')) }}
+        {% endif %}
         {{ ztbformelement(form.get('cancel')) }}
     </div>
 </div>

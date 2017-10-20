@@ -24,6 +24,7 @@ $config = [
         'factories' => [
             Controller\JsonController::class                  => Controller\Factory\ControllerFactory::class,
             Controller\NoteController::class                  => Controller\Factory\ControllerFactory::class,
+            Controller\ImageController::class                  => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationAdminController::class     => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationController::class          => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationFinancialController::class => Controller\Factory\ControllerFactory::class,
@@ -44,7 +45,6 @@ $config = [
             'renderOverviewExtraVariableContributionSheet' => Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class,
             'renderOverviewVariableContributionSheet'      => Controller\Plugin\RenderOverviewVariableContributionSheet::class,
             'mergeOrganisation'                            => Controller\Plugin\MergeOrganisation::class,
-
         ],
         'factories' => [
             Controller\Plugin\GetFilter::class                                    => Controller\Factory\PluginFactory::class,

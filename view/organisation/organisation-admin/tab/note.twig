@@ -1,7 +1,7 @@
 <h2>{{ translate("txt-notes") }} {{ organisationNoteLink(null, organisation, 'new', 'button') }}</h2>
 
 {% if organisation.note|length > 0 %}
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover table-condensed table-sm">
         <thead>
         <tr>
             <th>{{ translate('txt-date-created') }}</th>

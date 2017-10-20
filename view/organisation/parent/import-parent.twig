@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-import-parents")) %}
 
-<h1>{{ translate("txt-import-parents") }}</h1>
+<h1 class="display-4">{{ translate("txt-import-parents") }}</h1>
 
 {% do form.prepare() %}
 
@@ -49,7 +49,7 @@
 
 
     {% if  handleImport.getParents()|length > 0 %}
-        <table class="table table-hover table-striped table-condensed">
+        <table class="table table-hover table-striped table-condensed table-sm">
             <thead>
             <tr>
                 <th></th>

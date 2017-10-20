@@ -29,6 +29,7 @@ return array(
     'organisation/parent/import-parent'                         => __DIR__ . '//view/organisation/parent/import-parent.twig',
     'organisation/parent/new'                                   => __DIR__ . '//view/organisation/parent/new.twig',
     'organisation/parent/overview-extra-variable-contribution'  => __DIR__ . '//view/organisation/parent/overview-extra-variable-contribution.twig',
+    'organisation/parent/edit-financial'                        => __DIR__ . '//view/organisation/parent/edit-financial.twig',
     'organisation/parent/view'                                  => __DIR__ . '//view/organisation/parent/view.twig',
     'organisation/parent/tab/organisation'                      => __DIR__ . '//view/organisation/parent/tab/organisation.twig',
     'organisation/parent/tab/financial'                         => __DIR__ . '//view/organisation/parent/tab/financial.twig',

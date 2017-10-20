@@ -33,11 +33,11 @@
             <dt>{{ translate("txt-require-purchace-order") }}</dt>
             <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
             <dt>{{ translate("txt-iban") }}</dt>
-            <dd>{{ financial.iban }}</dd>
+            <dd>{{ financial.iban|default(translate("txt-not-provided")) }}</dd>
             <dt>{{ translate("txt-bic") }}</dt>
-            <dd>{{ financial.bic }}</dd>
+            <dd>{{ financial.bic|default(translate("txt-not-provided")) }}</dd>
             <dt>{{ translate("txt-supplier-number") }}</dt>
-            <dd>{{ financial.supplierNumber }}</dd>
+            <dd>{{ financial.supplierNumber|default(translate("txt-not-provided")) }}</dd>
             <dt>{{ translate("txt-amount-of-invoices") }}</dt>
             <dd>
                 <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ organisation.invoice.count() }}</a>

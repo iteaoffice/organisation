@@ -1,8 +1,8 @@
 <div class="pull-right">
-    {{ organisationLogo(organisation, null, true, 200) }}
+    {{ organisationLogo(organisation, null, false, 200) }}
 </div>
 
-<h1>{{ organisation }}</h1>
+<h1 class="display-4">{{ organisation }}</h1>
 
 {% if organisation.description %}
     <h3>{{ translate("txt-description") }}</h3>

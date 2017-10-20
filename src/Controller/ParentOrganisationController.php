@@ -31,7 +31,7 @@ class ParentOrganisationController extends OrganisationAbstractController
 {
 
     /**
-     * @return array|ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
@@ -51,9 +51,13 @@ class ParentOrganisationController extends OrganisationAbstractController
         $form->get($organisation->get('underscore_entity_name'))->get('organisation')
             ->injectOrganisation($organisation->getOrganisation());
 
+        if (!$this->getParentService()->canDeleteParentOrganisation($organisation)) {
+            $form->remove('delete');
+        }
+
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent/organisation/view',
                     [
                         'id' => $organisation->getId(),
@@ -61,11 +65,41 @@ class ParentOrganisationController extends OrganisationAbstractController
                 );
             }
 
+            if (isset($data['delete']) && $this->getParentService()->canDeleteParentOrganisation($organisation)) {
+
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-organisation-%s-has-been-removed-from-the-parent-successfully"),
+                            $organisation
+                        )
+                    );
+
+                $this->getParentService()->removeEntity($organisation);
+
+                return $this->redirect()->toRoute(
+                    'zfcadmin/parent/view',
+                    [
+                        'id' => $organisation->getParent()->getId(),
+                    ]
+                );
+            }
+
             if ($form->isValid()) {
-                /* @var $organisation Entity\Organisation */
+                /* @var  Entity\Parent\Organisation $organisation */
                 $organisation = $form->getData();
 
                 $organisation = $this->getParentService()->newEntity($organisation);
+
+                $this->flashMessenger()->setNamespace('success')
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-organisation-%s-has-been-updated-successfully"),
+                            $organisation
+                        )
+                    );
+
+
                 $this->redirect()->toRoute(
                     'zfcadmin/parent/organisation/view',
                     [

@@ -621,6 +621,15 @@ class ParentService extends AbstractService
     }
 
     /**
+     * @param Entity\Parent\Organisation $organisation
+     * @return bool
+     */
+    public function canDeleteParentOrganisation(Entity\Parent\Organisation $organisation): bool
+    {
+        return $organisation->getAffiliation()->isEmpty();
+    }
+
+    /**
      * @param Entity\OParent $parent
      * @param bool $autoGenerate
      * @return ArrayCollection

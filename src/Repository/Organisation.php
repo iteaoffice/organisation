@@ -269,9 +269,9 @@ class Organisation extends EntityRepository
      * @param bool $onlyActiveProject
      * @param bool $onlyActivePartner
      *
-     * @return \Doctrine\ORM\Query
+     * @return Query
      */
-    public function findOrganisations($onlyActiveProject, $onlyActivePartner)
+    public function findOrganisations($onlyActiveProject, $onlyActivePartner): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
@@ -301,9 +301,9 @@ class Organisation extends EntityRepository
      * @param bool $onlyActiveProject
      * @param bool $onlyActivePartner
      *
-     * @return \Doctrine\ORM\Query
+     * @return Query
      */
-    public function findOrganisationByCountry(Country $country, $onlyActiveProject, $onlyActivePartner)
+    public function findOrganisationByCountry(Country $country, $onlyActiveProject, $onlyActivePartner): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
@@ -346,7 +346,7 @@ class Organisation extends EntityRepository
         $countryId = null,
         $onlyActiveProject = true,
         $onlyActivePartner = true
-    ) {
+    ): array {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select(
             [
@@ -393,9 +393,9 @@ class Organisation extends EntityRepository
      */
     public function findOrganisationByNameCountryAndEmailAddress($name, Country $country, $emailAddress): array
     {
-        /*
-                * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
-                */
+        /**
+         * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
+         */
         $validateEmail = new EmailAddress();
         $validateEmail->isValid($emailAddress);
         $hostname = $validateEmail->hostname;
@@ -409,22 +409,17 @@ class Organisation extends EntityRepository
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->distinct('organisation_entity_organisation.id');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
-        //Select projects based on a type
 
+        //Subselect based on the website
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('organisation_entity_web_organisation');
         $subSelect->from(Entity\Web::class, 'organisation_entity_web');
         $subSelect->join('organisation_entity_web.organisation', 'organisation_entity_web_organisation');
         $subSelect->andWhere(
-            $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain'),
-                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain2')
-            )
+            $queryBuilder->expr()->like('organisation_entity_web.web', ':domain')
         );
+        $queryBuilder->setParameter('domain', '%' . $hostname . '%');
 
-
-        $queryBuilder->setParameter('domain', 'http://' . $hostname);
-        $queryBuilder->setParameter('domain2', 'https://' . $hostname);
         //We want a match on the email address
         $queryBuilder->andWhere(
             $queryBuilder->expr()->in('organisation_entity_organisation.id', $subSelect->getDQL())
@@ -500,21 +495,16 @@ class Organisation extends EntityRepository
             'organisation_entity_contactorganisation'
         );
 
-
+        //Subselect based on the website
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('organisation_entity_web_organisation');
         $subSelect->from(Entity\Web::class, 'organisation_entity_web');
         $subSelect->join('organisation_entity_web.organisation', 'organisation_entity_web_organisation');
-
         $subSelect->andWhere(
-            $queryBuilder->expr()->orX(
-                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain'),
-                $queryBuilder->expr()->eq('organisation_entity_web.web', ':domain2')
-            )
+                $queryBuilder->expr()->like('organisation_entity_web.web', ':domain')
         );
 
-        $queryBuilder->setParameter('domain', 'http://' . $hostname);
-        $queryBuilder->setParameter('domain2', 'https://' . $hostname);
+        $queryBuilder->setParameter('domain', '%' . $hostname . '%');
 
         //We want a match on the email address
         $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_organisation.id', $subSelect->getDQL()));
@@ -537,7 +527,8 @@ class Organisation extends EntityRepository
         string $name,
         Country $country,
         bool $onlyMain = true
-    ):?Entity\Organisation {
+    ):?Entity\Organisation
+    {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->distinct('organisation_entity_organisation.id');

@@ -264,11 +264,6 @@ class OrganisationAdminController extends OrganisationAbstractController
                     $logo->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
                     $logo->setLogoExtension($logo->getContentType()->getExtension());
                     $organisation->getLogo()->add($logo);
-
-                    // Remove the cached file
-                    if (file_exists($logo->getCacheFileName())) {
-                        unlink($logo->getCacheFileName());
-                    }
                 }
 
                 $this->getOrganisationService()->updateEntity($organisation);

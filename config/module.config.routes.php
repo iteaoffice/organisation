@@ -13,25 +13,16 @@ use Organisation\Controller;
 return [
     'router' => [
         'routes' => [
-            'assets'       => [
-                'type'          => 'Literal',
-                'options'       => [
-                    'route'    => '/assets/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test'),
-                    'defaults' => [
-                        'controller' => Controller\OrganisationController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-                'may_terminate' => true,
+            'image'    => [
                 'child_routes'  => [
                     'organisation-logo' => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => "/organisation-logo/[:id]-[:hash]-[:width].[:ext]",
+                            'route'    => '/o/[:id]-[:last-update].[:ext]',
                             'defaults' => [
                                 //Explicitly add the controller here as the assets are collected
-                                'controller' => Controller\OrganisationController::class,
-                                'action'     => 'logo',
+                                'controller' => Controller\ImageController::class,
+                                'action'     => 'organisation-logo',
                             ],
                         ],
                     ],

@@ -23,8 +23,7 @@ return [
              * access to all routes unless they are specified here.
              */
             Route::class => [
-                ['route' => 'assets/organisation-logo', 'roles' => []],
-                ['route' => 'organisation/logo', 'roles' => []],
+                ['route' => 'image/organisation-logo', 'roles' => []],
                 ['route' => 'organisation/search', 'roles' => []],
                 ['route' => 'organisation/json/get-branches', 'roles' => []],
                 ['route' => 'organisation/json/check-vat', 'roles' => [Access::ACCESS_OFFICE]],

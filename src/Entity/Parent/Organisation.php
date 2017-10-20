@@ -57,7 +57,7 @@ class Organisation extends AbstractEntity
      *          "params": {
      *              "criteria":{},
      *              "orderBy":{
-     *                  "id":"ASC"}
+     *                  "organisation":"ASC"}
      *              }
      *          }
      *      }
