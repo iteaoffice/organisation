@@ -15,7 +15,7 @@
 
 
 <div class="form-group row">
-    <label class="col-sm-3 control-label">{{ translate("txt-parent") }}</label>
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ parentLink(parent,'view','parent') }}</p>
@@ -33,8 +33,8 @@
 {{ contactformelement(parent.get('contact')) }}
 {{ ztbformelement(parent.get('dateEnd')) }}
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {% if form.has('delete') %}
             {{ ztbformelement(form.get('delete')) }}

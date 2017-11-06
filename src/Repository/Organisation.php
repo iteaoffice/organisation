@@ -501,7 +501,7 @@ class Organisation extends EntityRepository
         $subSelect->from(Entity\Web::class, 'organisation_entity_web');
         $subSelect->join('organisation_entity_web.organisation', 'organisation_entity_web_organisation');
         $subSelect->andWhere(
-                $queryBuilder->expr()->like('organisation_entity_web.web', ':domain')
+            $queryBuilder->expr()->like('organisation_entity_web.web', ':domain')
         );
 
         $queryBuilder->setParameter('domain', '%' . $hostname . '%');
@@ -527,8 +527,7 @@ class Organisation extends EntityRepository
         string $name,
         Country $country,
         bool $onlyMain = true
-    ):?Entity\Organisation
-    {
+    ):?Entity\Organisation {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
         $queryBuilder->distinct('organisation_entity_organisation.id');

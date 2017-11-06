@@ -66,7 +66,6 @@ class ParentOrganisationController extends OrganisationAbstractController
             }
 
             if (isset($data['delete']) && $this->getParentService()->canDeleteParentOrganisation($organisation)) {
-
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(

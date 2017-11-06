@@ -419,7 +419,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
      *
      * @return Translator|MockObject
      */
-    private function setUpTranslatorMock(): MockObject
+    private function setUpTranslatorMock()
     {
         $translatorMock = $this->getMockBuilder(Translator::class)
             ->setMethods(['translate'])
@@ -438,7 +438,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
      *
      * @return Translator|MockObject
      */
-    private function setUpControllerMock(): MockObject
+    private function setUpControllerMock()
     {
         $contact = new Contact();
         $contact->setId(1);
@@ -467,7 +467,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
      *
      * @return EntityManager|MockObject
      */
-    private function setUpEntityManagerMock(bool $throwException = false): MockObject
+    private function setUpEntityManagerMock(bool $throwException = false)
     {
         $entityManagerMock = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()

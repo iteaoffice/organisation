@@ -9,7 +9,7 @@
     <div class="col-md-5 col-sm-6">
         <h2>{{ translate("txt-source") }}</h2>
         <hr>
-        <div class="form-group">
+        <div class="form-group row">
             {% set main = mergeForm.get('source-main') %}
             {% if main.getValueOptions()|length == 0 %}
                 {{ ztbalert().info(translate("txt-no-suggestions-found"))|raw }}

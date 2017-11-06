@@ -7,16 +7,16 @@
 
 {{ ztbformelement(financialForm.get('id')) }}
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-debtor-number") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-debtor-number") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ organisationService.parseDebtorNumber(organisation) }}</p>
     </div>
 </div>
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-credit-number") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-credit-number") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static">{{ organisationService.parseCreditNumber(organisation) }}</p>
@@ -27,8 +27,8 @@
 {{ ztbformelement(financialForm.get('vat')) }}
 {{ ztbformelement(financialForm.get('vatStatus')) }}
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-vat-status") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label">{{ translate("txt-vat-status") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static"><span
@@ -47,8 +47,8 @@
 {{ ztbformelement(financialForm.get('email')) }}
 
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
         {% if form.has('delete') %}
