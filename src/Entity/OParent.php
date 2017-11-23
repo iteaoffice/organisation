@@ -33,17 +33,17 @@ use Zend\Form\Annotation;
  */
 class OParent extends AbstractEntity
 {
-    const EPOSS_MEMBER_TYPE_NO_MEMBER = 1;
-    const EPOSS_MEMBER_TYPE_MEMBER = 2;
-    const EPOSS_MEMBER_TYPE_DOA_SIGNER = 3;
+    public const EPOSS_MEMBER_TYPE_NO_MEMBER = 1;
+    public const EPOSS_MEMBER_TYPE_MEMBER = 2;
+    public const EPOSS_MEMBER_TYPE_DOA_SIGNER = 3;
 
-    const ARTEMISIA_MEMBER_TYPE_NO_MEMBER = 1;
-    const ARTEMISIA_MEMBER_TYPE_MEMBER = 2;
-    const ARTEMISIA_MEMBER_TYPE_DOA_SIGNER = 3;
+    public const ARTEMISIA_MEMBER_TYPE_NO_MEMBER = 1;
+    public const ARTEMISIA_MEMBER_TYPE_MEMBER = 2;
+    public const ARTEMISIA_MEMBER_TYPE_DOA_SIGNER = 3;
 
     //Create a set of criteria as dedicated constants as they don't fit in the normal type/status tables
-    const CRITERION_C_CHAMBER = 1;
-    const CRITERION_FREE_RIDER = 2;
+    public const CRITERION_C_CHAMBER = 1;
+    public const CRITERION_FREE_RIDER = 2;
 
     /**
      * @var array

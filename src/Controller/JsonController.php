@@ -30,7 +30,7 @@ class JsonController extends OrganisationAbstractController
         $organisationId = (int)$this->getEvent()->getRequest()->getPost()->get('organisationId');
         $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             return new JsonModel();
         }
 
@@ -59,14 +59,14 @@ class JsonController extends OrganisationAbstractController
          */
         $financial = $this->getOrganisationService()->findEntityById(Financial::class, $financialId);
 
-        if (is_null($financial->getVat()) && is_null($this->getRequest()->getPost('vat'))) {
+        if (\is_null($financial->getVat()) && \is_null($this->getRequest()->getPost('vat'))) {
             return new JsonModel(['success' => 'error', 'result' => $this->translate("txt-vat-number-empty")]);
         }
 
         $vat = $financial->getVat();
 
         //Overrule the vat when a VAT number is sent via the URL
-        if (!is_null($this->getRequest()->getPost('vat'))) {
+        if (!\is_null($this->getRequest()->getPost('vat'))) {
             $vat = $this->getRequest()->getPost('vat');
         }
 

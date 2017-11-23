@@ -35,13 +35,13 @@ use Zend\Validator\EmailAddress;
  */
 class HandleParentAndProjectImport extends AbstractImportPlugin
 {
-    const STATUS_MEMBER = 1;
-    const STATUS_DOA_SIGNER = 2;
-    const STATUS_FEE_RIDER = 3;
-    const STATUS_IA_MEMBER = 4;
-    const STATUS_PENTA_DOA = 5;
-    const STATUS_ECSEL_DOA = 6;
-    const STATUS_ECSEL_ENIAC_DOA = 7;
+    public const STATUS_MEMBER = 1;
+    public const STATUS_DOA_SIGNER = 2;
+    public const STATUS_FEE_RIDER = 3;
+    public const STATUS_IA_MEMBER = 4;
+    public const STATUS_PENTA_DOA = 5;
+    public const STATUS_ECSEL_DOA = 6;
+    public const STATUS_ECSEL_ENIAC_DOA = 7;
 
     /**
      * $this function extracts the data and created local arrays.
@@ -72,7 +72,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         for ($i = 1; $i < $amount; $i++) {
             $row = explode($this->delimiter, $data[$i]);
 
-            if (count($row) >= count($this->header)) {
+            if (\count($row) >= count($this->header)) {
                 //Trim all the elements
                 $row = array_map('trim', $row);
 
@@ -141,7 +141,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
          * Go over all elements and check if the required elements are present
          */
         foreach ($minimalRequiredElements as $element) {
-            if (!in_array($element, $this->header, true)) {
+            if (!\in_array($element, $this->header, true)) {
                 $this->errors[] = sprintf('Element %s is missing in the file', $element);
             }
         }
@@ -184,7 +184,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //Try to parse the status
             $status = $this->parseStatus($content);
-            if (is_null($status)) {
+            if (\is_null($status)) {
                 $this->warnings[] = sprintf(
                     'Status of row %s (%s) could not be found',
                     $counter,
@@ -198,7 +198,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
                     $counter
                 );
             } else {
-                if (is_null($this->getGeneralService()
+                if (\is_null($this->getGeneralService()
                     ->findCountryByCD($content[$this->headerKeys['Parent country']]))) {
                     $this->errors[] = sprintf(
                         'Parent country (%s) in row %s cannot be found',
@@ -214,7 +214,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
                     $counter
                 );
             } else {
-                if (is_null($this->getGeneralService()->findCountryByCD($content[$this->headerKeys['EPS']]))) {
+                if (\is_null($this->getGeneralService()->findCountryByCD($content[$this->headerKeys['EPS']]))) {
                     $this->errors[] = sprintf(
                         'Country (%s) in row %s cannot be found',
                         $content[$this->headerKeys['EPS']],
@@ -227,7 +227,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
                 //Try to find the status
                 $type = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['Member Type']]);
 
-                if (is_null($type)) {
+                if (\is_null($type)) {
                     $this->errors[] = sprintf(
                         'Type (%s) in row %s (%s) cannot be found',
                         $content[$this->headerKeys['Member Type']],
@@ -287,7 +287,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         foreach ($this->content as $key => $content) {
             $contact = $this->getContactService()->findContactByEmail($content[$this->headerKeys['Contact Email']]);
 
-            if (is_null($contact) && !empty($content[$this->headerKeys['Contact Email']])) {
+            if (\is_null($contact) && !empty($content[$this->headerKeys['Contact Email']])) {
                 $contact = new Contact();
                 $contact->setEmail($content[$this->headerKeys['Contact Email']]);
                 $contact->setGender($this->getGeneralService()->findEntityById(Gender::class, Gender::GENDER_UNKNOWN));
@@ -312,7 +312,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             //Try to find the program
             $program = $this->getProgramService()->findProgramByName($programName);
 
-            if (is_null($program)) {
+            if (\is_null($program)) {
                 $program = new Program();
                 $program->setProgram($programName);
             }
@@ -320,7 +320,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             //Try to find the call
             $call = $this->getCallService()->findCallByName($callName);
 
-            if (is_null($call)) {
+            if (\is_null($call)) {
                 $call = new Call();
                 $call->setProgram($program);
                 $call->setCall($callName);
@@ -330,7 +330,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
 
             $project = $this->getProjectService()->findProjectByName($content[$this->headerKeys['Proposal Acronym']]);
 
-            if (is_null($project)) {
+            if (\is_null($project)) {
                 $project = new Project();
                 $project->setProject($content[$this->headerKeys['Proposal Acronym']]);
 
@@ -355,7 +355,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             );
 
 
-            if (is_null($organisationForParent)) {
+            if (\is_null($organisationForParent)) {
                 $organisationForParent = $this->createOrganisation(
                     $content[$this->headerKeys['Parent']],
                     $parentCountry
@@ -370,7 +370,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             );
 
 
-            if (is_null($organisation)) {
+            if (\is_null($organisation)) {
                 $organisation = $this->createOrganisation(
                     $content[$this->headerKeys['Legal Name']],
                     $country
@@ -387,14 +387,14 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             //Start with the parent organisation which is found from the organisation
             $parentOrganisation = $organisation->getParentOrganisation();
 
-            if (!is_null($parentOrganisation) && $parentOrganisation->getParent() !== $parent->getId()) {
+            if (!\is_null($parentOrganisation) && $parentOrganisation->getParent() !== $parent->getId()) {
                 //Replace the parent
                 $parentOrganisation->setParent($parent);
             }
 
             //We have the parent now, we need to create the project information
             foreach ($parent->getParentOrganisation() as $otherParentOrganisation) {
-                if (is_null($parentOrganisation)
+                if (\is_null($parentOrganisation)
                     && $otherParentOrganisation->getOrganisation() === $organisation
                 ) {
                     $parentOrganisation = $otherParentOrganisation;
@@ -402,7 +402,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             //If we can't find the $parentOrganisation, create it
-            if (is_null($parentOrganisation)) {
+            if (\is_null($parentOrganisation)) {
                 $parentOrganisation = new ParentOrganisation();
                 $parentOrganisation->setOrganisation($organisation);
                 $parentOrganisation->setParent($parent);
@@ -475,7 +475,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
 
 
             //Only persist when the key is given
-            if (in_array($key, $keys, false)) {
+            if (\in_array($key, $keys, false)) {
                 $this->getEntityManager()->persist($parentOrganisation);
                 $this->getEntityManager()->flush($parentOrganisation);
                 $this->importedParentOrganisation[] = $parentOrganisation;
@@ -502,7 +502,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         array $content
     ): OParent {
         //If we find the organisation and the organisation is a parent, just return it
-        if (!is_null($organisation->getParent())) {
+        if (!\is_null($organisation->getParent())) {
             $parent = $organisation->getParent();
         } else {
             $parent = new OParent();
@@ -512,19 +512,19 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
 
         $parentType = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['Member Type']]);
 
-        if (is_null($parentType)) {
+        if (\is_null($parentType)) {
             $parentType = $this->getParentService()->findEntityById(ParentType::class, ParentType::TYPE_OTHER);
         }
 
         $parent->setType($parentType);
 
-        if (!is_null($this->parseStatus($content))) {
+        if (!\is_null($this->parseStatus($content))) {
             $parent->setStatus($this->parseStatus($content));
         }
         $parent->setArtemisiaMemberType($this->parseArtimisiaMemberType($content));
         $parent->setEpossMemberType($this->parseEpossMemberType($content));
 
-        if (is_null($parent->getFinancial())) {
+        if (\is_null($parent->getFinancial())) {
             $financial = new Financial();
             $financial->setParent($parent);
             $financial->setOrganisation($organisation);

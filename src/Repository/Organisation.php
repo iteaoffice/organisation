@@ -53,6 +53,8 @@ class Organisation extends EntityRepository
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->orX(
                     $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'),
+                    $queryBuilder->expr()->like('general_entity_country.country', ':like'),
+                    $queryBuilder->expr()->like('general_entity_country.iso3', ':like'),
                     $queryBuilder->expr()->like('organisation_entity_financial.vat', ':like')
                 )
             );
@@ -65,7 +67,7 @@ class Organisation extends EntityRepository
             );
         }
 
-        if (array_key_exists('options', $filter) && in_array('1', $filter['options'], true)) {
+        if (array_key_exists('options', $filter) && \in_array('1', $filter['options'], true)) {
             //Make a second sub-select to cancel out organisations which have a financial organisation
             $subSelect2 = $this->_em->createQueryBuilder();
             $subSelect2->select('affiliation_entity_affiliation_organisation');
@@ -81,14 +83,14 @@ class Organisation extends EntityRepository
             );
         }
 
-        if (array_key_exists('options', $filter) && in_array('2', $filter['options'], true)) {
+        if (array_key_exists('options', $filter) && \in_array('2', $filter['options'], true)) {
             //Make a second sub-select to cancel out organisations which have a financial organisation
             $queryBuilder->join('organisation_entity_organisation.parent', 'parent');
         }
 
         $direction = Criteria::ASC;
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)) {
+            && \in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -152,7 +154,7 @@ class Organisation extends EntityRepository
 
         $direction = Criteria::ASC;
         if (isset($filter['direction'])
-            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)) {
+            && \in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -239,7 +241,7 @@ class Organisation extends EntityRepository
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -357,15 +359,24 @@ class Organisation extends EntityRepository
         );
         $queryBuilder->distinct('organisation_entity_organisation.id');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
-
-        $queryBuilder->andWhere('organisation_entity_organisation.organisation LIKE :searchItem');
-
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+
+
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'),
+                $queryBuilder->expr()->like('general_entity_country.country', ':like'),
+                $queryBuilder->expr()->like('general_entity_country.iso3', ':like')
+            )
+        );
+
         $queryBuilder->leftJoin('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
         $queryBuilder->leftJoin('affiliation_entity_affiliation.project', 'project_entity_project');
-        $queryBuilder->setParameter('searchItem', "%" . $searchItem . "%");
 
-        if (!is_null($countryId)) {
+        $queryBuilder->setParameter('like', sprintf("%%%s%%", $searchItem));
+
+        if (!\is_null($countryId)) {
             $queryBuilder->andWhere('organisation_entity_organisation.country = ?3');
             $queryBuilder->setParameter(3, $countryId);
         }
@@ -401,7 +412,7 @@ class Organisation extends EntityRepository
         $hostname = $validateEmail->hostname;
 
         //Skip this function when we have yahoo, hotmail or gmail
-        if (in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
+        if (\in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
             return [];
         }
 
@@ -445,7 +456,7 @@ class Organisation extends EntityRepository
         $organisations = [];
         //Start with your own organisation
 
-        if (!is_null($contact->getContactOrganisation())) {
+        if (!\is_null($contact->getContactOrganisation())) {
             $organisations[$contact->getContactOrganisation()->getOrganisation()->getId()]
                 = $contact->getContactOrganisation()->getOrganisation();
         }
@@ -479,7 +490,7 @@ class Organisation extends EntityRepository
         $hostname = $validateEmail->hostname;
 
         //Skip this function when we have yahoo, hotmail or gmail
-        if (in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
+        if (\in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
             return [];
         }
 
@@ -637,7 +648,7 @@ class Organisation extends EntityRepository
         $queryBuilder->where($queryBuilder->expr()->neq('o.id', ':organisationId'));
 
         // Exclude when both organisations have a different VAT number
-        if (!is_null($organisation->getFinancial())) {
+        if (!\is_null($organisation->getFinancial())) {
             $queryBuilder->andWhere($queryBuilder->expr()->orX(
                 $queryBuilder->expr()->isNull('f.vat'),
                 $queryBuilder->expr()->neq('f.vat', ':vat')
@@ -646,7 +657,7 @@ class Organisation extends EntityRepository
         }
 
         // Exclude when both organisations are parent organisations
-        if (!is_null($organisation->getParent())) {
+        if (!\is_null($organisation->getParent())) {
             $queryBuilder->leftJoin('o.parent', 'organisation_entity_parent');
             $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.id'));
         }

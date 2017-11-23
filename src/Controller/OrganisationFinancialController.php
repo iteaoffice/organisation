@@ -62,7 +62,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
     {
         $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
-        if (is_null($financial = $organisation->getFinancial())) {
+        if (\is_null($financial = $organisation->getFinancial())) {
             $financial = new Financial();
             $financial->setOrganisation($organisation);
         }

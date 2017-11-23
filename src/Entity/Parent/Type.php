@@ -33,10 +33,10 @@ use Zend\Form\Annotation;
  */
 class Type extends AbstractEntity
 {
-    const TYPE_A_CHAMBER = 1;
-    const TYPE_B_CHAMBER = 2;
-    const TYPE_C_CHAMBER = 3;
-    const TYPE_OTHER = 4;
+    public const TYPE_A_CHAMBER = 1;
+    public const TYPE_B_CHAMBER = 2;
+    public const TYPE_C_CHAMBER = 3;
+    public const TYPE_OTHER = 4;
     /**
      * @ORM\Column(name="type_id", type="integer", nullable=false)
      * @ORM\Id

@@ -40,7 +40,7 @@ class GetFilter extends AbstractOrganisationPlugin
         $filter = (array) json_decode(base64_decode($encodedFilter));
 
         // If the form is submitted, refresh the URL
-        if ($this->getRequest()->isGet() && !is_null($this->getRequest()->getQuery('submit'))) {
+        if ($this->getRequest()->isGet() && !\is_null($this->getRequest()->getQuery('submit'))) {
             $filter = $this->getRequest()->getQuery()->toArray()['filter'];
         }
 
@@ -56,12 +56,12 @@ class GetFilter extends AbstractOrganisationPlugin
         }
 
         // Overrule the order if set in the query
-        if (!is_null($order)) {
+        if (!\is_null($order)) {
             $filter['order'] = $order;
         }
 
         // Overrule the direction if set in the query
-        if (!is_null($direction)) {
+        if (!\is_null($direction)) {
             $filter['direction'] = $direction;
         }
 

@@ -106,7 +106,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     {
         $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             return $this->notFoundAction();
         }
 
@@ -209,7 +209,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     {
         $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             return $this->notFoundAction();
         }
 
@@ -291,7 +291,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     {
         $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             return $this->notFoundAction();
         }
 
@@ -387,7 +387,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         /** @var Organisation $organisation */
         $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             return $this->notFoundAction();
         }
 
@@ -458,7 +458,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         /** @var Organisation $target */
         $target = $this->getOrganisationService()->findOrganisationById($this->params('targetId'));
 
-        if (is_null($source) || is_null($target)) {
+        if (\is_null($source) || \is_null($target)) {
             return $this->notFoundAction();
         }
 

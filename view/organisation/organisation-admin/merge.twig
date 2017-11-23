@@ -4,7 +4,7 @@
 {% do mergeForm.prepare() %}
 
 {{ form().openTag(mergeForm)|raw }}
-<h1 class="display-4">{{ translate("txt-merge-organisation-%s")|format(target) }}</h1>
+<h2 class="display-4">{{ translate("txt-merge-organisation-%s")|format(target) }}</h2>
 <p>{{ translate("txt-merge-organisation-explanation") }}</p>
 {{ ztbformelement(mergeForm.get('swap')) }}
 
@@ -40,6 +40,8 @@
             </dd>
             <dt>{{ translate("txt-projects") }}</dt>
             <dd>{{ organisationService.getAffiliationCount(source, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
+            <dt>{{ translate("txt-ideas") }}</dt>
+            <dd>{{ source.ideaPartner.count() }}</dd>
             <dt>{{ translate("txt-websites") }}</dt>
             {% for web in source.web %}
                 <dd><a href="{{ web.web }}">{{ web.web }}</a></dd>

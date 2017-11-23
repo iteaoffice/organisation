@@ -404,6 +404,14 @@ class Organisation extends AbstractEntity
     }
 
     /**
+     * @return string
+     */
+    public function parseFullName(): string
+    {
+        return (string)$this->organisation;
+    }
+
+    /**
      * @return int
      */
     public function getId()

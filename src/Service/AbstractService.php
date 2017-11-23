@@ -146,7 +146,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function getOrganisationService(): OrganisationService
     {
-        if (is_null($this->organisationService)) {
+        if (\is_null($this->organisationService)) {
             $this->organisationService = $this->getServiceLocator()->get(OrganisationService::class);
         }
 
@@ -178,7 +178,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function getAffiliationService(): AffiliationService
     {
-        if (is_null($this->affiliationService)) {
+        if (\is_null($this->affiliationService)) {
             $this->affiliationService = $this->getServiceLocator()->get(AffiliationService::class);
         }
 
@@ -190,7 +190,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function getVersionService(): VersionService
     {
-        if (is_null($this->versionService)) {
+        if (\is_null($this->versionService)) {
             $this->versionService = $this->getServiceLocator()->get(VersionService::class);
         }
 
@@ -202,7 +202,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function getProjectService(): ProjectService
     {
-        if (is_null($this->projectService)) {
+        if (\is_null($this->projectService)) {
             $this->projectService = $this->getServiceLocator()->get(ProjectService::class);
         }
 

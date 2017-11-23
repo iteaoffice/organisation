@@ -38,7 +38,7 @@ class Description extends AbstractEntity
      * @ORM\Column(name="description", type="text", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-organisation-description-label","help-block":"txt-organisation-description-help-block"})
-     * @Annotation\Attributes({"placeholder":"txt-organisation-description-placeholder"})
+     * @Annotation\Attributes({"placeholder":"txt-organisation-description-placeholder","rows":10})
      *
      * @var string
      */

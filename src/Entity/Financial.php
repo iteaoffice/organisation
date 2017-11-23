@@ -24,16 +24,16 @@ use Zend\Form\Annotation;
  */
 class Financial extends AbstractEntity
 {
-    const VAT_STATUS_UNDEFINED = 0;
-    const VAT_STATUS_VALID = 1;
-    const VAT_STATUS_INVALID = 2;
-    const VAT_STATUS_UNCHECKED = 3;
-    const NO_OMIT_CONTACT = 0;
-    const OMIT_CONTACT = 1;
-    const NO_REQUIRED_PURCHASE_ORDER = 0;
-    const REQUIRED_PURCHASE_ORDER = 1;
-    const NO_EMAIL_DELIVERY = 0;
-    const EMAIL_DELIVERY = 1;
+    public const VAT_STATUS_UNDEFINED = 0;
+    public const VAT_STATUS_VALID = 1;
+    public const VAT_STATUS_INVALID = 2;
+    public const VAT_STATUS_UNCHECKED = 3;
+    public const NO_OMIT_CONTACT = 0;
+    public const OMIT_CONTACT = 1;
+    public const NO_REQUIRED_PURCHASE_ORDER = 0;
+    public const REQUIRED_PURCHASE_ORDER = 1;
+    public const NO_EMAIL_DELIVERY = 0;
+    public const EMAIL_DELIVERY = 1;
     /**
      * Textual versions of the vat status.
      *

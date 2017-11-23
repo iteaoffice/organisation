@@ -22,8 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Web extends AbstractEntity
 {
-    const NOT_MAIN = 0;
-    const MAIN = 1;
+    public const NOT_MAIN = 0;
+    public const MAIN = 1;
 
     /**
      * Templates for the internal templates.

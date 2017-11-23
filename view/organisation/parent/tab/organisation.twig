@@ -5,7 +5,8 @@
         <thead>
         <tr>
             <th>{{ translate("txt-parent-organisation") }}</th>
-            <th>{{ translate("txt-parent") }}</th>
+            <th>{{ translate("txt-country") }}</th>
+            <th>{{ translate("txt-type") }}</th>
             <th>{{ translate("txt-representative") }}</th>
             <th>{{ translate("txt-projects") }}</th>
         </tr>
@@ -14,7 +15,8 @@
         {% for organisation in parent.parentOrganisation %}
             <tr>
                 <td>{{ parentOrganisationLink(organisation,'view','organisation') }} {{ parentOrganisationLink(organisation,'edit','icon') }}</td>
-                <td>{{ parentLink(parent, 'view','parent') }}</td>
+                <td>{{ countryLink(organisation.organisation.country,'view-admin', 'name') }}</td>
+                <td>{{ organisationTypeLink(organisation.organisation.type,'view', 'type') }}</td>
                 <td>{{ contactLink(organisation.contact,'view-admin','name') }}</td>
                 <td>{{ organisation.affiliation.count() }}</td>
             </tr>

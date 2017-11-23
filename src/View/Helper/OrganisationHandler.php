@@ -51,7 +51,7 @@ class OrganisationHandler extends AbstractViewHelper
 
         switch ($content->getHandler()->getHandler()) {
             case 'organisation':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
@@ -59,7 +59,7 @@ class OrganisationHandler extends AbstractViewHelper
                 $this->getHelperPluginManager()->get('headtitle')->append($this->getOrganisation()->getOrganisation());
 
                 //Do now show the organisation when we don't have projects
-                if (count($this->getProjectService()->findProjectByOrganisation($this->getOrganisation())) === 0) {
+                if (\count($this->getProjectService()->findProjectByOrganisation($this->getOrganisation())) === 0) {
                     $this->getServiceManager()->get('response')->setStatusCode(404);
 
                     return null;
@@ -83,49 +83,49 @@ class OrganisationHandler extends AbstractViewHelper
 
                 return $this->parseOrganisationList($page);
             case 'organisation_project':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationProjectList($this->getOrganisation());
 
             case 'organisation_metadata':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationMetadata($this->getOrganisation());
 
             case 'organisation_article':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationArticleList($this->getOrganisation());
 
             case 'organisation_title':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationTitle($this->getOrganisation());
 
             case 'organisation_info':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationInfo($this->getOrganisation());
 
             case 'organisation_map':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationMap($this->getOrganisation());
 
             case 'organisation_logo':
-                if (is_null($this->getOrganisation())) {
+                if (\is_null($this->getOrganisation())) {
                     return ("The selected organisation cannot be found");
                 }
 
@@ -153,7 +153,7 @@ class OrganisationHandler extends AbstractViewHelper
                 case 'docRef':
                     $docRef = $this->findParamValueFromContent($content, $parameter);
 
-                    if (!is_null($docRef)) {
+                    if (!\is_null($docRef)) {
                         $this->setOrganisationByDocRef($docRef);
                     }
                     break;
@@ -177,7 +177,7 @@ class OrganisationHandler extends AbstractViewHelper
         }
 
         //Try first to see if the param can be found from the route (rule 1)
-        if (!is_null($this->getRouteMatch()->getParam($param->getParam()))) {
+        if (!\is_null($this->getRouteMatch()->getParam($param->getParam()))) {
             return $this->getRouteMatch()->getParam($param->getParam());
         }
 
@@ -194,7 +194,7 @@ class OrganisationHandler extends AbstractViewHelper
     {
         $organisation = $this->getOrganisationService()->findOrganisationByDocRef($docRef);
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             $this->getOrganisationService()->findOrganisationById((int)$docRef);
         }
         $this->setOrganisation($organisation);

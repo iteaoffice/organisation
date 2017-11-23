@@ -63,7 +63,7 @@ class NoteLink extends AbstractLink
      */
     public function getNote(): Note
     {
-        if (is_null($this->note)) {
+        if (\is_null($this->note)) {
             $this->note = new Note();
         }
 

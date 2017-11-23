@@ -30,20 +30,20 @@ class Type extends AbstractEntity implements ResourceInterface
     /**
      * Constant for a type without invoice.
      */
-    const NO_INVOICE = 0;
+    public const NO_INVOICE = 0;
     /**
      * Constant for a type with a invoice.
      */
-    const INVOICE = 1;
+    public const INVOICE = 1;
 
-    const TYPE_UNKNOWN = 0;
-    const TYPE_IFC = 1;
-    const TYPE_LARGE_INDUSTRY = 2;
-    const TYPE_SME = 3;
-    const TYPE_RESEARCH = 4;
-    const TYPE_UNIVERSITY = 5;
-    const TYPE_GOVERNMENT = 6;
-    const TYPE_OTHER = 7;
+    public const TYPE_UNKNOWN = 0;
+    public const TYPE_IFC = 1;
+    public const TYPE_LARGE_INDUSTRY = 2;
+    public const TYPE_SME = 3;
+    public const TYPE_RESEARCH = 4;
+    public const TYPE_UNIVERSITY = 5;
+    public const TYPE_GOVERNMENT = 6;
+    public const TYPE_OTHER = 7;
 
     /**
      * Textual versions of the invoice.

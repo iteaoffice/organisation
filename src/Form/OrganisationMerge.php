@@ -39,7 +39,7 @@ class OrganisationMerge extends Form
         $this->setAttribute('action', '');
 
         $mainSuggestions = [];
-        if (!is_null($entityManager) && !is_null($destination)) {
+        if (!\is_null($entityManager) && !\is_null($destination)) {
             /** @var OrganisationRepository $repository */
             $repository = $entityManager->getRepository(Organisation::class);
             $suggestions = $repository->findMergeCandidatesFor($destination);

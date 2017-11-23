@@ -50,7 +50,7 @@ class AddAffiliation extends Form
          * @var $newProject Project
          */
         foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)->getResult() as $newProject) {
-            if (!in_array($newProject->getId(), $currentProjects, true)) {
+            if (!\in_array($newProject->getId(), $currentProjects, true)) {
                 $projects[$newProject->getId()] = sprintf('%s', $newProject);
             }
         }

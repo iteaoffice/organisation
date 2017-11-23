@@ -47,6 +47,8 @@ class OrganisationLogo extends ImageAbstract
             return '';
         }
 
+        $this->classes = [];
+
         $this->setRouter('image/organisation-logo');
 
         $this->addRouterParam('ext', $logo->getContentType()->getExtension());
@@ -56,6 +58,10 @@ class OrganisationLogo extends ImageAbstract
         $this->setImageId('organisation_logo_' . $logo->getId());
 
         $this->setWidth($width);
+
+        if ($responsive) {
+            $this->addClasses('img-responsive img-fluid');
+        }
 
         return $this->createImageUrl($onlyUrl);
     }

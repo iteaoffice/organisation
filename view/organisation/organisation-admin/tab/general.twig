@@ -1,14 +1,14 @@
+<h2>{{ translate("txt-general") }}</h2>
+
 <div class="row">
     <div class="col-md-8">
-        <h2>{{ translate("txt-general") }}</h2>
-
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-name") }}</dt>
             <dd>{{ organisation.organisation }}</dd>
             <dt>{{ translate("txt-organisation-on-public-website") }}</dt>
             <dd>{{ organisationLink(organisation,'view','name') }}</dd>
             <dt>{{ translate("txt-description") }}</dt>
-            <dd>{{ organisation.description|raw|default(translate("txt-not-provided"))}}</dd>
+            <dd>{{ organisation.description|default(translate("txt-not-provided"))|nl2br }}</dd>
             <dt>{{ translate("txt-organisation-type") }}</dt>
             <dd>{{ organisationTypeLink(organisation.type,'view','description') }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
@@ -22,7 +22,9 @@
             <dd>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
             <dt>{{ translate("txt-websites") }} {{ organisationLink(organisation, 'manage-web', 'icon') }}</dt>
             {% for web in organisation.web %}
-                <dd><a href="{{ web.web }}">{{ web.web }}</a> {% if web.isMain %}<i class="fa fa-help fa-thumb-tack" title="{{ translate("txt-website-is-main") }}"></i>{% endif %}</dd>
+                <dd><a href="{{ web.web }}">{{ web.web }}</a> {% if web.isMain %}<i class="fa fa-help fa-thumb-tack"
+                                                                                    title="{{ translate("txt-website-is-main") }}"></i>{% endif %}
+                </dd>
             {% else %}
                 <dd>{{ translate("txt-no-website-known") }}</dd>
             {% endfor %}
@@ -41,7 +43,7 @@
     </div>
     {% if not organisation.logo.isEmpty() %}
         <div class="col-md-4">
-            <div class="thumbnail">{{ organisationLogo(organisation,'view') }}</div>
+            {{ organisationLogo(organisation, 300, false) }}
         </div>
     {% endif %}
 </div>

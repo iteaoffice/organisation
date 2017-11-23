@@ -34,13 +34,13 @@ class ImageController extends OrganisationAbstractController
         $response = $this->getResponse();
 
         $id = $this->params('id');
-        if (is_null($id)) {
+        if (\is_null($id)) {
             return $response;
         }
         /** @var Logo $logo */
         $logo = $this->getOrganisationService()->findEntityById(Logo::class, $id);
 
-        if (is_null($logo)) {
+        if (\is_null($logo)) {
             return $response;
         }
 

@@ -134,7 +134,7 @@ abstract class AbstractLink extends AbstractViewHelper
             $serverUrl() . $url($this->router, $this->routerParams),
             htmlentities((string) $this->text),
             implode(' ', $this->classes),
-            in_array($this->getShow(), ['icon', 'button', 'alternativeShow'], true) ? implode('', $this->linkContent)
+            \in_array($this->getShow(), ['icon', 'button', 'alternativeShow'], true) ? implode('', $this->linkContent)
                 : htmlentities(implode('', $this->linkContent))
         );
     }
@@ -182,7 +182,7 @@ abstract class AbstractLink extends AbstractViewHelper
                 $this->addLinkContent($this->getText());
                 break;
             case 'paginator':
-                if (is_null($this->getAlternativeShow())) {
+                if (\is_null($this->getAlternativeShow())) {
                     throw new \InvalidArgumentException(
                         sprintf("alternativeShow cannot be null for a paginator link")
                     );
@@ -334,7 +334,7 @@ abstract class AbstractLink extends AbstractViewHelper
     public function hasAccess(AbstractEntity $entity, $assertion, $action)
     {
         $assertion = $this->getAssertion($assertion);
-        if (!is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
+        if (!\is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
             $this->getAuthorizeService()->getAcl()->addResource($entity);
             $this->getAuthorizeService()->getAcl()->allow([], $entity, [], $assertion);
         }
@@ -396,10 +396,10 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addRouterParam($key, $value, $allowNull = true)
     {
-        if (!$allowNull && is_null($value)) {
+        if (!$allowNull && \is_null($value)) {
             throw new \InvalidArgumentException(sprintf("null is not allowed for %s", $key));
         }
-        if (!is_null($value)) {
+        if (!\is_null($value)) {
             $this->routerParams[$key] = $value;
         }
     }
@@ -433,7 +433,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getOrganisation(): Entity\Organisation
     {
-        if (is_null($this->organisation)) {
+        if (\is_null($this->organisation)) {
             $this->organisation = new Entity\Organisation();
         }
 
@@ -457,7 +457,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getType(): Entity\Type
     {
-        if (is_null($this->type)) {
+        if (\is_null($this->type)) {
             $this->type = new Entity\Type();
         }
 
@@ -481,7 +481,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getParent(): Entity\OParent
     {
-        if (is_null($this->parent)) {
+        if (\is_null($this->parent)) {
             $this->parent = new Entity\OParent();
         }
 
@@ -505,7 +505,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getParentType(): Entity\Parent\Type
     {
-        if (is_null($this->parentType)) {
+        if (\is_null($this->parentType)) {
             $this->parentType = new Entity\Parent\Type();
         }
 
@@ -529,7 +529,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getParentStatus(): Entity\Parent\Status
     {
-        if (is_null($this->parentStatus)) {
+        if (\is_null($this->parentStatus)) {
             $this->parentStatus = new Entity\Parent\Status();
         }
 
@@ -553,7 +553,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getParentOrganisation(): Entity\Parent\Organisation
     {
-        if (is_null($this->parentOrganisation)) {
+        if (\is_null($this->parentOrganisation)) {
             $this->parentOrganisation = new Entity\Parent\Organisation();
         }
 
@@ -577,7 +577,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getDoa(): Entity\Parent\Doa
     {
-        if (is_null($this->doa)) {
+        if (\is_null($this->doa)) {
             $this->doa = new Entity\Parent\Doa();
         }
 
@@ -601,7 +601,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getFinancial(): Entity\Parent\Financial
     {
-        if (is_null($this->financial)) {
+        if (\is_null($this->financial)) {
             $this->financial = new Entity\Parent\Financial();
         }
 

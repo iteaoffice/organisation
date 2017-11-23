@@ -68,9 +68,9 @@ class OrganisationService extends AbstractService
         return
             $organisation->getContactOrganisation()->isEmpty()
             && $organisation->getAffiliation()->isEmpty()
-            && is_null($organisation->getParent())
+            && \is_null($organisation->getParent())
             && $organisation->getParentFinancial()->isEmpty()
-            && is_null($organisation->getParentOrganisation())
+            && \is_null($organisation->getParentOrganisation())
             && $organisation->getInvoice()->isEmpty()
             && $organisation->getBoothFinancial()->isEmpty()
             && $organisation->getOrganisationBooth()->isEmpty()
@@ -204,9 +204,9 @@ class OrganisationService extends AbstractService
             ) use ($which) {
                 switch ($which) {
                     case AffiliationService::WHICH_ONLY_ACTIVE:
-                        return is_null($affiliation->getDateEnd());
+                        return \is_null($affiliation->getDateEnd());
                     case AffiliationService::WHICH_ONLY_INACTIVE:
-                        return !is_null($affiliation->getDateEnd());
+                        return !\is_null($affiliation->getDateEnd());
                     default:
                         return true;
                 }
@@ -230,9 +230,9 @@ class OrganisationService extends AbstractService
             ) {
                 switch ($which) {
                     case ContactService::WHICH_ONLY_ACTIVE:
-                        return is_null($contactOrganisation->getContact()->getDateEnd());
+                        return \is_null($contactOrganisation->getContact()->getDateEnd());
                     case ContactService::WHICH_ONLY_EXPIRED:
-                        return !is_null($contactOrganisation->getContact()->getDateEnd());
+                        return !\is_null($contactOrganisation->getContact()->getDateEnd());
                     default:
                         return true;
                 }
@@ -268,7 +268,7 @@ class OrganisationService extends AbstractService
             $invoiceContactList[] = $invoice->getContact()->getId();
         }
 
-        if (count($invoiceContactList) === 0) {
+        if (\count($invoiceContactList) === 0) {
             return null;
         }
 
@@ -430,7 +430,7 @@ class OrganisationService extends AbstractService
         $organisationWeb->setMain(Entity\Web::MAIN);
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
-        if (!in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
+        if (!\in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
             $this->newEntity($organisationWeb);
         }
 
@@ -495,7 +495,7 @@ class OrganisationService extends AbstractService
     ) {
         $organisations = [];
         foreach ($project->getAffiliation() as $affiliation) {
-            if ($onlyActiveProject && is_null($affiliation->getDateEnd())) {
+            if ($onlyActiveProject && \is_null($affiliation->getDateEnd())) {
                 //Add the organisation in the key to sort on it
                 $organisations[sprintf(
                     '%s-%s',
@@ -536,7 +536,7 @@ class OrganisationService extends AbstractService
      */
     public function hasValidVat(Entity\Organisation $organisation): bool
     {
-        if (is_null($organisation->getFinancial())) {
+        if (\is_null($organisation->getFinancial())) {
             return false;
         }
 

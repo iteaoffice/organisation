@@ -78,7 +78,7 @@ class NoteController extends OrganisationAbstractController
         /** @var Request $request */
         $request = $this->getRequest();
 
-        if (is_null($note)) {
+        if (\is_null($note)) {
             return $this->notFoundAction();
         }
 

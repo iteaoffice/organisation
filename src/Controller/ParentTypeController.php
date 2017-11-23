@@ -146,7 +146,7 @@ class ParentTypeController extends OrganisationAbstractController
     {
         $type = $this->getParentService()->findEntityById(Entity\Parent\Type::class, $this->params('id'));
 
-        if (is_null($type)) {
+        if (\is_null($type)) {
             return $this->notFoundAction();
         }
 

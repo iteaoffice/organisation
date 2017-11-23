@@ -117,13 +117,13 @@ class ParentService extends AbstractService
     ): Entity\Parent\Organisation {
 
         //If the organisation is already a parent
-        if (!is_null($organisation->getParent())) {
+        if (!\is_null($organisation->getParent())) {
             $parentOrganisation = $this->findParentOrganisationInParentByOrganisation(
                 $organisation->getParent(),
                 $organisation
             );
 
-            if (!is_null($parentOrganisation)) {
+            if (!\is_null($parentOrganisation)) {
                 return $parentOrganisation;
             }
 
@@ -138,12 +138,12 @@ class ParentService extends AbstractService
         }
 
         //If the organisation has already a parent
-        if (!is_null($organisation->getParentOrganisation())) {
+        if (!\is_null($organisation->getParentOrganisation())) {
             $parent = $organisation->getParentOrganisation()->getParent();
 
             $parentOrganisation = $this->findParentOrganisationInParentByOrganisation($parent, $organisation);
 
-            if (!is_null($parentOrganisation)) {
+            if (!\is_null($parentOrganisation)) {
                 return $parentOrganisation;
             }
 
@@ -211,7 +211,7 @@ class ParentService extends AbstractService
             $latestVersion = $this->getProjectService()
                 ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
 
-            if (!is_null($latestVersion)) {
+            if (!\is_null($latestVersion)) {
                 $totalFunded += $this->getVersionService()
                     ->findTotalFundingVersionByAffiliationAndVersion($affiliation, $latestVersion);
             }
@@ -234,7 +234,7 @@ class ParentService extends AbstractService
             $latestVersion = $this->getProjectService()
                 ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
 
-            if (!is_null($latestVersion)) {
+            if (!\is_null($latestVersion)) {
                 $totalFunded += $this->getVersionService()
                     ->findTotalFundingEuVersionByAffiliationAndVersion($affiliation, $latestVersion);
             }
@@ -272,7 +272,7 @@ class ParentService extends AbstractService
             $latestVersion = $this->getProjectService()
                 ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
 
-            if (!is_null($latestVersion)) {
+            if (!\is_null($latestVersion)) {
                 $contributionDue += $this->getAffiliationService()
                     ->parseContributionDue($affiliation, $latestVersion, $year);
             }
@@ -294,7 +294,7 @@ class ParentService extends AbstractService
             $latestVersion = $this->getProjectService()
                 ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
 
-            if (!is_null($latestVersion)) {
+            if (!\is_null($latestVersion)) {
                 $contribution += $this->getAffiliationService()
                     ->parseContribution($affiliation, $latestVersion, $year);
             }
@@ -320,7 +320,7 @@ class ParentService extends AbstractService
             $latestVersion = $this->getProjectService()
                 ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
 
-            if (!is_null($latestVersion)) {
+            if (!\is_null($latestVersion)) {
                 $contributionBalance += $this->getAffiliationService()
                     ->parseBalance($affiliation, $latestVersion, $year, $period);
             }
@@ -343,7 +343,7 @@ class ParentService extends AbstractService
             $version = $this->getProjectService()->getLatestProjectVersion($project, null, null, false, false);
 
             //Only add the balance when there is a version
-            if (!is_null($version)) {
+            if (!\is_null($version)) {
                 $balanceTotal += $this->parseExtraVariableBalanceByParentAndVersion($parent, $version);
             }
         }
@@ -425,7 +425,7 @@ class ParentService extends AbstractService
             );
 
             //Skip the rest of the calculation if a project has no version
-            if (is_null($latestVersion)) {
+            if (\is_null($latestVersion)) {
                 continue;
             }
 
@@ -473,7 +473,7 @@ class ParentService extends AbstractService
     {
         $fee = $this->getProjectService()->findProjectFeeByParentAndYear($parent, $year);
 
-        if (is_null($fee)) {
+        if (\is_null($fee)) {
             return 0;
         }
 
@@ -493,14 +493,14 @@ class ParentService extends AbstractService
 
         foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
             //Skip the affiliations which are not in the $include affilations table
-            if (!is_null($includeAffiliations) && !in_array($affiliation, $includeAffiliations, true)) {
+            if (!\is_null($includeAffiliations) && !\in_array($affiliation, $includeAffiliations, true)) {
                 continue;
             }
 
             $latestVersion = $this->getProjectService()
                 ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
 
-            if (!is_null($latestVersion)) {
+            if (!\is_null($latestVersion)) {
                 $contributionTotal += $this->getAffiliationService()->parseTotal(
                     $affiliation,
                     $latestVersion,
@@ -641,7 +641,7 @@ class ParentService extends AbstractService
             case empty($parent->getFinancial()):
                 $errors[] = 'No financial organisation (parent financial) set for this parent';
                 break;
-            case !is_null($parent->getDateEnd()):
+            case !\is_null($parent->getDateEnd()):
                 $errors[] = 'Parent is de-activated';
                 break;
             case !$autoGenerate && !empty($parent->getFinancial()) && $parent->getFinancial()->count() !== 1:
@@ -649,15 +649,15 @@ class ParentService extends AbstractService
                 break;
             default:
                 foreach ($parent->getFinancial() as $financial) {
-                    if (is_null($financial->getOrganisation()->getFinancial())) {
+                    if (\is_null($financial->getOrganisation()->getFinancial())) {
                         $errors[] = sprintf('%s has no financial information', $financial->getOrganisation());
                     }
 
-                    if (!is_null($financial->getOrganisation()->getFinancial()) && empty($financial->getOrganisation()->getFinancial()->getVat())) {
+                    if (!\is_null($financial->getOrganisation()->getFinancial()) && empty($financial->getOrganisation()->getFinancial()->getVat())) {
                         $errors[] = sprintf('%s has no VAT number', $financial->getOrganisation());
                     }
 
-                    if (!is_null($financial->getOrganisation()->getFinancial()) && !empty($financial->getOrganisation()->getFinancial()->getVat()) && $financial->getOrganisation()->getFinancial()->getVatStatus() !== Entity\Financial::VAT_STATUS_VALID) {
+                    if (!\is_null($financial->getOrganisation()->getFinancial()) && !empty($financial->getOrganisation()->getFinancial()->getVat()) && $financial->getOrganisation()->getFinancial()->getVatStatus() !== Entity\Financial::VAT_STATUS_VALID) {
                         $errors[] = sprintf('%s has an unvalidated VAT number', $financial->getOrganisation());
                     }
                 }

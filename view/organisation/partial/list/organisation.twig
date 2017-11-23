@@ -9,17 +9,19 @@
     </div>
 
     <div class="col-sm-6">
-        <div class="pull-right">
-            <form class="form-inline" role="form" id="organisationSearch">
-                <div class="form-group row">
-                    <label class="sr-only" for="search-box">{{ translate("txt-search") }}</label>
-                    <input type="search" class="form-control col-md-12" id="search" name="q"
-                           placeholder="{{ translate("txt-search-item") }}">
-                </div>
-                <input type="submit" value="{{ translate("txt-search") }}" class="btn btn-primary">
-            </form>
-        </div>
+
+        <form class="form" id="organisationSearch">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search" name="q"
+                       placeholder="{{ translate("txt-search-item") }}">
+                <span class="input-group-btn">
+        <input type="submit" value="{{ translate("txt-search") }}" class="btn btn-primary">
+                        </span>
+            </div>
+        </form>
     </div>
+
+
 </div>
 
 <div id="organisation-list">
@@ -47,22 +49,36 @@
 </div>
 
 <script type="text/javascript">
-    $("#organisationSearch").on('submit', function (e) {
-            e.preventDefault();
+    $(document).ready(function () {
+        var timeoutID = null;
+
+        function findOrganisation() {
             $.ajax({
                 url: 'organisation/search',
                 data: {
-                    max_rows: 12,
+                    max_rows: 2000,
                     search_item: $("#search").val()
                 },
                 success: function (data) {
                     $("#organisation-list").html(data);
-                    $("#throbber").remove();
                 },
                 error: function (event, ui) {
                     alert("Search Failed");
                 }
             });
         }
-    );
+
+
+        $("#organisationSearch").on('submit', function (e) {
+                e.preventDefault();
+                findOrganisation();
+            }
+        );
+
+        $("#search").on('keyup', function (e) {
+                clearTimeout(timeoutID);
+                timeoutID = setTimeout(findOrganisation(), 500);
+            }
+        );
+    });
 </script>

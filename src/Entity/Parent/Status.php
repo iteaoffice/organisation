@@ -36,12 +36,12 @@ use Zend\Form\Annotation;
  */
 class Status extends AbstractEntity
 {
-    const STATUS_MEMBER = 1;
-    const STATUS_APPLICANT = 2;
-    const STATUS_FREE_RIDER = 3;
-    const STATUS_PENTA_DOA = 5;
-    const STATUS_ECSEL_ENIAC_DOA = 7;
-    const STATUS_DOA_IA_MEMBER = 9;
+    public const STATUS_MEMBER = 1;
+    public const STATUS_APPLICANT = 2;
+    public const STATUS_FREE_RIDER = 3;
+    public const STATUS_PENTA_DOA = 5;
+    public const STATUS_ECSEL_ENIAC_DOA = 7;
+    public const STATUS_DOA_IA_MEMBER = 9;
 
     /**
      * @ORM\Column(name="status_id", type="integer", nullable=false)

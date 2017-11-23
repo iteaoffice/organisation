@@ -39,7 +39,7 @@ class ParentOrganisationController extends OrganisationAbstractController
         $organisation = $this->getParentService()
             ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             return $this->notFoundAction();
         }
 
@@ -121,7 +121,7 @@ class ParentOrganisationController extends OrganisationAbstractController
         $organisation = $this->getParentService()
             ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
 
-        if (is_null($organisation)) {
+        if (\is_null($organisation)) {
             return $this->notFoundAction();
         }
 
@@ -137,7 +137,7 @@ class ParentOrganisationController extends OrganisationAbstractController
         $parentOrganisation = $this->getParentService()
             ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
 
-        if (is_null($parentOrganisation)) {
+        if (\is_null($parentOrganisation)) {
             return $this->notFoundAction();
         }
 

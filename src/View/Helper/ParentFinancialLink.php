@@ -50,7 +50,7 @@ class ParentFinancialLink extends AbstractLink
             return '';
         }
 
-        if (!is_null($financial)) {
+        if (!\is_null($financial)) {
             $this->setShowOptions(
                 [
                     'organisation' => $this->getFinancial()->getOrganisation(),

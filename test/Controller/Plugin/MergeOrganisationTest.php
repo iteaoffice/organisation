@@ -108,9 +108,9 @@ final class MergeOrganisationTest extends AbstractServiceTest
         // Run the merge check
         $errors = $mergeOrganisation()->checkMerge($this->source, $this->target);
 
-        $this->assertEquals(true, in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-both-be-parents', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-have-different-countries', $errors));
+        $this->assertEquals(true, \in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
+        $this->assertEquals(true, \in_array('txt-organisations-cant-both-be-parents', $errors));
+        $this->assertEquals(true, \in_array('txt-organisations-cant-have-different-countries', $errors));
     }
 
     /**
@@ -490,7 +490,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
             [$this->isInstanceOf(Note::class)],
         ];
 
-        $entityManagerMock->expects($this->exactly(count($params)))->method('persist')->withConsecutive(...$params);
+        $entityManagerMock->expects($this->exactly(\count($params)))->method('persist')->withConsecutive(...$params);
         $entityManagerMock->expects($this->once())->method('remove')->with($this->source);
         $entityManagerMock->expects($this->exactly(2))->method('flush');
 

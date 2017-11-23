@@ -53,7 +53,7 @@ class HandleParentImport extends AbstractImportPlugin
         for ($i = 1; $i < $amount; $i++) {
             $row = explode($this->delimiter, $explodedData[$i]);
 
-            if (count($row) === count($this->header)) {
+            if (\count($row) === count($this->header)) {
                 //Trim all the elements
                 $row = array_map('trim', $row);
 
@@ -86,7 +86,7 @@ class HandleParentImport extends AbstractImportPlugin
                 false
             );
 
-            if (is_null($organisation)) {
+            if (\is_null($organisation)) {
                 $organisation = $this->createOrganisation(
                     $name,
                     $parentCountry
@@ -103,7 +103,7 @@ class HandleParentImport extends AbstractImportPlugin
                 $content
             );
 
-            if (is_null($financialOrganisation = $organisation->getFinancial())) {
+            if (\is_null($financialOrganisation = $organisation->getFinancial())) {
                 $financialOrganisation = new Financial();
                 $financialOrganisation->setOrganisation($organisation);
             }
@@ -128,7 +128,7 @@ class HandleParentImport extends AbstractImportPlugin
             $parent->setFinancial($financialCollection);
 
             // Only persist when the key is given
-            if (in_array($key, $keys, false)) {
+            if (\in_array($key, $keys, false)) {
                 $this->getEntityManager()->persist($parent);
                 $this->getEntityManager()->flush($parent);
 
@@ -150,7 +150,7 @@ class HandleParentImport extends AbstractImportPlugin
         $contact = $this->getContactService()->findContactByEmail($content[$this->headerKeys['email']]);
 
         //Only when we have an email we can create a new contact
-        if (is_null($contact) && !empty($content[$this->headerKeys['email']])) {
+        if (\is_null($contact) && !empty($content[$this->headerKeys['email']])) {
             $contact = new Contact();
             $contact->setEmail($content[$this->headerKeys['email']]);
             $contact->setGender($this->getGeneralService()->findEntityById(Gender::class, Gender::GENDER_UNKNOWN));
@@ -158,7 +158,7 @@ class HandleParentImport extends AbstractImportPlugin
         }
 
         //We have no contact, no name, so we can't do anything
-        if (is_null($contact)) {
+        if (\is_null($contact)) {
             return $this->getContactService()->findContactById(1);
         }
 
@@ -175,7 +175,7 @@ class HandleParentImport extends AbstractImportPlugin
                 $financialAddress = $this->getContactService()->getFinancialAddress($contact);
             }
 
-            if (is_null($financialAddress)) {
+            if (\is_null($financialAddress)) {
                 $financialAddress = new Address();
                 /** @var AddressType $addressType */
                 $addressType = $this->getContactService()->findEntityById(
@@ -215,7 +215,7 @@ class HandleParentImport extends AbstractImportPlugin
         array $content
     ): OParent {
         //If we find the organisation and the organisation is a parent, just return it
-        if (!is_null($organisation->getParent())) {
+        if (!\is_null($organisation->getParent())) {
             $parent = $organisation->getParent();
         } else {
             $parent = new OParent();
@@ -224,7 +224,7 @@ class HandleParentImport extends AbstractImportPlugin
         }
 
         $parentType = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
-        if (is_null($parentType)) {
+        if (\is_null($parentType)) {
             $parentType = $this->getParentService()->findEntityById(ParentType::class, ParentType::TYPE_OTHER);
         }
         $parent->setType($parentType);
@@ -267,13 +267,13 @@ class HandleParentImport extends AbstractImportPlugin
          * Go over all elements and check if the required elements are present
          */
         foreach ($minimalRequiredElements as $element) {
-            if (!in_array(strtolower($element), $this->header, true)) {
+            if (!\in_array(strtolower($element), $this->header, true)) {
                 $this->errors[] = sprintf('Element %s is missing in the file', $element);
             }
         }
 
         //Break the validation already here as further testing makes no sense
-        if (count($this->errors) === 0) {
+        if (\count($this->errors) === 0) {
             /**
              * Create the lookup-table
              */
@@ -284,7 +284,7 @@ class HandleParentImport extends AbstractImportPlugin
                 //Try to find the status
                 $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
 
-                if (is_null($status)) {
+                if (\is_null($status)) {
                     $this->errors[] = sprintf(
                         'Status (%s) in row %s cannot be found',
                         $content[$this->headerKeys['status']],
@@ -311,7 +311,7 @@ class HandleParentImport extends AbstractImportPlugin
                     //Try to find the type
                     $type = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
 
-                    if (is_null($type)) {
+                    if (\is_null($type)) {
                         $this->errors[] = sprintf(
                             'Type (%s) in row %s cannot be found',
                             $content[$this->headerKeys['type']],
@@ -324,7 +324,7 @@ class HandleParentImport extends AbstractImportPlugin
                 //Try to find the parent country
                 $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['iso 2']]);
 
-                if (is_null($country)) {
+                if (\is_null($country)) {
                     $this->errors[] = sprintf(
                         'Parent Country (%s) in row %s cannot be found',
                         $content[$this->headerKeys['iso 2']],
@@ -336,7 +336,7 @@ class HandleParentImport extends AbstractImportPlugin
                     //Try to find the financial country
                     $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
 
-                    if (is_null($country)) {
+                    if (\is_null($country)) {
                         $this->errors[] = sprintf(
                             'Financial Country (%s) in row %s cannot be found',
                             $content[$this->headerKeys['country']],

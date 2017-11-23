@@ -33,7 +33,7 @@ class ParentDoaController extends OrganisationAbstractController
     {
         $parent = $this->getParentService()->findParentById($this->params('parentId'));
 
-        if (is_null($parent)) {
+        if (\is_null($parent)) {
             return $this->notFoundAction();
         }
 
@@ -109,14 +109,14 @@ class ParentDoaController extends OrganisationAbstractController
         /** @var Entity\Parent\Doa $doa */
         $doa = $this->getParentService()->findEntityById(Entity\Parent\Doa::class, $this->params('id'));
 
-        if (is_null($doa)) {
+        if (\is_null($doa)) {
             return $this->notFoundAction();
         }
 
         $data = array_merge(
             [
-                'dateSigned'   => is_null($doa->getDateSigned()) ? null : $doa->getDateSigned()->format('Y-m-d'),
-                'dateApproved' => is_null($doa->getDateApproved()) ? null : $doa->getDateApproved()->format('Y-m-d'),
+                'dateSigned'   => \is_null($doa->getDateSigned()) ? null : $doa->getDateSigned()->format('Y-m-d'),
+                'dateApproved' => \is_null($doa->getDateApproved()) ? null : $doa->getDateApproved()->format('Y-m-d'),
             ],
             $this->getRequest()->getFiles()->toArray(),
             $this->getRequest()->getPost()->toArray()
@@ -221,7 +221,7 @@ class ParentDoaController extends OrganisationAbstractController
          * @var Entity\Parent\Doa $doa
          */
         $doa = $this->getParentService()->findEntityById(Entity\Parent\Doa::class, $this->params('id'));
-        if (is_null($doa) || count($doa->getObject()) === 0) {
+        if (\is_null($doa) || count($doa->getObject()) === 0) {
             return $this->notFoundAction();
         }
         /*

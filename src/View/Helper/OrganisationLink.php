@@ -58,7 +58,7 @@ class OrganisationLink extends AbstractLink
          * If the alternativeShow is not null, use it an otherwise take the page
          */
         $this->setAlternativeShow($alternativeShow);
-        if (!is_null($organisation)) {
+        if (!\is_null($organisation)) {
             /*
              * Set the non-standard options needed to give an other link value
              */
@@ -110,8 +110,8 @@ class OrganisationLink extends AbstractLink
      */
     public function parseAction(): void
     {
-        if (in_array($this->getAction(), ['view', 'view-article'], true)) {
-            if (is_null($this->getOrganisation())) {
+        if (\in_array($this->getAction(), ['view', 'view-article'], true)) {
+            if (\is_null($this->getOrganisation())) {
                 throw new \InvalidArgumentException(
                     sprintf("Organisation is cannot be null for %s", $this->getAction())
                 );

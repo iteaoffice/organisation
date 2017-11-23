@@ -67,6 +67,7 @@ return array(
     'organisation/organisation-admin/tab/note'                  => __DIR__ . '//view/organisation/organisation-admin/tab/note.twig',
     'organisation/organisation-admin/tab/general'               => __DIR__ . '//view/organisation/organisation-admin/tab/general.twig',
     'organisation/organisation-admin/tab/merge'                 => __DIR__ . '//view/organisation/organisation-admin/tab/merge.twig',
+    'organisation/organisation-admin/tab/idea'                  => __DIR__ . '//view/organisation/organisation-admin/tab/idea.twig',
     'organisation/organisation-admin/tab/project'               => __DIR__ . '//view/organisation/organisation-admin/tab/project.twig',
     'organisation/organisation-admin/tab/invoices'              => __DIR__ . '//view/organisation/organisation-admin/tab/invoices.twig',
     'organisation/organisation-admin/tab/parent'                => __DIR__ . '//view/organisation/organisation-admin/tab/parent.twig',

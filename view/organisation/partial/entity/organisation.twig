@@ -1,12 +1,12 @@
 <div class="pull-right">
-    {{ organisationLogo(organisation, null, false, 200) }}
+    {{ organisationLogo(organisation, 200, false, true) }}
 </div>
 
 <h1 class="display-4">{{ organisation }}</h1>
 
 {% if organisation.description %}
     <h3>{{ translate("txt-description") }}</h3>
-    {{ organisation.description|raw }}
+    {{ organisation.description|nl2br }}
 {% endif %}
 
 {% if organisation.clusterMember.count > 0 %}

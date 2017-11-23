@@ -41,7 +41,7 @@ class ParentFinancialController extends OrganisationAbstractController
         /** @var Entity\OParent $parent */
         $parent = $this->getParentService()->findParentById($this->params('parentId'));
 
-        if (is_null($parent)) {
+        if (\is_null($parent)) {
             return $this->notFoundAction();
         }
 
@@ -62,7 +62,7 @@ class ParentFinancialController extends OrganisationAbstractController
         $formData['contact'] = $parent->getContact()->getId();
         $form->get('contact')->injectContact($parent->getContact());
 
-        if (!is_null(
+        if (!\is_null(
             $financialAddress = $this->getContactService()->getFinancialAddress(
                 $parent->getContact()
             )
@@ -109,7 +109,7 @@ class ParentFinancialController extends OrganisationAbstractController
                  * save the financial address
                  */
 
-                if (is_null(
+                if (\is_null(
                     $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact())
                 )) {
                     $financialAddress = new Address();
@@ -162,7 +162,7 @@ class ParentFinancialController extends OrganisationAbstractController
         /** @var Entity\Parent\Financial $financial */
         $financial = $this->getParentService()->findEntityById(Entity\Parent\Financial::class, $this->params('id'));
 
-        if (is_null($financial)) {
+        if (\is_null($financial)) {
             return $this->notFoundAction();
         }
 
@@ -186,7 +186,7 @@ class ParentFinancialController extends OrganisationAbstractController
         $formData['contact'] = $financial->getContact()->getId();
         $form->get('contact')->injectContact($financial->getContact());
 
-        if (!is_null(
+        if (!\is_null(
             $financialAddress = $this->getContactService()->getFinancialAddress(
                 $financial
                     ->getContact()
@@ -248,7 +248,7 @@ class ParentFinancialController extends OrganisationAbstractController
                  * save the financial address
                  */
 
-                if (is_null(
+                if (\is_null(
                     $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact())
                 )) {
                     $financialAddress = new Address();

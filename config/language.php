@@ -24,6 +24,9 @@ _("txt-not-artemisia-member");
 _("txt-artemisia-member");
 _("txt-artemisia-doa-signer");
 
+_("txt-organisation-description-label");
+_("txt-organisation-description-placeholder");
+_("txt-organisation-description-help-block");
 
 _("txt-parent-type-label");
 _("txt-parent-type-help-block");

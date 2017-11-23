@@ -7,7 +7,7 @@
         <dd>{{ countryFlag(organisation.country, 15) }}
             {{ countryLink(organisation.country,'view', 'name') }}</dd>
         <dt>{{ translate("txt-website") }}</dt>
-        {% for web in organisation.web %}
+        {% for web in organisation.web if web.isMain() %}
             <dd><a href="{{ web }}">{{ web }}</a></dd>
         {% endfor %}
     </dl>

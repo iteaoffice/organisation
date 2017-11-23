@@ -150,7 +150,7 @@ class ParentStatusController extends OrganisationAbstractController
         /** @var Entity\Parent\Status $status */
         $status = $this->getParentService()->findEntityById(Entity\Parent\Status::class, $this->params('id'));
 
-        if (is_null($status)) {
+        if (\is_null($status)) {
             return $this->notFoundAction();
         }
 

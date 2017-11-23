@@ -2,12 +2,12 @@
 
 {{ form().openTag(mergeForm)|raw }}
 
-<h1 class="display-4">{{ translate("txt-merge-organisation-%s")|format(organisation) }}</h1>
+<h2>{{ translate("txt-merge-organisation-%s")|format(organisation) }}</h2>
 <p>{{ translate("txt-merge-organisation-explanation-step-one") }}</p>
 
 <div class="row">
     <div class="col-md-5 col-sm-6">
-        <h2>{{ translate("txt-source") }}</h2>
+        <h3>{{ translate("txt-source") }}</h3>
         <hr>
         <div class="form-group row">
             {% set main = mergeForm.get('source-main') %}
@@ -34,14 +34,14 @@
     </div>
 
     <div class="col-md-2 hidden-sm hidden-xs text-center" style="margin-top:150px;">
-        <h2><i class="fa fa-arrow-circle-right fa-2x"></i></h2>
+        <h3><i class="fa fa-arrow-circle-right fa-2x"></i></h3>
     </div>
     <div class="hidden-lg hidden-md hidden-sm text-center">
-        <h2><i class="fa fa-arrow-circle-down fa-2x"></i></h2>
+        <h3><i class="fa fa-arrow-circle-down fa-2x"></i></h3>
     </div>
 
     <div class="col-md-5 col-sm-6">
-        <h2>{{ translate("txt-target") }}</h2>
+        <h3>{{ translate("txt-target") }}</h3>
         <hr>
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-name") }}</dt>

@@ -74,7 +74,7 @@ class MergeOrganisation extends AbstractPlugin
         $errors = [];
 
         // Check VAT
-        if (!is_null($target->getFinancial()) && !is_null($source->getFinancial())
+        if (!\is_null($target->getFinancial()) && !\is_null($source->getFinancial())
             && ($target->getFinancial()->getVat() !== $source->getFinancial()->getVat())
         ) {
             $errors[] = sprintf(
@@ -85,12 +85,12 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Organisations can't both be parents
-        if (!is_null($target->getParent()) && !is_null($source->getParent())) {
+        if (!\is_null($target->getParent()) && !\is_null($source->getParent())) {
             $errors[] = $this->translator->translate('txt-organisations-cant-both-be-parents');
         }
 
         // Check countries
-        if (!is_null($target->getCountry()) && !is_null($source->getCountry())
+        if (!\is_null($target->getCountry()) && !\is_null($source->getCountry())
             && ($target->getCountry()->getId() !== $source->getCountry()->getId())
         ) {
             $errors[] = $this->translator->translate('txt-organisations-cant-have-different-countries');
@@ -110,7 +110,7 @@ class MergeOrganisation extends AbstractPlugin
         $response = ['success' => true, 'errorMessage' => ''];
 
         // Update organisation properties
-        if (is_null($target->getType())) {
+        if (\is_null($target->getType())) {
             $target->setType($source->getType());
         }
         if ($source->getDateCreated() < $target->getDateCreated()) {
@@ -119,12 +119,12 @@ class MergeOrganisation extends AbstractPlugin
         if ($source->getDateUpdated() > $target->getDateUpdated()) {
             $target->setDateUpdated($source->getDateUpdated());
         }
-        if (is_null($target->getDescription()) && !is_null($source->getDescription())) {
+        if (\is_null($target->getDescription()) && !\is_null($source->getDescription())) {
             $source->getDescription()->setOrganisation($target);
             $target->setDescription($source->getDescription());
         }
-        if (!is_null($source->getFinancial()) && (
-                is_null($target->getFinancial())
+        if (!\is_null($source->getFinancial()) && (
+                \is_null($target->getFinancial())
                 || empty($target->getFinancial()->getVat())
                 || ($source->getFinancial()->getVat() === $target->getFinancial()->getVat())
             )
@@ -190,7 +190,7 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Transfer parent (one-to-one)
-        if (is_null($target->getParent()) && !is_null($source->getParent())) {
+        if (\is_null($target->getParent()) && !\is_null($source->getParent())) {
             $parent = $source->getParent();
             $parent->setOrganisation($target);
             $target->setParent($parent);
@@ -204,7 +204,7 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Transfer parent organisation (one-to-one)
-        if (is_null($target->getParentOrganisation()) && !is_null($source->getParentOrganisation())) {
+        if (\is_null($target->getParentOrganisation()) && !\is_null($source->getParentOrganisation())) {
             $parentOrganisation = $source->getParentOrganisation();
             $parentOrganisation->setOrganisation($target);
             $target->setParentOrganisation($parentOrganisation);
