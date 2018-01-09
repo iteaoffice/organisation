@@ -22,7 +22,6 @@ use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity;
 use Organisation\Repository;
-use Program\Entity\Program;
 use Project\Entity\Project;
 use Project\Entity\Result\Result;
 use Zend\Stdlib\Parameters;
@@ -167,7 +166,7 @@ class OrganisationService extends AbstractService
         Entity\Organisation $organisation,
         string $organisationName,
         Project $project
-    ):?Entity\Name {
+    ): ?Entity\Name {
         foreach ($organisation->getNames() as $name) {
             if ($name->getName() === $organisationName && $name->getProject() === $project) {
                 return $name;
@@ -514,15 +513,23 @@ class OrganisationService extends AbstractService
     /**
      * Checks if the affiliation has a DOA.
      *
-     * @param Entity\Organisation $organisation
-     * @param Program $program
+     * @param Affiliation $affiliation
      *
      * @return bool
      */
-    public function hasDoaForProgram(Entity\Organisation $organisation, Program $program): bool
+    public function hasDoaForProgram(Affiliation $affiliation): bool
     {
-        foreach ($organisation->getProgramDoa() as $doa) {
-            if ($doa->getProgram()->getId() === $program->getId()) {
+        //When the organisation has a DOA on parent level, check that first
+        if (null !== $affiliation->getParentOrganisation()) {
+            foreach ($affiliation->getParentOrganisation()->getParent()->getDoa() as $doa) {
+                if ($doa->getProgram()->getId() === $affiliation->getProject()->getCall()->getProgram()->getId()) {
+                    return true;
+                }
+            }
+        }
+
+        foreach ($affiliation->getOrganisation()->getProgramDoa() as $doa) {
+            if ($doa->getProgram()->getId() === $affiliation->getProject()->getCall()->getProgram()->getId()) {
                 return true;
             }
         }

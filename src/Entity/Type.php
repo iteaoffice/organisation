@@ -228,7 +228,7 @@ class Type extends AbstractEntity implements ResourceInterface
      *
      * @return int|string
      */
-    public function getInvoice($textual = false)
+    public function getInvoice(bool $textual = false)
     {
         if ($textual) {
             return self::$invoiceTemplates[$this->invoice];

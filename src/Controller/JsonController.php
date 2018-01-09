@@ -30,7 +30,7 @@ class JsonController extends OrganisationAbstractController
         $organisationId = (int)$this->getEvent()->getRequest()->getPost()->get('organisationId');
         $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
 
-        if (\is_null($organisation)) {
+        if (null === $organisation) {
             return new JsonModel();
         }
 

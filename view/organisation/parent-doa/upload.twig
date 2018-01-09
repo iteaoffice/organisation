@@ -9,8 +9,6 @@
     format(parent)|raw }}</h1>
 
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
@@ -24,6 +22,7 @@
 
 {{ ztbformelement(form.get('dateSigned')) }}
 {{ ztbformelement(form.get('dateApproved')) }}
+{{ ztbformelement(form.get('program')) }}
 {{ contactformelement(form.get('contact')) }}
 
 {{ ztbformelement(form.get('file')) }}

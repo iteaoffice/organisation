@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Organisation\Controller\Plugin;
 
 use Organisation\Entity\OParent;
+use Program\Entity\Program;
 
 /**
  * Class RenderOverviewVariableContributionSheet
@@ -27,10 +28,11 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
 {
     /**
      * @param OParent $parent
+     * @param Program $program
      * @param int $year
      * @return OrganisationPdf
      */
-    public function __invoke(OParent $parent, int $year): OrganisationPdf
+    public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
     {
         /**
          * @var $pdf OrganisationPdf|\TCPDF
@@ -41,7 +43,8 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
         $pdf->SetFontSize(8);
 
 
-        $projects = $this->getParentService()->renderProjectsByParentInYear($parent, $year);
+        $projects = $this->getParentService()->renderProjectsByParentInYear($parent, $program, $year);
+        $invoiceMethod = $this->getInvoiceService()->findInvoiceMethod($program);
 
 
         $content = $this->getTwigRenderer()->render(
@@ -49,13 +52,15 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
             [
                 'year'               => $year,
                 'parent'             => $parent,
+                'program'            => $program,
                 'membershipFactor'   => $this->getParentService()->parseMembershipFactor($parent),
                 'contactService'     => $this->getContactService(),
                 'versionService'     => $this->getVersionService(),
                 'parentService'      => $this->getParentService(),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $year),
+                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent),
                 'affiliationService' => $this->getAffiliationService(),
                 'projectService'     => $this->getProjectService(),
+                'invoiceMethod'      => $invoiceMethod,
                 'financialContact'   => $this->getParentService()->getFinancialContact($parent),
                 'projects'           => $projects,
             ]

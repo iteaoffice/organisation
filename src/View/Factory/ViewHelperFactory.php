@@ -20,6 +20,7 @@ namespace Organisation\View\Factory;
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Interop\Container\ContainerInterface;
+use Invoice\Service\InvoiceService;
 use Organisation\Service\ParentService;
 use Organisation\View\Helper\AbstractViewHelper;
 use Project\Service\ProjectService;
@@ -65,6 +66,10 @@ final class ViewHelperFactory implements FactoryInterface
         /** @var VersionService $versionService */
         $versionService = $container->get(VersionService::class);
         $viewHelper->setVersionService($versionService);
+
+        /** @var InvoiceService $invoiceService */
+        $invoiceService = $container->get(InvoiceService::class);
+        $viewHelper->setInvoiceService($invoiceService);
 
         /** @var AffiliationService $affiliationService */
         $affiliationService = $container->get(AffiliationService::class);

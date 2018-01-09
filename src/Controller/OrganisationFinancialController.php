@@ -62,7 +62,11 @@ class OrganisationFinancialController extends OrganisationAbstractController
     {
         $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
 
-        if (\is_null($financial = $organisation->getFinancial())) {
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        if (null === ($financial = $organisation->getFinancial())) {
             $financial = new Financial();
             $financial->setOrganisation($organisation);
         }
@@ -158,7 +162,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function noFinancialAction()
+    public function noFinancialAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();

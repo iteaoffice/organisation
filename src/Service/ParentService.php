@@ -23,6 +23,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Query;
 use Organisation\Entity;
 use Organisation\Repository;
+use Program\Entity\Call\Call;
+use Program\Entity\Program;
 use Project\Entity\Version\Version;
 
 /**
@@ -45,9 +47,9 @@ class ParentService extends AbstractService
     /**
      * @param string $name
      *
-     * @return null|Entity\Parent\Status|object
+     * @return null|Entity\Parent\Status
      */
-    public function findParentStatusByName(string $name):?Entity\Parent\Status
+    public function findParentStatusByName(string $name): ?Entity\Parent\Status
     {
         return $this->getEntityManager()->getRepository(Entity\Parent\Status::class)->findOneBy(['status' => $name]);
     }
@@ -55,9 +57,9 @@ class ParentService extends AbstractService
     /**
      * @param string $name
      *
-     * @return null|Entity\Parent\Type|object
+     * @return null|Entity\Parent\Type
      */
-    public function findParentTypeByName(string $name):?Entity\Parent\Type
+    public function findParentTypeByName(string $name): ?Entity\Parent\Type
     {
         return $this->getEntityManager()->getRepository(Entity\Parent\Type::class)->findOneBy(['type' => $name]);
     }
@@ -164,9 +166,6 @@ class ParentService extends AbstractService
         /** @var Entity\Parent\Type $type */
         $type = $this->findEntityById(Entity\Parent\Type::class, Entity\Parent\Type::TYPE_OTHER);
         $parent->setType($type);
-        /** @var Entity\Parent\Status $status */
-        $status = $this->findEntityById(Entity\Parent\Status::class, Entity\Parent\Status::STATUS_FREE_RIDER);
-        $parent->setStatus($status);
 
         $this->updateEntity($parent);
 
@@ -189,7 +188,7 @@ class ParentService extends AbstractService
     public function findParentOrganisationInParentByOrganisation(
         Entity\OParent $parent,
         Entity\Organisation $organisation
-    ):?Entity\Parent\Organisation {
+    ): ?Entity\Parent\Organisation {
         foreach ($parent->getParentOrganisation() as $parentOrganisation) {
             if ($parentOrganisation->getOrganisation() === $organisation) {
                 return $parentOrganisation;
@@ -200,18 +199,23 @@ class ParentService extends AbstractService
     }
 
     /**
-     * @param $parent
+     * @param Entity\OParent $parent
+     * @param Program $program
      * @return float
+     * @throws \Exception
      */
-    public function parseTotalFundedByParent($parent): float
+    public function parseTotalFundedByParent(Entity\OParent $parent, Program $program): float
     {
         //Go over each affiliation and sum up what has been paid already
         $totalFunded = 0;
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
             $latestVersion = $this->getProjectService()
-                ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
+                ->getLatestProjectVersion($affiliation->getProject());
 
-            if (!\is_null($latestVersion)) {
+            if (null !== $latestVersion) {
                 $totalFunded += $this->getVersionService()
                     ->findTotalFundingVersionByAffiliationAndVersion($affiliation, $latestVersion);
             }
@@ -221,20 +225,23 @@ class ParentService extends AbstractService
     }
 
     /**
-     * @param $parent
-     *
-     * @return float|int
+     * @param Entity\OParent $parent
+     * @param Program $program
+     * @return float
      * @throws \Exception
      */
-    public function parseTotalFundingEuByParent($parent): float
+    public function parseTotalFundingEuByParent(Entity\OParent $parent, Program $program): float
     {
         //Go over each affiliation and sum up what has been paid already
         $totalFunded = 0;
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
             $latestVersion = $this->getProjectService()
-                ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
+                ->getLatestProjectVersion($affiliation->getProject());
 
-            if (!\is_null($latestVersion)) {
+            if (null !== $latestVersion) {
                 $totalFunded += $this->getVersionService()
                     ->findTotalFundingEuVersionByAffiliationAndVersion($affiliation, $latestVersion);
             }
@@ -245,14 +252,18 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     * @param Program $program
      * @param int $year
      * @return float
      */
-    public function parseContributionPaid(Entity\OParent $parent, int $year): float
+    public function _parseContributionPaid(Entity\OParent $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contributionPaid = 0;
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
             $contributionPaid += $this->getAffiliationService()->parseContributionPaid($affiliation, $year);
         }
 
@@ -261,18 +272,25 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     * @param Program $program
      * @param int $year
      * @return float
+     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function parseContributionDue(Entity\OParent $parent, int $year): float
+    public function _parseContributionDue(Entity\OParent $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contributionDue = 0;
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
             $latestVersion = $this->getProjectService()
-                ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
+                ->getLatestProjectVersion($affiliation->getProject());
 
-            if (!\is_null($latestVersion)) {
+            if (null !== $latestVersion) {
                 $contributionDue += $this->getAffiliationService()
                     ->parseContributionDue($affiliation, $latestVersion, $year);
             }
@@ -283,20 +301,27 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     * @param Program $program
      * @param int $year
      * @return float
+     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function parseContribution(Entity\OParent $parent, int $year): float
+    public function parseContribution(Entity\OParent $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contribution = 0;
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
             $latestVersion = $this->getProjectService()
-                ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
+                ->getLatestProjectVersion($affiliation->getProject());
 
-            if (!\is_null($latestVersion)) {
+            if (null !== $latestVersion) {
                 $contribution += $this->getAffiliationService()
-                    ->parseContribution($affiliation, $latestVersion, $year);
+                    ->parseContribution($affiliation, $latestVersion, null, $year);
             }
         }
 
@@ -304,25 +329,28 @@ class ParentService extends AbstractService
     }
 
     /**
-     * Calculate the amount of contribution due by the parent
-     *
      * @param Entity\OParent $parent
+     * @param Program $program
      * @param int $year
-     * @param int $period
-     *
-     * @return float;
+     * @return float
+     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function parseBalance(Entity\OParent $parent, int $year, int $period): float
+    public function parseBalance(Entity\OParent $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contributionBalance = 0;
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
             $latestVersion = $this->getProjectService()
-                ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
+                ->getLatestProjectVersion($affiliation->getProject());
 
-            if (!\is_null($latestVersion)) {
+            if (null !== $latestVersion) {
                 $contributionBalance += $this->getAffiliationService()
-                    ->parseBalance($affiliation, $latestVersion, $year, $period);
+                    ->parseBalance($affiliation, $latestVersion, $year);
             }
         }
 
@@ -330,25 +358,25 @@ class ParentService extends AbstractService
     }
 
     /**
-     * @param $parent
-     *
+     * @param Entity\OParent $parent
+     * @param Program $program
      * @return float
      * @throws \Exception
      */
-    public function parseTotalExtraVariableBalanceByParent(Entity\OParent $parent): float
+    public function parseTotalExtraVariableBalanceByParent(Entity\OParent $parent, Program $program): float
     {
         //Go over each affiliation and sum up what has been paid already
         $balanceTotal = 0;
-        foreach ($this->getProjectService()->findProjectsByParent($parent) as $project) {
-            $version = $this->getProjectService()->getLatestProjectVersion($project, null, null, false, false);
+        foreach ($this->getProjectService()->findProjectsByParent($parent, $program) as $project) {
+            $version = $this->getProjectService()->getLatestProjectVersion($project);
 
             //Only add the balance when there is a version
-            if (!\is_null($version)) {
+            if (null !== $version) {
                 $balanceTotal += $this->parseExtraVariableBalanceByParentAndVersion($parent, $version);
             }
         }
 
-        return round($balanceTotal, 0);
+        return round($balanceTotal);
     }
 
     /**
@@ -385,29 +413,74 @@ class ParentService extends AbstractService
      */
     public function parseMembershipFactor(Entity\OParent $parent): int
     {
-        $amountOfMemberships = 1;
-
-        if ($parent->getArtemisiaMemberType() !== Entity\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER) {
-            $amountOfMemberships++;
-        }
-        if ($parent->getEpossMemberType() !== Entity\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER) {
-            $amountOfMemberships++;
-        }
-
-        return $amountOfMemberships;
+        return \count($this->parseMemberships($parent));
     }
 
     /**
      * @param Entity\OParent $parent
-     * @param int $year
      * @return array
      */
-    public function renderProjectsByParentInYear(Entity\OParent $parent, int $year): array
+    public function parseMemberships(Entity\OParent $parent): array
+    {
+        $memberships = [];
+
+        if ($parent->getMemberType() === Entity\OParent::MEMBER_TYPE_MEMBER) {
+            $memberships[] = 'AENEAS';
+        }
+        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_MEMBER) {
+            $memberships[] = 'ARTEMIS-IA';
+        }
+        if ($parent->getEpossMemberType() === Entity\OParent::EPOSS_MEMBER_TYPE_MEMBER) {
+            $memberships[] = 'EPOSS';
+        }
+
+        return $memberships;
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @return int
+     */
+    public function parseDoaFactor(Entity\OParent $parent): int
+    {
+        return \count($this->parseDoas($parent));
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @return array
+     */
+    public function parseDoas(Entity\OParent $parent): array
+    {
+        $otherDoa = [];
+
+        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER) {
+            $otherDoa[] = 'ARTEMIS-IA';
+        }
+        if ($parent->getEpossMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER) {
+            $otherDoa[] = 'EPOSS';
+        }
+
+        return $otherDoa;
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @param Program $program
+     * @param int $year
+     * @return array
+     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function renderProjectsByParentInYear(Entity\OParent $parent, Program $program, int $year): array
     {
         //Sort the projects per call
         $projects = [];
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich($parent, $program) as $affiliation) {
+            /** @var Call $call */
             $call = $affiliation->getProject()->getCall();
+
             //Initialize the array
             if (!array_key_exists($call->getId(), $projects)) {
                 $projects[$call->getId()]['affiliation'] = [];
@@ -416,16 +489,10 @@ class ParentService extends AbstractService
                 $projects[$call->getId()]['totalContribution'] = 0;
             }
 
-            $latestVersion = $this->getProjectService()->getLatestProjectVersion(
-                $affiliation->getProject(),
-                null,
-                null,
-                false,
-                false
-            );
+            $latestVersion = $this->getProjectService()->getLatestProjectVersion($affiliation->getProject());
 
             //Skip the rest of the calculation if a project has no version
-            if (\is_null($latestVersion)) {
+            if (null === $latestVersion) {
                 continue;
             }
 
@@ -436,12 +503,13 @@ class ParentService extends AbstractService
             $contribution = $this->getAffiliationService()->parseContribution(
                 $affiliation,
                 $latestVersion,
+                null,
                 $year
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation'  => $affiliation,
-                'funding'      => $funding,
+                'affiliation' => $affiliation,
+                'funding' => $funding,
                 'contribution' => $contribution
             ];
 
@@ -465,42 +533,48 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param int $year
-     *
      * @return float
      */
-    public function parseInvoiceFactor(Entity\OParent $parent, int $year): float
+    public function parseInvoiceFactor(Entity\OParent $parent): float
     {
-        $fee = $this->getProjectService()->findProjectFeeByParentAndYear($parent, $year);
-
-        if (\is_null($fee)) {
-            return 0;
+        if ($parent->isMember()) {
+            return 1.5;
         }
 
-        return (float)$fee->getPercentage();
+        return 2.5;
     }
 
     /**
      * @param Entity\OParent $parent
+     * @param Program $program
      * @param int $year
      * @param array|null $includeAffiliations
      * @return float
+     * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function parseTotal(Entity\OParent $parent, int $year, array $includeAffiliations = null): float
-    {
+    public function parseTotal(
+        Entity\OParent $parent,
+        Program $program,
+        int $year,
+        array $includeAffiliations = null
+    ): float {
         //Go over each affiliation and sum up what has been paid already
         $contributionTotal = 0;
 
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndWhich($parent) as $affiliation) {
-            //Skip the affiliations which are not in the $include affilations table
-            if (!\is_null($includeAffiliations) && !\in_array($affiliation, $includeAffiliations, true)) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
+            //Skip the affiliations which are not in the $include affiliations table
+            if (null !== $includeAffiliations && !\in_array($affiliation, $includeAffiliations, true)) {
                 continue;
             }
 
-            $latestVersion = $this->getProjectService()
-                ->getLatestProjectVersion($affiliation->getProject(), null, null, false, false);
+            $latestVersion = $this->getProjectService()->getLatestProjectVersion($affiliation->getProject());
 
-            if (!\is_null($latestVersion)) {
+            if (null !== $latestVersion) {
                 $contributionTotal += $this->getAffiliationService()->parseTotal(
                     $affiliation,
                     $latestVersion,
@@ -537,14 +611,15 @@ class ParentService extends AbstractService
     }
 
     /**
+     * @param Program $program
      * @return ArrayCollection
      */
-    public function findParentsForInvoicing(): ArrayCollection
+    public function findParentsForInvoicing(Program $program): ArrayCollection
     {
         /** @var Repository\OParent $repository */
         $repository = $this->getEntityManager()->getRepository(Entity\OParent::class);
 
-        return new ArrayCollection($repository->findParentsForInvoicing());
+        return new ArrayCollection($repository->findParentsForInvoicing($program));
     }
 
     /**

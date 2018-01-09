@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\OParent;
+use Program\Entity\Program;
 
 /**
  * Class OverviewExtraVariableContribution
@@ -28,12 +29,14 @@ class OverviewExtraVariableContribution extends AbstractViewHelper
 {
     /**
      * @param OParent $parent
+     * @param Program $program
      * @param int $year
-     *
      * @return string
      */
-    public function __invoke(OParent $parent, int $year): string
+    public function __invoke(OParent $parent, Program $program, int $year): string
     {
+        $invoiceMethod = $this->getInvoiceService()->findInvoiceMethod($program);
+
         return $this->getRenderer()->render(
             'organisation/partial/overview-extra-variable-contribution',
             [
@@ -45,8 +48,10 @@ class OverviewExtraVariableContribution extends AbstractViewHelper
                 'affiliationService' => $this->getAffiliationService(),
                 'projectService'     => $this->getProjectService(),
                 'financialContact'   => $this->getParentService()->getFinancialContact($parent),
-                'projects'           => $this->getProjectService()->findProjectsByParent($parent),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $year),
+                'projects'           => $this->getProjectService()->findProjectsByParent($parent, $program),
+                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent),
+                'invoiceMethod'      => $invoiceMethod,
+                'program'            => $program,
             ]
         );
     }

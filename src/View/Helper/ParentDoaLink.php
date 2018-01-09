@@ -32,7 +32,7 @@ class ParentDoaLink extends AbstractLink
      *
      * @return string
      */
-    public function __invoke(Doa $doa = null, $action = 'view', $show = 'name', OParent $parent = null)
+    public function __invoke(Doa $doa = null, $action = 'view', $show = 'name', OParent $parent = null): string
     {
         $this->setDoa($doa);
         $this->setAction($action);

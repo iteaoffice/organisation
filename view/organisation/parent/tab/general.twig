@@ -11,17 +11,19 @@
     <dd>{{ parentTypeLink(parent.type,'view','type') }}
         ({{ translate("txt-last-update-%s")|format(parent.dateparentTypeUpdate|date("d-m-Y")) }})
     </dd>
-    <dt>{{ translate("txt-parent-status") }}</dt>
-    <dd>{{ parent.status }}</dd>
+    <dt>{{ translate("txt-parent-status") }} </dt>
+    <dd>{{ parent.status }} ({{ translate("txt-deprecated") }})</dd>
 
     <dt>{{ translate("txt-representative") }}</dt>
     <dd>{{ contactLink(parent.contact,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-member-type") }}</dt>
+    <dd>{{ translate(parent.getMemberType(true)) }}</dd>
     <dt>{{ translate("txt-eposs-member-type") }}</dt>
     <dd>{{ translate(parent.getEpossMemberType(true)) }}</dd>
     <dt>{{ translate("txt-artemisia-member-type") }}</dt>
     <dd>{{ translate(parent.getArtemisiaMemberType(true)) }}</dd>
     <dt>{{ translate("txt-invoice-factor") }}</dt>
-    <dd>{{ invoiceFactor }}</dd>
+    <dd>{{ invoiceFactor }}%</dd>
     <dt>{{ translate("txt-membership-factor") }}</dt>
     <dd>{{ membershipFactor }}</dd>
 </dl>

@@ -1,8 +1,8 @@
 {% do headTitle().append(translate("txt-upload-parent-doa-title")) %}
 
 {% do headLink().appendStylesheet(
-'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
-) %}
+    '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+    ) %}
 
 
 <h1 class="display-4">{{ translate("txt-replace-doa-for-parent-%s")|
@@ -23,16 +23,18 @@
 
 {{ ztbformelement(form.get('dateSigned')) }}
 {{ ztbformelement(form.get('dateApproved')) }}
+{{ ztbformelement(form.get('program')) }}
 {{ contactformelement(form.get('contact')) }}
 
+{% if not doa.object.isEmpty() %}
+    <div class="form-group row">
+        <label class="col-md-3 form-control-label control-label">{{ translate("txt-download-current-doa") }}</label>
 
-<div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-download-current-doa") }}</label>
-
-    <div class="col-sm-9">
-        <p class="form-control-static">{{ parentDoaLink(doa,'download','text') }}</p>
+        <div class="col-sm-9">
+            <p class="form-control-static">{{ parentDoaLink(doa,'download','text') }}</p>
+        </div>
     </div>
-</div>
+{% endif %}
 {{ ztbformelement(form.get('file')) }}
 
 

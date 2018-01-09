@@ -44,7 +44,7 @@ class OrganisationLabel extends AbstractNavigationInvokable
                 ['id' => $organisation->getId()]
             ));
             $label = (string)$organisation;
-            // Get organisation from note
+        // Get organisation from note
         } elseif ($this->getEntities()->containsKey(Note::class)) {
             /** @var Note $note */
             $note = $this->getEntities()->get(Note::class);

@@ -320,7 +320,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             //Try to find the call
             $call = $this->getCallService()->findCallByName($callName);
 
-            if (\is_null($call)) {
+            if (null === $call) {
                 $call = new Call();
                 $call->setProgram($program);
                 $call->setCall($callName);
@@ -330,7 +330,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
 
             $project = $this->getProjectService()->findProjectByName($content[$this->headerKeys['Proposal Acronym']]);
 
-            if (\is_null($project)) {
+            if (null === $project) {
                 $project = new Project();
                 $project->setProject($content[$this->headerKeys['Proposal Acronym']]);
 
@@ -370,7 +370,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             );
 
 
-            if (\is_null($organisation)) {
+            if (null === $organisation) {
                 $organisation = $this->createOrganisation(
                     $content[$this->headerKeys['Legal Name']],
                     $country

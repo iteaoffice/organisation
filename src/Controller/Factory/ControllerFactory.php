@@ -28,6 +28,7 @@ use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
+use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\View\HelperPluginManager;
@@ -77,6 +78,10 @@ final class ControllerFactory implements FactoryInterface
         /** @var ProjectService $projectService */
         $projectService = $container->get(ProjectService::class);
         $controller->setProjectService($projectService);
+
+        /** @var ProgramService $programService */
+        $programService = $container->get(ProgramService::class);
+        $controller->setProgramService($programService);
 
         /** @var OrganisationService $organisationService */
         $organisationService = $container->get(OrganisationService::class);

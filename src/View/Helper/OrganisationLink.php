@@ -71,7 +71,7 @@ class OrganisationLink extends AbstractLink
                             $this->getOrganisation()
                         ),
                     'name-and-country' => sprintf(
-                        "%s (%s)",
+                        '%s (%s)',
                         $this->getOrganisationService()
                             ->parseOrganisationWithBranch(
                                 $this->getBranch(),
@@ -111,7 +111,7 @@ class OrganisationLink extends AbstractLink
     public function parseAction(): void
     {
         if (\in_array($this->getAction(), ['view', 'view-article'], true)) {
-            if (\is_null($this->getOrganisation())) {
+            if (null === $this->getOrganisation()) {
                 throw new \InvalidArgumentException(
                     sprintf("Organisation is cannot be null for %s", $this->getAction())
                 );

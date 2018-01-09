@@ -16,6 +16,7 @@ use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
+use Invoice\Service\InvoiceService;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
@@ -69,6 +70,10 @@ abstract class AbstractOrganisationPlugin extends AbstractPlugin
      * @var CallService
      */
     protected $callService;
+    /**
+     * @var InvoiceService
+     */
+    protected $invoiceService;
     /**
      * @var ModuleOptions
      */
@@ -146,6 +151,26 @@ abstract class AbstractOrganisationPlugin extends AbstractPlugin
     public function setParentService(ParentService $parentService): AbstractOrganisationPlugin
     {
         $this->parentService = $parentService;
+
+        return $this;
+    }
+
+    /**
+     * @return InvoiceService
+     */
+    public function getInvoiceService(): InvoiceService
+    {
+        return $this->invoiceService;
+    }
+
+    /**
+     * @param InvoiceService $invoiceService
+     *
+     * @return AbstractOrganisationPlugin
+     */
+    public function setInvoiceService(InvoiceService $invoiceService): AbstractOrganisationPlugin
+    {
+        $this->invoiceService = $invoiceService;
 
         return $this;
     }

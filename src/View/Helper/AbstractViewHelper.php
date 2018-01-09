@@ -20,6 +20,7 @@ namespace Organisation\View\Helper;
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Interop\Container\ContainerInterface;
+use Invoice\Service\InvoiceService;
 use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
@@ -57,6 +58,10 @@ abstract class AbstractViewHelper extends AbstractHelper
      */
     protected $parentService;
     /**
+     * @var InvoiceService
+     */
+    protected $invoiceService;
+    /**
      * @var AffiliationService
      */
     protected $affiliationService;
@@ -77,7 +82,7 @@ abstract class AbstractViewHelper extends AbstractHelper
      */
     public function getRouteMatch()
     {
-        if (\is_null($this->routeMatch)) {
+        if (null === $this->routeMatch) {
             $this->routeMatch = $this->getServiceManager()->get('application')->getMvcEvent()->getRouteMatch();
         }
 
@@ -241,6 +246,24 @@ abstract class AbstractViewHelper extends AbstractHelper
     public function setVersionService(VersionService $versionService): AbstractViewHelper
     {
         $this->versionService = $versionService;
+
+        return $this;
+    }/**
+     * @return InvoiceService
+     */
+    public function getInvoiceService(): InvoiceService
+    {
+        return $this->invoiceService;
+    }
+
+    /**
+     * @param InvoiceService $invoiceService
+     *
+     * @return AbstractViewHelper
+     */
+    public function setInvoiceService(InvoiceService $invoiceService): AbstractViewHelper
+    {
+        $this->invoiceService = $invoiceService;
 
         return $this;
     }

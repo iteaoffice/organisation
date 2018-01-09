@@ -13,13 +13,14 @@
     }
 </style>
 
-<p style="text-align: center"><strong>Annex 1 - Overview of {{ year }} Variable Contribution for ECSEL
+<p style="text-align: center"><strong>Annex 1 - Overview of {{ year }} Variable Contribution for {{ program }}
         Project(s)</strong></p>
 
-{% for project in projects if project.totalContribution > 0 %}
+{#{% for project in projects if project.totalContribution > 0 %}#}
+{% for project in projects %}
     <table class="table" width="555" cellpadding="1">
         <tr class="header">
-            <th width="70">ECSEL project name</th>
+            <th width="70">{{ program }} project name</th>
             <th width="365">Partner Name</th>
             <th width="60">Max. Possible Funding</th>
             <th width="60">{{ year }} Variable Contribution<sup>*</sup></th>
@@ -38,7 +39,12 @@
             <th align="right">{{ project.totalContribution|round_currency }}</th>
         </tr>
     </table>
-    <small><sup>*</sup> {{ invoiceFactor }}% of Maximum Possible Funding / {{ membershipFactor * 3 }}</small>
+    {% if invoiceMethod.id is constant('Invoice\\Entity\\Method::METHOD_FUNDING_MEMBER') %}
+        <small><sup>*</sup> {{ invoiceFactor }}% of Maximum Possible Funding / {{ membershipFactor * 3 }}</small>
+    {% else %}
+        <small><sup>*</sup> {{ invoiceFactor }}% of Maximum Possible Funding / 3</small>
+    {% endif %}
+
     <p></p>
 {% endfor %}
 
@@ -52,10 +58,18 @@
         Sum {{ project.call }}: {{ project.totalContribution|round_currency }}<br>
     {% endfor %}
 
-    <p><strong>Total Amount due by {{ parent }} equals {{ parentService.parseTotal(parent, year,
-            period)|round_currency }}</strong>
+    <p><strong>Total Amount due by {{ parent }}
+            equals {{ parentService.parseTotal(parent, program, year)|round_currency }}</strong>
 
+
+        {% if invoiceMethod.id is constant('Invoice\\Entity\\Method::METHOD_FUNDING_MEMBER') %}
     <p>{{ year }} variable contribution = {{ invoiceFactor }} % / 3 years * Number of memberships
         ({{ membershipFactor }})</p>
+{% else %}
+    <p>{{ year }} variable contribution = {{ invoiceFactor }} % / 3 years</p>
+    {% endif %}
+
+
+
 
 </div>

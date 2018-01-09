@@ -22,6 +22,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
+use Program\Entity\Program;
 use Project\Entity\Version\Version;
 
 /**
@@ -68,9 +69,24 @@ class OParent extends EntityRepository
             );
         }
 
-        if (array_key_exists('status', $filter)) {
+        if (array_key_exists('memberType', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->in('parent_entity_status.id', $filter['status'])
+                $queryBuilder->expr()->in('organisation_entity_parent.memberType', $filter['memberType'])
+            );
+        }
+
+        if (array_key_exists('artemisiaMemberType', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    'organisation_entity_parent.artemisiaMemberType',
+                    $filter['artemisiaMemberType']
+                )
+            );
+        }
+
+        if (array_key_exists('epossMemberType', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in('organisation_entity_parent.epossMemberType', $filter['epossMemberType'])
             );
         }
 
@@ -126,7 +142,6 @@ class OParent extends EntityRepository
         $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
         $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
-        $queryBuilder->join('organisation_entity_parent.type', 'organisation_entity_parent_type');
 
         //Make a second sub-select to cancel out organisations which have a financial organisation
         $subSelect2 = $this->_em->createQueryBuilder();
@@ -153,10 +168,24 @@ class OParent extends EntityRepository
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }
 
-        if (array_key_exists('type', $filter)) {
+        if (array_key_exists('memberType', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()
-                    ->in('organisation_entity_parent.type', $filter['type'])
+                $queryBuilder->expr()->in('organisation_entity_parent.memberType', $filter['memberType'])
+            );
+        }
+
+        if (array_key_exists('artemisiaMemberType', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    'organisation_entity_parent.artemisiaMemberType',
+                    $filter['artemisiaMemberType']
+                )
+            );
+        }
+
+        if (array_key_exists('epossMemberType', $filter)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in('organisation_entity_parent.epossMemberType', $filter['epossMemberType'])
             );
         }
 
@@ -185,9 +214,6 @@ class OParent extends EntityRepository
             case 'type':
                 $queryBuilder->addOrderBy('organisation_entity_parent_type.type', $direction);
                 break;
-            case 'status':
-                $queryBuilder->addOrderBy('organisation_entity_parent_status.status', $direction);
-                break;
             default:
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
@@ -208,7 +234,6 @@ class OParent extends EntityRepository
 
         $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
-        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
         $queryBuilder->join('organisation_entity_parent.type', 'organisation_entity_parent_type');
 
         //Make a second subselect to filter on parents which are active in projects
@@ -248,13 +273,11 @@ class OParent extends EntityRepository
                 ->in('organisation_entity_parent', $subSelect2->getDQL())
         );
 
-        //Exclude the free-riders
+        //Exclude the members
         $queryBuilder->andWhere(
             $queryBuilder->expr()
-                ->notIn('organisation_entity_parent_status.id', [
-                    Entity\Parent\Status::STATUS_MEMBER,
-                    Entity\Parent\Status::STATUS_ECSEL_ENIAC_DOA,
-                    Entity\Parent\Status::STATUS_PENTA_DOA
+                ->notIn('organisation_entity_parent.memberType', [
+                    Entity\OParent::MEMBER_TYPE_MEMBER
                 ])
         );
 
@@ -303,22 +326,51 @@ class OParent extends EntityRepository
 
 
     /**
+     * @param Program $program
      * @return array
      */
-    public function findParentsForInvoicing(): array
+    public function findParentsForInvoicing(Program $program): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
         $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
         $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
 
-        //Limit on parent types which have a fee
-        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
-        $queryBuilder->join('organisation_entity_parent_status.projectFee', 'project_entity_fee');
 
-        $queryBuilder->addOrderBy('organisation_entity_parent.status', 'ASC');
-        $queryBuilder->addOrderBy('organisation_entity_parent.type', 'DESC');
+        //Make a second subselect to filter on parents which are active in projects
+        $subSelect2 = $this->_em->createQueryBuilder();
+        $subSelect2->select('projectParent');
+        $subSelect2->from(Affiliation::class, 'affiliation_entity_affiliation');
+        $subSelect2->join(
+            'affiliation_entity_affiliation.parentOrganisation',
+            'organisation_entity_parent_organisation'
+        );
+        $subSelect2->join('organisation_entity_parent_organisation.parent', 'projectParent');
+        $subSelect2->join('affiliation_entity_affiliation.project', 'project_entity_project');
+        $subSelect2->join('project_entity_project.call', 'program_entity_call');
+        $subSelect2->andWhere('program_entity_call.program = :program');
+        $subSelect2->andWhere($subSelect2->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
 
+        //The project should at least have an approved FPP
+        //Select projects based on a type
+        $subSelect = $this->_em->createQueryBuilder();
+        $subSelect->select('activeProject.id');
+        $subSelect->from(Version::class, 'activeProjectVersion');
+        $subSelect->join('activeProjectVersion.project', 'activeProject');
+        $subSelect->where('activeProjectVersion.approved = :approved');
+        $subSelect->andWhere('activeProjectVersion.versionType = :versionType');
+
+        $subSelect2->andWhere($queryBuilder->expr()->in('project_entity_project', $subSelect->getDQL()));
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()
+                ->in('organisation_entity_parent', $subSelect2->getDQL())
+        );
+
+
+        $queryBuilder->setParameter('approved', Version::STATUS_APPROVED);
+        $queryBuilder->setParameter('versionType', \Project\Entity\Version\Type::TYPE_FPP);
+        $queryBuilder->setParameter('program', $program);
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -336,7 +388,7 @@ class OParent extends EntityRepository
         $queryBuilder = $this->limitCChambers($queryBuilder);
 
         $queryBuilder->addOrderBy('organisation_entity_parent.status', 'ASC');
-        $queryBuilder->addOrderBy('organisation_entity_parent.type', 'DESC');
+        $queryBuilder->addOrderBy('organisation_entity_parent.memberType', 'DESC');
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -357,11 +409,11 @@ class OParent extends EntityRepository
         $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_freerider');
         $subSelect->join('organisation_entity_parent_freerider.status', 'organisation_entity_parent_freerider_status');
 
-        $subSelect->andWhere('organisation_entity_parent_freerider_status.id = :status');
+        $subSelect->andWhere('organisation_entity_parent_freerider_memberType = :memberType');
         $subSelect->andWhere('organisation_entity_parent_freerider.epossMemberType = :epossMemberType');
         $subSelect->andWhere('organisation_entity_parent_freerider.artemisiaMemberType = :artemisiaMemberType');
 
-        $queryBuilder->setParameter('status', Entity\Parent\Status::STATUS_FREE_RIDER);
+        $queryBuilder->setParameter('memberType', Entity\OParent::MEMBER_TYPE_NO_MEMBER);
         $queryBuilder->setParameter('epossMemberType', Entity\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER);
         $queryBuilder->setParameter('artemisiaMemberType', Entity\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER);
 
@@ -387,10 +439,10 @@ class OParent extends EntityRepository
         $subSelect->join('organisation_entity_parent_c_chamber.status', 'organisation_entity_parent_c_chamber_status');
 
         $subSelect->andWhere('organisation_entity_parent_c_chamber_type.id = :type');
-        $subSelect->andWhere('organisation_entity_parent_c_chamber_status.id = :status');
+        $subSelect->andWhere('organisation_entity_parent_c_chamber.memberType = :memberType');
 
         $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_C_CHAMBER);
-        $queryBuilder->setParameter('status', Entity\Parent\Status::STATUS_MEMBER);
+        $queryBuilder->setParameter('memberType', Entity\OParent::MEMBER_TYPE_MEMBER);
 
         $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_parent', $subSelect->getDQL()));
 

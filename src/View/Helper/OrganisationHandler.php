@@ -40,10 +40,10 @@ class OrganisationHandler extends AbstractViewHelper
 
     /**
      * @param Content $content
-     *
-     * @return string|null
-     *
+     * @return string
      * @throws \Exception
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function __invoke(Content $content)
     {
@@ -51,7 +51,7 @@ class OrganisationHandler extends AbstractViewHelper
 
         switch ($content->getHandler()->getHandler()) {
             case 'organisation':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
@@ -83,49 +83,49 @@ class OrganisationHandler extends AbstractViewHelper
 
                 return $this->parseOrganisationList($page);
             case 'organisation_project':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationProjectList($this->getOrganisation());
 
             case 'organisation_metadata':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationMetadata($this->getOrganisation());
 
             case 'organisation_article':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationArticleList($this->getOrganisation());
 
             case 'organisation_title':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationTitle($this->getOrganisation());
 
             case 'organisation_info':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationInfo($this->getOrganisation());
 
             case 'organisation_map':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
                 return $this->parseOrganisationMap($this->getOrganisation());
 
             case 'organisation_logo':
-                if (\is_null($this->getOrganisation())) {
+                if (null === $this->getOrganisation()) {
                     return ("The selected organisation cannot be found");
                 }
 
@@ -167,7 +167,7 @@ class OrganisationHandler extends AbstractViewHelper
      *
      * @return null|string
      */
-    private function findParamValueFromContent(Content $content, Param $param)
+    private function findParamValueFromContent(Content $content, Param $param): ?string
     {
         //Hardcoded is always first,If it cannot be found, try to find it from the docref (rule 2)
         foreach ($content->getContentParam() as $contentParam) {
@@ -190,11 +190,11 @@ class OrganisationHandler extends AbstractViewHelper
      *
      * @return void
      */
-    private function setOrganisationByDocRef($docRef)
+    private function setOrganisationByDocRef($docRef): void
     {
         $organisation = $this->getOrganisationService()->findOrganisationByDocRef($docRef);
 
-        if (\is_null($organisation)) {
+        if (null === $organisation) {
             $this->getOrganisationService()->findOrganisationById((int)$docRef);
         }
         $this->setOrganisation($organisation);
@@ -203,7 +203,7 @@ class OrganisationHandler extends AbstractViewHelper
     /**
      * @return OrganisationService
      */
-    public function getOrganisationService()
+    public function getOrganisationService(): OrganisationService
     {
         return $this->getServiceManager()->get(OrganisationService::class);
     }
@@ -221,7 +221,7 @@ class OrganisationHandler extends AbstractViewHelper
      *
      * @return OrganisationHandler
      */
-    public function setOrganisation($organisation)
+    public function setOrganisation($organisation): OrganisationHandler
     {
         $this->organisation = $organisation;
 
@@ -238,8 +238,7 @@ class OrganisationHandler extends AbstractViewHelper
 
     /**
      * @param Organisation $organisation
-     *
-     * @return null|string
+     * @return string
      */
     public function parseOrganisation(Organisation $organisation): string
     {
@@ -349,7 +348,7 @@ class OrganisationHandler extends AbstractViewHelper
     /**
      * @param int $limit
      */
-    public function setLimit($limit)
+    public function setLimit($limit): void
     {
         $this->limit = $limit;
     }

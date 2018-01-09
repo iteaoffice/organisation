@@ -6,7 +6,7 @@
 
 {% if organisation.description %}
     <h3>{{ translate("txt-description") }}</h3>
-    {{ organisation.description|nl2br }}
+    {{ organisation.description|raw|nl2br }}
 {% endif %}
 
 {% if organisation.clusterMember.count > 0 %}

@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Organisation\Form;
 
-use Zend\Form\Form;
+use Doctrine\ORM\EntityManager;
+use DoctrineORMModule\Form\Element\EntitySelect;
+use Program\Entity\Program;
+use Zend\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\File\Extension;
 use Zend\Validator\File\Size;
@@ -20,12 +23,13 @@ use Zend\Validator\File\Size;
 /**
  *
  */
-class ParentDoa extends Form implements InputFilterProviderInterface
+class ParentDoa extends Form\Form implements InputFilterProviderInterface
 {
     /**
-     * Class constructor.
+     * ParentDoa constructor.
+     * @param EntityManager $entityManager
      */
-    public function __construct()
+    public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
         $this->setAttribute('method', 'post');
@@ -35,7 +39,7 @@ class ParentDoa extends Form implements InputFilterProviderInterface
 
         $this->add(
             [
-                'type'    => \Zend\Form\Element\File::class,
+                'type'    => Form\Element\File::class,
                 'name'    => 'file',
                 'options' => [
                     'label'      => 'txt-file',
@@ -45,7 +49,7 @@ class ParentDoa extends Form implements InputFilterProviderInterface
         );
         $this->add(
             [
-                'type'    => \Zend\Form\Element\Date::class,
+                'type'    => Form\Element\Date::class,
                 'name'    => 'dateSigned',
                 'options' => [
                     'label'      => 'txt-date-signed',
@@ -55,11 +59,32 @@ class ParentDoa extends Form implements InputFilterProviderInterface
         );
         $this->add(
             [
-                'type'    => \Zend\Form\Element\Date::class,
+                'type'    => Form\Element\Date::class,
                 'name'    => 'dateApproved',
                 'options' => [
                     'label'      => 'txt-date-approved',
                     'help-block' => _('txt-partner-doa-date-approved-help-block'),
+                ],
+            ]
+        );
+        $this->add(
+            [
+                'type'    => EntitySelect::class,
+                'name'    => 'program',
+                'options' => [
+                    'target_class'   => Program::class,
+                    'find_method'    => [
+                        'name'   => 'findBy',
+                        'params' => [
+                            'criteria' => [],
+                            'orderBy'  => [
+                                'program' => 'ASC',
+                            ],
+                        ],
+                    ],
+                    'object_manager' => $entityManager,
+                    'help-block'     => _('txt-parent-doa-valid-for-program-help-block'),
+                    'label'          => _("txt-parent-doa-valid-for-program-label"),
                 ],
             ]
         );
@@ -75,7 +100,7 @@ class ParentDoa extends Form implements InputFilterProviderInterface
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Form\Element\Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => 'btn btn-primary',
@@ -85,7 +110,7 @@ class ParentDoa extends Form implements InputFilterProviderInterface
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Form\Element\Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => 'btn btn-warning',
@@ -95,7 +120,7 @@ class ParentDoa extends Form implements InputFilterProviderInterface
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Form\Element\Submit::class,
                 'name'       => 'delete',
                 'attributes' => [
                     'class' => 'btn btn-danger',
@@ -115,13 +140,13 @@ class ParentDoa extends Form implements InputFilterProviderInterface
     {
         return [
             'dateSigned'   => [
-                'required' => true,
+                'required' => false,
             ],
             'dateApproved' => [
                 'required' => false,
             ],
             'file'         => [
-                'required'   => true,
+                'required'   => false,
                 'validators' => [
                     new Size(
                         [

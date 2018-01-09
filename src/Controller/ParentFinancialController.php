@@ -41,7 +41,7 @@ class ParentFinancialController extends OrganisationAbstractController
         /** @var Entity\OParent $parent */
         $parent = $this->getParentService()->findParentById($this->params('parentId'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
             return $this->notFoundAction();
         }
 

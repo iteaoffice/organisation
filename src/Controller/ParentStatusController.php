@@ -32,7 +32,7 @@ class ParentStatusController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function listAction()
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
@@ -45,7 +45,7 @@ class ParentStatusController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentStatusFilter($this->getParentService());
+        $form = new Form\ParentStatusFilter();
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -61,9 +61,7 @@ class ParentStatusController extends OrganisationAbstractController
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function newAction()
     {
@@ -72,11 +70,9 @@ class ParentStatusController extends OrganisationAbstractController
         $form = $this->getFormService()->prepare(Entity\Parent\Status::class, null, $data);
         $form->remove('delete');
 
-        $form->setAttribute('class', 'form-horizontal');
-
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/parent-status/list');
+                return $this->redirect()->toRoute('zfcadmin/parent-status/list');
             }
 
             if ($form->isValid()) {
@@ -84,7 +80,8 @@ class ParentStatusController extends OrganisationAbstractController
                 $parentStatus = $form->getData();
 
                 $result = $this->getParentService()->newEntity($parentStatus);
-                $this->redirect()->toRoute(
+
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent-status/view',
                     [
                         'id' => $result->getId(),
@@ -97,9 +94,7 @@ class ParentStatusController extends OrganisationAbstractController
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function editAction()
     {
@@ -112,15 +107,26 @@ class ParentStatusController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->getFormService()->prepare($parentStatus, $parentStatus, $data);
-        $form->setAttribute('class', 'form-horizontal');
+
+        if (!$parentStatus->getParent()->isEmpty()) {
+            $form->remove('delete');
+        }
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent-status/view',
                     [
                         'id' => $parentStatus->getId(),
                     ]
+                );
+            }
+
+            if (isset($data['delete']) && $parentStatus->getParent()->isEmpty()) {
+                $this->getParentService()->removeEntity($parentStatus);
+
+                return $this->redirect()->toRoute(
+                    'zfcadmin/parent-status/list'
                 );
             }
 
@@ -129,7 +135,8 @@ class ParentStatusController extends OrganisationAbstractController
                 $parentStatus = $form->getData();
 
                 $result = $this->getParentService()->newEntity($parentStatus);
-                $this->redirect()->toRoute(
+
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent-status/view',
                     [
                         'id' => $result->getId(),
@@ -143,9 +150,9 @@ class ParentStatusController extends OrganisationAbstractController
 
 
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         /** @var Entity\Parent\Status $status */
         $status = $this->getParentService()->findEntityById(Entity\Parent\Status::class, $this->params('id'));

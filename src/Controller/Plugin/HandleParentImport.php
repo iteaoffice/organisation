@@ -86,7 +86,7 @@ class HandleParentImport extends AbstractImportPlugin
                 false
             );
 
-            if (\is_null($organisation)) {
+            if (null === $organisation) {
                 $organisation = $this->createOrganisation(
                     $name,
                     $parentCountry

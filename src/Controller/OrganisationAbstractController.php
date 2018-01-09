@@ -25,11 +25,14 @@ use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Controller\Plugin\HandleParentAndProjectImport;
 use Organisation\Controller\Plugin\HandleParentImport;
 use Organisation\Controller\Plugin\MergeOrganisation;
-use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
 use Organisation\Controller\Plugin\RenderOverviewExtraVariableContributionSheet;
+use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
+use Organisation\Entity;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
+use Program\Entity\Program;
+use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -45,8 +48,8 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      IsAllowed isAllowed($resource, $action)
  * @method      InvoiceFilterPlugin getInvoiceFilter()
  * @method      OrganisationFilterPlugin getOrganisationFilter()
- * @method      RenderOverviewVariableContributionSheet renderOverviewVariableContributionSheet($parent, $year)
- * @method      RenderOverviewExtraVariableContributionSheet renderOverviewExtraVariableContributionSheet($parent, $year)
+ * @method      RenderOverviewVariableContributionSheet renderOverviewVariableContributionSheet(Entity\OParent $parent, Program $program, int $year)
+ * @method      RenderOverviewExtraVariableContributionSheet renderOverviewExtraVariableContributionSheet(Entity\OParent $parent, Program $program, int $year)
  * @method      HandleParentAndProjectImport handleParentAndProjectImport($fileData, $keys, $doImport)
  * @method      HandleParentImport handleParentImport($fileData, $keys, $doImport)
  * @method      MergeOrganisation mergeOrganisation()
@@ -85,6 +88,10 @@ abstract class OrganisationAbstractController extends AbstractActionController
      * @var ProjectService
      */
     protected $projectService;
+    /**
+     * @var ProgramService
+     */
+    protected $programService;
     /**
      * @var GeneralService
      */
@@ -280,6 +287,26 @@ abstract class OrganisationAbstractController extends AbstractActionController
     public function setLoiService($loiService): OrganisationAbstractController
     {
         $this->loiService = $loiService;
+
+        return $this;
+    }
+
+    /**
+     * @return ProgramService
+     */
+    public function getProgramService(): ProgramService
+    {
+        return $this->programService;
+    }
+
+    /**
+     * @param  ProgramService $programService
+     *
+     * @return OrganisationAbstractController
+     */
+    public function setProgramService($programService): OrganisationAbstractController
+    {
+        $this->programService = $programService;
 
         return $this;
     }

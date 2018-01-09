@@ -18,9 +18,10 @@ declare(strict_types=1);
 
 namespace Organisation\Entity\Parent;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
+use Program\Entity\Program;
 use Project\Entity\Fee;
 use Zend\Form\Annotation;
 
@@ -33,6 +34,7 @@ use Zend\Form\Annotation;
  * @Annotation\Name("organisation_parent_status")
  *
  * @category Organisation
+ * @deprecated
  */
 class Status extends AbstractEntity
 {
@@ -56,13 +58,15 @@ class Status extends AbstractEntity
      * @ORM\Column(name="status", type="string", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation-status-label","help-block":"txt-organisation-status-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-organisation-status-placeholder"})
      * @var string
      */
     private $status;
     /**
      * @ORM\Column(name="description", type="string", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-organisation-description-label","help-block":"txt-organisation-description-help-block"})
+     * @Annotation\Options({"label":"txt-organisation-status-description-label","help-block":"txt-organisation-status-description-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-organisation-description-placeholder"})
      * @var string
      */
     private $description;
@@ -70,24 +74,16 @@ class Status extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Organisation\Entity\OParent", cascade={"persist"}, mappedBy="status")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\OParent[]|ArrayCollection
+     * @var \Organisation\Entity\OParent[]|Collections\ArrayCollection
      */
     private $parent;
-    /**
-     * @ORM\ManyToMany(targetEntity="Project\Entity\Fee", cascade={"persist"}, mappedBy="parentStatus")
-     * @Annotation\Exclude()
-     *
-     * @var Fee[]|ArrayCollection
-     */
-    private $projectFee;
 
     /**
      * OrganisationType constructor.
      */
     public function __construct()
     {
-        $this->parent = new ArrayCollection();
-        $this->projectFee = new ArrayCollection();
+        $this->parent = new Collections\ArrayCollection();
     }
 
     /**
@@ -130,6 +126,30 @@ class Status extends AbstractEntity
     }
 
     /**
+     * New function needed to make the hydrator happy
+     *
+     * @param Collections\Collection $programCollection
+     */
+    public function addProgram(Collections\Collection $programCollection)
+    {
+        foreach ($programCollection as $program) {
+            $this->program->add($program);
+        }
+    }
+
+    /**
+     * New function needed to make the hydrator happy
+     *
+     * @param Collections\Collection $programCollection
+     */
+    public function removeProgram(Collections\Collection $programCollection)
+    {
+        foreach ($programCollection as $single) {
+            $this->program->removeElement($single);
+        }
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -139,7 +159,6 @@ class Status extends AbstractEntity
 
     /**
      * @param int $id
-     *
      * @return Status
      */
     public function setId($id): Status
@@ -152,14 +171,13 @@ class Status extends AbstractEntity
     /**
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
     /**
      * @param string $status
-     *
      * @return Status
      */
     public function setStatus(string $status): Status
@@ -172,14 +190,13 @@ class Status extends AbstractEntity
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
      * @param string $description
-     *
      * @return Status
      */
     public function setDescription(string $description): Status
@@ -190,7 +207,7 @@ class Status extends AbstractEntity
     }
 
     /**
-     * @return ArrayCollection|\Organisation\Entity\OParent[]
+     * @return Collections\ArrayCollection|\Organisation\Entity\OParent[]
      */
     public function getParent()
     {
@@ -198,33 +215,12 @@ class Status extends AbstractEntity
     }
 
     /**
-     * @param ArrayCollection|\Organisation\Entity\OParent[] $parent
-     *
+     * @param Collections\ArrayCollection|\Organisation\Entity\OParent[] $parent
      * @return Status
      */
-    public function setParent($parent)
+    public function setParent($parent): Status
     {
         $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * @return ArrayCollection|Fee[]
-     */
-    public function getProjectFee()
-    {
-        return $this->projectFee;
-    }
-
-    /**
-     * @param ArrayCollection|Fee[] $projectFee
-     *
-     * @return Status
-     */
-    public function setProjectFee($projectFee)
-    {
-        $this->projectFee = $projectFee;
 
         return $this;
     }

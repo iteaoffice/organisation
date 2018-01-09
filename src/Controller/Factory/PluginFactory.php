@@ -23,6 +23,7 @@ use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Interop\Container\ContainerInterface;
+use Invoice\Service\InvoiceService;
 use Organisation\Controller\Plugin\AbstractOrganisationPlugin;
 use Organisation\Controller\Plugin\MergeOrganisation;
 use Organisation\Options\ModuleOptions;
@@ -76,7 +77,6 @@ final class PluginFactory implements FactoryInterface
             default:
                 /** @var AbstractOrganisationPlugin $plugin */
                 $plugin = new $requestedName($options);
-
                 $plugin->setEntityManager($entityManager);
 
                 /** @var ModuleOptions $moduleOptions */
@@ -94,6 +94,10 @@ final class PluginFactory implements FactoryInterface
                 /** @var VersionService $versionService */
                 $versionService = $container->get(VersionService::class);
                 $plugin->setVersionService($versionService);
+
+                /** @var InvoiceService $invoiceService */
+                $invoiceService = $container->get(InvoiceService::class);
+                $plugin->setInvoiceService($invoiceService);
 
                 /** @var AffiliationService $affiliationService */
                 $affiliationService = $container->get(AffiliationService::class);

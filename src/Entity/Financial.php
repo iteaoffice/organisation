@@ -348,7 +348,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getEmail($textual = false)
+    public function getEmail(bool $textual = false)
     {
         if ($textual) {
             return self::$emailTemplates[$this->email];
@@ -418,7 +418,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getOmitContact($textual = false)
+    public function getOmitContact(bool $textual = false)
     {
         if ($textual) {
             return self::$omitContactTemplates[$this->omitContact];
@@ -456,7 +456,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getRequiredPurchaseOrder($textual = false)
+    public function getRequiredPurchaseOrder(bool $textual = false)
     {
         if ($textual) {
             return self::$requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder];
@@ -510,7 +510,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getVatStatus($textual = false)
+    public function getVatStatus(bool $textual = false)
     {
         if ($textual) {
             return self::$vatStatusTemplates[$this->vatStatus];

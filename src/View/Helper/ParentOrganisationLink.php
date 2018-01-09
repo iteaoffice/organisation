@@ -52,9 +52,9 @@ class ParentOrganisationLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'organisation'  => $this->getParentOrganisation()->getOrganisation(),
+                'organisation'  => (string) $this->getParentOrganisation()->getOrganisation(),
                 'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent()->getType()->getType() : '',
-                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent()->getStatus()->getStatus() : '',
+                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translate($this->getParentOrganisation()->getParent()->getMemberType(true)) : '',
             ]
         );
 

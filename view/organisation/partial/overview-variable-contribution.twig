@@ -13,14 +13,14 @@
     {% for affiliation in affiliations %}
 
         {% set latestVersion = projectService.getLatestProjectVersion(affiliation.getProject(), null,
-        null, false, false) %}
+            null, false, false) %}
 
         {% if latestVersion %}
             <tr>
                 <td>{{ affiliation.project }}</td>
                 <td>{{ affiliation.organisation }}</td>
                 <td>{{ versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, latestVersion)|round_currency }}</td>
-                <td>{{ affiliationService.parseContribution(affiliation, latestVersion, year)|round_currency }}</td>
+                <td>{{ affiliationService.parseContribution(affiliation, latestVersion, null, year)|round_currency }}</td>
             </tr>
         {% endif %}
     {% endfor %}
@@ -29,8 +29,8 @@
     <tr>
         <th colspan="2" class="text-right">
             {{ translate("txt-total") }}</th>
-        <th style="border-top: 2px solid black;">{{ parentService.parseTotalFundedByParent(parent, year)|round_currency }}</th>
-        <th style="border-top: 2px solid black;">{{ parentService.parseContribution(parent, year)|round_currency }}</th>
+        <th style="border-top: 2px solid black;">{{ parentService.parseTotalFundedByParent(parent, program, year)|round_currency }}</th>
+        <th style="border-top: 2px solid black;">{{ parentService.parseContribution(parent, program, year)|round_currency }}</th>
     </tr>
     </tfoot>
 </table>
@@ -48,36 +48,41 @@
     <tfoot>
     <tr>
         <th colspan="2" class="text-right">
-            {{ translate("txt-total-due-by-%s-variable-contribution-for-projects")|format(parent) }}</th>
-        <th style="border-top: 2px solid black;">{{ parentService.parseTotal(parent, year)|round_currency }}</th>
+            {{ translate("txt-total-due-by-%s-variable-contribution-for-projects-in-program-%s")|format(parent, program) }}</th>
+        <th style="border-top: 2px solid black;">{{ parentService.parseTotal(parent, program, year)|round_currency }}</th>
     </tr>
     </tfoot>
     <tbody>
     <tr>
         <td>{{ year }}</td>
-        <td>{{ translate("txt-variable-contribution-for-%s-projects")|format(year) }}</td>
-        <td>{{ parentService.parseContribution(parent, year)|round_currency }}</td>
+        <td>{{ translate("txt-variable-contribution-for-%s-projects-in-program-%s")|format(year, program) }}</td>
+        <td>{{ parentService.parseContribution(parent, program, year)|round_currency }}</td>
     </tr>
     </tbody>
 </table>
 
 
-<h4>{{ translate("txt-already-sent-invoices-after-invoice-for-year-%s-period-%s")|format(year,period) }}</h4>
+{% set hasSentInvoices = false %}
+{% for parentInvoice in parent.invoice if parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice) %}
+    {% set hasSentInvoices = true %}
+{% endfor %}
 
-<table class="table table-hover table-striped table-condensed table-sm">
-    <thead>
-    <tr>
-        <th>{{ translate("txt-invoice-number") }}</th>
-        <th>{{ translate("txt-period") }}</th>
-        <th>{{ translate("txt-date") }}</th>
-        <th>{{ translate("txt-amount-excluding-vat") }}</th>
-        <th>{{ translate("txt-amount") }}</th>
-        <th>{{ translate("txt-paid") }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for parentInvoice in parter.invoice if affiliationInvoice.year > year or (affiliationInvoice.year == year and  affiliationInvoice.period > period) %}
-        {% if invoiceService.isSent(parentInvoice.invoice) %}
+{% if hasSentInvoices %}
+    <h4>{{ translate("txt-already-sent-invoices-after-invoice-for-year-%s-period-%s")|format(year,period) }}</h4>
+
+    <table class="table table-hover table-striped table-condensed table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-invoice-number") }}</th>
+            <th>{{ translate("txt-period") }}</th>
+            <th>{{ translate("txt-date") }}</th>
+            <th>{{ translate("txt-amount-excluding-vat") }}</th>
+            <th>{{ translate("txt-amount") }}</th>
+            <th>{{ translate("txt-paid") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for parentInvoice in parent.invoice if parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice) %}
             <tr>
                 <td>{{ parentInvoice.invoice.invoiceNr }} {{ invoiceLink(parentInvoice.invoice,'download','icon') }}</td>
                 <td>{{ parentInvoice.year }}</td>
@@ -86,16 +91,18 @@
                 <td>{{ invoiceService.parseTotal(parentInvoice.invoice)|round_currency }}</td>
                 <td>{% if parentInvoice.invoice.bookingDate %}{{ parentInvoice.invoice.bookingDate|date("d-m-Y") }}{% endif %}</td>
             </tr>
-        {% endif %}
-    {% else %}
-        <tr>
-            <td colspan="6">{{ translate("txt-no-invoices-found") }}</td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif  %}
 
-<div class="well well-itea">
-    {{ translate("txt-year-%s-variable-contribution-percentage-%s-%%-3-years-number-of-memberships")|format(year,invoiceFactor) }}
-</div>
+{% if invoiceMethod.id is constant('Invoice\\Entity\\Method::METHOD_FUNDING_MEMBER') %}
+    <div class="well">
+        {{ translate("txt-year-%s-variable-contribution-percentage-%s-%%-3-years-number-of-memberships-(%s)")|format(year,invoiceFactor, parentService.parseMembershipFactor(parent)) }}
+    </div>
+{% else %}
+    <div class="well">
+        {{ translate("txt-year-%s-variable-contribution-percentage-%s-%%-3-years")|format(year,invoiceFactor) }}
+    </div>
+{% endif %}
 

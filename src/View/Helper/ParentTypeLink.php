@@ -52,7 +52,7 @@ class ParentTypeLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'type' => $this->getParentType(),
+                'type' => (string) $this->getParentType(),
             ]
         );
 

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Organisation\Controller\Plugin;
 
 use Organisation\Entity\OParent;
+use Program\Entity\Program;
 
 /**
  * Class RenderOverviewExtraVariableContributionSheet
@@ -27,11 +28,11 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
 {
     /**
      * @param OParent $parent
-     * @param $year
-     * @param $period
-     * @return OrganisationPdf|\TCPDF
+     * @param Program $program
+     * @param int $year
+     * @return OrganisationPdf
      */
-    public function __invoke(OParent $parent, int $year): OrganisationPdf
+    public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
     {
         /**
          * @var $pdf OrganisationPdf|\TCPDF
@@ -52,9 +53,10 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
                 'parentService'      => $this->getParentService(),
                 'affiliationService' => $this->getAffiliationService(),
                 'projectService'     => $this->getProjectService(),
+                'program'            => $program,
                 'financialContact'   => $this->getParentService()->getFinancialContact($parent),
-                'projects'           => $this->getProjectService()->findProjectsByParent($parent),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $year),
+                'projects'           => $this->getProjectService()->findProjectsByParent($parent, $program),
+                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent),
 
             ]
         );

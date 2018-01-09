@@ -69,6 +69,14 @@ class InvoiceExtra extends AbstractEntity
      * @var \Invoice\Entity\Invoice
      */
     private $invoice;
+    /**
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="parentInvoiceExtra", cascade={"persist"})
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
+     * })
+     * @var \Program\Entity\Program
+     */
+    private $program;
 
     /**
      * Class constructor.
@@ -211,6 +219,26 @@ class InvoiceExtra extends AbstractEntity
     public function setInvoice(\Invoice\Entity\Invoice $invoice): InvoiceExtra
     {
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * @return \Program\Entity\Program
+     */
+    public function getProgram():?\Program\Entity\Program
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param \Program\Entity\Program $program
+     *
+     * @return InvoiceExtra
+     */
+    public function setProgram(\Program\Entity\Program $program): InvoiceExtra
+    {
+        $this->program = $program;
 
         return $this;
     }

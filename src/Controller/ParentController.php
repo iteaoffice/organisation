@@ -43,8 +43,7 @@ class ParentController extends OrganisationAbstractController
             $filterPlugin->getFilter()
         );
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($query, false)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($query, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
@@ -74,8 +73,7 @@ class ParentController extends OrganisationAbstractController
         $parentQuery = $this->getParentService()
             ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
@@ -123,7 +121,9 @@ class ParentController extends OrganisationAbstractController
                 'country',
                 'iso3',
                 'type',
-                'status',
+                'member type',
+                'artemisia type',
+                'eposs type',
                 'projects',
                 'contact',
                 'email',
@@ -153,14 +153,16 @@ class ParentController extends OrganisationAbstractController
                         $parent->getOrganisation()->getCountry()->getCountry(),
                         $parent->getOrganisation()->getCountry()->getIso3(),
                         $parent->getType()->getType(),
-                        $parent->getStatus()->getStatus(),
+                        $this->translate($parent->getMemberType(true)),
+                        $this->translate($parent->getArtemisiaMemberType(true)),
+                        $this->translate($parent->getEpossMemberType(true)),
                         implode($projects, ';'),
                         $parent->getContact()->parseFullName(),
                         $parent->getContact()->getEmail(),
-                        !\is_null($address) ? $address->getAddress() : '',
-                        !\is_null($address) ? $address->getZipCode() : '',
-                        !\is_null($address) ? $address->getCity() : '',
-                        !\is_null($address) ? $address->getCountry()->getCountry() : '',
+                        null !== $address ? $address->getAddress() : '',
+                        null !== $address ? $address->getZipCode() : '',
+                        null !== $address ? $address->getCity() : '',
+                        null !== $address ? $address->getCountry()->getCountry() : '',
                     ]
                 );
             }
@@ -177,7 +179,10 @@ class ParentController extends OrganisationAbstractController
         $response = $this->getResponse();
         $headers = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'text/csv');
-        $headers->addHeaderLine('Content-Disposition', "attachment; filename=\"exoport-members-with-are-no-member-and-have-no-doa.csv\"");
+        $headers->addHeaderLine(
+            'Content-Disposition',
+            "attachment; filename=\"exoport-members-with-are-no-member-and-have-no-doa.csv\""
+        );
         $headers->addHeaderLine('Accept-Ranges', 'bytes');
         $headers->addHeaderLine('Content-Length', strlen($string));
 
@@ -330,7 +335,7 @@ class ParentController extends OrganisationAbstractController
     {
         $parent = $this->getParentService()->findParentById($this->params('id'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
             return $this->notFoundAction();
         }
 
@@ -372,12 +377,12 @@ class ParentController extends OrganisationAbstractController
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-updated"), $parent));
 
-                $result = $this->getParentService()->updateEntity($parent);
+                $parent = $this->getParentService()->updateEntity($parent);
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
                     [
-                        'id' => $result->getId(),
+                        'id' => $parent->getId(),
                     ]
                 );
             }
@@ -389,19 +394,54 @@ class ParentController extends OrganisationAbstractController
         ]);
     }
 
-
     /**
-     * @return array|ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function viewAction()
     {
         $parent = $this->getParentService()->findParentById($this->params('id'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
             return $this->notFoundAction();
         }
 
         $year = (int)date('Y');
+
+        $form = new Form\CreateParentDoa($this->getEntityManager());
+        $form->setData($this->getRequest()->getPost()->toArray());
+        if ($this->getRequest()->isPost() && $form->isValid()) {
+            $counter = 0;
+            foreach ((array)$form->getData()['program'] as $programId) {
+                $program = $this->getProgramService()->findProgramById($programId);
+                if (null !== $program) {
+                    $doa = new Entity\Parent\Doa();
+                    $doa->setContact($parent->getContact());
+                    $doa->setParent($parent);
+                    $doa->setProgram($program);
+                    $this->getParentService()->newEntity($doa);
+                    $counter++;
+                }
+            }
+
+            $this->flashMessenger()->setNamespace('success')
+                ->addMessage(
+                    sprintf(
+                        $this->translate("txt-%s-parent-doa-have-been-created-for-%s"),
+                        $counter,
+                        $parent
+                    )
+                );
+
+            return $this->redirect()->toRoute(
+                'zfcadmin/parent/view',
+                [
+                    'id' => $parent->getId(),
+                ],
+                [
+                    'fragment' => 'doa'
+                ]
+            );
+        }
 
         return new ViewModel(
             [
@@ -409,8 +449,9 @@ class ParentController extends OrganisationAbstractController
                 'organisationService' => $this->getOrganisationService(),
                 'contactService'      => $this->getContactService(),
                 'year'                => $year,
-                'invoiceFactor'       => $this->getParentService()->parseInvoiceFactor($parent, $year),
+                'invoiceFactor'       => $this->getParentService()->parseInvoiceFactor($parent),
                 'membershipFactor'    => $this->getParentService()->parseMembershipFactor($parent),
+                'form'                => $form
             ]
         );
     }
@@ -420,19 +461,29 @@ class ParentController extends OrganisationAbstractController
      */
     public function overviewVariableContributionAction(): ViewModel
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('id'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        $program = $this->getProgramService()->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
             return $this->notFoundAction();
         }
 
         $year = (int)$this->params('year');
 
+        $invoiceMethod = $this->getInvoiceService()->findInvoiceMethod($program);
+
         return new ViewModel(
             [
                 'year'          => $year,
                 'parent'        => $parent,
-                'invoiceFactor' => $this->getParentService()->parseInvoiceFactor($parent, $year)
+                'program'       => $program,
+                'invoiceMethod' => $invoiceMethod,
+                'invoiceFactor' => $this->getParentService()->parseInvoiceFactor($parent)
 
             ]
         );
@@ -443,15 +494,22 @@ class ParentController extends OrganisationAbstractController
      */
     public function overviewVariableContributionPdfAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('id'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        $program = $this->getProgramService()->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
             return $this->notFoundAction();
         }
 
         $year = (int)$this->params('year');
 
-        $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $year);
+
+        $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $program, $year);
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
@@ -475,9 +533,15 @@ class ParentController extends OrganisationAbstractController
      */
     public function overviewExtraVariableContributionAction(): ViewModel
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('id'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        $program = $this->getProgramService()->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
             return $this->notFoundAction();
         }
 
@@ -485,8 +549,9 @@ class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'year'   => $year,
-                'parent' => $parent,
+                'year'    => $year,
+                'parent'  => $parent,
+                'program' => $program
 
             ]
         );
@@ -497,15 +562,21 @@ class ParentController extends OrganisationAbstractController
      */
     public function overviewExtraVariableContributionPdfAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('id'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        $program = $this->getProgramService()->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
             return $this->notFoundAction();
         }
 
         $year = (int)$this->params('year');
 
-        $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $year);
+        $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $program, $year);
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
@@ -527,7 +598,7 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function importParentAction()
+    public function importParentAction(): ViewModel
     {
         set_time_limit(0);
 
@@ -575,7 +646,7 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function importProjectAction()
+    public function importProjectAction(): ViewModel
     {
         set_time_limit(0);
 

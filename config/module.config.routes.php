@@ -479,7 +479,7 @@ return [
                             'overview-variable-contribution'           => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year].html',
+                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year]/program-[:program].html',
                                     'defaults' => [
                                         'action' => 'overview-variable-contribution',
                                     ],
@@ -488,7 +488,7 @@ return [
                             'overview-variable-contribution-pdf'       => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year].pdf',
+                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year]/program-[:program].pdf',
                                     'defaults' => [
                                         'action' => 'overview-variable-contribution-pdf',
                                     ],
@@ -497,7 +497,7 @@ return [
                             'overview-extra-variable-contribution'     => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year].html',
+                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year]/program-[:program].html',
                                     'defaults' => [
                                         'action' => 'overview-extra-variable-contribution',
                                     ],
@@ -506,7 +506,7 @@ return [
                             'overview-extra-variable-contribution-pdf' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year].pdf',
+                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year]/program-[:program].pdf',
                                     'defaults' => [
                                         'action' => 'overview-extra-variable-contribution-pdf',
                                     ],

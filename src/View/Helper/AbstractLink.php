@@ -19,6 +19,7 @@ use Organisation\Acl\Assertion\AssertionAbstract;
 use Organisation\Entity;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Service\OrganisationService;
+use Program\Entity\Program;
 use Zend\View\Helper\ServerUrl;
 use Zend\View\Helper\Url;
 
@@ -96,6 +97,10 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $doa;
     /**
+     * @var Program
+     */
+    protected $program;
+    /**
      * @var int
      */
     protected $year;
@@ -110,7 +115,7 @@ abstract class AbstractLink extends AbstractViewHelper
      *
      * @return string
      */
-    public function createLink()
+    public function createLink(): string
     {
         /**
          * @var $url Url
@@ -132,7 +137,7 @@ abstract class AbstractLink extends AbstractViewHelper
         return sprintf(
             $uri,
             $serverUrl() . $url($this->router, $this->routerParams),
-            htmlentities((string) $this->text),
+            htmlentities((string)$this->text),
             implode(' ', $this->classes),
             \in_array($this->getShow(), ['icon', 'button', 'alternativeShow'], true) ? implode('', $this->linkContent)
                 : htmlentities(implode('', $this->linkContent))
@@ -150,7 +155,7 @@ abstract class AbstractLink extends AbstractViewHelper
     /**
      * @throws \Exception
      */
-    public function parseShow()
+    public function parseShow(): void
     {
         switch ($this->getShow()) {
             case 'icon':
@@ -158,6 +163,12 @@ abstract class AbstractLink extends AbstractViewHelper
                 switch ($this->getAction()) {
                     case 'new':
                         $this->addLinkContent('<i class="fa fa-plus"></i>');
+                        break;
+                    case 'upload':
+                        $this->addLinkContent('<i class="fa fa-cloud-upload" aria-hidden="true"></i>');
+                        break;
+                    case 'download':
+                        $this->addLinkContent('<i class="fa fa-download" aria-hidden="true"></i>');
                         break;
                     case 'edit':
                     case 'edit-financial':
@@ -174,7 +185,7 @@ abstract class AbstractLink extends AbstractViewHelper
 
                 if ($this->getShow() === 'button') {
                     $this->addLinkContent(' ' . $this->getText());
-                    $this->addClasses("btn btn-primary");
+                    $this->addClasses('btn btn-primary');
                 }
 
                 break;
@@ -182,10 +193,8 @@ abstract class AbstractLink extends AbstractViewHelper
                 $this->addLinkContent($this->getText());
                 break;
             case 'paginator':
-                if (\is_null($this->getAlternativeShow())) {
-                    throw new \InvalidArgumentException(
-                        sprintf("alternativeShow cannot be null for a paginator link")
-                    );
+                if (null === $this->getAlternativeShow()) {
+                    throw new \InvalidArgumentException('alternativeShow cannot be null for a paginator link');
                 }
                 $this->addLinkContent($this->getAlternativeShow());
                 break;
@@ -249,11 +258,8 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addLinkContent($linkContent)
     {
-        if (!is_array($linkContent)) {
-            $linkContent = [$linkContent];
-        }
-        foreach ($linkContent as $content) {
-            $this->linkContent[] = $content;
+        foreach ((array) $linkContent as $content) {
+            $this->linkContent[] = (string) $content;
         }
 
         return $this;
@@ -282,10 +288,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addClasses($classes)
     {
-        if (!is_array($classes)) {
-            $classes = (array)$classes;
-        }
-        foreach ($classes as $class) {
+        foreach ((array) $classes as $class) {
             $this->classes[] = $class;
         }
 
@@ -396,10 +399,10 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addRouterParam($key, $value, $allowNull = true)
     {
-        if (!$allowNull && \is_null($value)) {
+        if (!$allowNull && null === $value) {
             throw new \InvalidArgumentException(sprintf("null is not allowed for %s", $key));
         }
-        if (!\is_null($value)) {
+        if (null !== $value) {
             $this->routerParams[$key] = $value;
         }
     }
@@ -452,6 +455,30 @@ abstract class AbstractLink extends AbstractViewHelper
         return $this;
     }
 
+    /**
+     * @return Program
+     */
+    public function getProgram(): Program
+    {
+        if (\is_null($this->program)) {
+            $this->program = new Program();
+        }
+
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     *
+     * @return AbstractLink
+     */
+    public function setProgram($program): AbstractLink
+    {
+        $this->program = $program;
+
+        return $this;
+    }
+    
     /**
      * @return Entity\Type
      */

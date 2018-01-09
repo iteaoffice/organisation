@@ -26,7 +26,7 @@ class OrganisationController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function searchAction()
+    public function searchAction(): ViewModel
     {
         $searchItem = $this->getRequest()->getQuery()->get('search_item');
         $maxResults = $this->getRequest()->getQuery()->get('max_rows', 12);

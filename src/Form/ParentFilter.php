@@ -21,6 +21,7 @@ use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Organisation\Entity;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
+use Zend\Form\Element\MultiCheckbox;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
@@ -55,22 +56,34 @@ class ParentFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'    => EntityMultiCheckbox::class,
-                'name'    => 'status',
+                'type'    => MultiCheckbox::class,
+                'name'    => 'memberType',
                 'options' => [
-                    'target_class'   => Entity\Parent\Status::class,
-                    'find_method'    => [
-                        'name'   => 'findBy',
-                        'params' => [
-                            'criteria' => [],
-                            'orderBy'  => [
-                                'status' => 'ASC',
-                            ],
-                        ],
-                    ],
-                    'inline'         => true,
-                    'object_manager' => $parentService->getEntityManager(),
-                    'label'          => _("txt-status"),
+                    'inline'        => true,
+                    'value_options' => Entity\OParent::getMemberTypeTemplates(),
+                    'label'         => _("txt-member-type"),
+                ],
+            ]
+        );
+        $filterFieldset->add(
+            [
+                'type'    => MultiCheckbox::class,
+                'name'    => 'artemisiaMemberType',
+                'options' => [
+                    'inline'        => true,
+                    'value_options' => Entity\OParent::getArtemisiaMemberTypeTemplates(),
+                    'label'         => _("txt-artemisia-member-type"),
+                ],
+            ]
+        );
+        $filterFieldset->add(
+            [
+                'type'    => MultiCheckbox::class,
+                'name'    => 'epossMemberType',
+                'options' => [
+                    'inline'        => true,
+                    'value_options' => Entity\OParent::getEpossMemberTypeTemplates(),
+                    'label'         => _("txt-eposs-member-type"),
                 ],
             ]
         );
@@ -114,7 +127,7 @@ class ParentFilter extends Form
                     ],
                     'inline'         => true,
                     'object_manager' => $parentService->getEntityManager(),
-                    'label'          => _("txt-program"),
+                    'label'          => _("txt-has-doa-for"),
                 ],
             ]
         );

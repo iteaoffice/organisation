@@ -115,7 +115,7 @@ abstract class AssertionAbstract implements AssertionInterface
      */
     public function getRouteMatch()
     {
-        if (\is_null($this->routeMatch)) {
+        if (null === $this->routeMatch) {
             $this->routeMatch = $this->getServiceLocator()->get("Application")->getMvcEvent()->getRouteMatch();
         }
 

@@ -27,13 +27,13 @@ use Zend\View\Model\ViewModel;
 class ParentDoaController extends OrganisationAbstractController
 {
     /**
-     * @return array|\Zend\Http\Response|ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function uploadAction()
     {
         $parent = $this->getParentService()->findParentById($this->params('parentId'));
 
-        if (\is_null($parent)) {
+        if (null === $parent) {
             return $this->notFoundAction();
         }
 
@@ -41,7 +41,7 @@ class ParentDoaController extends OrganisationAbstractController
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
-        $form = new ParentDoa();
+        $form = new ParentDoa($this->getEntityManager());
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -109,19 +109,19 @@ class ParentDoaController extends OrganisationAbstractController
         /** @var Entity\Parent\Doa $doa */
         $doa = $this->getParentService()->findEntityById(Entity\Parent\Doa::class, $this->params('id'));
 
-        if (\is_null($doa)) {
+        if (null === $doa) {
             return $this->notFoundAction();
         }
 
         $data = array_merge(
             [
-                'dateSigned'   => \is_null($doa->getDateSigned()) ? null : $doa->getDateSigned()->format('Y-m-d'),
-                'dateApproved' => \is_null($doa->getDateApproved()) ? null : $doa->getDateApproved()->format('Y-m-d'),
+                'dateSigned'   => null === $doa->getDateSigned() ? null : $doa->getDateSigned()->format('Y-m-d'),
+                'dateApproved' => null === $doa->getDateApproved() ? null : $doa->getDateApproved()->format('Y-m-d'),
             ],
             $this->getRequest()->getFiles()->toArray(),
             $this->getRequest()->getPost()->toArray()
         );
-        $form = new ParentDoa();
+        $form = new ParentDoa($this->getEntityManager());
         $form->setData($data);
 
         $form->get('contact')->injectContact($doa->getContact());
@@ -211,9 +211,8 @@ class ParentDoaController extends OrganisationAbstractController
         );
     }
 
-
     /**
-     * @return array|\Zend\Stdlib\ResponseInterface
+     * @return \Zend\Stdlib\ResponseInterface
      */
     public function downloadAction()
     {
@@ -221,8 +220,8 @@ class ParentDoaController extends OrganisationAbstractController
          * @var Entity\Parent\Doa $doa
          */
         $doa = $this->getParentService()->findEntityById(Entity\Parent\Doa::class, $this->params('id'));
-        if (\is_null($doa) || count($doa->getObject()) === 0) {
-            return $this->notFoundAction();
+        if (null === $doa || count($doa->getObject()) === 0) {
+            return $this->getResponse();
         }
         /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element

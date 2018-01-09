@@ -24,9 +24,11 @@ _("txt-not-artemisia-member");
 _("txt-artemisia-member");
 _("txt-artemisia-doa-signer");
 
-_("txt-organisation-description-label");
-_("txt-organisation-description-placeholder");
-_("txt-organisation-description-help-block");
+_("txt-member-type");
+_("txt-member-type-help-block");
+_("txt-no-member");
+_("txt-applicant-member");
+
 
 _("txt-parent-type-label");
 _("txt-parent-type-help-block");
@@ -42,3 +44,17 @@ _("txt-parent-contact-label");
 _("txt-parent-contact-help-block");
 _("txt-parent-date-end-label");
 _("txt-parent-date-end-help-block");
+
+_("txt-organisation-description-label");
+_("txt-organisation-description-placeholder");
+_("txt-organisation-description-help-block");
+
+
+_("txt-organisation-status-label");
+_("txt-organisation-status-placeholder");
+_("txt-organisation-status-help-block");
+_("txt-organisation-status-description-label");
+_("txt-organisation-status-description-placeholder");
+_("txt-organisation-status-description-help-block");
+_("txt-organisation-status-program-label");
+_("txt-organisation-status-program-help-block");
