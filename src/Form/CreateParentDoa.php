@@ -51,8 +51,8 @@ class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
                         ],
                     ],
                     'object_manager' => $entityManager,
-                    'help-block'     => _('txt-create-doa-for-program-help-block'),
-                    'label'          => _("txt-create-doa-for-program-label"),
+                    'help-block'     => _('txt-add-doa-for-program-help-block'),
+                    'label'          => _("txt-add-doa-for-program-label"),
                 ],
             ]
         );
@@ -62,7 +62,7 @@ class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => 'btn btn-primary',
-                    'value' => _('txt-create-parent-doa'),
+                    'value' => _('txt-add-parent-doa'),
                 ],
             ]
         );

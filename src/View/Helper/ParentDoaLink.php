@@ -43,7 +43,7 @@ class ParentDoaLink extends AbstractLink
          */
         $this->setShowOptions(
             [
-                'name' => $this->getDoa(),
+                'name' => (string) $this->getDoa(),
             ]
         );
         if (!$this->hasAccess($this->getDoa(), DoaAssertion::class, $this->getAction())) {

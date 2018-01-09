@@ -253,16 +253,14 @@ class ParentController extends OrganisationAbstractController
     }
 
     /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
+     * @return \Zend\Http\Response|ViewModel
      */
     public function addOrganisationAction()
     {
         $parent = $this->getParentService()->findParentById($this->params('id'));
 
         $organisation = null;
-        if (!\is_null($this->params('organisationId'))) {
+        if (null !== $this->params('organisationId')) {
             $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
         }
 
@@ -311,7 +309,7 @@ class ParentController extends OrganisationAbstractController
 
 
                 $parentOrganisation = $this->getParentService()->newEntity($parentOrganisation);
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent/organisation/view',
                     [
                         'id' => $parentOrganisation->getId(),
