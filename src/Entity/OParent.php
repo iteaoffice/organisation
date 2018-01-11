@@ -529,7 +529,7 @@ class OParent extends AbstractEntity
     /**
      * @return Organisation
      */
-    public function getOrganisation(): Organisation
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }

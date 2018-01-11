@@ -15,13 +15,16 @@
 {% set parent = form.get('organisation_entity_oparent') %}
 
 {{ ztbformelement(parent.get('id')) }}
-{{ organisationformelement(parent.get('organisation')) }}
+
 
 {{ ztbformelement(parent.get('type')) }}
 {{ ztbformelement(parent.get('status')) }}
+
+{{ ztbformelement(parent.get('memberType')) }}
 {{ ztbformelement(parent.get('epossMemberType')) }}
 {{ ztbformelement(parent.get('artemisiaMemberType')) }}
 
+{{ organisationformelement(parent.get('organisation')) }}
 {{ contactformelement(parent.get('contact')) }}
 
 <div class="form-group row">
