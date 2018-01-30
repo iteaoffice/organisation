@@ -23,6 +23,7 @@ use Organisation\Entity;
 use Organisation\Form;
 use Project\Entity\Project;
 use Zend\View\Model\ViewModel;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 
 /**
  * @category    Parent
@@ -99,7 +100,7 @@ class ParentOrganisationController extends OrganisationAbstractController
                     );
 
 
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent/organisation/view',
                     [
                         'id' => $organisation->getId(),
@@ -113,9 +114,9 @@ class ParentOrganisationController extends OrganisationAbstractController
 
 
     /**
-     * @return array|ViewModel
+     * @return ViewModel
      */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
         /** @var Entity\Parent\Organisation $organisation */
         $organisation = $this->getParentService()
@@ -129,7 +130,63 @@ class ParentOrganisationController extends OrganisationAbstractController
     }
 
     /**
-     * @return array|\Zend\Http\Response|ViewModel
+     * @return \Zend\Http\Response|ViewModel
+     */
+    public function mergeAction()
+    {
+        /** @var Request $request */
+        $request = $this->getRequest();
+
+        /** @var Entity\Parent\Organisation $organisation */
+        $organisation = $this->getParentService()
+            ->findEntityById(Entity\Parent\Organisation::class, $this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        $data = $request->getPost()->toArray();
+
+        if (isset($data['merge'], $data['submit']) && $request->isPost()) {
+
+            /** @var Entity\Parent\Organisation $otherOrganisation */
+            $otherOrganisation = $this->getParentService()
+                ->findEntityById(Entity\Parent\Organisation::class, (int)$data['merge']);
+
+            $result = $this->mergeParentOrganisation($organisation, $otherOrganisation);
+
+            if ($result['success'] === true) {
+                $this->flashMessenger()->setNamespace(FlashMessenger::NAMESPACE_SUCCESS)
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-merge-of-organisation-%s-and-%s-in-in-parent-%s-was-successful"),
+                            $organisation->getOrganisation(),
+                            $otherOrganisation->getOrganisation(),
+                            $organisation->getParent()->getOrganisation()
+                        )
+                    );
+            } else {
+                $this->flashMessenger()->setNamespace(FlashMessenger::NAMESPACE_ERROR)
+                    ->addMessage(sprintf($this->translate('txt-merge-failed:-%s'), $result['errorMessage']));
+            }
+
+            return $this->redirect()->toRoute(
+                'zfcadmin/parent/view',
+                ['id' => $organisation->getParent()->getId()]
+            );
+        }
+
+        return new ViewModel(
+            [
+                'organisation'  => $organisation,
+                'merge'         => $data['merge'] ?? null,
+                'parentService' => $this->getParentService()
+            ]
+        );
+    }
+
+    /**
+     * @return \Zend\Http\Response|ViewModel
      */
     public function addAffiliationAction()
     {

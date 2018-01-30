@@ -72,6 +72,7 @@ return [
                 ['route' => 'zfcadmin/parent/organisation/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/organisation/edit', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/organisation/add-affiliation', 'roles' => [Access::ACCESS_OFFICE]],
+                ['route' => 'zfcadmin/parent/organisation/merge', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/organisation/affiliation/list', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/organisation/affiliation/view', 'roles' => [Access::ACCESS_OFFICE]],
                 ['route' => 'zfcadmin/parent/organisation/affiliation/edit', 'roles' => [Access::ACCESS_OFFICE]],

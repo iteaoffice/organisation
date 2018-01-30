@@ -236,6 +236,16 @@ return [
                                                     ],
                                                 ],
                                             ],
+                                            'merge'   => [
+                                                'label'   => _("txt-merge"),
+                                                'route'   => 'zfcadmin/parent/organisation/merge',
+                                                'visible' => false,
+                                                'params'  => [
+                                                    'entities' => [
+                                                        'id' => Organisation\Entity\Parent\Organisation::class,
+                                                    ],
+                                                ],
+                                            ],
 
                                         ],
                                     ],

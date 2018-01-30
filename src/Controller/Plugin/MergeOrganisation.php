@@ -110,7 +110,7 @@ class MergeOrganisation extends AbstractPlugin
         $response = ['success' => true, 'errorMessage' => ''];
 
         // Update organisation properties
-        if (\is_null($target->getType())) {
+        if (null === $target->getType()) {
             $target->setType($source->getType());
         }
         if ($source->getDateCreated() < $target->getDateCreated()) {

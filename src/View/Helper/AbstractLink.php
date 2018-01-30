@@ -162,10 +162,14 @@ abstract class AbstractLink extends AbstractViewHelper
             case 'button':
                 switch ($this->getAction()) {
                     case 'new':
+                    case 'add-affiliation':
                         $this->addLinkContent('<i class="fa fa-plus"></i>');
                         break;
                     case 'upload':
                         $this->addLinkContent('<i class="fa fa-cloud-upload" aria-hidden="true"></i>');
+                        break;
+                    case 'merge':
+                        $this->addLinkContent('<i class="fa fa-compress" aria-hidden="true"></i>');
                         break;
                     case 'download':
                         $this->addLinkContent('<i class="fa fa-download" aria-hidden="true"></i>');
@@ -258,8 +262,8 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addLinkContent($linkContent)
     {
-        foreach ((array) $linkContent as $content) {
-            $this->linkContent[] = (string) $content;
+        foreach ((array)$linkContent as $content) {
+            $this->linkContent[] = (string)$content;
         }
 
         return $this;
@@ -288,7 +292,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addClasses($classes)
     {
-        foreach ((array) $classes as $class) {
+        foreach ((array)$classes as $class) {
             $this->classes[] = $class;
         }
 
@@ -329,8 +333,8 @@ abstract class AbstractLink extends AbstractViewHelper
 
     /**
      * @param AbstractEntity $entity
-     * @param string $assertion
-     * @param string $action
+     * @param string         $assertion
+     * @param string         $action
      *
      * @return bool
      */
@@ -368,7 +372,7 @@ abstract class AbstractLink extends AbstractViewHelper
 
     /**
      * @param null|AbstractEntity $resource
-     * @param string $privilege
+     * @param string              $privilege
      *
      * @return bool
      */
@@ -395,7 +399,7 @@ abstract class AbstractLink extends AbstractViewHelper
      *
      * @param string $key
      * @param        $value
-     * @param bool $allowNull
+     * @param bool   $allowNull
      */
     public function addRouterParam($key, $value, $allowNull = true)
     {
@@ -478,7 +482,7 @@ abstract class AbstractLink extends AbstractViewHelper
 
         return $this;
     }
-    
+
     /**
      * @return Entity\Type
      */

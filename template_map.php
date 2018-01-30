@@ -54,6 +54,7 @@ return array(
     'organisation/parent-type/view'                             => __DIR__ . '//view/organisation/parent-type/view.twig',
     'organisation/parent-type/list'                             => __DIR__ . '//view/organisation/parent-type/list.twig',
     'organisation/parent-organisation/edit'                     => __DIR__ . '//view/organisation/parent-organisation/edit.twig',
+    'organisation/parent-organisation/merge'                    => __DIR__ . '//view/organisation/parent-organisation/merge.twig',
     'organisation/parent-organisation/view'                     => __DIR__ . '//view/organisation/parent-organisation/view.twig',
     'organisation/parent-organisation/add-affiliation'          => __DIR__ . '//view/organisation/parent-organisation/add-affiliation.twig',
     'organisation/organisation-admin/edit'                      => __DIR__ . '//view/organisation/organisation-admin/edit.twig',

@@ -96,6 +96,22 @@ class ParentService extends AbstractService
     }
 
     /**
+     * @param Entity\OParent $parent
+     * @param Program $program
+     * @return bool
+     */
+    public function hasDoaForProgram(Entity\OParent $parent, Program $program): bool
+    {
+        foreach ($parent->getDoa() as $doa) {
+            if ($doa->getProgram()->getId() === $program->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param array $filter
      * @return Query
      */
@@ -477,7 +493,10 @@ class ParentService extends AbstractService
     {
         //Sort the projects per call
         $projects = [];
-        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich($parent, $program) as $affiliation) {
+        foreach ($this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+            $parent,
+            $program
+        ) as $affiliation) {
             /** @var Call $call */
             $call = $affiliation->getProject()->getCall();
 
@@ -508,8 +527,8 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation' => $affiliation,
-                'funding' => $funding,
+                'affiliation'  => $affiliation,
+                'funding'      => $funding,
                 'contribution' => $contribution
             ];
 

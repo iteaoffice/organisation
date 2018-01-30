@@ -50,7 +50,7 @@ class ParentStatusLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'status' => $this->getParentStatus(),
+                'status' => $this->getParentStatus()->getStatus(),
             ]
         );
 

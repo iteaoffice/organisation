@@ -13,8 +13,8 @@ use Organisation\Controller;
 return [
     'router' => [
         'routes' => [
-            'image'    => [
-                'child_routes'  => [
+            'image'        => [
+                'child_routes' => [
                     'organisation-logo' => [
                         'type'    => 'Segment',
                         'options' => [
@@ -163,7 +163,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'manage-web'            => [
+                            'manage-web'      => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/manage-web/[:id].html',
@@ -556,6 +556,15 @@ return [
                                             'route'    => '/add-affiliation/[:id].html',
                                             'defaults' => [
                                                 'action' => 'add-affiliation',
+                                            ],
+                                        ],
+                                    ],
+                                    'merge'           => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/merge/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'merge',
                                             ],
                                         ],
                                     ],

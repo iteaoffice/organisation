@@ -33,6 +33,16 @@
             <dd>{{ source.type }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
             <dd>{{ source.country }}</dd>
+
+
+            {% if source.parent %}
+                <dt>{{ translate("txt-parent") }}</dt>
+                <dd>{{ parentLink(source.parent, 'view','parent') }} {{ parentLink(source.parent, 'edit','icon') }}</dd>
+                <dt>{{ translate("txt-parent-type") }}</dt>
+                <dd>{{ translate(organisation.parent.getMemberType(true)) }}</dd>
+            {% endif %}
+
+
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
                 (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
@@ -64,8 +74,8 @@
             <dd>{{ organisationService.parseDebtorNumber(source) }}</dd>
             <dt>{{ translate("txt-credit-number") }}</dt>
             <dd>{{ organisationService.parseCreditNumber(source) }}</dd>
-        {% set financial = source.financial %}
-        {% if financial %}
+            {% set financial = source.financial %}
+            {% if financial %}
             <dt>{{ translate("txt-vat-number") }}</dt>
             <dd>{{ financial.vat }}
                 (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
@@ -96,7 +106,6 @@
             </dd>
         </dl>
         {% else %}
-            </dl>
             {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(source))|raw }}
         {% endif %}
     </div>
@@ -121,6 +130,15 @@
             <dd>{{ target.type }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
             <dd>{{ target.country }}</dd>
+
+            {% if target.parent %}
+                <dt>{{ translate("txt-parent") }}</dt>
+                <dd>{{ parentLink(target.parent, 'view','parent') }} {{ parentLink(target.parent, 'edit','icon') }}</dd>
+                <dt>{{ translate("txt-parent-type") }}</dt>
+                <dd>{{ translate(target.parent.getMemberType(true)) }}</dd>
+            {% endif %}
+
+
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(target, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
                 (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(target, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
@@ -181,10 +199,9 @@
                 <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ target.invoice.count() }}</a>
             </dd>
         </dl>
-            {% else %}
-                </dl>
-                {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(target))|raw }}
-            {% endif %}
+        {% else %}
+            {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(target))|raw }}
+        {% endif %}
     </div>
 </div>
 <hr>

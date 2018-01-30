@@ -1,12 +1,12 @@
 <h2>{{ translate("txt-parent-information") }}</h2>
 
-<h3>{{ translate("txt-is-parent") }}</h3>
+<h3>{{ translate("txt-parent-status") }}</h3>
 {% if organisation.parent %}
     <dl class="dl-horizontal">
         <dt>{{ translate("txt-parent") }}</dt>
         <dd>{{ parentLink(organisation.parent, 'view','parent') }} {{ parentLink(organisation.parent, 'edit','icon') }}</dd>
         <dt>{{ translate("txt-parent-type") }}</dt>
-        <dd>{{ parentTypeLink(organisation.parent.type, 'view','type') }}</dd>
+        <dd>{{ translate(organisation.parent.getMemberType(true)) }}</dd>
         <dt>{{ translate("txt-parent-representative") }}</dt>
         <dd>{{ contactLink(organisation.parent.contact, 'view-admin','name') }}</dd>
         <dt>{{ translate("txt-date-start") }}</dt>
@@ -24,8 +24,6 @@
 
 {% if organisation.parentOrganisation %}
     <dl class="dl-horizontal">
-        <dt>{{ translate("txt-parent-organisation") }}</dt>
-        <dd>{{ parentOrganisationLink(organisation.parentOrganisation, 'view','organisation') }} {{ parentOrganisationLink(organisation.parentOrganisation, 'edit','icon') }}</dd>
         <dt>{{ translate("txt-parent") }}</dt>
         <dd>{{ parentLink(organisation.parentOrganisation.parent, 'view','parent') }} {{ parentLink(organisation.parentOrganisation.parent, 'edit','icon') }}</dd>
         <dt>{{ translate("txt-parent-type") }}</dt>

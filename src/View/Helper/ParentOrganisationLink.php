@@ -30,8 +30,8 @@ class ParentOrganisationLink extends AbstractLink
 {
     /**
      * @param Organisation|null $organisation
-     * @param string $action
-     * @param string $show
+     * @param string            $action
+     * @param string            $show
      *
      * @return string
      */
@@ -52,9 +52,12 @@ class ParentOrganisationLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'organisation'  => (string) $this->getParentOrganisation()->getOrganisation(),
-                'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent()->getType()->getType() : '',
-                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translate($this->getParentOrganisation()->getParent()->getMemberType(true)) : '',
+                'organisation' => (string)$this->getParentOrganisation()->getOrganisation(),
+                'member-type' => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent(
+                )->getType()->getType() : '',
+                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translate(
+                    $this->getParentOrganisation()->getParent()->getMemberType(true)
+                ) : '',
             ]
         );
 
@@ -70,6 +73,10 @@ class ParentOrganisationLink extends AbstractLink
             case 'add-affiliation':
                 $this->setRouter('zfcadmin/parent/organisation/add-affiliation');
                 $this->setText($this->translate('txt-parent-organisation-add-affiliation'));
+                break;
+            case 'merge':
+                $this->setRouter('zfcadmin/parent/organisation/merge');
+                $this->setText($this->translate('txt-merge-parent-organisation'));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent/organisation/edit');

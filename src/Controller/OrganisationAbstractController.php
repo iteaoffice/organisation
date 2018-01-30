@@ -25,6 +25,7 @@ use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Controller\Plugin\HandleParentAndProjectImport;
 use Organisation\Controller\Plugin\HandleParentImport;
 use Organisation\Controller\Plugin\MergeOrganisation;
+use Organisation\Controller\Plugin\MergeParentOrganisation;
 use Organisation\Controller\Plugin\RenderOverviewExtraVariableContributionSheet;
 use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
 use Organisation\Entity;
@@ -52,7 +53,8 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      RenderOverviewExtraVariableContributionSheet renderOverviewExtraVariableContributionSheet(Entity\OParent $parent, Program $program, int $year)
  * @method      HandleParentAndProjectImport handleParentAndProjectImport($fileData, $keys, $doImport)
  * @method      HandleParentImport handleParentImport($fileData, $keys, $doImport)
- * @method      MergeOrganisation mergeOrganisation()
+ * @method      MergeOrganisation mergeOrganisation(Entity\Organisation $target, Entity\Organisation $source)
+ * @method      MergeParentOrganisation mergeParentOrganisation(Entity\Parent\Organisation $target, Entity\Parent\Organisation $source)
  */
 abstract class OrganisationAbstractController extends AbstractActionController
 {

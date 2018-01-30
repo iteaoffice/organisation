@@ -24,7 +24,7 @@ $config = [
         'factories' => [
             Controller\JsonController::class                  => Controller\Factory\ControllerFactory::class,
             Controller\NoteController::class                  => Controller\Factory\ControllerFactory::class,
-            Controller\ImageController::class                  => Controller\Factory\ControllerFactory::class,
+            Controller\ImageController::class                 => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationAdminController::class     => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationController::class          => Controller\Factory\ControllerFactory::class,
             Controller\OrganisationFinancialController::class => Controller\Factory\ControllerFactory::class,
@@ -45,6 +45,7 @@ $config = [
             'renderOverviewExtraVariableContributionSheet' => Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class,
             'renderOverviewVariableContributionSheet'      => Controller\Plugin\RenderOverviewVariableContributionSheet::class,
             'mergeOrganisation'                            => Controller\Plugin\MergeOrganisation::class,
+            'mergeParentOrganisation'                      => Controller\Plugin\MergeParentOrganisation::class,
         ],
         'factories' => [
             Controller\Plugin\GetFilter::class                                    => Controller\Factory\PluginFactory::class,
@@ -53,6 +54,7 @@ $config = [
             Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class => Controller\Factory\PluginFactory::class,
             Controller\Plugin\RenderOverviewVariableContributionSheet::class      => Controller\Factory\PluginFactory::class,
             Controller\Plugin\MergeOrganisation::class                            => Controller\Factory\PluginFactory::class,
+            Controller\Plugin\MergeParentOrganisation::class                      => Controller\Factory\PluginFactory::class,
         ],
     ],
     'view_manager'       => [

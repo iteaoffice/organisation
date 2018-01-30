@@ -36,8 +36,8 @@ use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 /**
- * @category    Organisation
- *
+ * Class OrganisationAdminController
+ * @package Organisation\Controller
  */
 class OrganisationAdminController extends OrganisationAbstractController
 {
