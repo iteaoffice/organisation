@@ -455,20 +455,28 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     * @param Program $program
      * @return int
      */
-    public function parseDoaFactor(Entity\OParent $parent): int
+    public function parseDoaFactor(Entity\OParent $parent, Program $program): int
     {
-        return \count($this->parseDoas($parent));
+        return \count($this->parseDoas($parent, $program));
     }
 
     /**
      * @param Entity\OParent $parent
+     * @param Program $program
      * @return array
      */
-    public function parseDoas(Entity\OParent $parent): array
+    public function parseDoas(Entity\OParent $parent, Program $program): array
     {
         $otherDoa = [];
+
+        foreach ($parent->getDoa() as $doa) {
+            if ($doa->getProgram()->getId() === $program->getId()) {
+                $otherDoa[] = $program->getProgram();
+            }
+        }
 
         if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER) {
             $otherDoa[] = 'ARTEMIS-IA';
@@ -527,8 +535,8 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation'  => $affiliation,
-                'funding'      => $funding,
+                'affiliation' => $affiliation,
+                'funding' => $funding,
                 'contribution' => $contribution
             ];
 
