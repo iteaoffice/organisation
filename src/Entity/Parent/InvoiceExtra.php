@@ -147,7 +147,7 @@ class InvoiceExtra extends AbstractEntity
     /**
      * @return int
      */
-    public function getYear():?int
+    public function getYear():int
     {
         return $this->year;
     }
@@ -187,7 +187,7 @@ class InvoiceExtra extends AbstractEntity
     /**
      * @return \Organisation\Entity\OParent
      */
-    public function getParent()
+    public function getParent(): \Organisation\Entity\OParent
     {
         return $this->parent;
     }

@@ -281,10 +281,6 @@ return [
                                 'label' => _("txt-create-new-parent"),
                                 'route' => 'zfcadmin/parent/new',
                             ],
-                            'import-parent'  => [
-                                'label' => _("txt-import-parents"),
-                                'route' => 'zfcadmin/parent/import/parent',
-                            ],
                             'import-project' => [
                                 'label' => _("txt-import-project"),
                                 'route' => 'zfcadmin/parent/import/project',

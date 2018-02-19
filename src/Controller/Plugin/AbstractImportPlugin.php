@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Organisation\Controller\Plugin;
 
+use Affiliation\Entity\Affiliation;
 use General\Entity\Country;
 use Organisation\Entity;
 use Organisation\Entity\OParent;
@@ -52,21 +53,13 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
      */
     protected $warnings = [];
     /**
-     * @var OParent[]
+     * @var Affiliation[]
      */
-    protected $parents = [];
+    protected $affiliation = [];
     /**
-     * @var Entity\Parent\Organisation[]
+     * @var Affiliation[]
      */
-    protected $parentOrganisation = [];
-    /**
-     * @var Parent[]
-     */
-    protected $importedParents = [];
-    /**
-     * @var Entity\Parent\Organisation[]
-     */
-    protected $importedParentOrganisation = [];
+    protected $importedAffiliation = [];
 
 
     /**
@@ -104,7 +97,7 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
      */
     public function hasErrors(): bool
     {
-        return count($this->errors) > 0;
+        return \count($this->errors) > 0;
     }
 
     /**
@@ -240,70 +233,18 @@ abstract class AbstractImportPlugin extends AbstractOrganisationPlugin
     }
 
     /**
-     * @return Entity\Parent\Organisation[]
+     * @return Affiliation[]
      */
-    public function getParentOrganisation(): array
+    public function getAffiliation(): array
     {
-        return $this->parentOrganisation;
+        return $this->affiliation;
     }
 
     /**
-     * @param Entity\Parent\Organisation[] $parentOrganisation
-     *
-     * @return AbstractImportPlugin
+     * @return Affiliation[]
      */
-    public function setParentOrganisation(array $parentOrganisation): AbstractImportPlugin
+    public function getImportedAffiliation(): array
     {
-        $this->parentOrganisation = $parentOrganisation;
-
-        return $this;
-    }
-
-    /**
-     * @return OParent[]
-     */
-    public function getImportedParents(): array
-    {
-        return $this->importedParents;
-    }
-
-    /**
-     * @param array $importedParents
-     *
-     * @return AbstractImportPlugin
-     */
-    public function setImportedParents(array $importedParents): AbstractImportPlugin
-    {
-        $this->importedParents = $importedParents;
-
-        return $this;
-    }
-
-    /**
-     * @return OParent[]
-     */
-    public function getParents(): array
-    {
-        return $this->parents;
-    }
-
-    /**
-     * @return Entity\Parent\Organisation[]
-     */
-    public function getImportedParentOrganisation(): array
-    {
-        return $this->importedParentOrganisation;
-    }
-
-    /**
-     * @param Entity\Parent\Organisation[] $importedParentOrganisation
-     *
-     * @return AbstractImportPlugin
-     */
-    public function setImportedParentOrganisation(array $importedParentOrganisation): AbstractImportPlugin
-    {
-        $this->importedParentOrganisation = $importedParentOrganisation;
-
-        return $this;
+        return $this->importedAffiliation;
     }
 }

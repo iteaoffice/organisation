@@ -34,10 +34,10 @@
                 <thead>
                 <tr>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'status', 'text': translate('txt-status')} %}</a></th>
+                    <th>{{ translate('txt-member-type') }}</th>
+                    <th>{{ translate('txt-doa') }}</th>
                     <th>{{ translate('txt-projects') }}</th>
                     <th>{{ translate("txt-contact") }}</th>
                     <th>{{ translate("txt-address") }}</th>
@@ -55,7 +55,8 @@
 
                         <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
                         <td>{{ parentTypeLink(parent.type,'view', 'type') }}</td>
-                        <td>{{ parentStatusLink(parent.status,'view', 'status') }}</td>
+                        <td>{{ translate(parent.getMemberType(true)) }}</td>
+                        <td>{% for doa in parentService.parseDoas(parent) %}{{ doa }}{% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
                         <td>
                             {% for organisation in parent.parentOrganisation %}
                                 {% for affiliation in organisation.affiliation %}
@@ -84,7 +85,7 @@
     <div class="col-md-12">
         <div class="well well-sm">
             <fieldset>
-                {{ ztbformelement(filter.get('status')) }}
+
                 {{ ztbformelement(filter.get('type')) }}
                 {{ ztbformelement(filter.get('program')) }}
 

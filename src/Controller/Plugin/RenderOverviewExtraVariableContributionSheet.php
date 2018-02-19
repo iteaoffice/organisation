@@ -56,7 +56,7 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
                 'program'            => $program,
                 'financialContact'   => $this->getParentService()->getFinancialContact($parent),
                 'projects'           => $this->getProjectService()->findProjectsByParent($parent, $program),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent),
+                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $program),
 
             ]
         );

@@ -381,15 +381,6 @@ return [
                                     ],
                                 ],
                                 'child_routes' => [
-                                    'parent'  => [
-                                        'type'    => 'Segment',
-                                        'options' => [
-                                            'route'    => '/parent.html',
-                                            'defaults' => [
-                                                'action' => 'import-parent',
-                                            ],
-                                        ],
-                                    ],
                                     'project' => [
                                         'type'    => 'Segment',
                                         'options' => [

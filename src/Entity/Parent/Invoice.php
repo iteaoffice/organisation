@@ -147,7 +147,7 @@ class Invoice extends AbstractEntity
     /**
      * @return int
      */
-    public function getYear():?int
+    public function getYear(): ?int
     {
         return $this->year;
     }
@@ -167,9 +167,9 @@ class Invoice extends AbstractEntity
     /**
      * @return float
      */
-    public function getAmountInvoiced():?float
+    public function getAmountInvoiced(): ?float
     {
-        return $this->amountInvoiced;
+        return (float) $this->amountInvoiced;
     }
 
     /**
@@ -187,7 +187,7 @@ class Invoice extends AbstractEntity
     /**
      * @return \Organisation\Entity\OParent
      */
-    public function getParent():?\Organisation\Entity\OParent
+    public function getParent(): \Organisation\Entity\OParent
     {
         return $this->parent;
     }
@@ -207,7 +207,7 @@ class Invoice extends AbstractEntity
     /**
      * @return \Invoice\Entity\Invoice
      */
-    public function getInvoice():?\Invoice\Entity\Invoice
+    public function getInvoice(): \Invoice\Entity\Invoice
     {
         return $this->invoice;
     }
@@ -223,11 +223,11 @@ class Invoice extends AbstractEntity
 
         return $this;
     }
-    
+
     /**
      * @return \Program\Entity\Program
      */
-    public function getProgram():?\Program\Entity\Program
+    public function getProgram(): \Program\Entity\Program
     {
         return $this->program;
     }

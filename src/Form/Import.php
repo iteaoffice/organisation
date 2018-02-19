@@ -82,12 +82,6 @@ class Import extends Form implements InputFilterProviderInterface
             'file' => [
                 'required'   => true,
                 'validators' => [
-                    new Size(
-                        [
-                            'min' => '1kB',
-                            'max' => '8MB',
-                        ]
-                    ),
                     new MimeType(
                         [
                             'text/plain',

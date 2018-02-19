@@ -49,7 +49,7 @@ class OverviewExtraVariableContribution extends AbstractViewHelper
                 'projectService'     => $this->getProjectService(),
                 'financialContact'   => $this->getParentService()->getFinancialContact($parent),
                 'projects'           => $this->getProjectService()->findProjectsByParent($parent, $program),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent),
+                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $program),
                 'invoiceMethod'      => $invoiceMethod,
                 'program'            => $program,
             ]

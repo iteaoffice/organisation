@@ -46,7 +46,7 @@ class OverviewVariableContribution extends AbstractViewHelper
                 'contactService'     => $this->getContactService(),
                 'versionService'     => $this->getVersionService(),
                 'parentService'      => $this->getParentService(),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent),
+                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $program),
                 'affiliationService' => $this->getAffiliationService(),
                 'projectService'     => $this->getProjectService(),
                 'financialContact'   => $this->getParentService()->getFinancialContact($parent),

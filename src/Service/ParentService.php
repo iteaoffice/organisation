@@ -70,12 +70,15 @@ class ParentService extends AbstractService
      */
     public function findParents(): ArrayCollection
     {
-        return new ArrayCollection($this->getEntityManager()->getRepository(Entity\OParent::class)
-            ->findAll());
+        return new ArrayCollection(
+            $this->getEntityManager()->getRepository(Entity\OParent::class)
+                ->findAll()
+        );
     }
 
     /**
      * @param Entity\OParent $parent
+     *
      * @return bool
      */
     public function parentCanBeDeleted(Entity\OParent $parent): bool
@@ -85,6 +88,7 @@ class ParentService extends AbstractService
 
     /**
      * @param array $filter
+     *
      * @return Query
      */
     public function findActiveParentWhichAreNoMember(array $filter): Query
@@ -97,7 +101,8 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
+     * @param Program        $program
+     *
      * @return bool
      */
     public function hasDoaForProgram(Entity\OParent $parent, Program $program): bool
@@ -113,6 +118,7 @@ class ParentService extends AbstractService
 
     /**
      * @param array $filter
+     *
      * @return Query
      */
     public function findActiveParentWithoutFinancial(array $filter): Query
@@ -125,7 +131,7 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
-     * @param Contact $contact
+     * @param Contact             $contact
      *
      * @return Entity\Parent\Organisation
      */
@@ -196,7 +202,7 @@ class ParentService extends AbstractService
     }
 
     /**
-     * @param Entity\OParent $parent
+     * @param Entity\OParent      $parent
      * @param Entity\Organisation $organisation
      *
      * @return null|Entity\Parent\Organisation
@@ -216,7 +222,8 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
+     * @param Program        $program
+     *
      * @return float
      * @throws \Exception
      */
@@ -242,7 +249,8 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
+     * @param Program        $program
+     *
      * @return float
      * @throws \Exception
      */
@@ -268,8 +276,9 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
-     * @param int $year
+     * @param Program        $program
+     * @param int            $year
+     *
      * @return float
      */
     public function _parseContributionPaid(Entity\OParent $parent, Program $program, int $year): float
@@ -288,8 +297,9 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
-     * @param int $year
+     * @param Program        $program
+     * @param int            $year
+     *
      * @return float
      * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -317,8 +327,9 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
-     * @param int $year
+     * @param Program        $program
+     * @param int            $year
+     *
      * @return float
      * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -346,8 +357,9 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
-     * @param int $year
+     * @param Program        $program
+     * @param int            $year
+     *
      * @return float
      * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -375,7 +387,8 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
+     * @param Program        $program
+     *
      * @return float
      * @throws \Exception
      */
@@ -397,7 +410,7 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Version $version
+     * @param Version        $version
      *
      * @return float
      */
@@ -425,6 +438,7 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     *
      * @return int
      */
     public function parseMembershipFactor(Entity\OParent $parent): int
@@ -433,7 +447,27 @@ class ParentService extends AbstractService
     }
 
     /**
+     * This function checks if the parent has other membersips besides AENEAS
+     *
      * @param Entity\OParent $parent
+     *
+     * @return bool
+     */
+    public function hasOtherMemberships(Entity\OParent $parent): bool
+    {
+        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_MEMBER) {
+            return true;
+        }
+        if ($parent->getEpossMemberType() === Entity\OParent::EPOSS_MEMBER_TYPE_MEMBER) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     *
      * @return array
      */
     public function parseMemberships(Entity\OParent $parent): array
@@ -455,26 +489,28 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
+     * @param Program|null   $program
+     *
      * @return int
      */
-    public function parseDoaFactor(Entity\OParent $parent, Program $program): int
+    public function parseDoaFactor(Entity\OParent $parent, Program $program = null): int
     {
         return \count($this->parseDoas($parent, $program));
     }
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
+     * @param Program        $program
+     *
      * @return array
      */
-    public function parseDoas(Entity\OParent $parent, Program $program): array
+    public function parseDoas(Entity\OParent $parent, ?Program $program = null): array
     {
         $otherDoa = [];
 
         foreach ($parent->getDoa() as $doa) {
-            if ($doa->getProgram()->getId() === $program->getId()) {
-                $otherDoa[] = $program->getProgram();
+            if (null === $program || $doa->getProgram()->getId() === $program->getId()) {
+                $otherDoa[] = $doa->getProgram()->getProgram();
             }
         }
 
@@ -490,8 +526,9 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
-     * @param int $year
+     * @param Program        $program
+     * @param int            $year
+     *
      * @return array
      * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -535,8 +572,8 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation' => $affiliation,
-                'funding' => $funding,
+                'affiliation'  => $affiliation,
+                'funding'      => $funding,
                 'contribution' => $contribution
             ];
 
@@ -550,7 +587,8 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Version $version
+     * @param Version        $version
+     *
      * @return bool
      */
     public function hasExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version): bool
@@ -560,12 +598,20 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
+     * @param Program        $program
+     *
      * @return float
+     *
      */
-    public function parseInvoiceFactor(Entity\OParent $parent): float
+    public function parseInvoiceFactor(Entity\OParent $parent, Program $program): float
     {
         if ($parent->isMember()) {
             return 1.5;
+        }
+
+        //If the organisation is member of any other organisation we will not invoice
+        if (!$this->hasDoaForProgram($parent, $program) || $this->hasOtherMemberships($parent)) {
+            return 0;
         }
 
         return 2.5;
@@ -573,9 +619,10 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param Program $program
-     * @param int $year
-     * @param array|null $includeAffiliations
+     * @param Program        $program
+     * @param int            $year
+     * @param array|null     $includeAffiliations
+     *
      * @return float
      * @throws \Exception
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -627,6 +674,7 @@ class ParentService extends AbstractService
 
     /**
      * @param string $name
+     *
      * @return ArrayCollection|Entity\Parent\Organisation[]
      */
     public function findParentOrganisationByNameLike(string $name)
@@ -639,6 +687,7 @@ class ParentService extends AbstractService
 
     /**
      * @param Program $program
+     *
      * @return ArrayCollection
      */
     public function findParentsForInvoicing(Program $program): ArrayCollection
@@ -676,22 +725,23 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param int $year
+     * @param int            $year
+     * @param Program        $program
      *
-     * @return Entity\Parent\Invoice[]|Collection|iterable
+     * @return iterable
      */
-    public function findParentInvoiceByParentYear(Entity\OParent $parent, int $year): iterable
+    public function findParentInvoiceByParentYear(Entity\OParent $parent, int $year, Program $program): iterable
     {
         return $parent->getInvoice()->filter(
-            function (Entity\Parent\Invoice $invoice) use ($year) {
-                return $invoice->getYear() === $year;
+            function (Entity\Parent\Invoice $invoice) use ($year, $program) {
+                return $invoice->getYear() === $year && $invoice->getProgram() === $program;
             }
         );
     }
 
     /**
      * @param Entity\OParent $parent
-     * @param int $year
+     * @param int            $year
      *
      * @return Entity\Parent\Invoice[]|Collection|iterable
      */
@@ -708,22 +758,25 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param int $year
+     * @param int            $year
+     * @param Program        $program
      *
-     * @return Entity\Parent\Invoice[]|Collection|iterable
+     * @return iterable
      */
     public function findAllParentExtraInvoiceByParentYear(
         Entity\OParent $parent,
-        int $year
+        int $year,
+        Program $program
     ): iterable {
         return array_merge(
-            $this->findParentInvoiceByParentYear($parent, $year)->toArray(),
+            $this->findParentInvoiceByParentYear($parent, $year, $program)->toArray(),
             $this->findParentExtraInvoiceByParentYear($parent, $year)->toArray()
         );
     }
 
     /**
      * @param Entity\Parent\Organisation $organisation
+     *
      * @return bool
      */
     public function canDeleteParentOrganisation(Entity\Parent\Organisation $organisation): bool
@@ -733,14 +786,15 @@ class ParentService extends AbstractService
 
     /**
      * @param Entity\OParent $parent
-     * @param bool $autoGenerate
+     * @param bool           $autoGenerate
+     *
      * @return ArrayCollection
      */
     public function canCreateInvoice(Entity\OParent $parent, $autoGenerate = false): ArrayCollection
     {
         $errors = [];
         switch (true) {
-            case empty($parent->getFinancial()):
+            case $parent->getFinancial()->count() === 0:
                 $errors[] = 'No financial organisation (parent financial) set for this parent';
                 break;
             case !\is_null($parent->getDateEnd()):
@@ -751,15 +805,25 @@ class ParentService extends AbstractService
                 break;
             default:
                 foreach ($parent->getFinancial() as $financial) {
-                    if (\is_null($financial->getOrganisation()->getFinancial())) {
+                    if (null === $financial->getOrganisation()->getFinancial()) {
                         $errors[] = sprintf('%s has no financial information', $financial->getOrganisation());
                     }
 
-                    if (!\is_null($financial->getOrganisation()->getFinancial()) && empty($financial->getOrganisation()->getFinancial()->getVat())) {
+                    if (null !== $financial->getOrganisation()->getFinancial()
+                        && empty(
+                            $financial->getOrganisation()->getFinancial()->getVat()
+                        )
+                    ) {
                         $errors[] = sprintf('%s has no VAT number', $financial->getOrganisation());
                     }
 
-                    if (!\is_null($financial->getOrganisation()->getFinancial()) && !empty($financial->getOrganisation()->getFinancial()->getVat()) && $financial->getOrganisation()->getFinancial()->getVatStatus() !== Entity\Financial::VAT_STATUS_VALID) {
+                    if (null !== $financial->getOrganisation()->getFinancial()
+                        && !empty(
+                            $financial->getOrganisation()->getFinancial()->getVat()
+                        )
+                        && $financial->getOrganisation()->getFinancial()->getVatStatus()
+                        !== Entity\Financial::VAT_STATUS_VALID
+                    ) {
                         $errors[] = sprintf('%s has an unvalidated VAT number', $financial->getOrganisation());
                     }
                 }

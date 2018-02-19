@@ -90,7 +90,8 @@ class ParentController extends OrganisationAbstractController
                 'order'               => $filterPlugin->getOrder(),
                 'direction'           => $filterPlugin->getDirection(),
                 'organisationService' => $this->getOrganisationService(),
-                'contactService'      => $this->getContactService()
+                'contactService'      => $this->getContactService(),
+                'parentService'       => $this->getParentService(),
             ]
         );
     }
@@ -386,10 +387,12 @@ class ParentController extends OrganisationAbstractController
             }
         }
 
-        return new ViewModel([
-            'form'   => $form,
-            'parent' => $parent,
-        ]);
+        return new ViewModel(
+            [
+                'form'   => $form,
+                'parent' => $parent,
+            ]
+        );
     }
 
     /**
@@ -447,7 +450,6 @@ class ParentController extends OrganisationAbstractController
                 'organisationService' => $this->getOrganisationService(),
                 'contactService'      => $this->getContactService(),
                 'year'                => $year,
-                'invoiceFactor'       => $this->getParentService()->parseInvoiceFactor($parent),
                 'membershipFactor'    => $this->getParentService()->parseMembershipFactor($parent),
                 'form'                => $form
             ]
@@ -481,7 +483,7 @@ class ParentController extends OrganisationAbstractController
                 'parent'        => $parent,
                 'program'       => $program,
                 'invoiceMethod' => $invoiceMethod,
-                'invoiceFactor' => $this->getParentService()->parseInvoiceFactor($parent)
+                'invoiceFactor' => $this->getParentService()->parseInvoiceFactor($parent, $program)
 
             ]
         );
@@ -596,54 +598,6 @@ class ParentController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function importParentAction(): ViewModel
-    {
-        set_time_limit(0);
-
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
-        $form = new Form\Import();
-        $form->setData($data);
-
-        /** store the data in the session, so we can use it when we really handle the import */
-        $importSession = new Container('import');
-
-        $handleImport = null;
-        if ($this->getRequest()->isPost()) {
-            if (isset($data['upload']) && $form->isValid()) {
-                $fileData = file_get_contents($data['file']['tmp_name'], FILE_TEXT);
-
-                $importSession->active = true;
-                $importSession->fileData = $fileData;
-
-                $handleImport = $this->handleParentImport(
-                    $fileData,
-                    [],
-                    false
-                );
-            }
-
-            if (isset($data['import'], $data['key']) && $importSession->active) {
-                $handleImport = $this->handleParentImport(
-                    $importSession->fileData,
-                    $data['key'],
-                    true
-                );
-            }
-        }
-
-        return new ViewModel([
-            'form'           => $form,
-            'handleImport'   => $handleImport,
-            'contactService' => $this->getContactService()
-        ]);
-    }
-
-    /**
-     * @return ViewModel
-     */
     public function importProjectAction(): ViewModel
     {
         set_time_limit(0);
@@ -661,7 +615,7 @@ class ParentController extends OrganisationAbstractController
         $handleImport = null;
         if ($this->getRequest()->isPost()) {
             if (isset($data['upload']) && $form->isValid()) {
-                $fileData = file_get_contents($data['file']['tmp_name'], FILE_TEXT);
+                $fileData = file_get_contents($data['file']['tmp_name']);
 
                 $importSession->active = true;
                 $importSession->fileData = $fileData;

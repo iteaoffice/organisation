@@ -130,6 +130,7 @@ class OParent extends EntityRepository
 
     /**
      * @param array $filter
+     *
      * @return Query
      */
     public function findActiveParentWithoutFinancial(array $filter): Query
@@ -223,6 +224,7 @@ class OParent extends EntityRepository
 
     /**
      * @param array $filter
+     *
      * @return Query
      */
     public function findActiveParentWhichAreNoMember(array $filter): Query
@@ -273,13 +275,23 @@ class OParent extends EntityRepository
                 ->in('organisation_entity_parent', $subSelect2->getDQL())
         );
 
-        //Exclude the members
+
+        //Show only the applicants
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->eq('organisation_entity_parent.memberType', Entity\OParent::MEMBER_TYPE_APPLICANT)
+        );
+
+        //Exlude the DOA signers
+        $doaSigners = $this->_em->createQueryBuilder();
+        $doaSigners->select('doaParent.id');
+        $doaSigners->from(Entity\Parent\Doa::class, 'organisation_entity_parent_doa');
+        $doaSigners->join('organisation_entity_parent_doa.parent', 'doaParent');
+
         $queryBuilder->andWhere(
             $queryBuilder->expr()
-                ->notIn('organisation_entity_parent.memberType', [
-                    Entity\OParent::MEMBER_TYPE_MEMBER
-                ])
+                ->notIn('organisation_entity_parent', $doaSigners->getDQL())
         );
+
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
@@ -327,6 +339,7 @@ class OParent extends EntityRepository
 
     /**
      * @param Program $program
+     *
      * @return array
      */
     public function findParentsForInvoicing(Program $program): array
@@ -334,6 +347,7 @@ class OParent extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
         $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
         $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
 
 
@@ -371,6 +385,8 @@ class OParent extends EntityRepository
         $queryBuilder->setParameter('approved', Version::STATUS_APPROVED);
         $queryBuilder->setParameter('versionType', \Project\Entity\Version\Type::TYPE_FPP);
         $queryBuilder->setParameter('program', $program);
+
+        $queryBuilder->addOrderBy('organisation_entity_organisation.organisation');
 
         return $queryBuilder->getQuery()->getResult();
     }

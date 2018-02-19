@@ -52,7 +52,6 @@ use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
  * @method      RenderOverviewVariableContributionSheet renderOverviewVariableContributionSheet(Entity\OParent $parent, Program $program, int $year)
  * @method      RenderOverviewExtraVariableContributionSheet renderOverviewExtraVariableContributionSheet(Entity\OParent $parent, Program $program, int $year)
  * @method      HandleParentAndProjectImport handleParentAndProjectImport($fileData, $keys, $doImport)
- * @method      HandleParentImport handleParentImport($fileData, $keys, $doImport)
  * @method      MergeOrganisation mergeOrganisation(Entity\Organisation $target, Entity\Organisation $source)
  * @method      MergeParentOrganisation mergeParentOrganisation(Entity\Parent\Organisation $target, Entity\Parent\Organisation $source)
  */

@@ -166,6 +166,7 @@ abstract class AbstractLink extends AbstractViewHelper
                         $this->addLinkContent('<i class="fa fa-plus"></i>');
                         break;
                     case 'upload':
+                    case 'import-project':
                         $this->addLinkContent('<i class="fa fa-cloud-upload" aria-hidden="true"></i>');
                         break;
                     case 'merge':
