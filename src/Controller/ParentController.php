@@ -21,6 +21,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Organisation\Entity;
 use Organisation\Form;
+use Program\Entity\Program;
 use Zend\Paginator\Paginator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -450,8 +451,9 @@ class ParentController extends OrganisationAbstractController
                 'organisationService' => $this->getOrganisationService(),
                 'contactService'      => $this->getContactService(),
                 'year'                => $year,
-                'membershipFactor'    => $this->getParentService()->parseMembershipFactor($parent),
-                'form'                => $form
+                'form'                => $form,
+                'programs'            => $this->getProgramService()->findAll(Program::class),
+                'parentService'       => $this->getParentService()
             ]
         );
     }

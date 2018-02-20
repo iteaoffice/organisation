@@ -8,7 +8,7 @@
             <dt>{{ translate("txt-organisation-on-public-website") }}</dt>
             <dd>{{ organisationLink(organisation,'view','name') }}</dd>
             <dt>{{ translate("txt-description") }}</dt>
-            <dd>{{ organisation.description|default(translate("txt-not-provided"))|nl2br }}</dd>
+            <dd>{{ organisation.description|default(translate("txt-not-provided"))|raw }}</dd>
             <dt>{{ translate("txt-organisation-type") }}</dt>
             <dd>{{ organisationTypeLink(organisation.type,'view','description') }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
