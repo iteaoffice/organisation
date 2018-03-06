@@ -22,10 +22,10 @@
   "minimum-stability": "dev",
   "require": {
     "php": "^7.1",
-    "zendframework/zendframework": "~3.0"
+    "zendframework/zendframework": "^3.1"
   },
   "require-dev": {
-    "iteaoffice/testing": "^1.0",
+    "iteaoffice/testing": "^1.1.4",
     "iteaoffice/contact": "^3.1",
     "iteaoffice/general": "^3.1",
     "iteaoffice/program": "^3.1",
