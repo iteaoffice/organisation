@@ -40,7 +40,7 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
         $pdf = new OrganisationPdf();
         $pdf->setTemplate($this->getModuleOptions()->getOverviewVariableContributionTemplate());
         $pdf->AddPage();
-        $pdf->SetMargins(10, 40, 10, true);
+        $pdf->SetMargins(10, 30, 10, true);
         $pdf->SetFontSize(8);
 
         $content = $this->getTwigRenderer()->render(
@@ -61,7 +61,7 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
             ]
         );
 
-        $pdf->writeHTMLCell(0, 0, 10, 30, $content);
+        $pdf->writeHTMLCell(0, 600, 10, 25, $content);
 
         return $pdf;
     }

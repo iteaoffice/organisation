@@ -399,12 +399,12 @@ class OParent extends EntityRepository
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
         $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
         $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
 
         $queryBuilder = $this->limitCChambers($queryBuilder);
 
-        $queryBuilder->addOrderBy('organisation_entity_parent.status', 'ASC');
-        $queryBuilder->addOrderBy('organisation_entity_parent.memberType', 'DESC');
+        $queryBuilder->addOrderBy('organisation_entity_organisation.organisation');
 
         return $queryBuilder->getQuery()->getResult();
     }

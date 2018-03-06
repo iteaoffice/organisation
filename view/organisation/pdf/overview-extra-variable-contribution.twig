@@ -84,7 +84,7 @@
         {# Take the latest version to calculate the contribution of the affiliation#}
         {% set version = projectService.getLatestProjectVersion(project, null, null, false, false) %}
 
-        {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, program, version) %}
+        {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
 
             <tr>
                 <td align="left">{{ project }}</td>
