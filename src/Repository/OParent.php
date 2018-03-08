@@ -411,15 +411,17 @@ class OParent extends EntityRepository
 
 
     /**
-     * This subselect returns all free riders and limits the query automatically
+     * This function returns all the free-riders in the program. They are not member and have no signed DOA of the program
      *
      * @param QueryBuilder $queryBuilder
+     * @param Program      $program
      *
      * @return QueryBuilder
+     *
      */
-    public function limitFreeRiders(QueryBuilder $queryBuilder): QueryBuilder
+    public function limitFreeRiders(QueryBuilder $queryBuilder, Program $program): QueryBuilder
     {
-        //Select projects based on a type
+        //Limit parents based on membership
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('organisation_entity_parent_freerider.id');
         $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_freerider');
@@ -433,7 +435,17 @@ class OParent extends EntityRepository
         $queryBuilder->setParameter('epossMemberType', Entity\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER);
         $queryBuilder->setParameter('artemisiaMemberType', Entity\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER);
 
+        //Limit parents based on the signed DOA
+        $doaSubselect = $this->_em->createQueryBuilder();
+        $doaSubselect->select('organisation_entity_parent_doa');
+        $doaSubselect->from(Entity\OParent::class, 'organisation_entity_parent_doa');
+        $doaSubselect->join('organisation_entity_parent_doa.doa', 'organisation_entity_parent_doa_doa');
+        $doaSubselect->andWhere('organisation_entity_parent_doa_doa.program = :program');
+
+        $queryBuilder->setParameter('program', $program);
+
         $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_parent', $subSelect->getDQL()));
+        $queryBuilder->andWhere($queryBuilder->expr()->notIn('organisation_entity_parent', $doaSubselect->getDQL()));
 
         return $queryBuilder;
     }

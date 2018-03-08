@@ -19,13 +19,13 @@ namespace Organisation\Controller;
 
 use Contact\Entity\Address;
 use Contact\Entity\AddressType;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Entity\Country;
 use Organisation\Entity;
 use Organisation\Form;
-use Zend\View\Model\ViewModel;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Zend\Paginator\Paginator;
+use Zend\View\Model\ViewModel;
 
 /**
  * @category    Parent
@@ -111,7 +111,8 @@ class ParentFinancialController extends OrganisationAbstractController
 
                 if (\is_null(
                     $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact())
-                )) {
+                )
+                ) {
                     $financialAddress = new Address();
                     $financialAddress->setContact($financial->getContact());
                     /**
@@ -131,10 +132,12 @@ class ParentFinancialController extends OrganisationAbstractController
                 $financialAddress->setCountry($country);
                 $this->getContactService()->updateEntity($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-financial-organisation-for-parent-%s-has-successfully-been-created"),
-                        $financial->getParent()
-                    ));
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-financial-organisation-for-parent-%s-has-successfully-been-created"),
+                            $financial->getParent()
+                        )
+                    );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -179,20 +182,17 @@ class ParentFinancialController extends OrganisationAbstractController
             $this->getOrganisationService()
         );
 
-
-        $branch = $financial->getBranch();
-        $formData['organisationFinancial'] = $financial->getOrganisation()->getFinancial()->getId();
+        if (null !== $financial->getOrganisation()->getFinancial()) {
+            $formData['organisationFinancial'] = $financial->getOrganisation()->getFinancial()->getId();
+        }
         $formData['attention'] = $financial->getContact()->getDisplayName();
         $formData['contact'] = $financial->getContact()->getId();
         $form->get('contact')->injectContact($financial->getContact());
 
-        if (!\is_null(
-            $financialAddress = $this->getContactService()->getFinancialAddress(
-                $financial
-                    ->getContact()
-            )
-        )
-        ) {
+        //Try to find the financial address
+        $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact());
+
+        if (null !== $financialAddress) {
             $formData['address'] = $financialAddress->getAddress();
             $formData['zipCode'] = $financialAddress->getZipCode();
             $formData['city'] = $financialAddress->getCity();
@@ -210,10 +210,12 @@ class ParentFinancialController extends OrganisationAbstractController
                 $this->getParentService()->removeEntity($financial);
 
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-financial-organisation-of-parent-%s-has-successfully-been-deleted"),
-                        $financial->getParent()
-                    ));
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-financial-organisation-of-parent-%s-has-successfully-been-deleted"),
+                            $financial->getParent()
+                        )
+                    );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -247,10 +249,10 @@ class ParentFinancialController extends OrganisationAbstractController
                 /*
                  * save the financial address
                  */
+                $financialAddress
+                    = $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact());
 
-                if (\is_null(
-                    $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact())
-                )) {
+                if (null === $financialAddress) {
                     $financialAddress = new Address();
                     $financialAddress->setContact($financial->getContact());
                     /**
@@ -270,10 +272,12 @@ class ParentFinancialController extends OrganisationAbstractController
                 $financialAddress->setCountry($country);
                 $this->getContactService()->updateEntity($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf(
-                        $this->translate("txt-parent-%s-has-successfully-been-updated"),
-                        $financial->getParent()
-                    ));
+                    ->addMessage(
+                        sprintf(
+                            $this->translate("txt-parent-%s-has-successfully-been-updated"),
+                            $financial->getParent()
+                        )
+                    );
             }
 
             return $this->redirect()->toRoute(
@@ -296,7 +300,7 @@ class ParentFinancialController extends OrganisationAbstractController
     /**
      * @return ViewModel
      */
-    public function noFinancialAction()
+    public function noFinancialAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
