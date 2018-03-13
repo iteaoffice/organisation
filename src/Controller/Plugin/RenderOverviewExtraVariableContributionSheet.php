@@ -22,6 +22,7 @@ use Program\Entity\Program;
 
 /**
  * Class RenderOverviewExtraVariableContributionSheet
+ *
  * @package Parent\Controller\Plugin
  */
 class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationPlugin
@@ -29,7 +30,8 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
     /**
      * @param OParent $parent
      * @param Program $program
-     * @param int $year
+     * @param int     $year
+     *
      * @return OrganisationPdf
      */
     public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
@@ -39,8 +41,11 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
          */
         $pdf = new OrganisationPdf();
         $pdf->setTemplate($this->getModuleOptions()->getOverviewVariableContributionTemplate());
+
+
+        $pdf->SetMargins(10, 30, -1, true);
+        $pdf->SetAutoPageBreak(true, 30);
         $pdf->AddPage();
-        $pdf->SetMargins(10, 30, 10, true);
         $pdf->SetFontSize(8);
 
         $content = $this->getTwigRenderer()->render(
@@ -61,7 +66,7 @@ class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationP
             ]
         );
 
-        $pdf->writeHTMLCell(0, 600, 10, 25, $content);
+        $pdf->writeHTMLCell(0, 0, '', '', $content);
 
         return $pdf;
     }

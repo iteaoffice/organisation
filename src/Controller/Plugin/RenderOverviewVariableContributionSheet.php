@@ -42,7 +42,6 @@ class RenderOverviewVariableContributionSheet extends AbstractOrganisationPlugin
         $pdf->AddPage();
         $pdf->SetFontSize(8);
 
-
         $projects = $this->getParentService()->renderProjectsByParentInYear($parent, $program, $year);
         $invoiceMethod = $this->getInvoiceService()->findInvoiceMethod($program);
 

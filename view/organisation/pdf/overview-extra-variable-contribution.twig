@@ -11,10 +11,12 @@
     .header > th {
         border-bottom: 1px solid #0066cc;
     }
+    img {
+        width: 450px;
+    }
 </style>
 
 <strong>{{ translate("txt-status-of-extra-variable-contribution-for-program-%s-projects-due-by-%s")|format(program,parent) }}</strong>
-
 
 {% for project in projects %}
     {# Take the latest version to calculate the contribution of the affiliation#}
@@ -69,15 +71,14 @@
     {% endif %}
 {% endfor %}
 
-<br pagebreak="true"/>
 <strong>{{ translate("txt-details-of-total-additional-invoice-to-be-expected-by-second-half-year-%s")|format(year) }}</strong>
-<br><br>
+<br>
 
 <table class="table" width="545" cellpadding="1">
     <tr class="header">
-        <th>{{ translate("txt-project-name") }}</th>
-        <th>{{ translate("txt-parent-name") }}</th>
-        <th align="right">{{ translate("txt-maximum-eligible-funding") }}</th>
+        <th width="150">{{ translate("txt-project-name") }}</th>
+        <th width="245">{{ translate("txt-parent-name") }}</th>
+        <th align="right" width="150">{{ translate("txt-maximum-eligible-funding") }}</th>
     </tr>
     {% for project in projects %}
 
@@ -87,9 +88,10 @@
         {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
 
             <tr>
-                <td align="left">{{ project }}</td>
-                <td>{{ parent }}</td>
-                <td align="right">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|round_currency }}</td>
+                <td align="left" width="150">{{ project }}</td>
+                <td width="245">{{ parent }}</td>
+                <td align="right"
+                    width="150">{{ parentService.parseExtraVariableBalanceByParentAndVersion(parent, version)|round_currency }}</td>
             </tr>
         {% endif %}
     {% endfor %}
@@ -98,3 +100,11 @@
         <th align="right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent, program)|round_currency }}</th>
     </tr>
 </table>
+<br><br>
+
+<table class="table" width="545" cellpadding="1">
+    <tr>
+        <td width="50"></td>
+        <td width="500"><img src="public/assets/aeneas/style/image/formula.png"></td>
+        <td></td>
+    </tr>
