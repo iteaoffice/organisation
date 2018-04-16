@@ -11,18 +11,18 @@
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-partner") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-partner") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ parentLink(organisation.parent,'view', 'parent') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ parentLink(organisation.parent,'view', 'parent') }}</p>
     </div>
 </div>
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-organisation") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-organisation") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ parentOrganisationLink(organisation,'view', 'organisation') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ parentOrganisationLink(organisation,'view', 'organisation') }}</p>
     </div>
 </div>
 

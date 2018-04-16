@@ -8,18 +8,18 @@
 {{ ztbformelement(financialForm.get('id')) }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-debtor-number") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-debtor-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ organisationService.parseDebtorNumber(organisation) }}</p>
+        <p class="form-control-static form-control-plaintext">{{ organisationService.parseDebtorNumber(organisation) }}</p>
     </div>
 </div>
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-credit-number") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-credit-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ organisationService.parseCreditNumber(organisation) }}</p>
+        <p class="form-control-static form-control-plaintext">{{ organisationService.parseCreditNumber(organisation) }}</p>
     </div>
 </div>
 
@@ -28,10 +28,10 @@
 {{ ztbformelement(financialForm.get('vatStatus')) }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-vat-status") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-vat-status") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static"><span
+        <p class="form-control-static form-control-plaintext"><span
                     id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
                 ({{ financial.dateVat|string_date }})</span>
             {#<i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i></p>#}

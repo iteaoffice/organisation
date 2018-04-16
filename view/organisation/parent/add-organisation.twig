@@ -11,10 +11,10 @@
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-parent") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ parentLink(parent,'view','parent') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
     </div>
 </div>
 

@@ -121,7 +121,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 if ($data['vatType'] == 0) {
                     $financial->setVatType(null);
                 } else {
-                    $vatType = $this->getGeneralService()->findEntityById(VatType::class, $data['vatType']);
+                    $vatType = $this->generalService->find(VatType::class, (int) $data['vatType']);
                     $arrayCollection = new ArrayCollection();
                     $arrayCollection->add($vatType);
                     $financial->setVatType($arrayCollection);

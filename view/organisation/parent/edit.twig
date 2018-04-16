@@ -15,10 +15,10 @@
 
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-parent") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ parentLink(parent,'view','parent') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
     </div>
 </div>
 
@@ -29,10 +29,10 @@
 {{ ztbformelement(parentForm.get('status')) }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label">{{ translate("txt-program-doa") }}</label>
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-program-doa") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{% for doa in parent.doa %}{{ parentDoaLink(doa,'view','name') }}{% if not loop.last %} &middot; {% endif %}{% else %}{{ translate("txt-no-doa-signed") }}{% endfor %}</p>
+        <p class="form-control-static form-control-plaintext">{% for doa in parent.doa %}{{ parentDoaLink(doa,'view','name') }}{% if not loop.last %} &middot; {% endif %}{% else %}{{ translate("txt-no-doa-signed") }}{% endfor %}</p>
     </div>
 </div>
 

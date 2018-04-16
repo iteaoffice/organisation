@@ -100,23 +100,6 @@ class ParentService extends AbstractService
     }
 
     /**
-     * @param Entity\OParent $parent
-     * @param Program        $program
-     *
-     * @return bool
-     */
-    public function hasDoaForProgram(Entity\OParent $parent, Program $program): bool
-    {
-        foreach ($parent->getDoa() as $doa) {
-            if ($doa->getProgram()->getId() === $program->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param array $filter
      *
      * @return Query
@@ -396,6 +379,7 @@ class ParentService extends AbstractService
     {
         //Go over each affiliation and sum up what has been paid already
         $balanceTotal = 0;
+
         foreach ($this->getProjectService()->findProjectsByParent($parent, $program) as $project) {
             $version = $this->getProjectService()->getLatestProjectVersion($project);
 
@@ -444,25 +428,6 @@ class ParentService extends AbstractService
     public function parseMembershipFactor(Entity\OParent $parent): int
     {
         return \count($this->parseMemberships($parent));
-    }
-
-    /**
-     * This function checks if the parent has other membersips besides AENEAS
-     *
-     * @param Entity\OParent $parent
-     *
-     * @return bool
-     */
-    public function hasOtherMemberships(Entity\OParent $parent): bool
-    {
-        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_MEMBER) {
-            return true;
-        }
-        if ($parent->getEpossMemberType() === Entity\OParent::EPOSS_MEMBER_TYPE_MEMBER) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -620,6 +585,42 @@ class ParentService extends AbstractService
     /**
      * @param Entity\OParent $parent
      * @param Program        $program
+     *
+     * @return bool
+     */
+    public function hasDoaForProgram(Entity\OParent $parent, Program $program): bool
+    {
+        foreach ($parent->getDoa() as $doa) {
+            if ($doa->getProgram()->getId() === $program->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * This function checks if the parent has other membersips besides AENEAS
+     *
+     * @param Entity\OParent $parent
+     *
+     * @return bool
+     */
+    public function hasOtherMemberships(Entity\OParent $parent): bool
+    {
+        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_MEMBER) {
+            return true;
+        }
+        if ($parent->getEpossMemberType() === Entity\OParent::EPOSS_MEMBER_TYPE_MEMBER) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @param Program        $program
      * @param int            $year
      * @param array|null     $includeAffiliations
      *
@@ -730,6 +731,24 @@ class ParentService extends AbstractService
      *
      * @return iterable
      */
+    public function findAllParentExtraInvoiceByParentYear(
+        Entity\OParent $parent,
+        int $year,
+        Program $program
+    ): iterable {
+        return array_merge(
+            $this->findParentInvoiceByParentYear($parent, $year, $program)->toArray(),
+            $this->findParentExtraInvoiceByParentYear($parent, $year)->toArray()
+        );
+    }
+
+    /**
+     * @param Entity\OParent $parent
+     * @param int            $year
+     * @param Program        $program
+     *
+     * @return iterable
+     */
     public function findParentInvoiceByParentYear(Entity\OParent $parent, int $year, Program $program): iterable
     {
         return $parent->getInvoice()->filter(
@@ -753,24 +772,6 @@ class ParentService extends AbstractService
             function (Entity\Parent\InvoiceExtra $invoiceExtra) use ($year) {
                 return $invoiceExtra->getYear() === $year;
             }
-        );
-    }
-
-    /**
-     * @param Entity\OParent $parent
-     * @param int            $year
-     * @param Program        $program
-     *
-     * @return iterable
-     */
-    public function findAllParentExtraInvoiceByParentYear(
-        Entity\OParent $parent,
-        int $year,
-        Program $program
-    ): iterable {
-        return array_merge(
-            $this->findParentInvoiceByParentYear($parent, $year, $program)->toArray(),
-            $this->findParentExtraInvoiceByParentYear($parent, $year)->toArray()
         );
     }
 

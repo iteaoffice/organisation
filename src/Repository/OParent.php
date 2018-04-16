@@ -42,7 +42,7 @@ class OParent extends EntityRepository
         $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
         $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_parent.type', 'parent_entity_type');
-        $queryBuilder->leftJoin('organisation_entity_parent.status', 'parent_entity_status');
+
         $queryBuilder->leftJoin('organisation_entity_parent.financial', 'parent_entity_financial');
         $queryBuilder->leftJoin('parent_entity_financial.organisation', 'organisation_entity_financial_organisation');
         $queryBuilder->leftJoin(
@@ -142,7 +142,6 @@ class OParent extends EntityRepository
 
         $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
-        $queryBuilder->join('organisation_entity_parent.status', 'organisation_entity_parent_status');
 
         //Make a second sub-select to cancel out organisations which have a financial organisation
         $subSelect2 = $this->_em->createQueryBuilder();
@@ -187,13 +186,6 @@ class OParent extends EntityRepository
         if (array_key_exists('epossMemberType', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in('organisation_entity_parent.epossMemberType', $filter['epossMemberType'])
-            );
-        }
-
-        if (array_key_exists('status', $filter)) {
-            $queryBuilder->andWhere(
-                $queryBuilder->expr()
-                    ->in('organisation_entity_parent.status', $filter['status'])
             );
         }
 
@@ -326,9 +318,6 @@ class OParent extends EntityRepository
             case 'type':
                 $queryBuilder->addOrderBy('organisation_entity_parent_type.type', $direction);
                 break;
-            case 'status':
-                $queryBuilder->addOrderBy('organisation_entity_parent_status.status', $direction);
-                break;
             default:
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
@@ -425,7 +414,6 @@ class OParent extends EntityRepository
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('organisation_entity_parent_freerider.id');
         $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_freerider');
-        $subSelect->join('organisation_entity_parent_freerider.status', 'organisation_entity_parent_freerider_status');
 
         $subSelect->andWhere('organisation_entity_parent_freerider.memberType = :memberType');
         $subSelect->andWhere('organisation_entity_parent_freerider.epossMemberType = :epossMemberType');
@@ -464,7 +452,6 @@ class OParent extends EntityRepository
         $subSelect->select('organisation_entity_parent_c_chamber.id');
         $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_c_chamber');
         $subSelect->join('organisation_entity_parent_c_chamber.type', 'organisation_entity_parent_c_chamber_type');
-        $subSelect->join('organisation_entity_parent_c_chamber.status', 'organisation_entity_parent_c_chamber_status');
 
         $subSelect->andWhere('organisation_entity_parent_c_chamber_type.id = :type');
         $subSelect->andWhere('organisation_entity_parent_c_chamber.memberType = :memberType');

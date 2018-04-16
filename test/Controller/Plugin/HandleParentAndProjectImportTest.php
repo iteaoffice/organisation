@@ -56,7 +56,7 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
         //Mock the GeneralService for the country lookup
         /** @var GeneralService|\PHPUnit_Framework_MockObject_MockObject $generalServiceMock */
-        $generalServiceMock = $this->getMockBuilder(GeneralService::class)
+        $generalServiceMock = $this->getMockBuilder(GeneralService::class)->disableOriginalConstructor()
             ->setMethods([
                 'findEntityById',
                 'findCountryByCD',
@@ -153,7 +153,7 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
         //Mock the program service
         $program = new Program();
-        $programServiceMock = $this->getMockBuilder(ProgramService::class)
+        $programServiceMock = $this->getMockBuilder(ProgramService::class)->disableOriginalConstructor()
             ->setMethods(['findProgramByName',])->getMock();
         $programServiceMock->expects($this->any())
             ->method('findProgramByName')
@@ -164,7 +164,7 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
         //Mock the call service
         $call = new Call();
-        $callServiceMock = $this->getMockBuilder(CallService::class)
+        $callServiceMock = $this->getMockBuilder(CallService::class)->disableOriginalConstructor()
             ->setMethods(['findCallByName',])->getMock();
         $callServiceMock->expects($this->any())
             ->method('findCallByName')

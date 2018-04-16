@@ -11,10 +11,10 @@
     {{ ztbformelement(organisationForm.get('country')) }}
 
     <div class="form-group row">
-        <label class="col-md-3 form-control-label control-label">{{ translate("txt-current-logo") }}</label>
+        <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-current-logo") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static">{{ organisationLogo(organisation, 300, false) }}</p>
+            <p class="form-control-static form-control-plaintext">{{ organisationLogo(organisation, 300, false) }}</p>
         </div>
     </div>
 

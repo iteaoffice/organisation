@@ -414,7 +414,7 @@ class ParentController extends OrganisationAbstractController
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $counter = 0;
             foreach ((array)$form->getData()['program'] as $programId) {
-                $program = $this->getProgramService()->findProgramById($programId);
+                $program = $this->programService->findProgramById((int) $programId);
                 if (null !== $program) {
                     $doa = new Entity\Parent\Doa();
                     $doa->setContact($parent->getContact());
@@ -514,7 +514,7 @@ class ParentController extends OrganisationAbstractController
         $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $program, $year);
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
             ->addHeaderLine(
                 'Content-Disposition',
                 'attachment; filename="' . sprintf(
@@ -581,7 +581,7 @@ class ParentController extends OrganisationAbstractController
         $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $program, $year);
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
             ->addHeaderLine(
                 'Content-Disposition',
                 'attachment; filename="' . sprintf(

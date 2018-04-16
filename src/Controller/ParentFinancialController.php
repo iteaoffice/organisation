@@ -128,7 +128,7 @@ class ParentFinancialController extends OrganisationAbstractController
                 /**
                  * @var Country $country
                  */
-                $country = $this->getGeneralService()->findEntityById(Country::class, $formData['country']);
+                $country = $this->generalService->find(Country::class, (int) $formData['country']);
                 $financialAddress->setCountry($country);
                 $this->getContactService()->updateEntity($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
@@ -268,7 +268,7 @@ class ParentFinancialController extends OrganisationAbstractController
                 /**
                  * @var Country $country
                  */
-                $country = $this->getGeneralService()->findEntityById(Country::class, $formData['country']);
+                $country = $this->generalService->find(Country::class, (int) $formData['country']);
                 $financialAddress->setCountry($country);
                 $this->getContactService()->updateEntity($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
