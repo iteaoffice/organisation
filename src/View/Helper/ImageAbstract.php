@@ -77,7 +77,7 @@ abstract class ImageAbstract extends AbstractViewHelper
 
         $thumberLink = Builder::construct($config['image']['server'], $config['image']['secret'], $serverUrl().$url($this->router, $this->routerParams))
             ->fitIn($this->width, null)
-            ->smartCrop(true);
+            ->smartCrop(false);
 
         $imageUrl = '<img src="%s" id="%s" class="%s">';
 

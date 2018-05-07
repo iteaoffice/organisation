@@ -56,7 +56,7 @@ class Type extends AbstractEntity
     /**
      * @ORM\Column(name="description", type="string", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-organisation-parent-description-label","help-block":"txt-organisation-parent-description-help-block"})
+     * @Annotation\Options({"label":"txt-organisation-parent-type-description-label","help-block":"txt-organisation-parent-type-description-help-block"})
      * @var string
      */
     private $description;

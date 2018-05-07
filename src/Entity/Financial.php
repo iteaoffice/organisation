@@ -185,13 +185,6 @@ class Financial extends AbstractEntity
      */
     private $organisation;
     /**
-     * @ORM\OneToMany(targetEntity="\Invoice\Entity\Financial\Row", cascade={"persist"}, mappedBy="financial")
-     * @Annotation\Exclude()
-     *
-     * @var \Invoice\Entity\Financial\Row[]
-     */
-    private $financialRow;
-    /**
      * @ORM\ManyToMany(targetEntity="General\Entity\VatType", cascade="persist", inversedBy="organisationFinancial")
      * @ORM\JoinTable(name="vat_type_financial",
      *            joinColumns={@ORM\JoinColumn(name="financial_id", referencedColumnName="financial_id")},
@@ -363,22 +356,6 @@ class Financial extends AbstractEntity
     public function setEmail($email)
     {
         $this->email = $email;
-    }
-
-    /**
-     * @return \Invoice\Entity\Financial\Row[]
-     */
-    public function getFinancialRow()
-    {
-        return $this->financialRow;
-    }
-
-    /**
-     * @param \Invoice\Entity\Financial\Row[] $financialRow
-     */
-    public function setFinancialRow($financialRow)
-    {
-        $this->financialRow = $financialRow;
     }
 
     /**

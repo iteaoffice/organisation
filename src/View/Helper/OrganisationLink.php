@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
+use Content\Entity\Route;
 use Organisation\Entity\Organisation;
 
 /**
@@ -31,11 +32,11 @@ class OrganisationLink extends AbstractLink
 
     /**
      * @param Organisation $organisation
-     * @param string $action
-     * @param string $show
-     * @param null $branch
-     * @param null $page
-     * @param null $alternativeShow
+     * @param string       $action
+     * @param string       $show
+     * @param null         $branch
+     * @param null         $page
+     * @param null         $alternativeShow
      *
      * @return string
      *
@@ -185,7 +186,7 @@ class OrganisationLink extends AbstractLink
                 break;
             case 'view':
                 $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
-                $this->setRouter('route-organisation_entity_organisation');
+                $this->setRouter(Route::parseRouteName(Route::DEFAULT_ROUTE_ORGANISATION));
                 $this->setText(
                     sprintf(
                         $this->translate("txt-view-organisation-%s"),
@@ -193,17 +194,6 @@ class OrganisationLink extends AbstractLink
                             ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
                     )
                 );
-                break;
-            case 'view-article':
-                $this->setRouter('route-organisation_entity_organisation-article');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-view-article-for-organisation-%s"),
-                        $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
-                    )
-                );
-                $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
                 break;
             default:
                 throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
