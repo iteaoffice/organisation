@@ -113,7 +113,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getInvoiceFilter();
 
-        $invoiceQuery = $this->getInvoiceService()->findEntitiesFiltered(
+        $invoiceQuery = $this->getInvoiceService()->findFiltered(
             Invoice::class,
             array_merge($filterPlugin->getFilter(), ['organisation' => [$organisation->getId()]])
         );
