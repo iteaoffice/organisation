@@ -8,9 +8,9 @@
 $options = [
     'country_color'                                 => '#00a651',
     'country_color_faded'                           => '#005C00',
-    'overview_variable_contribution_template'       => __DIR__ . '/../../../../styles/' . ITEAOFFICE_HOST
+    'overview_variable_contribution_template'       => __DIR__ . '/../../../../styles/' . (\defined('ITEAOFFICE_HOST') ? ITEAOFFICE_HOST : 'test')
         . '/template/pdf/aeneas-template.pdf',
-    'overview_extra_variable_contribution_template' => __DIR__ . '/../../../../styles/' . ITEAOFFICE_HOST
+    'overview_extra_variable_contribution_template' => __DIR__ . '/../../../../styles/' . (\defined('ITEAOFFICE_HOST') ? ITEAOFFICE_HOST : 'test')
         . '/template/pdf/aeneas-template.pdf',
 ];
 

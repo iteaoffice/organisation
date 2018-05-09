@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Organisation\Controller;
 
-use Organisation\Entity\Logo;
-use PHPThumb\GD;
 use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;

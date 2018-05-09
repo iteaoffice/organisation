@@ -87,13 +87,15 @@ class EntityTest extends TestCase
                         }
                     }
 
-                    $this->assertInternalType('array', ($element->getAttributes()));
-                    $this->assertInternalType('array', ($element->getOptions()));
+
 
                 }
 
             }
         }
+
+        $this->assertInternalType('array', ($element->getAttributes()));
+        $this->assertInternalType('array', ($element->getOptions()));
 
         file_put_contents(
             __DIR__ . '/../../config/language.php',

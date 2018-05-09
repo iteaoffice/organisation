@@ -17,6 +17,7 @@ use Organisation\Navigation;
 use Organisation\Options;
 use Organisation\Service;
 use Organisation\View;
+use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Zend\Stdlib;
 
 $config = [
@@ -60,7 +61,6 @@ $config = [
     ],
     'view_helpers'       => [
         'aliases'    => [
-            'organisationHandler'               => View\Helper\OrganisationHandler::class,
             'organisationLink'                  => View\Helper\OrganisationLink::class,
             'organisationTypeLink'              => View\Helper\TypeLink::class,
             'organisationLogo'                  => View\Helper\OrganisationLogo::class,
@@ -78,7 +78,7 @@ $config = [
             'organisationformelement' => Form\View\Helper\OrganisationFormElement::class,
         ],
         'factories'  => [
-            View\Helper\OrganisationHandler::class               => View\Factory\ViewHelperFactory::class,
+            View\Handler\OrganisationHandler::class              => ConfigAbstractFactory::class,
             View\Helper\OrganisationLink::class                  => View\Factory\ViewHelperFactory::class,
             View\Helper\TypeLink::class                          => View\Factory\ViewHelperFactory::class,
             View\Helper\NoteLink::class                          => View\Factory\ViewHelperFactory::class,
