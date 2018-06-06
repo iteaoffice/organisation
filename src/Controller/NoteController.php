@@ -29,7 +29,7 @@ class NoteController extends OrganisationAbstractController
     {
         /** @var Request $request */
         $request = $this->getRequest();
-        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
+        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('organisationId'));
         $note = new Note();
         $data = $request->getPost()->toArray();
         $form = $this->getFormService()->prepare($note, $note, $data);
@@ -48,7 +48,7 @@ class NoteController extends OrganisationAbstractController
                 /** @var Note $note */
                 $note = $form->getData();
                 $note->setOrganisation($organisation);
-                $note->setContact($this->zfcUserAuthentication()->getIdentity());
+                $note->setContact($this->identity());
                 $this->getOrganisationService()->updateEntity($note);
                 $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
                     $this->translate("txt-note-for-organisation-%s-has-successfully-been-added"),

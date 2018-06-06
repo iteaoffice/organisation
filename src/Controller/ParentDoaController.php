@@ -31,7 +31,7 @@ class ParentDoaController extends OrganisationAbstractController
      */
     public function uploadAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('parentId'));
+        $parent = $this->getParentService()->findParentById((int) $this->params('parentId'));
 
         if (null === $parent) {
             return $this->notFoundAction();

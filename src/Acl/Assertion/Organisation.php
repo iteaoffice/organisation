@@ -46,7 +46,7 @@ class Organisation extends AssertionAbstract
         $id = $this->getId();
 
         if (!$organisation instanceof OrganisationEntity && !\is_null($id)) {
-            $organisation = $this->getOrganisationService()->findOrganisationById($id);
+            $organisation = $this->getOrganisationService()->findOrganisationById((int) $id);
         }
 
         switch ($this->getPrivilege()) {

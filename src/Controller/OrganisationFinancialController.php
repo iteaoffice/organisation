@@ -60,7 +60,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
      */
     public function editAction()
     {
-        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('id'));
 
         if (null === $organisation) {
             return $this->notFoundAction();

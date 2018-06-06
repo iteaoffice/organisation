@@ -128,7 +128,7 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
 
         //Mock the GeneralService for the country lookup
-        $contactServiceMock = $this->getMockBuilder(ContactService::class)
+        $contactServiceMock = $this->getMockBuilder(ContactService::class)->disableOriginalConstructor()
             ->setMethods([
                 'findContactByEmail',
                 'findContactById',
@@ -175,7 +175,7 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
         //Mock the project service
         $project = new Project();
-        $projectServiceMock = $this->getMockBuilder(ProjectService::class)
+        $projectServiceMock = $this->getMockBuilder(ProjectService::class)->disableOriginalConstructor()
             ->setMethods(['findProjectByName',])->getMock();
         $projectServiceMock->expects($this->any())
             ->method('findProjectByName')
@@ -186,7 +186,7 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
 
         //Mock the organisation service
         $organisation = new Organisation();
-        $organisationServiceMock = $this->getMockBuilder(OrganisationService::class)
+        $organisationServiceMock = $this->getMockBuilder(OrganisationService::class)->disableOriginalConstructor()
             ->setMethods(['findOrganisationByNameCountry',])->getMock();
         $organisationServiceMock->expects($this->any())
             ->method('findOrganisationByNameCountry')

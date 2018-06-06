@@ -104,7 +104,7 @@ class OrganisationAdminController extends OrganisationAbstractController
      */
     public function viewAction(): ViewModel
     {
-        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('id'));
 
         if (null === $organisation) {
             return $this->notFoundAction();
@@ -207,7 +207,7 @@ class OrganisationAdminController extends OrganisationAbstractController
      */
     public function editAction()
     {
-        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('id'));
 
         if (null === $organisation) {
             return $this->notFoundAction();
@@ -289,7 +289,7 @@ class OrganisationAdminController extends OrganisationAbstractController
      */
     public function manageWebAction()
     {
-        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('id'));
 
         if (null === $organisation) {
             return $this->notFoundAction();
@@ -385,7 +385,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     public function addAffiliationAction()
     {
         /** @var Organisation $organisation */
-        $organisation = $this->getOrganisationService()->findOrganisationById($this->params('id'));
+        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('id'));
 
         if (null === $organisation) {
             return $this->notFoundAction();
@@ -454,9 +454,9 @@ class OrganisationAdminController extends OrganisationAbstractController
         /** @var Request $request */
         $request = $this->getRequest();
         /** @var Organisation $source */
-        $source = $this->getOrganisationService()->findOrganisationById($this->params('sourceId'));
+        $source = $this->getOrganisationService()->findOrganisationById((int) $this->params('sourceId'));
         /** @var Organisation $target */
-        $target = $this->getOrganisationService()->findOrganisationById($this->params('targetId'));
+        $target = $this->getOrganisationService()->findOrganisationById((int) $this->params('targetId'));
 
         if (\is_null($source) || \is_null($target)) {
             return $this->notFoundAction();

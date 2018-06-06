@@ -38,11 +38,11 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
     {
         switch ($switch) {
             case 'full_entity_name':
-                return str_replace('DoctrineORMModule\Proxy\__CG__\\', '', static::class);
+                return \str_replace('DoctrineORMModule\Proxy\__CG__\\', '', static::class);
             case 'entity_name':
-                return str_replace(__NAMESPACE__ . '\\', '', $this->get('full_entity_name'));
+                return \str_replace(__NAMESPACE__ . '\\', '', $this->get('full_entity_name'));
             case 'underscore_entity_name':
-                return strtolower(str_replace('\\', '_', $this->get('full_entity_name')));
+                return \strtolower(\str_replace('\\', '_', $this->get('full_entity_name')));
         }
 
         return null;
@@ -53,7 +53,7 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
      */
     public function isEmpty(): bool
     {
-        return \is_null($this->getId());
+        return null === $this->getId();
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
      */
     public function __toString(): string
     {
-        return (string)sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
+        return sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
     }
 
     /**
@@ -69,13 +69,15 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
      *
      * @return bool
      */
-    public function has($prop)
+    public function has($prop): bool
     {
         $getter = 'get' . ucfirst($prop);
         if (method_exists($this, $getter)) {
             if (strpos($prop, 's') === 0 && is_array($this->$getter())) {
                 return true;
-            } elseif ($this->$getter()) {
+            }
+
+            if ($this->$getter()) {
                 return true;
             }
         }

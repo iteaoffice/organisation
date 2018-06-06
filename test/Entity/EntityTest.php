@@ -33,7 +33,9 @@ class EntityTest extends TestCase
 
         foreach ($finder as $file) {
 
-            $className = 'Organisation\Entity\\' . \str_replace(['/', '.php'], ['\\', ''], $file->getRelativePathname());
+            $className = 'Organisation\Entity\\' . \str_replace(
+                    ['/', '.php'], ['\\', ''], $file->getRelativePathname()
+                );
 
             $testClass = new \ReflectionClass($className);
 
@@ -79,23 +81,21 @@ class EntityTest extends TestCase
                         $labels[] = $element->getOptions()['placeholder'];
                     }
 
-                    foreach ($testClass->getStaticProperties() as $constant) {
-                        if (\is_array($constant)) {
-                            foreach ($constant as $constantValue) {
-                                $labels[] = $constantValue;
-                            }
-                        }
-                    }
 
-
-
+                    $this->assertInternalType('array', ($element->getAttributes()));
+                    $this->assertInternalType('array', ($element->getOptions()));
                 }
+            }
 
+            foreach ($testClass->getStaticProperties() as $constant) {
+                if (\is_array($constant)) {
+                    foreach ($constant as $constantValue) {
+                        $labels[] = $constantValue;
+                    }
+                }
             }
         }
 
-        $this->assertInternalType('array', ($element->getAttributes()));
-        $this->assertInternalType('array', ($element->getOptions()));
 
         file_put_contents(
             __DIR__ . '/../../config/language.php',

@@ -202,7 +202,7 @@ class ParentController extends OrganisationAbstractController
     {
         $organisation = null;
         if (!\is_null($this->params('organisationId'))) {
-            $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
+            $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('organisationId'));
         }
 
         $data = $this->getRequest()->getPost()->toArray();
@@ -259,11 +259,11 @@ class ParentController extends OrganisationAbstractController
      */
     public function addOrganisationAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->getParentService()->findParentById((int) $this->params('id'));
 
         $organisation = null;
         if (null !== $this->params('organisationId')) {
-            $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
+            $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('organisationId'));
         }
 
         $data = $this->getRequest()->getPost()->toArray();
@@ -333,7 +333,7 @@ class ParentController extends OrganisationAbstractController
      */
     public function editAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->getParentService()->findParentById((int) $this->params('id'));
 
         if (null === $parent) {
             return $this->notFoundAction();
@@ -401,7 +401,7 @@ class ParentController extends OrganisationAbstractController
      */
     public function viewAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->getParentService()->findParentById((int) $this->params('id'));
 
         if (null === $parent) {
             return $this->notFoundAction();
