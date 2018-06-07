@@ -354,25 +354,14 @@ class OrganisationService extends AbstractService
         return array_unique($branches);
     }
 
-    /**
-     * @param                     $branch
-     * @param Entity\Organisation $organisation = null
-     *
-     * @return string
-     */
     public function parseOrganisationWithBranch(string $branch = null, Entity\Organisation $organisation): string
     {
         return self::parseBranch((string)$branch, $organisation);
     }
 
-    /**
-     * @param string $branch
-     * @param Entity\Organisation $organisation
-     * @return string
-     */
     public static function parseBranch(string $branch = null, Entity\Organisation $organisation): string
     {
-        if (is_string($branch) && strpos($branch, '!') === 0) {
+        if (\is_string($branch) && \strpos($branch, '!') === 0) {
             return substr($branch, 1);
         }
 
