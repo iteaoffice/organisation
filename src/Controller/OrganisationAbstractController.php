@@ -23,7 +23,6 @@ use Invoice\Controller\Plugin\GetFilter as InvoiceFilterPlugin;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller\Plugin\GetFilter as OrganisationFilterPlugin;
 use Organisation\Controller\Plugin\HandleParentAndProjectImport;
-use Organisation\Controller\Plugin\HandleParentImport;
 use Organisation\Controller\Plugin\MergeOrganisation;
 use Organisation\Controller\Plugin\MergeParentOrganisation;
 use Organisation\Controller\Plugin\RenderOverviewExtraVariableContributionSheet;
@@ -38,12 +37,14 @@ use Project\Service\ProjectService;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Zend\Mvc\Plugin\Identity\Identity;
 use Zend\View\HelperPluginManager;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
  * @category    Organisation
  * @package     Controller
+ * @method Identity identity()
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)

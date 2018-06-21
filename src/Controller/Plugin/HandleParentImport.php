@@ -178,7 +178,7 @@ class HandleParentImport extends AbstractImportPlugin
             if (\is_null($financialAddress)) {
                 $financialAddress = new Address();
                 /** @var AddressType $addressType */
-                $addressType = $this->getContactService()->findEntityById(
+                $addressType = $this->getContactService()->find(
                     AddressType::class,
                     AddressType::ADDRESS_TYPE_FINANCIAL
                 );

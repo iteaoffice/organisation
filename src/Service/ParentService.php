@@ -747,7 +747,7 @@ class ParentService extends AbstractService
      * @param int            $year
      * @param Program        $program
      *
-     * @return iterable
+     * @return Entity\Parent\Invoice[]|Collection|iterable
      */
     public function findParentInvoiceByParentYear(Entity\OParent $parent, int $year, Program $program): iterable
     {
@@ -762,7 +762,7 @@ class ParentService extends AbstractService
      * @param Entity\OParent $parent
      * @param int            $year
      *
-     * @return Entity\Parent\Invoice[]|Collection|iterable
+     * @return Entity\Parent\InvoiceExtra[]|Collection|iterable
      */
     public function findParentExtraInvoiceByParentYear(
         Entity\OParent $parent,

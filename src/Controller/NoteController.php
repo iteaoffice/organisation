@@ -22,9 +22,6 @@ use Zend\View\Model\ViewModel;
  */
 class NoteController extends OrganisationAbstractController
 {
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function newAction()
     {
         /** @var Request $request */

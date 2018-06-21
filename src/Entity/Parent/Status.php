@@ -21,8 +21,6 @@ namespace Organisation\Entity\Parent;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
-use Program\Entity\Program;
-use Project\Entity\Fee;
 use Zend\Form\Annotation;
 
 /**
@@ -126,30 +124,6 @@ class Status extends AbstractEntity
     }
 
     /**
-     * New function needed to make the hydrator happy
-     *
-     * @param Collections\Collection $programCollection
-     */
-    public function addProgram(Collections\Collection $programCollection)
-    {
-        foreach ($programCollection as $program) {
-            $this->program->add($program);
-        }
-    }
-
-    /**
-     * New function needed to make the hydrator happy
-     *
-     * @param Collections\Collection $programCollection
-     */
-    public function removeProgram(Collections\Collection $programCollection)
-    {
-        foreach ($programCollection as $single) {
-            $this->program->removeElement($single);
-        }
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -159,6 +133,7 @@ class Status extends AbstractEntity
 
     /**
      * @param int $id
+     *
      * @return Status
      */
     public function setId($id): Status
@@ -178,6 +153,7 @@ class Status extends AbstractEntity
 
     /**
      * @param string $status
+     *
      * @return Status
      */
     public function setStatus(string $status): Status
@@ -197,6 +173,7 @@ class Status extends AbstractEntity
 
     /**
      * @param string $description
+     *
      * @return Status
      */
     public function setDescription(string $description): Status
@@ -216,6 +193,7 @@ class Status extends AbstractEntity
 
     /**
      * @param Collections\ArrayCollection|\Organisation\Entity\OParent[] $parent
+     *
      * @return Status
      */
     public function setParent($parent): Status

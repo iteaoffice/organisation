@@ -28,13 +28,6 @@ use Organisation\Entity\Parent\Organisation;
  */
 class ParentOrganisationLink extends AbstractLink
 {
-    /**
-     * @param Organisation|null $organisation
-     * @param string            $action
-     * @param string            $show
-     *
-     * @return string
-     */
     public function __invoke(
         Organisation $organisation = null,
         $action = 'view',
@@ -52,9 +45,9 @@ class ParentOrganisationLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'organisation' => (string)$this->getParentOrganisation()->getOrganisation(),
-                'member-type' => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent(
-                )->getType()->getType() : '',
+                'organisation'  => (string)$this->getParentOrganisation()->getOrganisation(),
+                'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()
+                    ->getParent()->getType()->getType() : '',
                 'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translate(
                     $this->getParentOrganisation()->getParent()->getMemberType(true)
                 ) : '',

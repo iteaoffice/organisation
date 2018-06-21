@@ -119,7 +119,7 @@ class ParentFinancialController extends OrganisationAbstractController
                      * @var $addressType AddressType
                      */
                     $addressType = $this->getContactService()
-                        ->findEntityById(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
+                        ->find(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
                     $financialAddress->setType($addressType);
                 }
                 $financialAddress->setAddress($formData['address']);
@@ -130,7 +130,7 @@ class ParentFinancialController extends OrganisationAbstractController
                  */
                 $country = $this->generalService->find(Country::class, (int) $formData['country']);
                 $financialAddress->setCountry($country);
-                $this->getContactService()->updateEntity($financialAddress);
+                $this->getContactService()->save($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
@@ -259,7 +259,7 @@ class ParentFinancialController extends OrganisationAbstractController
                      * @var $addressType AddressType
                      */
                     $addressType = $this->getContactService()
-                        ->findEntityById(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
+                        ->find(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
                     $financialAddress->setType($addressType);
                 }
                 $financialAddress->setAddress($formData['address']);
@@ -270,7 +270,7 @@ class ParentFinancialController extends OrganisationAbstractController
                  */
                 $country = $this->generalService->find(Country::class, (int) $formData['country']);
                 $financialAddress->setCountry($country);
-                $this->getContactService()->updateEntity($financialAddress);
+                $this->getContactService()->save($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
