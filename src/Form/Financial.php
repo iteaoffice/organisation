@@ -27,6 +27,7 @@ use Zend\Form\Form;
 
 /**
  * Class Financial
+ *
  * @package Organisation\Form
  */
 class Financial extends Form
@@ -34,8 +35,8 @@ class Financial extends Form
     /**
      * Financial constructor.
      *
-     * @param OParent $parent
-     * @param GeneralService $generalService
+     * @param OParent             $parent
+     * @param GeneralService      $generalService
      * @param OrganisationService $organisationService
      */
     public function __construct(
@@ -57,7 +58,7 @@ class Financial extends Form
 
         /** @var Financial $financial */
         foreach ($organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
-                     ->getArrayResult() as $financialOrganisation) {
+                ->getArrayResult() as $financialOrganisation) {
             $country = $financialOrganisation['organisation']['country'];
 
             if (!array_key_exists($country['id'], $financialOrganisationValueOptions)) {
@@ -122,7 +123,7 @@ class Financial extends Form
 
         $this->add(
             [
-                'type'       => 'Contact\Form\Element\Contact',
+                'type'       => 'Zend\Form\Element\Select',
                 'name'       => 'contact',
                 'options'    => [
                     'value_options' => $financialContactValueOptions,
@@ -130,7 +131,6 @@ class Financial extends Form
                 ],
                 'attributes' => [
                     'class'    => 'form-control',
-                    'required' => true,
                 ],
             ]
         );

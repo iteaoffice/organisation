@@ -28,7 +28,9 @@ use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * @category    Parent
+ * Class ParentFinancialController
+ *
+ * @package Organisation\Controller
  */
 class ParentFinancialController extends OrganisationAbstractController
 {
@@ -39,7 +41,7 @@ class ParentFinancialController extends OrganisationAbstractController
     public function newAction()
     {
         /** @var Entity\OParent $parent */
-        $parent = $this->getParentService()->findParentById((int) $this->params('parentId'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('parentId'));
 
         if (null === $parent) {
             return $this->notFoundAction();
@@ -60,7 +62,6 @@ class ParentFinancialController extends OrganisationAbstractController
 
         $formData['attention'] = $parent->getContact()->getDisplayName();
         $formData['contact'] = $parent->getContact()->getId();
-        $form->get('contact')->injectContact($parent->getContact());
 
         if (!\is_null(
             $financialAddress = $this->getContactService()->getFinancialAddress(
@@ -100,7 +101,7 @@ class ParentFinancialController extends OrganisationAbstractController
 
                 $financial = new Entity\Parent\Financial();
                 $financial->setParent($parent);
-                $financial->setContact($this->getContactService()->findContactById($formData['contact']));
+                $financial->setContact($this->getContactService()->findContactById((int) $formData['contact']));
                 $financial->setOrganisation($financialOrganisation->getOrganisation());
                 $financial->setBranch($formData['branch']);
                 $this->getParentService()->updateEntity($financial);
@@ -128,7 +129,7 @@ class ParentFinancialController extends OrganisationAbstractController
                 /**
                  * @var Country $country
                  */
-                $country = $this->generalService->find(Country::class, (int) $formData['country']);
+                $country = $this->generalService->find(Country::class, (int)$formData['country']);
                 $financialAddress->setCountry($country);
                 $this->getContactService()->save($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
@@ -187,7 +188,7 @@ class ParentFinancialController extends OrganisationAbstractController
         }
         $formData['attention'] = $financial->getContact()->getDisplayName();
         $formData['contact'] = $financial->getContact()->getId();
-        $form->get('contact')->injectContact($financial->getContact());
+        //$form->get('contact')->injectContact($financial->getContact());
 
         //Try to find the financial address
         $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact());
@@ -198,7 +199,6 @@ class ParentFinancialController extends OrganisationAbstractController
             $formData['city'] = $financialAddress->getCity();
             $formData['country'] = $financialAddress->getCountry()->getId();
         }
-
 
         $data = array_merge($formData, $this->getRequest()->getPost()->toArray());
 
@@ -241,7 +241,7 @@ class ParentFinancialController extends OrganisationAbstractController
                     $formData['organisationFinancial']
                 );
 
-                $financial->setContact($this->getContactService()->findContactById($formData['contact']));
+                $financial->setContact($this->getContactService()->findContactById((int) $formData['contact']));
                 $financial->setOrganisation($financialOrganisation->getOrganisation());
                 $financial->setBranch($formData['branch']);
                 $this->getParentService()->updateEntity($financial);
@@ -268,7 +268,7 @@ class ParentFinancialController extends OrganisationAbstractController
                 /**
                  * @var Country $country
                  */
-                $country = $this->generalService->find(Country::class, (int) $formData['country']);
+                $country = $this->generalService->find(Country::class, (int)$formData['country']);
                 $financialAddress->setCountry($country);
                 $this->getContactService()->save($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
