@@ -484,18 +484,8 @@ class OrganisationAdminController extends OrganisationAbstractController
 
             // Do the merge
             if (isset($data['merge'])) {
-                $logPath = ini_get('error_log');
-                $logger = null;
-                if (!empty($logPath)) {
-                    $logger = new Logger();
-                    $logger->addWriter(new Stream($logPath));
-                    $result = $this->mergeOrganisation()->merge($source, $target, $logger);
-                    $logger = null; // Explicit fclose() of the writer
-                } else {
-                    $result = $this->mergeOrganisation()->merge($source, $target);
-                }
-
-                $tab = 'general';
+                $result = $this->mergeOrganisation()->merge($source, $target);
+                $tab    = 'general';
                 if ($result['success']) {
                     $this->flashMessenger()->setNamespace('success')->addMessage(
                         $this->translate('txt-organisations-have-been-successfully-merged')

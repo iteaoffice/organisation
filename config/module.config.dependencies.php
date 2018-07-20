@@ -19,7 +19,10 @@ namespace Organisation;
 
 use Content\Navigation\Service\UpdateNavigationService;
 use Content\Service\ArticleService;
-use Organisation\Service\OrganisationService;
+use Doctrine\ORM\EntityManager;
+use ErrorHeroModule\Handler\Logging;
+use Organisation\Controller;
+use Organisation\Service;
 use Project\Options\ModuleOptions;
 use Project\Service\ProjectService;
 use Zend\Authentication\AuthenticationService;
@@ -29,7 +32,11 @@ use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
-
+        Controller\Plugin\MergeOrganisation::class => [
+            EntityManager::class,
+            TranslatorInterface::class,
+            Logging::class
+        ],
         View\Handler\OrganisationHandler::class => [
             'Application',
             'ViewHelperManager',
@@ -37,7 +44,7 @@ return [
             AuthenticationService::class,
             UpdateNavigationService::class,
             TranslatorInterface::class,
-            OrganisationService::class,
+            Service\OrganisationService::class,
             ModuleOptions::class,
             ProjectService::class,
             ArticleService::class

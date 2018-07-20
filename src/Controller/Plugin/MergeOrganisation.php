@@ -19,14 +19,17 @@ namespace Organisation\Controller\Plugin;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
+use ErrorHeroModule\Handler\Logging;
+use General\Entity\Country;
 use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Entity\Description;
+use Organisation\Entity\Financial;
 use Organisation\Entity\Log;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Note;
+use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Log\LoggerInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
@@ -40,44 +43,42 @@ class MergeOrganisation extends AbstractPlugin
      * @var EntityManagerInterface
      */
     private $entityManager;
+
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * MergeOrganisation constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param TranslatorInterface $translator
+     * @var Logging
      */
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    private $errorLogger;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TranslatorInterface    $translator,
+        Logging                $errorLogger = null
+    )
     {
         $this->entityManager = $entityManager;
         $this->translator    = $translator;
+        $this->errorLogger   = $errorLogger;
     }
 
-    /**
-     * @return MergeOrganisation
-     */
     public function __invoke(): MergeOrganisation
     {
         return $this;
     }
 
-    /**
-     * @param Organisation $source
-     * @param Organisation $target
-     * @return array
-     */
     public function checkMerge(Organisation $source, Organisation $target): array
     {
         $errors = [];
 
         // Check VAT
-        if (!\is_null($target->getFinancial()) && !\is_null($source->getFinancial())
+        if (($target->getFinancial() instanceof Financial) && ($source->getFinancial() instanceof Financial)
             && ($target->getFinancial()->getVat() !== $source->getFinancial()->getVat())
         ) {
-            $errors[] = sprintf(
+            $errors[] = \sprintf(
                 $this->translator->translate('txt-cannot-merge-VAT-%s-and-%s'),
                 $target->getFinancial()->getVat(),
                 $source->getFinancial()->getVat()
@@ -85,12 +86,12 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Organisations can't both be parents
-        if (!\is_null($target->getParent()) && !\is_null($source->getParent())) {
+        if (($target->getParent() instanceof OParent) && ($source->getParent() instanceof OParent)) {
             $errors[] = $this->translator->translate('txt-organisations-cant-both-be-parents');
         }
 
         // Check countries
-        if (!\is_null($target->getCountry()) && !\is_null($source->getCountry())
+        if (($target->getCountry() instanceof Country) && ($source->getCountry() instanceof Country)
             && ($target->getCountry()->getId() !== $source->getCountry()->getId())
         ) {
             $errors[] = $this->translator->translate('txt-organisations-cant-have-different-countries');
@@ -99,18 +100,12 @@ class MergeOrganisation extends AbstractPlugin
         return $errors;
     }
 
-    /**
-     * @param Organisation $source
-     * @param Organisation $target
-     * @param LoggerInterface|null $logger
-     * @return array
-     */
-    public function merge(Organisation $source, Organisation $target, LoggerInterface $logger = null): array
+    public function merge(Organisation $source, Organisation $target): array
     {
         $response = ['success' => true, 'errorMessage' => ''];
 
         // Update organisation properties
-        if (null === $target->getType()) {
+        if ($target->getType() === null) {
             $target->setType($source->getType());
         }
         if ($source->getDateCreated() < $target->getDateCreated()) {
@@ -119,12 +114,12 @@ class MergeOrganisation extends AbstractPlugin
         if ($source->getDateUpdated() > $target->getDateUpdated()) {
             $target->setDateUpdated($source->getDateUpdated());
         }
-        if (\is_null($target->getDescription()) && !\is_null($source->getDescription())) {
+        if (($target->getDescription() === null) && ($source->getDescription() instanceof Description)) {
             $source->getDescription()->setOrganisation($target);
             $target->setDescription($source->getDescription());
         }
-        if (!\is_null($source->getFinancial()) && (
-                \is_null($target->getFinancial())
+        if (($source->getFinancial() instanceof Financial) && (
+                ($target->getFinancial() === null)
                 || empty($target->getFinancial()->getVat())
                 || ($source->getFinancial()->getVat() === $target->getFinancial()->getVat())
             )
@@ -190,7 +185,7 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Transfer parent (one-to-one)
-        if (\is_null($target->getParent()) && !\is_null($source->getParent())) {
+        if (($target->getParent() === null) && ($source->getParent() instanceof OParent)) {
             $parent = $source->getParent();
             $parent->setOrganisation($target);
             $target->setParent($parent);
@@ -204,7 +199,9 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Transfer parent organisation (one-to-one)
-        if (\is_null($target->getParentOrganisation()) && !\is_null($source->getParentOrganisation())) {
+        if (($target->getParentOrganisation() === null)
+            && ($source->getParentOrganisation() instanceof \Organisation\Entity\Parent\Organisation))
+        {
             $parentOrganisation = $source->getParentOrganisation();
             $parentOrganisation->setOrganisation($target);
             $target->setParentOrganisation($parentOrganisation);
@@ -309,7 +306,7 @@ class MergeOrganisation extends AbstractPlugin
             $this->entityManager->flush();
 
             // Prepare for logging
-            $message = sprintf(
+            $message = \sprintf(
                 'Merged organisation %s (%d) into %s (%d)',
                 $source->getOrganisation(),
                 $sourceId,
@@ -318,7 +315,7 @@ class MergeOrganisation extends AbstractPlugin
             );
             /** @var OrganisationAbstractController $controller */
             $controller = $this->getController();
-            $contact = $controller->zfcUserAuthentication()->getIdentity();
+            $contact = $controller->identity();
 
             // Log the merge in the target organisation
             $organisationLog = new Log();
@@ -326,26 +323,24 @@ class MergeOrganisation extends AbstractPlugin
             $organisationLog->setContact($contact);
             $organisationLog->setLog($message);
             $this->entityManager->persist($organisationLog);
+
             // Add a note to the target organisation about the merge
             $organisationNote = new Note();
             $organisationNote->setOrganisation($target);
-            $organisationNote->setSource('auto');
+            $organisationNote->setSource('Organisation merge');
             $organisationNote->setContact($contact);
             $organisationNote->setNote($message);
             $notes = $target->getNote()->toArray();
-            array_unshift($notes, $organisationNote);
+            \array_unshift($notes, $organisationNote);
             $target->setNote(new ArrayCollection($notes));
             $this->entityManager->persist($organisationNote);
+
             $this->entityManager->flush();
-        } catch (ORMException $exception) {
+
+        } catch (\Exception $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
-            if ($logger instanceof LoggerInterface) {
-                $logger->err(sprintf(
-                    '%s: %d %s',
-                    $exception->getFile(),
-                    $exception->getLine(),
-                    $exception->getMessage()
-                ));
+            if ($this->errorLogger instanceof Logging) {
+                $this->errorLogger->handleErrorException($exception);
             }
         }
 

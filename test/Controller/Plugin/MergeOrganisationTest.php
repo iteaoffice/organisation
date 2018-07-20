@@ -18,6 +18,7 @@ use Contact\Entity\ContactOrganisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use ErrorHeroModule\Handler\Logging;
 use General\Entity\Country;
 use Invoice\Entity\Invoice;
 use Invoice\Entity\Journal;
@@ -44,7 +45,6 @@ use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
 use Zend\I18n\Translator\Translator;
-use Zend\Log\Logger;
 use Zend\Stdlib\DispatchableInterface;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
@@ -69,8 +69,8 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     public function setUp()
     {
-        $this->source = $this->createSource();
-        $this->target = $this->createTarget();
+        $this->source     = $this->createSource();
+        $this->target     = $this->createTarget();
         $this->translator = $this->setUpTranslatorMock();
     }
 
@@ -225,21 +225,24 @@ final class MergeOrganisationTest extends AbstractServiceTest
     public function testMergeFail()
     {
         $entityManagerMock = $this->setUpEntityManagerMock(true);
-        $mergeOrganisation = new MergeOrganisation($entityManagerMock, $this->translator);
-        $loggerMock = $this->getMockBuilder(Logger::class)
-            ->setMethods(['err'])
-            ->getMock();
 
-        $loggerMock->expects($this->once())
-            ->method('err')
-            ->with($this->stringContains('Oops!'))
-            ->will($this->returnSelf());
-
-        $responseNoLog = $mergeOrganisation()->merge($this->source, $this->target);
-        $responseLog = $mergeOrganisation()->merge($this->source, $this->target, $loggerMock);
-
+        $mergeOrganisationNoLog = new MergeOrganisation($entityManagerMock, $this->translator);
+        $responseNoLog          = $mergeOrganisationNoLog->merge($this->source, $this->target);
         $this->assertEquals(false, $responseNoLog['success']);
         $this->assertEquals('Oops!', $responseNoLog['errorMessage']);
+
+        $errorLoggerMock = $this->getMockBuilder(Logging::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['handleErrorException'])
+            ->getMock();
+
+        $errorLoggerMock->expects($this->once())
+            ->method('handleErrorException')
+            ->with($this->isInstanceOf('Exception'));
+
+        $mergeOrganisationLog = new MergeOrganisation($entityManagerMock, $this->translator, $errorLoggerMock);
+        $responseLog          = $mergeOrganisationLog()->merge($this->source, $this->target);
+
         $this->assertEquals(false, $responseLog['success']);
     }
 
@@ -443,20 +446,14 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $contact = new Contact();
         $contact->setId(1);
 
-        $zfcUserAuthenticationMock = $this->getMockBuilder(ZfcUserAuthentication::class)
-            ->setMethods(['getIdentity'])
-            ->getMock();
-        $zfcUserAuthenticationMock->expects($this->once())
-            ->method('getIdentity')
-            ->will($this->returnValue($contact));
-
         $controllerMock = $this->getMockBuilder(OrganisationAdminController::class)
-            ->setMethods(['zfcUserAuthentication'])
+            ->disableOriginalConstructor()
+            ->setMethods(['identity'])
             ->getMock();
 
         $controllerMock->expects($this->once())
-            ->method('zfcUserAuthentication')
-            ->will($this->returnValue($zfcUserAuthenticationMock));
+            ->method('identity')
+            ->will($this->returnValue($contact));
 
         return $controllerMock;
     }

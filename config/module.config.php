@@ -52,7 +52,7 @@ $config = [
             Controller\Plugin\HandleParentAndProjectImport::class                 => Controller\Factory\PluginFactory::class,
             Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class => Controller\Factory\PluginFactory::class,
             Controller\Plugin\RenderOverviewVariableContributionSheet::class      => Controller\Factory\PluginFactory::class,
-            Controller\Plugin\MergeOrganisation::class                            => Controller\Factory\PluginFactory::class,
+            Controller\Plugin\MergeOrganisation::class                            => ConfigAbstractFactory::class,
             Controller\Plugin\MergeParentOrganisation::class                      => Controller\Factory\PluginFactory::class,
         ],
     ],

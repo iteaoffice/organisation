@@ -32,25 +32,21 @@ class MergeParentOrganisation extends AbstractOrganisationPlugin
      * @var array
      */
     protected $debug = [];
+
     /**
      * @var EntityManager
      */
     protected $entityManager;
-
 
     /**
      * MergeOrganisation magic invokable
      *
      * @param Organisation $mainOrganisation
      * @param Organisation $otherOrganisation
-     * @param int          $costAndEffortStrategy
-     *
      * @return array
      */
-    public function __invoke(
-        Organisation $mainOrganisation,
-        Organisation $otherOrganisation
-    ): array {
+    public function __invoke(Organisation $mainOrganisation, Organisation $otherOrganisation): array
+    {
         $response = ['success' => true, 'errorMessage' => ''];
 
         try {

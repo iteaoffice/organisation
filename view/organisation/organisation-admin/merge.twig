@@ -6,7 +6,7 @@
 {{ form().openTag(mergeForm)|raw }}
 <h2 class="display-4">{{ translate("txt-merge-organisation-%s")|format(target) }}</h2>
 <p>{{ translate("txt-merge-organisation-explanation") }}</p>
-{{ ztbformelement(mergeForm.get('swap')) }}
+<p>{{ ztbformelement(mergeForm.get('swap')) }}</p>
 
 {% if errors|length > 0 %}
     <div class="alert alert-danger">
@@ -33,16 +33,12 @@
             <dd>{{ source.type }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
             <dd>{{ source.country }}</dd>
-
-
             {% if source.parent %}
                 <dt>{{ translate("txt-parent") }}</dt>
                 <dd>{{ parentLink(source.parent, 'view','parent') }} {{ parentLink(source.parent, 'edit','icon') }}</dd>
                 <dt>{{ translate("txt-parent-type") }}</dt>
                 <dd>{{ translate(organisation.parent.getMemberType(true)) }}</dd>
             {% endif %}
-
-
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
                 (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(source, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
@@ -130,15 +126,12 @@
             <dd>{{ target.type }}</dd>
             <dt>{{ translate("txt-country") }}</dt>
             <dd>{{ target.country }}</dd>
-
             {% if target.parent %}
                 <dt>{{ translate("txt-parent") }}</dt>
                 <dd>{{ parentLink(target.parent, 'view','parent') }} {{ parentLink(target.parent, 'edit','icon') }}</dd>
                 <dt>{{ translate("txt-parent-type") }}</dt>
                 <dd>{{ translate(target.parent.getMemberType(true)) }}</dd>
             {% endif %}
-
-
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(target, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
                 (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(target, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
