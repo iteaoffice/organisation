@@ -58,8 +58,7 @@ class MergeOrganisation extends AbstractPlugin
         EntityManagerInterface $entityManager,
         TranslatorInterface    $translator,
         Logging                $errorLogger = null
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->translator    = $translator;
         $this->errorLogger   = $errorLogger;
@@ -200,8 +199,7 @@ class MergeOrganisation extends AbstractPlugin
 
         // Transfer parent organisation (one-to-one)
         if (($target->getParentOrganisation() === null)
-            && ($source->getParentOrganisation() instanceof \Organisation\Entity\Parent\Organisation))
-        {
+            && ($source->getParentOrganisation() instanceof \Organisation\Entity\Parent\Organisation)) {
             $parentOrganisation = $source->getParentOrganisation();
             $parentOrganisation->setOrganisation($target);
             $target->setParentOrganisation($parentOrganisation);
@@ -336,7 +334,6 @@ class MergeOrganisation extends AbstractPlugin
             $this->entityManager->persist($organisationNote);
 
             $this->entityManager->flush();
-
         } catch (\Exception $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
             if ($this->errorLogger instanceof Logging) {
