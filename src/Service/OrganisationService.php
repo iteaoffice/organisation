@@ -157,8 +157,8 @@ class OrganisationService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
-     * @param string $organisationName
-     * @param Project $project
+     * @param string              $organisationName
+     * @param Project             $project
      *
      * @return null|Entity\Name
      */
@@ -191,7 +191,7 @@ class OrganisationService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
-     * @param int $which
+     * @param int                 $which
      *
      * @return int
      */
@@ -215,7 +215,7 @@ class OrganisationService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
-     * @param int $which
+     * @param int                 $which
      *
      * @return int
      */
@@ -252,12 +252,7 @@ class OrganisationService extends AbstractService
         return $repository->findOrganisationFinancialList($filter);
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     *
-     * @return Contact|\Contact\Entity\Selection|null|object
-     */
-    public function findFinancialContact(Entity\Organisation $organisation)
+    public function findFinancialContact(Entity\Organisation $organisation): ?Contact
     {
         /**
          * The financial contact can be found be taking the contact which has the most invoices on his/her name
@@ -319,8 +314,8 @@ class OrganisationService extends AbstractService
      * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
      *
      * @param Country $country
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
      *
      * @return \Doctrine\ORM\Query
      */
@@ -371,9 +366,9 @@ class OrganisationService extends AbstractService
     /**
      * Find a country based on three criteria: Name, CountryObject and the email address.
      *
-     * @param string $name
+     * @param string  $name
      * @param Country $country
-     * @param string $emailAddress
+     * @param string  $emailAddress
      *
      * @return Entity\Organisation[]
      */
@@ -389,10 +384,10 @@ class OrganisationService extends AbstractService
     }
 
     /**
-     * @param string $name
+     * @param string  $name
      * @param Country $country
-     * @param int $typeId
-     * @param string $email
+     * @param int     $typeId
+     * @param string  $email
      *
      * @return Entity\Organisation
      */
@@ -438,9 +433,9 @@ class OrganisationService extends AbstractService
     /**
      * Find a country based on three criteria: Name, CountryObject.
      *
-     * @param string $name
+     * @param string  $name
      * @param Country $country
-     * @param bool $onlyMain
+     * @param bool    $onlyMain
      *
      * @return Entity\Organisation
      */
@@ -454,7 +449,7 @@ class OrganisationService extends AbstractService
 
 
     /**
-     * @param Meeting $meeting
+     * @param Meeting    $meeting
      * @param Parameters $search
      *
      * @return Entity\Organisation[]
@@ -473,7 +468,7 @@ class OrganisationService extends AbstractService
      * Produce a list of organisations for a project (only active).
      *
      * @param Project $project
-     * @param bool $onlyActiveProject
+     * @param bool    $onlyActiveProject
      *
      * @return Entity\Organisation[]
      */
@@ -528,6 +523,7 @@ class OrganisationService extends AbstractService
 
     /**
      * @param Entity\Organisation $organisation
+     *
      * @return bool
      */
     public function hasValidVat(Entity\Organisation $organisation): bool
