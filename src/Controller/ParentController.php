@@ -22,6 +22,7 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Organisation\Entity;
 use Organisation\Form;
 use Program\Entity\Program;
+use Zend\Http\Response;
 use Zend\Paginator\Paginator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -97,9 +98,6 @@ class ParentController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return \Zend\Http\PhpEnvironment\Response|\Zend\Stdlib\ResponseInterface
-     */
     public function listNoMemberExportAction()
     {
         $filterPlugin = $this->getOrganisationFilter();
@@ -178,15 +176,16 @@ class ParentController extends OrganisationAbstractController
         // Prepend BOM
         $string = "\xFF\xFE" . $string;
 
+        /** @var Response $response */
         $response = $this->getResponse();
         $headers = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'text/csv');
         $headers->addHeaderLine(
             'Content-Disposition',
-            "attachment; filename=\"exoport-members-with-are-no-member-and-have-no-doa.csv\""
+            'attachment; filename="exoport-members-with-are-no-member-and-have-no-doa.csv"'
         );
         $headers->addHeaderLine('Accept-Ranges', 'bytes');
-        $headers->addHeaderLine('Content-Length', strlen($string));
+        $headers->addHeaderLine('Content-Length', \strlen($string));
 
         $response->setContent($string);
 
@@ -201,8 +200,8 @@ class ParentController extends OrganisationAbstractController
     public function newAction(): ViewModel
     {
         $organisation = null;
-        if (!\is_null($this->params('organisationId'))) {
-            $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('organisationId'));
+        if (null !== $this->params('organisationId')) {
+            $organisation = $this->getOrganisationService()->findOrganisationById((int)$this->params('organisationId'));
         }
 
         $data = $this->getRequest()->getPost()->toArray();
@@ -211,7 +210,7 @@ class ParentController extends OrganisationAbstractController
         $form = $this->getFormService()->prepare($parent, null, $data);
         $form->remove('delete');
 
-        if (!\is_null($organisation)) {
+        if (null !== $organisation) {
             //Inject the organisation in the form
             $form->get($parent->get('underscore_entity_name'))->get('organisation')
                 ->setValueOptions([$organisation->getId() => $organisation->getOrganisation()]);
@@ -226,9 +225,6 @@ class ParentController extends OrganisationAbstractController
             $form->get($parent->get('underscore_entity_name'))->get('contact')
                 ->setValueOptions($contactsInOrganisation);
         }
-
-
-        $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -254,23 +250,24 @@ class ParentController extends OrganisationAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function addOrganisationAction()
     {
-        $parent = $this->getParentService()->findParentById((int) $this->params('id'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('id'));
+
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
 
         $organisation = null;
         if (null !== $this->params('organisationId')) {
-            $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('organisationId'));
+            $organisation = $this->getOrganisationService()->findOrganisationById((int)$this->params('organisationId'));
         }
 
         $data = $this->getRequest()->getPost()->toArray();
 
         $form = new Form\AddOrganisation();
 
-        if (!\is_null($organisation)) {
+        if (null !== $organisation) {
             //Inject the organisation in the form
             $form->get('organisation')->setValueOptions([$organisation->getId() => $organisation->getOrganisation()]);
 
@@ -306,7 +303,7 @@ class ParentController extends OrganisationAbstractController
                 $parentOrganisation->setOrganisation($organisation);
 
                 //Find the contact from the form.
-                $contact = $this->getContactService()->findContactById($data['contact']);
+                $contact = $this->getContactService()->findContactById((int)$data['contact']);
                 $parentOrganisation->setContact($contact);
 
 
@@ -328,12 +325,9 @@ class ParentController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
-        $parent = $this->getParentService()->findParentById((int) $this->params('id'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('id'));
 
         if (null === $parent) {
             return $this->notFoundAction();
@@ -396,12 +390,9 @@ class ParentController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function viewAction()
     {
-        $parent = $this->getParentService()->findParentById((int) $this->params('id'));
+        $parent = $this->getParentService()->findParentById((int)$this->params('id'));
 
         if (null === $parent) {
             return $this->notFoundAction();
@@ -414,7 +405,7 @@ class ParentController extends OrganisationAbstractController
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $counter = 0;
             foreach ((array)$form->getData()['program'] as $programId) {
-                $program = $this->programService->findProgramById((int) $programId);
+                $program = $this->programService->findProgramById((int)$programId);
                 if (null !== $program) {
                     $doa = new Entity\Parent\Doa();
                     $doa->setContact($parent->getContact());
@@ -491,9 +482,6 @@ class ParentController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return \Zend\Stdlib\ResponseInterface|ViewModel
-     */
     public function overviewVariableContributionPdfAction()
     {
         $parent = $this->getParentService()->findParentById((int)$this->params('id'));
@@ -510,7 +498,6 @@ class ParentController extends OrganisationAbstractController
 
         $year = (int)$this->params('year');
 
-
         $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $program, $year);
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
@@ -524,15 +511,12 @@ class ParentController extends OrganisationAbstractController
                 ) . '"'
             )
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
+            ->addHeaderLine('Content-Length', \strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
 
         return $response;
     }
 
-    /**
-     * @return ViewModel
-     */
     public function overviewExtraVariableContributionAction(): ViewModel
     {
         $parent = $this->getParentService()->findParentById((int)$this->params('id'));

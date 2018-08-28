@@ -29,6 +29,7 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Note;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
+use Zend\Http\Request;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
@@ -337,7 +338,7 @@ class MergeOrganisation extends AbstractPlugin
         } catch (\Exception $exception) {
             $response = ['success' => false, 'errorMessage' => $exception->getMessage()];
             if ($this->errorLogger instanceof Logging) {
-                $this->errorLogger->handleErrorException($exception);
+                $this->errorLogger->handleErrorException($exception, new Request());
             }
         }
 
