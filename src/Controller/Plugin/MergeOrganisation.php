@@ -29,7 +29,7 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Note;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
-use Zend\Http\Request;
+use Zend\Http\PhpEnvironment\Request;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
