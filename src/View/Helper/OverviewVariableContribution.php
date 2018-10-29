@@ -35,7 +35,7 @@ class OverviewVariableContribution extends AbstractViewHelper
      */
     public function __invoke(OParent $parent, Program $program, int $year): string
     {
-        $invoiceMethod = $this->getInvoiceService()->findInvoiceMethod($program);
+        $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
 
         return $this->getRenderer()->render(
             'organisation/partial/overview-variable-contribution',
@@ -43,15 +43,15 @@ class OverviewVariableContribution extends AbstractViewHelper
                 'year'               => $year,
                 'parent'             => $parent,
                 'program'            => $program,
-                'contactService'     => $this->getContactService(),
-                'versionService'     => $this->getVersionService(),
-                'parentService'      => $this->getParentService(),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $program),
-                'affiliationService' => $this->getAffiliationService(),
-                'projectService'     => $this->getProjectService(),
-                'financialContact'   => $this->getParentService()->getFinancialContact($parent),
+                'contactService'     => $this->contactService,
+                'versionService'     => $this->versionService,
+                'parentService'      => $this->parentService,
+                'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
+                'affiliationService' => $this->affiliationService,
+                'projectService'     => $this->projectService,
+                'financialContact'   => $this->parentService->getFinancialContact($parent),
                 'invoiceMethod' => $invoiceMethod,
-                'affiliations'       => $this->getAffiliationService()->findAffiliationByParentAndProgramAndWhich(
+                'affiliations'       => $this->affiliationService->findAffiliationByParentAndProgramAndWhich(
                     $parent,
                     $program
                 ),

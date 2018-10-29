@@ -16,31 +16,37 @@ declare(strict_types=1);
 namespace Organisation\Controller;
 
 use Organisation\Entity\Logo;
+use Organisation\Service\OrganisationService;
 use Zend\Http\Response;
 
 /**
- * The index of the system.
+ * Class ImageController
  *
- * @category Content
+ * @package Organisation\Controller
  */
-class ImageController extends OrganisationAbstractController
+final class ImageController extends OrganisationAbstractController
 {
     /**
-     * @return Response
+     * @var OrganisationService
      */
+    private $organisationService;
+
+    public function __construct(OrganisationService $organisationService)
+    {
+        $this->organisationService = $organisationService;
+    }
+
     public function organisationLogoAction(): Response
     {
         /** @var Response $response */
         $response = $this->getResponse();
 
         $id = $this->params('id');
-        if (\is_null($id)) {
-            return $response;
-        }
-        /** @var Logo $logo */
-        $logo = $this->getOrganisationService()->findEntityById(Logo::class, $id);
 
-        if (\is_null($logo)) {
+        /** @var Logo $logo */
+        $logo = $this->organisationService->find(Logo::class, (int)$id);
+
+        if (null === $logo) {
             return $response;
         }
 

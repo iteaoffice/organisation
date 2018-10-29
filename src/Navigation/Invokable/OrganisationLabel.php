@@ -54,7 +54,7 @@ class OrganisationLabel extends AbstractNavigationInvokable
             ));
             $label = (string)$note->getOrganisation();
         } else {
-            $label = $this->translate('txt-nav-view');
+            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

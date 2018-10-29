@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Organisation\View\Handler;
 
 use Content\Entity\Content;
-use Content\Navigation\Service\UpdateNavigationService;
 use Content\Service\ArticleService;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
@@ -54,26 +53,11 @@ final class OrganisationHandler extends AbstractHandler
      */
     protected $articleService;
 
-    /**
-     * OrganisationHandler constructor.
-     *
-     * @param Application             $application
-     * @param HelperPluginManager     $helperPluginManager
-     * @param TwigRenderer            $renderer
-     * @param AuthenticationService   $authenticationService
-     * @param UpdateNavigationService $updateNavigationService
-     * @param TranslatorInterface     $translator
-     * @param OrganisationService     $organisationService
-     * @param ModuleOptions           $moduleOptions
-     * @param ProjectService          $projectService
-     * @param ArticleService          $articleService
-     */
     public function __construct(
         Application $application,
         HelperPluginManager $helperPluginManager,
         TwigRenderer $renderer,
         AuthenticationService $authenticationService,
-        UpdateNavigationService $updateNavigationService,
         TranslatorInterface $translator,
         OrganisationService $organisationService,
         ModuleOptions $moduleOptions,
@@ -85,7 +69,6 @@ final class OrganisationHandler extends AbstractHandler
             $helperPluginManager,
             $renderer,
             $authenticationService,
-            $updateNavigationService,
             $translator
         );
 
@@ -95,12 +78,6 @@ final class OrganisationHandler extends AbstractHandler
         $this->articleService = $articleService;
     }
 
-    /**
-     * @param Content $content
-     *
-     * @return null|string
-     * @throws \Exception
-     */
     public function __invoke(Content $content): ?string
     {
         $params = $this->extractContentParam($content);
@@ -118,13 +95,13 @@ final class OrganisationHandler extends AbstractHandler
                 $this->getHeadTitle()->append($organisation->getOrganisation());
 
                 $organisationLink = $this->helperPluginManager->get(OrganisationLink::class);
-                $this->getHeadMeta()->setProperty('og:type', $this->translate("txt-organisation"));
+                $this->getHeadMeta()->setProperty('og:type', $this->translator->translate("txt-organisation"));
                 $this->getHeadMeta()->setProperty('og:title', $organisation->getOrganisation());
                 $this->getHeadMeta()->setProperty('og:url', $organisationLink($organisation, 'view', 'social'));
 
                 return $this->parseOrganisation($organisation);
             case 'organisation_list':
-                $this->getHeadTitle()->append($this->translate("txt-organisation-list"));
+                $this->getHeadTitle()->append($this->translator->translate("txt-organisation-list"));
 
                 return $this->parseOrganisationList();
             default:

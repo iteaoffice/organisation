@@ -12,9 +12,14 @@ declare(strict_types=1);
 
 namespace Organisation\Controller;
 
+use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
+use General\Service\GeneralService;
 use Organisation\Entity;
 use Organisation\Form\ParentDoa;
-use Organisation\Form\UploadParentDoa;
+use Organisation\Service\ParentService;
+use Zend\Http\Response;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Validator\File\FilesSize;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
@@ -24,14 +29,47 @@ use Zend\View\Model\ViewModel;
  *
  * @package Organisation\Controller
  */
-class ParentDoaController extends OrganisationAbstractController
+final class ParentDoaController extends OrganisationAbstractController
 {
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @var ParentService
      */
+    private $parentService;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var GeneralService
+     */
+    private $generalService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        ParentService $parentService,
+        EntityManager $entityManager,
+        GeneralService $generalService,
+        ContactService $contactService,
+        TranslatorInterface $translator
+    ) {
+        $this->parentService = $parentService;
+        $this->entityManager = $entityManager;
+        $this->generalService = $generalService;
+        $this->contactService = $contactService;
+        $this->translator = $translator;
+    }
+
+
     public function uploadAction()
     {
-        $parent = $this->getParentService()->findParentById((int) $this->params('parentId'));
+        $parent = $this->parentService->findParentById((int)$this->params('parentId'));
 
         if (null === $parent) {
             return $this->notFoundAction();
@@ -41,7 +79,7 @@ class ParentDoaController extends OrganisationAbstractController
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
-        $form = new ParentDoa($this->getEntityManager());
+        $form = new ParentDoa($this->entityManager);
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -64,9 +102,9 @@ class ParentDoaController extends OrganisationAbstractController
 
                 $fileTypeValidator = new MimeType();
                 $fileTypeValidator->isValid($fileData['file']);
-                $doa->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+                $doa->setContentType($this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type));
 
-                $doa->setContact($this->getContactService()->findContactById((int)$data['contact']));
+                $doa->setContact($this->contactService->findContactById((int)$data['contact']));
                 if ($dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
                     $doa->setDateSigned($dateSigned);
                 }
@@ -76,11 +114,11 @@ class ParentDoaController extends OrganisationAbstractController
 
                 $doa->setParent($parent);
                 $doaObject->setDoa($doa);
-                $this->getParentService()->newEntity($doaObject);
+                $this->parentService->save($doaObject);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-doa-for-parent-%s-has-been-uploaded"),
+                            $this->translator->translate('txt-doa-for-parent-%s-has-been-uploaded'),
                             $parent->getOrganisation()
                         )
                     );
@@ -101,13 +139,10 @@ class ParentDoaController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         /** @var Entity\Parent\Doa $doa */
-        $doa = $this->getParentService()->findEntityById(Entity\Parent\Doa::class, $this->params('id'));
+        $doa = $this->parentService->find(Entity\Parent\Doa::class, (int)$this->params('id'));
 
         if (null === $doa) {
             return $this->notFoundAction();
@@ -121,7 +156,7 @@ class ParentDoaController extends OrganisationAbstractController
             $this->getRequest()->getFiles()->toArray(),
             $this->getRequest()->getPost()->toArray()
         );
-        $form = new ParentDoa($this->getEntityManager());
+        $form = new ParentDoa($this->entityManager);
         $form->setData($data);
 
         $form->get('contact')->injectContact($doa->getContact());
@@ -137,7 +172,7 @@ class ParentDoaController extends OrganisationAbstractController
             }
 
             if (isset($data['delete'])) {
-                $this->getParentService()->removeEntity($doa);
+                $this->parentService->delete($doa);
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -155,7 +190,7 @@ class ParentDoaController extends OrganisationAbstractController
                      */
                     if (!$doa->getObject()->isEmpty()) {
                         $doa->getObject()->first()->setObject(
-                            file_get_contents($fileData['file']['tmp_name'])
+                            \file_get_contents($fileData['file']['tmp_name'])
                         );
                     } else {
                         $doaObject = new Entity\Parent\DoaObject();
@@ -163,7 +198,7 @@ class ParentDoaController extends OrganisationAbstractController
                             file_get_contents($fileData['file']['tmp_name'])
                         );
                         $doaObject->setDoa($doa);
-                        $this->getParentService()->newEntity($doaObject);
+                        $this->parentService->save($doaObject);
                     }
 
                     //Create a article object element
@@ -173,11 +208,13 @@ class ParentDoaController extends OrganisationAbstractController
 
                     $fileTypeValidator = new MimeType();
                     $fileTypeValidator->isValid($fileData['file']);
-                    $doa->setContentType($this->getGeneralService()->findContentTypeByContentTypeName($fileTypeValidator->type));
+                    $doa->setContentType(
+                        $this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type)
+                    );
                 }
 
 
-                $doa->setContact($this->getContactService()->findContactById((int)$data['contact']));
+                $doa->setContact($this->contactService->findContactById((int)$data['contact']));
                 if ($dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
                     $doa->setDateSigned($dateSigned);
                 }
@@ -185,12 +222,12 @@ class ParentDoaController extends OrganisationAbstractController
                     $doa->setDateApproved($dateApproved);
                 }
 
-                $this->getParentService()->updateEntity($doa);
+                $this->parentService->save($doa);
 
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-doa-for-parent-%s-has-been-uploaded"),
+                            $this->translator->translate('txt-doa-for-parent-%s-has-been-uploaded'),
                             $doa->getParent()->getOrganisation()
                         )
                     );
@@ -211,34 +248,36 @@ class ParentDoaController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return \Zend\Stdlib\ResponseInterface
-     */
-    public function downloadAction()
+    public function downloadAction(): Response
     {
+        /** @var Response $response */
+        $response = $this->getResponse();
+
         /**
          * @var Entity\Parent\Doa $doa
          */
-        $doa = $this->getParentService()->findEntityById(Entity\Parent\Doa::class, $this->params('id'));
+        $doa = $this->parentService->find(Entity\Parent\Doa::class, (int)$this->params('id'));
         if (null === $doa || count($doa->getObject()) === 0) {
-            return $this->getResponse();
+            return $response->setStatusCode(Response::STATUS_CODE_404);
         }
         /*
          * Due to the BLOB issue, we treat this as an array and we need to capture the first element
          */
         $object = $doa->getObject()->first()->getObject();
-        $response = $this->getResponse();
+
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
+                'attachment; filename=\'' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '\''
             )
             ->addHeaderLine('Pragma: public')->addHeaderLine(
                 'Content-Type: ' . $doa->getContentType()->getContentType()
-            )->addHeaderLine('Content-Length: '
-                . $doa->getSize());
+            )->addHeaderLine(
+                'Content-Length: '
+                . $doa->getSize()
+            );
 
-        return $this->response;
+        return $response;
     }
 }

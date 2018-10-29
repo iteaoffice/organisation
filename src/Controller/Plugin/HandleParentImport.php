@@ -15,72 +15,110 @@ namespace Organisation\Controller\Plugin;
 use Contact\Entity\Address;
 use Contact\Entity\AddressType;
 use Contact\Entity\Contact;
+use Contact\Service\ContactService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use General\Entity\Country;
 use General\Entity\Gender;
 use General\Entity\Title;
+use General\Service\CountryService;
+use General\Service\GeneralService;
 use Organisation\Entity\Financial;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Parent\Type as ParentType;
+use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
 use Zend\Validator\EmailAddress;
 
 /**
  * Class HandleImport.
  */
-class HandleParentImport extends AbstractImportPlugin
+final class HandleParentImport extends AbstractImportPlugin
 {
+    private $importedParents = [];
+    private $parents = [];
+
     /**
-     * $this function extracts the data and created local arrays.
-     *
-     * @param string $data
+     * @var CountryService
      */
-    public function setData(string $data)
+    private $countryService;
+    /**
+     * @var ParentService
+     */
+    private $parentService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var OrganisationService
+     */
+    private $organisationService;
+    /**
+     * @var GeneralService
+     */
+    private $generalService;
+
+    public function __construct(
+        EntityManager $entityManager,
+        CountryService $countryService,
+        ParentService $parentService,
+        ContactService $contactService,
+        OrganisationService $organisationService,
+        GeneralService $generalService
+    ) {
+        parent::__construct($entityManager);
+
+        $this->countryService = $countryService;
+        $this->parentService = $parentService;
+        $this->contactService = $contactService;
+        $this->organisationService = $organisationService;
+        $this->generalService = $generalService;
+    }
+
+    public function setData(string $data): void
     {
-        $data = utf8_encode($data);
+        $data = \utf8_encode($data);
 
         //Explode first on the \n to have the different rows
-        $explodedData = explode(PHP_EOL, $data);
+        $explodedData = \explode(PHP_EOL, $data);
 
-        $this->header = explode($this->delimiter, trim($explodedData[0]));
+        $this->header = \explode($this->delimiter, trim($explodedData[0]));
 
-        $this->header = array_map('strtolower', $this->header);
+        $this->header = \array_map('strtolower', $this->header);
 
         /*
          * Go over the rest of the data and add the rows to the array
          */
-        $amount = count($explodedData);
+        $amount = \count($explodedData);
         for ($i = 1; $i < $amount; $i++) {
-            $row = explode($this->delimiter, $explodedData[$i]);
+            $row = \explode($this->delimiter, $explodedData[$i]);
 
             if (\count($row) === count($this->header)) {
                 //Trim all the elements
-                $row = array_map('trim', $row);
+                $row = \array_map('trim', $row);
 
                 $this->content[$i] = $row;
             } else {
                 $this->warnings[] = sprintf(
                     'Row %s has been skipped, does not contain %s elements but %s',
                     $i + 1,
-                    count($this->header),
-                    count($row)
+                    \count($this->header),
+                    \count($row)
                 );
             }
         }
     }
 
-    /**
-     * @param array $keys
-     */
     public function prepareContent(array $keys = []): void
     {
         foreach ($this->content as $key => $content) {
             $name = $content[$this->headerKeys['parent']];
-            $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
-            $parentCountry = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['iso 2']]);
+            $parentCountry = $this->countryService->findCountryByCD($content[$this->headerKeys['iso 2']]);
 
             // Try to find the parent organisation
-            $organisation = $this->getOrganisationService()->findOrganisationByNameCountry(
+            $organisation = $this->organisationService->findOrganisationByNameCountry(
                 $name,
                 $parentCountry,
                 false
@@ -98,12 +136,11 @@ class HandleParentImport extends AbstractImportPlugin
 
             $parent = $this->handleParentInformation(
                 $organisation,
-                $parentCountry,
                 $contact,
                 $content
             );
 
-            if (\is_null($financialOrganisation = $organisation->getFinancial())) {
+            if (null === ($financialOrganisation = $organisation->getFinancial())) {
                 $financialOrganisation = new Financial();
                 $financialOrganisation->setOrganisation($organisation);
             }
@@ -129,8 +166,8 @@ class HandleParentImport extends AbstractImportPlugin
 
             // Only persist when the key is given
             if (\in_array($key, $keys, false)) {
-                $this->getEntityManager()->persist($parent);
-                $this->getEntityManager()->flush($parent);
+                $this->entityManager->persist($parent);
+                $this->entityManager->flush($parent);
 
                 $this->importedParents[] = $parent;
             }
@@ -140,17 +177,13 @@ class HandleParentImport extends AbstractImportPlugin
         }
     }
 
-    /**
-     * @param array $content
-     * @return Contact
-     */
     public function handleContactInformation(array $content): Contact
     {
         //Try first to find the contact based on the email address
-        $contact = $this->getContactService()->findContactByEmail($content[$this->headerKeys['email']]);
+        $contact = $this->contactService->findContactByEmail($content[$this->headerKeys['email']]);
 
         //Only when we have an email we can create a new contact
-        if (\is_null($contact) && !empty($content[$this->headerKeys['email']])) {
+        if (null === $contact && !empty($content[$this->headerKeys['email']])) {
             $contact = new Contact();
             $contact->setEmail($content[$this->headerKeys['email']]);
             $contact->setGender($this->generalService->find(Gender::class, Gender::GENDER_UNKNOWN));
@@ -158,8 +191,8 @@ class HandleParentImport extends AbstractImportPlugin
         }
 
         //We have no contact, no name, so we can't do anything
-        if (\is_null($contact)) {
-            return $this->getContactService()->findContactById(1);
+        if (null === $contact) {
+            return $this->contactService->findContactById(1);
         }
 
         $contact->setFirstName($content[$this->headerKeys['first name']]);
@@ -172,13 +205,13 @@ class HandleParentImport extends AbstractImportPlugin
             //Set the address
             $financialAddress = null;
             if (!$contact->isEmpty()) {
-                $financialAddress = $this->getContactService()->getFinancialAddress($contact);
+                $financialAddress = $this->contactService->getFinancialAddress($contact);
             }
 
-            if (\is_null($financialAddress)) {
+            if (null === $financialAddress) {
                 $financialAddress = new Address();
                 /** @var AddressType $addressType */
-                $addressType = $this->getContactService()->find(
+                $addressType = $this->contactService->find(
                     AddressType::class,
                     AddressType::ADDRESS_TYPE_FINANCIAL
                 );
@@ -190,7 +223,7 @@ class HandleParentImport extends AbstractImportPlugin
             $financialAddress->setZipCode($content[$this->headerKeys['zip']]);
             $financialAddress->setCity($content[$this->headerKeys['city']]);
 
-            $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
+            $country = $this->countryService->findCountryByCD($content[$this->headerKeys['country']]);
             $financialAddress->setCountry($country);
 
             //@todo, figure out why the address is not updated
@@ -200,22 +233,13 @@ class HandleParentImport extends AbstractImportPlugin
         return $contact;
     }
 
-    /**
-     * @param Organisation $organisation
-     * @param Country $country
-     * @param Contact $contact
-     * @param array $content
-     *
-     * @return OParent
-     */
     public function handleParentInformation(
         Organisation $organisation,
-        Country $country,
         Contact $contact,
         array $content
     ): OParent {
         //If we find the organisation and the organisation is a parent, just return it
-        if (!\is_null($organisation->getParent())) {
+        if (null !== $organisation->getParent()) {
             $parent = $organisation->getParent();
         } else {
             $parent = new OParent();
@@ -223,14 +247,11 @@ class HandleParentImport extends AbstractImportPlugin
             $parent->setOrganisation($organisation);
         }
 
-        $parentType = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
-        if (\is_null($parentType)) {
-            $parentType = $this->getParentService()->findEntityById(ParentType::class, ParentType::TYPE_OTHER);
+        $parentType = $this->parentService->findParentTypeByName($content[$this->headerKeys['type']]);
+        if (null === $parentType) {
+            $parentType = $this->parentService->find(ParentType::class, ParentType::TYPE_OTHER);
         }
         $parent->setType($parentType);
-
-        $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
-        $parent->setStatus($status);
 
         $parent->setArtemisiaMemberType(OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER);
         $parent->setEpossMemberType(OParent::EPOSS_MEMBER_TYPE_NO_MEMBER);
@@ -243,10 +264,7 @@ class HandleParentImport extends AbstractImportPlugin
         return $parent;
     }
 
-    /**
-     * validate the data
-     */
-    public function validateData()
+    public function validateData(): void
     {
         $minimalRequiredElements = [
             'parent',
@@ -281,17 +299,6 @@ class HandleParentImport extends AbstractImportPlugin
 
             $counter = 2;
             foreach ($this->content as $content) {
-                //Try to find the status
-                $status = $this->getParentService()->findParentStatusByName($content[$this->headerKeys['status']]);
-
-                if (\is_null($status)) {
-                    $this->errors[] = sprintf(
-                        'Status (%s) in row %s cannot be found',
-                        $content[$this->headerKeys['status']],
-                        $counter
-                    );
-                }
-
                 if (!empty($content[$this->headerKeys['email']])) {
                     /**
                      * Validate the email addresses
@@ -309,9 +316,9 @@ class HandleParentImport extends AbstractImportPlugin
 
                 if (!empty($content[$this->headerKeys['type']])) {
                     //Try to find the type
-                    $type = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['type']]);
+                    $type = $this->parentService->findParentTypeByName($content[$this->headerKeys['type']]);
 
-                    if (\is_null($type)) {
+                    if (null === $type) {
                         $this->errors[] = sprintf(
                             'Type (%s) in row %s cannot be found',
                             $content[$this->headerKeys['type']],
@@ -322,9 +329,9 @@ class HandleParentImport extends AbstractImportPlugin
 
 
                 //Try to find the parent country
-                $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['iso 2']]);
+                $country = $this->countryService->findCountryByCD($content[$this->headerKeys['iso 2']]);
 
-                if (\is_null($country)) {
+                if (null === $country) {
                     $this->errors[] = sprintf(
                         'Parent Country (%s) in row %s cannot be found',
                         $content[$this->headerKeys['iso 2']],
@@ -334,9 +341,9 @@ class HandleParentImport extends AbstractImportPlugin
 
                 if (!empty($content[$this->headerKeys['country']])) {
                     //Try to find the financial country
-                    $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['country']]);
+                    $country = $this->countryService->findCountryByCD($content[$this->headerKeys['country']]);
 
-                    if (\is_null($country)) {
+                    if (null === $country) {
                         $this->errors[] = sprintf(
                             'Financial Country (%s) in row %s cannot be found',
                             $content[$this->headerKeys['country']],

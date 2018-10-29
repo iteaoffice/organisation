@@ -25,19 +25,12 @@ use Zend\ServiceManager\Factory\FactoryInterface;
  *
  * @package Organisation\Factory
  */
-class ModuleOptionsFactory implements FactoryInterface
+final class ModuleOptionsFactory implements FactoryInterface
 {
-    /**
-     * @param ContainerInterface $container
-     * @param string $requestedName
-     * @param array|null|null $options
-     *
-     * @return mixed
-     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ModuleOptions
     {
         $config = $container->get('Config');
 
-        return new ModuleOptions(isset($config['organisation_option']) ? $config['organisation_option'] : []);
+        return new ModuleOptions($config['organisation_option'] ?? []);
     }
 }

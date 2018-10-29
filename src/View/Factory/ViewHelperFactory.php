@@ -25,8 +25,8 @@ use Organisation\Service\ParentService;
 use Organisation\View\Helper\AbstractViewHelper;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use Zend\View\HelperPluginManager;
 
 /**
  * Class LinkInvokableFactory
@@ -35,21 +35,14 @@ use Zend\View\HelperPluginManager;
  */
 final class ViewHelperFactory implements FactoryInterface
 {
-    /**
-     * Create an instance of the requested class name.
-     *
-     * @param ContainerInterface|HelperPluginManager $container
-     * @param string $requestedName
-     * @param null|array $options
-     *
-     * @return AbstractViewHelper
-     */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AbstractViewHelper
     {
         /** @var AbstractViewHelper $viewHelper */
         $viewHelper = new $requestedName($options);
         $viewHelper->setServiceManager($container);
         $viewHelper->setHelperPluginManager($container->get('ViewHelperManager'));
+
+        $viewHelper->setTranslator($container->get(TranslatorInterface::class));
 
         /** @var ContactService $contactService */
         $contactService = $container->get(ContactService::class);

@@ -25,10 +25,6 @@ use Zend\Validator\File\Size;
  */
 class ParentDoa extends Form\Form implements InputFilterProviderInterface
 {
-    /**
-     * ParentDoa constructor.
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
@@ -84,7 +80,7 @@ class ParentDoa extends Form\Form implements InputFilterProviderInterface
                     ],
                     'object_manager' => $entityManager,
                     'help-block'     => _('txt-parent-doa-valid-for-program-help-block'),
-                    'label'          => _("txt-parent-doa-valid-for-program-label"),
+                    'label'          => _('txt-parent-doa-valid-for-program-label'),
                 ],
             ]
         );
@@ -130,12 +126,6 @@ class ParentDoa extends Form\Form implements InputFilterProviderInterface
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [

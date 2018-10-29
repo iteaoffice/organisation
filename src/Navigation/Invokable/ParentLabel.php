@@ -50,7 +50,7 @@ class ParentLabel extends AbstractNavigationInvokable
 
             $label = (string)$parent;
         } else {
-            $label = $this->translate('txt-nav-view');
+            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

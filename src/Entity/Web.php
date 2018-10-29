@@ -25,11 +25,6 @@ class Web extends AbstractEntity
     public const NOT_MAIN = 0;
     public const MAIN = 1;
 
-    /**
-     * Templates for the internal templates.
-     *
-     * @var array
-     */
     protected static $mainTemplates
         = [
             self::NOT_MAIN => 'txt-not-main-web-address',
@@ -58,66 +53,37 @@ class Web extends AbstractEntity
     private $main;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation", cascade={"persist"}, inversedBy="web")
-     * @ORM\JoinColumns({
-     *  @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=true)
-     * })
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=true)
      *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return sprintf($this->web);
     }
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * Magic Setter.
-     *
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
     }
 
-    /**
-     * @return bool
-     */
     public function isMain(): bool
     {
         return $this->main === self::MAIN;
     }
 
-    /**
-     * @return array
-     */
     public static function getMainTemplates(): array
     {
         return self::$mainTemplates;

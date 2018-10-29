@@ -22,14 +22,11 @@ use Organisation\Entity;
 
 /**
  * Class Organisation
+ *
  * @package Organisation\Repository\Parent
  */
-class Organisation extends EntityRepository
+final class Organisation extends EntityRepository
 {
-    /**
-     * @param string $name
-     * @return mixed
-     */
     public function findParentOrganisationByNameLike(string $name)
     {
         $queryBuilder = $this->_em->createQueryBuilder();

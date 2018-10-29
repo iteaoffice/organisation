@@ -19,11 +19,18 @@ namespace Organisation\Controller;
 
 use Contact\Entity\Address;
 use Contact\Entity\AddressType;
+use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Entity\Country;
+use General\Service\CountryService;
 use Organisation\Entity;
 use Organisation\Form;
+use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
+use Project\Service\ProjectService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
@@ -32,16 +39,58 @@ use Zend\View\Model\ViewModel;
  *
  * @package Organisation\Controller
  */
-class ParentFinancialController extends OrganisationAbstractController
+final class ParentFinancialController extends OrganisationAbstractController
 {
-
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @var ParentService
      */
+    private $parentService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
+    /**
+     * @var CountryService
+     */
+    private $countryService;
+    /**
+     * @var OrganisationService
+     */
+    private $organisationService;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        ParentService $parentService,
+        ContactService $contactService,
+        ProjectService $projectService,
+        CountryService $countryService,
+        OrganisationService $organisationService,
+        EntityManager $entityManager,
+        TranslatorInterface $translator
+    ) {
+        $this->parentService = $parentService;
+        $this->contactService = $contactService;
+        $this->projectService = $projectService;
+        $this->countryService = $countryService;
+        $this->organisationService = $organisationService;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+    }
+
     public function newAction()
     {
-        /** @var Entity\OParent $parent */
-        $parent = $this->getParentService()->findParentById((int)$this->params('parentId'));
+        $parent = $this->parentService->findParentById((int)$this->params('parentId'));
 
         if (null === $parent) {
             return $this->notFoundAction();
@@ -56,18 +105,18 @@ class ParentFinancialController extends OrganisationAbstractController
 
         $form = new Form\Financial(
             $parent,
-            $this->getGeneralService(),
-            $this->getOrganisationService()
+            $this->countryService,
+            $this->organisationService
         );
 
         $formData['attention'] = $parent->getContact()->getDisplayName();
         $formData['contact'] = $parent->getContact()->getId();
 
-        if (!\is_null(
-            $financialAddress = $this->getContactService()->getFinancialAddress(
+        if (null !== (
+            $financialAddress = $this->contactService->getFinancialAddress(
                 $parent->getContact()
             )
-        )
+            )
         ) {
             $formData['address'] = $financialAddress->getAddress();
             $formData['zipCode'] = $financialAddress->getZipCode();
@@ -94,32 +143,32 @@ class ParentFinancialController extends OrganisationAbstractController
                 $formData = $form->getData();
 
                 /** @var Entity\Financial $financialOrganisation */
-                $financialOrganisation = $this->getOrganisationService()->findEntityById(
+                $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
                     $formData['organisationFinancial']
                 );
 
                 $financial = new Entity\Parent\Financial();
                 $financial->setParent($parent);
-                $financial->setContact($this->getContactService()->findContactById((int) $formData['contact']));
+                $financial->setContact($this->contactService->findContactById((int)$formData['contact']));
                 $financial->setOrganisation($financialOrganisation->getOrganisation());
                 $financial->setBranch($formData['branch']);
-                $this->getParentService()->updateEntity($financial);
+                $this->parentService->save($financial);
 
                 /*
                  * save the financial address
                  */
 
-                if (\is_null(
-                    $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact())
-                )
+                if (null === (
+                    $financialAddress = $this->contactService->getFinancialAddress($financial->getContact())
+                    )
                 ) {
                     $financialAddress = new Address();
                     $financialAddress->setContact($financial->getContact());
                     /**
                      * @var $addressType AddressType
                      */
-                    $addressType = $this->getContactService()
+                    $addressType = $this->contactService
                         ->find(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
                     $financialAddress->setType($addressType);
                 }
@@ -129,13 +178,15 @@ class ParentFinancialController extends OrganisationAbstractController
                 /**
                  * @var Country $country
                  */
-                $country = $this->generalService->find(Country::class, (int)$formData['country']);
+                $country = $this->countryService->find(Country::class, (int)$formData['country']);
                 $financialAddress->setCountry($country);
-                $this->getContactService()->save($financialAddress);
+                $this->contactService->save($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-financial-organisation-for-parent-%s-has-successfully-been-created"),
+                            $this->translator->translate(
+                                'txt-financial-organisation-for-parent-%s-has-successfully-been-created'
+                            ),
                             $financial->getParent()
                         )
                     );
@@ -151,8 +202,8 @@ class ParentFinancialController extends OrganisationAbstractController
         return new ViewModel(
             [
                 'parent'         => $parent,
-                'parentService'  => $this->getParentService(),
-                'projectService' => $this->getProjectService(),
+                'parentService'  => $this->parentService,
+                'projectService' => $this->projectService,
                 'form'           => $form,
             ]
         );
@@ -164,9 +215,9 @@ class ParentFinancialController extends OrganisationAbstractController
     public function editAction()
     {
         /** @var Entity\Parent\Financial $financial */
-        $financial = $this->getParentService()->findEntityById(Entity\Parent\Financial::class, $this->params('id'));
+        $financial = $this->parentService->find(Entity\Parent\Financial::class, (int)$this->params('id'));
 
-        if (\is_null($financial)) {
+        if (null === $financial) {
             return $this->notFoundAction();
         }
 
@@ -179,8 +230,8 @@ class ParentFinancialController extends OrganisationAbstractController
 
         $form = new Form\Financial(
             $financial->getParent(),
-            $this->getGeneralService(),
-            $this->getOrganisationService()
+            $this->countryService,
+            $this->organisationService
         );
 
         if (null !== $financial->getOrganisation()->getFinancial()) {
@@ -191,7 +242,7 @@ class ParentFinancialController extends OrganisationAbstractController
         //$form->get('contact')->injectContact($financial->getContact());
 
         //Try to find the financial address
-        $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact());
+        $financialAddress = $this->contactService->getFinancialAddress($financial->getContact());
 
         if (null !== $financialAddress) {
             $formData['address'] = $financialAddress->getAddress();
@@ -207,12 +258,14 @@ class ParentFinancialController extends OrganisationAbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['delete'])) {
-                $this->getParentService()->removeEntity($financial);
+                $this->parentService->delete($financial);
 
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-financial-organisation-of-parent-%s-has-successfully-been-deleted"),
+                            $this->translator->translate(
+                                'txt-financial-organisation-of-parent-%s-has-successfully-been-deleted'
+                            ),
                             $financial->getParent()
                         )
                     );
@@ -236,21 +289,21 @@ class ParentFinancialController extends OrganisationAbstractController
                 $formData = $form->getData();
 
                 /** @var Entity\Financial $financialOrganisation */
-                $financialOrganisation = $this->getOrganisationService()->findEntityById(
+                $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
                     $formData['organisationFinancial']
                 );
 
-                $financial->setContact($this->getContactService()->findContactById((int) $formData['contact']));
+                $financial->setContact($this->contactService->findContactById((int)$formData['contact']));
                 $financial->setOrganisation($financialOrganisation->getOrganisation());
                 $financial->setBranch($formData['branch']);
-                $this->getParentService()->updateEntity($financial);
+                $this->parentService->save($financial);
 
                 /*
                  * save the financial address
                  */
                 $financialAddress
-                    = $financialAddress = $this->getContactService()->getFinancialAddress($financial->getContact());
+                    = $financialAddress = $this->contactService->getFinancialAddress($financial->getContact());
 
                 if (null === $financialAddress) {
                     $financialAddress = new Address();
@@ -258,7 +311,7 @@ class ParentFinancialController extends OrganisationAbstractController
                     /**
                      * @var $addressType AddressType
                      */
-                    $addressType = $this->getContactService()
+                    $addressType = $this->contactService
                         ->find(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
                     $financialAddress->setType($addressType);
                 }
@@ -268,13 +321,13 @@ class ParentFinancialController extends OrganisationAbstractController
                 /**
                  * @var Country $country
                  */
-                $country = $this->generalService->find(Country::class, (int)$formData['country']);
+                $country = $this->countryService->find(Country::class, (int)$formData['country']);
                 $financialAddress->setCountry($country);
-                $this->getContactService()->save($financialAddress);
+                $this->contactService->save($financialAddress);
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-parent-%s-has-successfully-been-updated"),
+                            $this->translator->translate('txt-parent-%s-has-successfully-been-updated'),
                             $financial->getParent()
                         )
                     );
@@ -290,30 +343,26 @@ class ParentFinancialController extends OrganisationAbstractController
         return new ViewModel(
             [
                 'parent'         => $financial->getParent(),
-                'parentService'  => $this->getParentService(),
-                'projectService' => $this->getProjectService(),
+                'parentService'  => $this->parentService,
+                'projectService' => $this->projectService,
                 'form'           => $form,
             ]
         );
     }
 
-    /**
-     * @return ViewModel
-     */
     public function noFinancialAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $parentQuery = $this->getParentService()
+        $parentQuery = $this->parentService
             ->findActiveParentWithoutFinancial($filterPlugin->getFilter());
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentFilter($this->getParentService());
+        $form = new Form\ParentFilter($this->entityManager);
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -324,7 +373,7 @@ class ParentFinancialController extends OrganisationAbstractController
                 'encodedFilter'       => urlencode($filterPlugin->getHash()),
                 'order'               => $filterPlugin->getOrder(),
                 'direction'           => $filterPlugin->getDirection(),
-                'organisationService' => $this->getOrganisationService(),
+                'organisationService' => $this->organisationService,
             ]
         );
     }

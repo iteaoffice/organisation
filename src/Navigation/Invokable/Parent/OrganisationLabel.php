@@ -44,7 +44,7 @@ class OrganisationLabel extends AbstractNavigationInvokable
             $page->setParams(array_merge($page->getParams(), ['id' => $organisation->getId()]));
             $label = (string)$organisation;
         } else {
-            $label = $this->translate('txt-nav-view');
+            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

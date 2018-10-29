@@ -67,19 +67,19 @@ class ParentTypeLink extends AbstractLink
         switch ($this->getAction()) {
             case 'new':
                 $this->setRouter('zfcadmin/parent-type/new');
-                $this->setText($this->translate('txt-new-parent-type'));
+                $this->setText($this->translator->translate('txt-new-parent-type'));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent-type/edit');
-                $this->setText(sprintf($this->translate('txt-edit-parent-type-%s'), $this->getParentType()));
+                $this->setText(sprintf($this->translator->translate('txt-edit-parent-type-%s'), $this->getParentType()));
                 break;
             case 'list':
                 $this->setRouter('zfcadmin/parent-type/list');
-                $this->setText($this->translate('txt-list-parent-types'));
+                $this->setText($this->translator->translate('txt-list-parent-types'));
                 break;
             case 'view':
                 $this->setRouter('zfcadmin/parent-type/view');
-                $this->setText(sprintf($this->translate('txt-view-parent-type-%s'), $this->getParentType()));
+                $this->setText(sprintf($this->translator->translate('txt-view-parent-type-%s'), $this->getParentType()));
                 break;
             default:
                 throw new \InvalidArgumentException(

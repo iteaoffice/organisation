@@ -13,23 +13,56 @@ declare(strict_types=1);
 namespace Organisation\Controller;
 
 use Organisation\Entity\Note;
+use Organisation\Service\FormService;
+use Organisation\Service\OrganisationService;
 use Zend\Http\Request;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\View\Model\ViewModel;
 
 /**
  * Class NoteController
+ *
  * @package Organisation\Controller
  */
-class NoteController extends OrganisationAbstractController
+final class NoteController extends OrganisationAbstractController
 {
+    /**
+     * @var OrganisationService
+     */
+    private $organisationService;
+    /**
+     * @var FormService
+     */
+    private $formService;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        OrganisationService $organisationService,
+        FormService $formService,
+        TranslatorInterface $translator
+    ) {
+        $this->organisationService = $organisationService;
+        $this->formService = $formService;
+        $this->translator = $translator;
+    }
+
+
     public function newAction()
     {
         /** @var Request $request */
         $request = $this->getRequest();
-        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('organisationId'));
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('organisationId'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
         $note = new Note();
         $data = $request->getPost()->toArray();
-        $form = $this->getFormService()->prepare($note, $note, $data);
+        $form = $this->formService->prepare($note, $data);
         $form->remove('delete');
 
         if ($request->isPost()) {
@@ -46,11 +79,13 @@ class NoteController extends OrganisationAbstractController
                 $note = $form->getData();
                 $note->setOrganisation($organisation);
                 $note->setContact($this->identity());
-                $this->getOrganisationService()->updateEntity($note);
-                $this->flashMessenger()->setNamespace('success')->addMessage(sprintf(
-                    $this->translate("txt-note-for-organisation-%s-has-successfully-been-added"),
-                    $organisation
-                ));
+                $this->organisationService->save($note);
+                $this->flashMessenger()->addSuccessMessage(
+                    \sprintf(
+                        $this->translator->translate('txt-note-for-organisation-%s-has-successfully-been-added'),
+                        $organisation
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/view',
@@ -60,27 +95,26 @@ class NoteController extends OrganisationAbstractController
             }
         }
 
-        return new ViewModel([
-            'form' => $form,
-        ]);
+        return new ViewModel(
+            [
+                'form' => $form,
+            ]
+        );
     }
 
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         /** @var Note $note */
-        $note = $this->getOrganisationService()->findEntityById(Note::class, $this->params('id'));
+        $note = $this->organisationService->find(Note::class, (int) $this->params('id'));
         /** @var Request $request */
         $request = $this->getRequest();
 
-        if (\is_null($note)) {
+        if (null === $note) {
             return $this->notFoundAction();
         }
 
         $data = $request->getPost()->toArray();
-        $form = $this->getFormService()->prepare($note, $note, $data);
+        $form = $this->formService->prepare($note, $data);
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
@@ -92,9 +126,9 @@ class NoteController extends OrganisationAbstractController
             }
 
             if (isset($data['delete'])) {
-                $this->getOrganisationService()->removeEntity($note);
+                $this->organisationService->delete($note);
                 $this->flashMessenger()->setNamespace('success')->addMessage(
-                    $this->translate("txt-note-has-been-removed-successfully")
+                    $this->translator->translate("txt-note-has-been-removed-successfully")
                 );
 
                 return $this->redirect()->toRoute(
@@ -107,10 +141,10 @@ class NoteController extends OrganisationAbstractController
             if ($form->isValid()) {
                 /** @var Note $note */
                 $note = $form->getData();
-                $this->getOrganisationService()->updateEntity($note);
+                $this->organisationService->save($note);
 
                 $this->flashMessenger()->setNamespace('success')->addMessage(
-                    $this->translate("txt-note-has-successfully-been-updated")
+                    $this->translator->translate("txt-note-has-successfully-been-updated")
                 );
 
                 return $this->redirect()->toRoute(
@@ -121,8 +155,10 @@ class NoteController extends OrganisationAbstractController
             }
         }
 
-        return new ViewModel([
-            'form' => $form,
-        ]);
+        return new ViewModel(
+            [
+                'form' => $form,
+            ]
+        );
     }
 }

@@ -15,21 +15,16 @@ declare(strict_types=1);
 
 namespace Organisation\Factory;
 
-use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Organisation\Service\FormService;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-/**
- * Class FormServiceFactory
- *
- * @package Admin\Factory
- */
-final class FormServiceFactory implements FactoryInterface
+final class InvokableFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FormService
+    /**
+     * {@inheritDoc}
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var FormService $formService */
-        return new $requestedName($container, $container->get(EntityManager::class));
+        return (null === $options) ? new $requestedName($container) : new $requestedName($container, $options);
     }
 }

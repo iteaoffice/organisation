@@ -94,11 +94,11 @@ class NoteLink extends AbstractLink
             case 'new':
                 $this->setRouter('zfcadmin/organisation/note/new');
                 $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
-                $this->setText($this->translate('txt-new-note'));
+                $this->setText($this->translator->translate('txt-new-note'));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/organisation/note/edit');
-                $this->setText($this->translate('txt-edit-note'));
+                $this->setText($this->translator->translate('txt-edit-note'));
                 break;
             default:
                 throw new \InvalidArgumentException(

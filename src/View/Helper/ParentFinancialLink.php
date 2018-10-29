@@ -72,11 +72,11 @@ class ParentFinancialLink extends AbstractLink
         switch ($this->getAction()) {
             case 'new':
                 $this->setRouter('zfcadmin/parent/financial/new');
-                $this->setText(sprintf($this->translate('txt-new-financial-for-%s'), $this->getParent()));
+                $this->setText(sprintf($this->translator->translate('txt-new-financial-for-%s'), $this->getParent()));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent/financial/edit');
-                $this->setText(sprintf($this->translate('txt-edit-parent-financial-%s'), $this->getFinancial()));
+                $this->setText(sprintf($this->translator->translate('txt-edit-parent-financial-%s'), $this->getFinancial()));
                 break;
             default:
                 throw new \InvalidArgumentException(

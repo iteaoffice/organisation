@@ -27,29 +27,23 @@ use Program\Entity\Program;
  */
 class OverviewExtraVariableContribution extends AbstractViewHelper
 {
-    /**
-     * @param OParent $parent
-     * @param Program $program
-     * @param int $year
-     * @return string
-     */
     public function __invoke(OParent $parent, Program $program, int $year): string
     {
-        $invoiceMethod = $this->getInvoiceService()->findInvoiceMethod($program);
+        $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
 
         return $this->getRenderer()->render(
             'organisation/partial/overview-extra-variable-contribution',
             [
                 'year'               => $year,
                 'parent'             => $parent,
-                'contactService'     => $this->getContactService(),
-                'versionService'     => $this->getVersionService(),
-                'parentService'      => $this->getParentService(),
-                'affiliationService' => $this->getAffiliationService(),
-                'projectService'     => $this->getProjectService(),
-                'financialContact'   => $this->getParentService()->getFinancialContact($parent),
-                'projects'           => $this->getProjectService()->findProjectsByParent($parent, $program),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $program),
+                'contactService'     => $this->contactService,
+                'versionService'     => $this->versionService,
+                'parentService'      => $this->parentService,
+                'affiliationService' => $this->affiliationService,
+                'projectService'     => $this->projectService,
+                'financialContact'   => $this->parentService->getFinancialContact($parent),
+                'projects'           => $this->projectService->findProjectsByParent($parent, $program),
+                'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
                 'invoiceMethod'      => $invoiceMethod,
                 'program'            => $program,
             ]

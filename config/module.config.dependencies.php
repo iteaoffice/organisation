@@ -17,14 +17,22 @@ declare(strict_types=1);
 
 namespace Organisation;
 
-use Content\Navigation\Service\UpdateNavigationService;
+use Affiliation\Service\AffiliationService;
+use Contact\Service\ContactService;
 use Content\Service\ArticleService;
 use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
+use General\Service\CountryService;
+use General\Service\GeneralService;
+use Invoice\Service\InvoiceService;
 use Organisation\Controller;
+use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service;
+use Program\Service\CallService;
+use Program\Service\ProgramService;
 use Project\Options\ModuleOptions;
 use Project\Service\ProjectService;
+use Project\Service\VersionService;
 use Zend\Authentication\AuthenticationService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
@@ -32,22 +40,68 @@ use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
-        Controller\Plugin\MergeOrganisation::class => [
+        Service\OrganisationService::class                                    => [
             EntityManager::class,
-            TranslatorInterface::class,
-            Logging::class
+            OrganisationSearchService::class
         ],
-        View\Handler\OrganisationHandler::class => [
+        Search\Service\OrganisationSearchService::class                       => [
+            'Config'
+        ],
+        View\Handler\OrganisationHandler::class                               => [
             'Application',
             'ViewHelperManager',
             TwigRenderer::class,
             AuthenticationService::class,
-            UpdateNavigationService::class,
             TranslatorInterface::class,
             Service\OrganisationService::class,
             ModuleOptions::class,
             ProjectService::class,
             ArticleService::class
         ],
+        Controller\Plugin\HandleParentAndProjectImport::class                 => [
+            EntityManager::class,
+            CountryService::class,
+            Service\ParentService::class,
+            ProjectService::class,
+            ContactService::class,
+            Service\OrganisationService::class,
+            CallService::class,
+            ProgramService::class
+        ],
+        Controller\Plugin\HandleParentImport::class                           => [
+            EntityManager::class,
+            CountryService::class,
+            Service\ParentService::class,
+            ContactService::class,
+            Service\OrganisationService::class,
+            GeneralService::class
+        ],
+        Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class => [
+            Service\ParentService::class,
+            Options\ModuleOptions::class,
+            ProjectService::class,
+            VersionService::class,
+            ContactService::class,
+            AffiliationService::class,
+            TwigRenderer::class
+        ],
+        Controller\Plugin\RenderOverviewVariableContributionSheet::class      => [
+            Service\ParentService::class,
+            InvoiceService::class,
+            Options\ModuleOptions::class,
+            ProjectService::class,
+            VersionService::class,
+            ContactService::class,
+            AffiliationService::class,
+            TwigRenderer::class
+        ],
+        Controller\Plugin\MergeOrganisation::class                            => [
+            EntityManager::class,
+            TranslatorInterface::class,
+            Logging::class
+        ],
+        Controller\Plugin\MergeParentOrganisation::class                      => [
+            EntityManager::class
+        ]
     ]
 ];

@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Organisation\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
 
 /**
@@ -26,14 +26,9 @@ use Organisation\Entity;
  *
  * @package Organisation\Repository
  */
-class Type extends EntityRepository
+class Type extends EntityRepository implements FilteredObjectRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter = []): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_type');
@@ -60,6 +55,6 @@ class Type extends EntityRepository
                 $queryBuilder->addOrderBy('organisation_entity_type.type', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 }

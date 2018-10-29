@@ -18,33 +18,30 @@ use Project\Service\ProjectService;
 use Zend\Form\Form;
 
 /**
- * Class AddAffiliation
+ * Class AddParentAffiliation
  *
  * @package Organisation\Form
  */
-final class AddAffiliation extends Form
+final class AddParentAffiliation extends Form
 {
     public function __construct(
         ProjectService $projectService,
-        Entity\Organisation $organisation
+        Entity\Parent\Organisation $parentOrganisation
     ) {
         parent::__construct();
 
         $currentProjects = [];
-        /**
-         * @var $projectService ProjectService
-         */
-        foreach ($projectService->findProjectByOrganisation(
-            $organisation,
+
+        foreach ($projectService->findProjectByParentOrganisation(
+            $parentOrganisation,
             ProjectService::WHICH_ALL
         ) as $project) {
             $currentProjects[] = $project->getId();
         }
 
         $projects = [];
-        /**
-         * @var $newProject Project
-         */
+
+        /** @var Project $newProject */
         foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)->getResult() as $newProject) {
             if (!\in_array($newProject->getId(), $currentProjects, true)) {
                 $projects[$newProject->getId()] = sprintf('%s', $newProject);
@@ -82,7 +79,7 @@ final class AddAffiliation extends Form
         );
 
         $contacts = [];
-        foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
+        foreach ($parentOrganisation->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
             $contacts[$contactOrganisation->getContact()->getId()] = $contactOrganisation->getContact()->getFormName();
         }
 

@@ -80,29 +80,29 @@ class ParentLink extends AbstractLink
         switch ($this->getAction()) {
             case 'new':
                 $this->setRouter('zfcadmin/parent/new');
-                $this->setText($this->translate('txt-new-parent'));
+                $this->setText($this->translator->translate('txt-new-parent'));
                 break;
             case 'import-project':
                 $this->setRouter('zfcadmin/parent/import/project');
-                $this->setText($this->translate('txt-import-project'));
+                $this->setText($this->translator->translate('txt-import-project'));
                 break;
             case 'create-from-organisation':
                 $this->setRouter('zfcadmin/parent/new');
-                $this->setText(sprintf($this->translate('txt-new-parent-from-%s'), $this->getOrganisation()));
+                $this->setText(sprintf($this->translator->translate('txt-new-parent-from-%s'), $this->getOrganisation()));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent/edit');
-                $this->setText(sprintf($this->translate('txt-edit-parent-%s'), $this->getParent()));
+                $this->setText(sprintf($this->translator->translate('txt-edit-parent-%s'), $this->getParent()));
                 break;
             case 'add-organisation':
                 $this->setRouter('zfcadmin/parent/add-organisation');
-                $this->setText(sprintf($this->translate('txt-add-organisation-to-parent-%s'), $this->getParent()));
+                $this->setText(sprintf($this->translator->translate('txt-add-organisation-to-parent-%s'), $this->getParent()));
                 break;
             case 'overview-variable-contribution':
                 $this->setRouter('zfcadmin/parent/overview-variable-contribution');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-variable-contribution-for-parent-in-program-%s-in-%s'),
+                        $this->translator->translate('txt-overview-variable-contribution-for-parent-in-program-%s-in-%s'),
                         $this->getProgram(),
                         $this->getYear()
                     )
@@ -112,7 +112,7 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/overview-variable-contribution-pdf');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-variable-contribution-for-parent-in-program-%s-in-%s-pdf'),
+                        $this->translator->translate('txt-overview-variable-contribution-for-parent-in-program-%s-in-%s-pdf'),
                         $this->getProgram(),
                         $this->getYear()
                     )
@@ -122,7 +122,7 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/overview-extra-variable-contribution');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-extra-variable-contribution-for-parent-in-program-%s-in-%s'),
+                        $this->translator->translate('txt-overview-extra-variable-contribution-for-parent-in-program-%s-in-%s'),
                         $this->getProgram(),
                         $this->getYear()
                     )
@@ -132,7 +132,7 @@ class ParentLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/overview-extra-variable-contribution-pdf');
                 $this->setText(
                     sprintf(
-                        $this->translate('txt-overview-extra-variable-contribution-for-parent-in-program-%s-in-%s-pdf'),
+                        $this->translator->translate('txt-overview-extra-variable-contribution-for-parent-in-program-%s-in-%s-pdf'),
                         $this->getProgram(),
                         $this->getYear()
                     )
@@ -140,11 +140,11 @@ class ParentLink extends AbstractLink
                 break;
             case 'list':
                 $this->setRouter('zfcadmin/parent/list');
-                $this->setText($this->translate('txt-list-parents'));
+                $this->setText($this->translator->translate('txt-list-parents'));
                 break;
             case 'view':
                 $this->setRouter('zfcadmin/parent/view');
-                $this->setText(sprintf($this->translate('txt-view-parent-%s'), $this->getParent()));
+                $this->setText(sprintf($this->translator->translate('txt-view-parent-%s'), $this->getParent()));
                 break;
             default:
                 throw new \InvalidArgumentException(

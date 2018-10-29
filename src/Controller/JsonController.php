@@ -14,27 +14,43 @@ namespace Organisation\Controller;
 
 use DragonBe\Vies\Vies;
 use Organisation\Entity\Financial;
+use Organisation\Service\OrganisationService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\View\Model\JsonModel;
+use Zend\View\Model\ViewModel;
 
 /**
  * Class JsonController
+ *
  * @package Organisation\Controller
  */
-class JsonController extends OrganisationAbstractController
+final class JsonController extends OrganisationAbstractController
 {
     /**
-     *
+     * @var OrganisationService
      */
+    private $organisationService;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(OrganisationService $organisationService, TranslatorInterface $translator)
+    {
+        $this->organisationService = $organisationService;
+        $this->translator = $translator;
+    }
+
     public function getBranchesAction(): JsonModel
     {
-        $organisationId = (int)$this->getEvent()->getRequest()->getPost()->get('organisationId');
-        $organisation = $this->getOrganisationService()->findOrganisationById($organisationId);
+        $organisationId = (int)$this->getRequest()->getPost('organisationId');
+        $organisation = $this->organisationService->findOrganisationById($organisationId);
 
         if (null === $organisation) {
             return new JsonModel();
         }
 
-        $options = $this->getOrganisationService()->findBranchesByOrganisation($organisation);
+        $options = $this->organisationService->findBranchesByOrganisation($organisation);
         asort($options);
 
         $branches = [];
@@ -48,25 +64,35 @@ class JsonController extends OrganisationAbstractController
         return new JsonModel($branches);
     }
 
-    /**
-     * @return JsonModel
-     */
+    public function searchAction(): ViewModel
+    {
+        $search = $this->getRequest()->getPost()->get('search');
+        $results = [];
+        foreach ($this->organisationService->searchOrganisation($search, 1000) as $result) {
+            $text = trim(sprintf("%s (%s)", $result['organisation'], $result['iso3']));
+            $results[] = ['value' => $result['id'], 'text' => $text,];
+        }
+        return new JsonModel($results);
+    }
+
     public function checkVatAction(): JsonModel
     {
         $financialId = (int)$this->getRequest()->getPost('financialId');
         /**
          * @var $financial Financial
          */
-        $financial = $this->getOrganisationService()->findEntityById(Financial::class, $financialId);
+        $financial = $this->organisationService->find(Financial::class, $financialId);
 
-        if (\is_null($financial->getVat()) && \is_null($this->getRequest()->getPost('vat'))) {
-            return new JsonModel(['success' => 'error', 'result' => $this->translate("txt-vat-number-empty")]);
+        if (null === $financial->getVat() && null === $this->getRequest()->getPost('vat')) {
+            return new JsonModel(
+                ['success' => 'error', 'result' => $this->translator->translate("txt-vat-number-empty")]
+            );
         }
 
         $vat = $financial->getVat();
 
         //Overrule the vat when a VAT number is sent via the URL
-        if (!\is_null($this->getRequest()->getPost('vat'))) {
+        if (null !== $this->getRequest()->getPost('vat')) {
             $vat = $this->getRequest()->getPost('vat');
         }
 
@@ -90,7 +116,7 @@ class JsonController extends OrganisationAbstractController
                 //Update the financial
                 $financial->setVatStatus(Financial::VAT_STATUS_VALID);
                 $financial->setDateVat(new \DateTime());
-                $this->getOrganisationService()->updateEntity($financial);
+                $this->organisationService->save($financial);
 
 
                 return new JsonModel(
@@ -105,7 +131,7 @@ class JsonController extends OrganisationAbstractController
             //Update the financial
             $financial->setVatStatus(Financial::VAT_STATUS_INVALID);
             $financial->setDateVat(new \DateTime());
-            $this->getOrganisationService()->updateEntity($financial);
+            $this->organisationService->save($financial);
 
             return new JsonModel(
                 [

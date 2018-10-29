@@ -20,9 +20,11 @@ namespace Organisation\Form;
 use Zend\Form\Form;
 
 /**
+ * Class AddOrganisation
  *
+ * @package Organisation\Form
  */
-class AddOrganisation extends Form
+final class AddOrganisation extends Form
 {
     /**
      * AddOrganisation constructor.
@@ -36,10 +38,10 @@ class AddOrganisation extends Form
                 'type'       => 'Organisation\Form\Element\Organisation',
                 'name'       => 'organisation',
                 'options'    => [
-                    'help-block' => _("txt-parent-add-organisation-organisation-help-block"),
+                    'help-block' => _('txt-parent-add-organisation-organisation-help-block'),
                 ],
                 'attributes' => [
-                    'label' => _("txt-parent-add-organiation-organisation-label"),
+                    'label' => _('txt-parent-add-organiation-organisation-label'),
                 ],
             ]
         );
@@ -49,10 +51,10 @@ class AddOrganisation extends Form
                 'type'       => 'Contact\Form\Element\Contact',
                 'name'       => 'contact',
                 'options'    => [
-                    'help-block' => _("txt-parent-add-organisation-contact-help-block"),
+                    'help-block' => _('txt-parent-add-organisation-contact-help-block'),
                 ],
                 'attributes' => [
-                    'label' => _("txt-parent-add-organisation-contact-label"),
+                    'label' => _('txt-parent-add-organisation-contact-label'),
                 ],
             ]
         );
@@ -63,8 +65,8 @@ class AddOrganisation extends Form
                 'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'submit',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-submit"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-submit'),
                 ],
             ]
         );
@@ -73,8 +75,8 @@ class AddOrganisation extends Form
                 'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'cancel',
                 'attributes' => [
-                    'class' => "btn btn-warning",
-                    'value' => _("txt-cancel"),
+                    'class' => 'btn btn-warning',
+                    'value' => _('txt-cancel'),
                 ],
             ]
         );

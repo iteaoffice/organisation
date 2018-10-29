@@ -15,6 +15,7 @@ namespace Organisation\View\Helper;
 
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use BjyAuthorize\Service\Authorize;
+use Organisation\Acl\Assertion\AbstractAssertion;
 use Organisation\Acl\Assertion\AssertionAbstract;
 use Organisation\Entity;
 use Organisation\Entity\AbstractEntity;
@@ -89,10 +90,6 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $parentType;
     /**
-     * @var Entity\Parent\Status
-     */
-    protected $parentStatus;
-    /**
      * @var Entity\Parent\Doa
      */
     protected $doa;
@@ -109,22 +106,11 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $period;
 
-
-    /**
-     * This function produces the link in the end.
-     *
-     * @return string
-     */
     public function createLink(): string
     {
-        /**
-         * @var $url Url
-         */
-        $url = $this->getHelperPluginManager()->get('url');
-        /**
-         * @var $serverUrl ServerUrl
-         */
-        $serverUrl = $this->getHelperPluginManager()->get('serverUrl');
+        $url = $this->getHelperPluginManager()->get(Url::class);
+        $serverUrl = $this->getHelperPluginManager()->get(ServerUrl::class);
+
         $this->linkContent = [];
         $this->classes = [];
         $this->parseAction();
@@ -144,9 +130,6 @@ abstract class AbstractLink extends AbstractViewHelper
         );
     }
 
-    /**
-     *
-     */
     public function parseAction(): void
     {
         $this->action = null;
@@ -332,17 +315,10 @@ abstract class AbstractLink extends AbstractViewHelper
         $this->showOptions = $showOptions;
     }
 
-    /**
-     * @param AbstractEntity $entity
-     * @param string         $assertion
-     * @param string         $action
-     *
-     * @return bool
-     */
-    public function hasAccess(AbstractEntity $entity, $assertion, $action)
+    public function hasAccess(AbstractEntity $entity, $assertion, $action): bool
     {
         $assertion = $this->getAssertion($assertion);
-        if (!\is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
+        if (null !== $entity && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
             $this->getAuthorizeService()->getAcl()->addResource($entity);
             $this->getAuthorizeService()->getAcl()->allow([], $entity, [], $assertion);
         }
@@ -353,12 +329,7 @@ abstract class AbstractLink extends AbstractViewHelper
         return true;
     }
 
-    /**
-     * @param string $assertion
-     *
-     * @return AssertionAbstract
-     */
-    public function getAssertion($assertion)
+    public function getAssertion($assertion): AbstractAssertion
     {
         return $this->getServiceManager()->get($assertion);
     }
@@ -371,13 +342,7 @@ abstract class AbstractLink extends AbstractViewHelper
         return $this->getServiceManager()->get(Authorize::class);
     }
 
-    /**
-     * @param null|AbstractEntity $resource
-     * @param string              $privilege
-     *
-     * @return bool
-     */
-    public function isAllowed($resource, $privilege = null)
+    public function isAllowed($resource, $privilege = null): bool
     {
         /**
          * @var $isAllowed IsAllowed
@@ -387,10 +352,7 @@ abstract class AbstractLink extends AbstractViewHelper
         return $isAllowed($resource, $privilege);
     }
 
-    /**
-     * @return OrganisationService
-     */
-    public function getOrganisationService()
+    public function getOrganisationService(): OrganisationService
     {
         return $this->getServiceManager()->get(OrganisationService::class);
     }
@@ -552,30 +514,6 @@ abstract class AbstractLink extends AbstractViewHelper
     public function setParentType(Entity\Parent\Type $parentType = null): AbstractLink
     {
         $this->parentType = $parentType;
-
-        return $this;
-    }
-
-    /**
-     * @return Entity\Parent\Status
-     */
-    public function getParentStatus(): Entity\Parent\Status
-    {
-        if (\is_null($this->parentStatus)) {
-            $this->parentStatus = new Entity\Parent\Status();
-        }
-
-        return $this->parentStatus;
-    }
-
-    /**
-     * @param \Organisation\Entity\Parent\Status $parentStatus
-     *
-     * @return AbstractLink
-     */
-    public function setParentStatus(Entity\Parent\Status $parentStatus = null): AbstractLink
-    {
-        $this->parentStatus = $parentStatus;
 
         return $this;
     }

@@ -19,10 +19,8 @@ declare(strict_types=1);
 namespace Organisation\View\Helper;
 
 use Thumbor\Url\Builder;
-use Zend\Router\Http\RouteMatch;
 use Zend\View\Helper\ServerUrl;
 use Zend\View\Helper\Url;
-use Zend\View\HelperPluginManager;
 
 /**
  * Class LinkAbstract.
@@ -54,28 +52,20 @@ abstract class ImageAbstract extends AbstractViewHelper
      */
     protected $width;
 
-    /**
-     * @param bool $onlyUrl
-     * @return string
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     */
     public function createImageUrl(bool $onlyUrl = false): string
     {
-        /**
-         * @var $url Url
-         */
-        $url = $this->getHelperPluginManager()->get('url');
-        /**
-         * @var $serverUrl ServerUrl
-         */
-        $serverUrl = $this->getHelperPluginManager()->get('serverUrl');
+        $url = $this->getHelperPluginManager()->get(Url::class);
+        $serverUrl = $this->getHelperPluginManager()->get(ServerUrl::class);
         /**
          * Get the thumber config
          */
         $config = $this->getServiceManager()->get('content_module_config');
 
-        $thumberLink = Builder::construct($config['image']['server'], $config['image']['secret'], $serverUrl().$url($this->router, $this->routerParams))
+        $thumberLink = Builder::construct(
+            $config['image']['server'],
+            $config['image']['secret'],
+            $serverUrl() . $url($this->router, $this->routerParams)
+        )
             ->fitIn($this->width, null)
             ->smartCrop(false);
 
@@ -96,18 +86,16 @@ abstract class ImageAbstract extends AbstractViewHelper
             return $image;
         }
 
-        $thumberLinkFull = Builder::construct($config['image']['server'], $config['image']['secret'], $serverUrl().$url($this->router, $this->routerParams));
+        $thumberLinkFull = Builder::construct(
+            $config['image']['server'],
+            $config['image']['secret'],
+            $serverUrl() . $url($this->router, $this->routerParams)
+        );
 
-        return '<a href="' . $thumberLinkFull . '" class="thumbnail fancybox-thumbs" data-fancybox-group="album-6">' . $image . '</a>';
+        return '<a href="' . $thumberLinkFull . '" class="thumbnail fancybox-thumbs" data-fancybox-group="album-6">'
+            . $image . '</a>';
     }
 
-    /**
-     * Add a parameter to the list of parameters for the router.
-     *
-     * @param string $key
-     * @param        $value
-     * @param bool $allowNull
-     */
     public function addRouterParam($key, $value, $allowNull = true): void
     {
         if (!$allowNull && null === $value) {
@@ -165,7 +153,7 @@ abstract class ImageAbstract extends AbstractViewHelper
      */
     public function addClasses($classes): ImageAbstract
     {
-        foreach ((array) $classes as $class) {
+        foreach ((array)$classes as $class) {
             $this->classes[] = $class;
         }
 
@@ -206,6 +194,7 @@ abstract class ImageAbstract extends AbstractViewHelper
 
     /**
      * @param int $width
+     *
      * @return ImageAbstract
      */
     public function setWidth($width): ImageAbstract

@@ -32,15 +32,11 @@ return [
                 'type'          => 'Literal',
                 'priority'      => 1000,
                 'options'       => [
-                    'route'    => '/organisation',
-                    'defaults' => [
-                        'controller' => Controller\OrganisationController::class,
-                        'action'     => 'index',
-                    ],
+                    'route' => '/organisation',
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'json'   => [
+                    'json' => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route'    => '/json',
@@ -76,19 +72,20 @@ return [
                                     ],
                                 ],
                             ],
+                            'search'       => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/search.json',
+                                    'defaults' => [
+                                        'controller' => Controller\JsonController::class,
+                                        'action'     => 'search',
+                                    ],
+                                ],
+                            ],
                         ],
 
                     ],
-                    'search' => [
-                        'type'    => 'Segment',
-                        'options' => [
-                            'route'    => '/search',
-                            'defaults' => [
-                                'action' => 'search',
-                            ],
-                        ],
-                    ],
-                    'logo'   => [
+                    'logo' => [
                         'type'    => 'Segment',
                         'options' => [
                             'route'       => '/logo/[:id].[:ext]',
@@ -178,15 +175,6 @@ return [
                                     'route'    => '/add-affiliation/[:id].html',
                                     'defaults' => [
                                         'action' => 'add-affiliation',
-                                    ],
-                                ],
-                            ],
-                            'search-form'     => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/search-form.html',
-                                    'defaults' => [
-                                        'action' => 'search-form',
                                     ],
                                 ],
                             ],

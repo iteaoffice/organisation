@@ -44,12 +44,10 @@ class MergeOrganisation extends AbstractPlugin
      * @var EntityManagerInterface
      */
     private $entityManager;
-
     /**
      * @var TranslatorInterface
      */
     private $translator;
-
     /**
      * @var Logging
      */

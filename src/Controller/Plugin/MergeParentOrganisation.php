@@ -20,31 +20,25 @@ namespace Organisation\Controller\Plugin;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Organisation\Entity\Parent\Organisation;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Class MergeOrganisation
  *
  * @package Organisation\Controller\Plugin
  */
-class MergeParentOrganisation extends AbstractOrganisationPlugin
+final class MergeParentOrganisation extends AbstractPlugin
 {
-    /**
-     * @var array
-     */
-    protected $debug = [];
-
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    private $entityManager;
 
-    /**
-     * MergeOrganisation magic invokable
-     *
-     * @param Organisation $mainOrganisation
-     * @param Organisation $otherOrganisation
-     * @return array
-     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function __invoke(Organisation $mainOrganisation, Organisation $otherOrganisation): array
     {
         $response = ['success' => true, 'errorMessage' => ''];
@@ -54,16 +48,16 @@ class MergeParentOrganisation extends AbstractOrganisationPlugin
             foreach ($otherOrganisation->getAffiliation() as $key => $affiliation) {
                 $affiliation->setParentOrganisation($mainOrganisation);
 
-                $this->getEntityManager()->persist($affiliation);
+                $this->entityManager->persist($affiliation);
             }
 
             // Step 12: Persist main affiliation, remove the other + flush and update permissions
 
-            $this->getEntityManager()->remove($otherOrganisation);
-            $this->getEntityManager()->flush();
+            $this->entityManager->remove($otherOrganisation);
+            $this->entityManager->flush();
         } catch (ORMException $e) {
             $response = ['success' => false, 'errorMessage' => $e->getMessage()];
-            error_log($e->getFile() . ':' . $e->getLine() . ' ' . $e->getMessage());
+            \error_log($e->getFile() . ':' . $e->getLine() . ' ' . $e->getMessage());
         }
 
         return $response;

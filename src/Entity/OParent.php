@@ -50,9 +50,6 @@ class OParent extends AbstractEntity
     public const CRITERION_C_CHAMBER = 1;
     public const CRITERION_FREE_RIDER = 2;
 
-    /**
-     * @var array
-     */
     protected static $memberTypeTemplates
         = [
             self::MEMBER_TYPE_NO_MEMBER => 'txt-no-member',
@@ -60,9 +57,6 @@ class OParent extends AbstractEntity
             self::MEMBER_TYPE_APPLICANT => 'txt-applicant-member',
         ];
 
-    /**
-     * @var array
-     */
     protected static $epossMemberTypeTemplates
         = [
             self::EPOSS_MEMBER_TYPE_NO_MEMBER  => 'txt-not-eposs-member',
@@ -70,9 +64,6 @@ class OParent extends AbstractEntity
             self::EPOSS_MEMBER_TYPE_DOA_SIGNER => 'txt-eposs-doa-signer',
         ];
 
-    /**
-     * @var array
-     */
     protected static $artemisiaMemberTypeTemplates
         = [
             self::ARTEMISIA_MEMBER_TYPE_NO_MEMBER  => 'txt-not-artemisia-member',
@@ -126,30 +117,6 @@ class OParent extends AbstractEntity
      * @var \Organisation\Entity\Parent\Type
      */
     private $type;
-    /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Parent\Status", inversedBy="parent", cascade={"persist"})
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="status_id", referencedColumnName="status_id", nullable=false)
-     * })
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({
-     *      "help-block":"txt-parent-status-help-block",
-     *      "target_class":"Organisation\Entity\Parent\Status",
-     *      "find_method":{
-     *          "name":"findBy",
-     *          "params": {
-     *              "criteria":{},
-     *              "orderBy":{
-     *                  "status":"ASC"}
-     *              }
-     *          }
-     *      }
-     * )
-     * @Annotation\Attributes({"label":"txt-parent-status-label"})
-     *
-     * @var \Organisation\Entity\Parent\Status
-     */
-    private $status;
     /**
      * @ORM\Column(name="member_type", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -410,26 +377,6 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return Parent\Status
-     */
-    public function getStatus(): ?parent\Status
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param Parent\Status $status
-     *
-     * @return OParent
-     */
-    public function setStatus($status): OParent
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
      * @param bool $textual
      *
      * @return int|string
@@ -508,17 +455,13 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return Collections\ArrayCollection|Financial[]|iterable
+     * @return Collections\ArrayCollection|Financial[]
      */
-    public function getFinancial(): iterable
+    public function getFinancial()
     {
         return $this->financial;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Financial[] $financial
-     * @return OParent
-     */
     public function setFinancial($financial): OParent
     {
         $this->financial = $financial;
@@ -676,6 +619,7 @@ class OParent extends AbstractEntity
 
     /**
      * @param Collections\ArrayCollection|Parent\InvoiceExtra[] $invoiceExtra
+     *
      * @return OParent
      */
     public function setInvoiceExtra($invoiceExtra): OParent

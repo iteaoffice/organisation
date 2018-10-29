@@ -68,7 +68,7 @@ class ParentDoaLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/doa/upload');
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-upload-doa-for-parent-%s-link-title"),
+                        $this->translator->translate("txt-upload-doa-for-parent-%s-link-title"),
                         $this->getParent()->getOrganisation()
                     )
                 );
@@ -77,7 +77,7 @@ class ParentDoaLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/doa/download');
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-download-doa-for-parent-%s-link-title"),
+                        $this->translator->translate("txt-download-doa-for-parent-%s-link-title"),
                         $this->getDoa()->getParent()->getOrganisation()
                     )
                 );
@@ -86,7 +86,7 @@ class ParentDoaLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/doa/view');
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-view-doa-for-parent-%s-link-title"),
+                        $this->translator->translate("txt-view-doa-for-parent-%s-link-title"),
                         $this->getDoa()->getParent()->getOrganisation()
                     )
                 );
@@ -95,7 +95,7 @@ class ParentDoaLink extends AbstractLink
                 $this->setRouter('zfcadmin/parent/doa/edit');
                 $this->setText(
                     sprintf(
-                        $this->translate("txt-edit-doa-for-parent-%s-link-title"),
+                        $this->translator->translate("txt-edit-doa-for-parent-%s-link-title"),
                         $this->getDoa()->getParent()->getOrganisation()
                     )
                 );

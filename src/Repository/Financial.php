@@ -17,15 +17,12 @@ use Doctrine\ORM\Query;
 use Organisation\Entity;
 
 /**
- * @category    Financial
+ * Class Financial
+ *
+ * @package Organisation\Repository
  */
-class Financial extends EntityRepository
+final class Financial extends EntityRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
     public function findOrganisationFinancialList(array $filter): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();

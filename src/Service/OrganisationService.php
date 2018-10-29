@@ -17,13 +17,19 @@ use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Organisation\Entity;
 use Organisation\Repository;
+use Organisation\Search\Service\OrganisationSearchService;
 use Project\Entity\Project;
 use Project\Entity\Result\Result;
+use Search\Service\AbstractSearchService;
+use Search\Service\SearchUpdateInterface;
+use Solarium\Client;
+use Solarium\Core\Query\AbstractQuery;
 use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
@@ -32,14 +38,20 @@ use Zend\Validator\EmailAddress;
  *
  * @package Organisation\Service
  */
-class OrganisationService extends AbstractService
+class OrganisationService extends AbstractService implements SearchUpdateInterface
 {
     /**
-     * @param string $givenName
-     * @param string $organisation
-     *
-     * @return string
+     * @var OrganisationSearchService
      */
+    private $organisationSearchService;
+
+    public function __construct(EntityManager $entityManager, OrganisationSearchService $organisationSearchService)
+    {
+        parent::__construct($entityManager);
+
+        $this->organisationSearchService = $organisationSearchService;
+    }
+
     public static function determineBranch(string $givenName, string $organisation): string
     {
         //when the names are identical
@@ -48,28 +60,21 @@ class OrganisationService extends AbstractService
         }
 
         /** When the name is not found in the organisation */
-        if (strpos($givenName, $organisation) === false) {
-            return sprintf('!%s', $givenName);
+        if (\strpos($givenName, $organisation) === false) {
+            return \sprintf('!%s', $givenName);
         }
 
-        return str_replace($organisation, '~', $givenName);
+        return \str_replace($organisation, '~', $givenName);
     }
 
-    /**
-     * Function which checks if an organisation can be deleted
-     *
-     * @param Entity\Organisation $organisation
-     *
-     * @return bool
-     */
     public function canDeleteOrganisation(Entity\Organisation $organisation): bool
     {
         return
             $organisation->getContactOrganisation()->isEmpty()
             && $organisation->getAffiliation()->isEmpty()
-            && \is_null($organisation->getParent())
+            && null === $organisation->getParent()
             && $organisation->getParentFinancial()->isEmpty()
-            && \is_null($organisation->getParentOrganisation())
+            && null === $organisation->getParentOrganisation()
             && $organisation->getInvoice()->isEmpty()
             && $organisation->getBoothFinancial()->isEmpty()
             && $organisation->getOrganisationBooth()->isEmpty()
@@ -78,68 +83,37 @@ class OrganisationService extends AbstractService
             && $organisation->getResult()->isEmpty();
     }
 
-
-    /**
-     * @param $id
-     *
-     * @return null|Entity\Organisation|object
-     */
-    public function findOrganisationById($id)
+    public function findOrganisationById(int $id)
     {
-        return $this->getEntityManager()->getRepository(Entity\Organisation::class)->find($id);
+        return $this->entityManager->getRepository(Entity\Organisation::class)->find($id);
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     *
-     * @return string
-     */
     public function parseDebtorNumber(Entity\Organisation $organisation): string
     {
         return trim(sprintf("%'.06d\n", 100000 + $organisation->getId()));
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     *
-     * @return string
-     */
     public function parseCreditNumber(Entity\Organisation $organisation): string
     {
         return trim(sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
 
-    /**
-     * @param $filter
-     *
-     * @return Query
-     */
     public function findActiveOrganisationWithoutFinancial($filter): Query
     {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findActiveOrganisationWithoutFinancial($filter);
     }
 
-    /**
-     * @param $filter
-     *
-     * @return Query
-     */
     public function findDuplicateOrganisations($filter): Query
     {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findDuplicateOrganisations($filter);
     }
 
-    /**
-     * @param Result $result
-     *
-     * @return array
-     */
     public function findOrganisationByResult(Result $result): array
     {
         //Create a list of organisations
@@ -155,13 +129,6 @@ class OrganisationService extends AbstractService
         return $organisations;
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     * @param string              $organisationName
-     * @param Project             $project
-     *
-     * @return null|Entity\Name
-     */
     public function findOrganisationNameByNameAndProject(
         Entity\Organisation $organisation,
         string $organisationName,
@@ -176,52 +143,35 @@ class OrganisationService extends AbstractService
         return null;
     }
 
-    /**
-     * @param  Contact $contact
-     *
-     * @return Entity\Organisation[]
-     */
     public function findOrganisationForProfileEditByContact(Contact $contact): array
     {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationForProfileEditByContact($contact);
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     * @param int                 $which
-     *
-     * @return int
-     */
     public function getAffiliationCount(Entity\Organisation $organisation, $which = AffiliationService::WHICH_ALL): int
     {
-        return ($organisation->getAffiliation()->filter(
+        return $organisation->getAffiliation()->filter(
             function (
                 Affiliation $affiliation
             ) use ($which) {
                 switch ($which) {
                     case AffiliationService::WHICH_ONLY_ACTIVE:
-                        return \is_null($affiliation->getDateEnd());
+                        return $affiliation->isActive();
                     case AffiliationService::WHICH_ONLY_INACTIVE:
-                        return !\is_null($affiliation->getDateEnd());
+                        return !$affiliation->isActive();
                     default:
                         return true;
                 }
             }
-        )->count());
+        )->count();
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     * @param int                 $which
-     *
-     * @return int
-     */
     public function getContactCount(Entity\Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE): int
     {
-        return ($organisation->getContactOrganisation()->filter(
+        return $organisation->getContactOrganisation()->filter(
             function (
                 ContactOrganisation $contactOrganisation
             ) use (
@@ -229,25 +179,20 @@ class OrganisationService extends AbstractService
             ) {
                 switch ($which) {
                     case ContactService::WHICH_ONLY_ACTIVE:
-                        return \is_null($contactOrganisation->getContact()->getDateEnd());
+                        return $contactOrganisation->getContact()->isActive();
                     case ContactService::WHICH_ONLY_EXPIRED:
-                        return !\is_null($contactOrganisation->getContact()->getDateEnd());
+                        return !$contactOrganisation->getContact()->isActive();
                     default:
                         return true;
                 }
             }
-        )->count());
+        )->count();
     }
 
-    /**
-     * @param $filter
-     *
-     * @return Query
-     */
-    public function findOrganisationFinancialList($filter): Query
+    public function findOrganisationFinancialList(array $filter): Query
     {
         /** @var Repository\Financial $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Financial::class);
+        $repository = $this->entityManager->getRepository(Entity\Financial::class);
 
         return $repository->findOrganisationFinancialList($filter);
     }
@@ -266,75 +211,45 @@ class OrganisationService extends AbstractService
             return null;
         }
 
-        $values = array_count_values($invoiceContactList);
-        arsort($values);
+        $values = \array_count_values($invoiceContactList);
+        \arsort($values);
 
-        $contactId = array_keys($values)[0];
+        $contactId = \array_keys($values)[0];
 
-        return $this->getEntityManager()->find(Contact::class, $contactId);
+        return $this->entityManager->find(Contact::class, (int) $contactId);
     }
 
-    /**
-     * @param $docRef
-     *
-     * @return null|Entity\Organisation|object
-     */
-    public function findOrganisationByDocRef($docRef)
+    public function findOrganisationByDocRef(string $docRef)
     {
-        return $this->getEntityManager()->getRepository(Entity\Organisation::class)->findOneBy(['docRef' => $docRef]);
+        return $this->entityManager->getRepository(Entity\Organisation::class)->findOneBy(['docRef' => $docRef]);
     }
 
-    /**
-     * @return Entity\Type[]
-     */
     public function findOrganisationTypes(): array
     {
-        return $this->getEntityManager()->getRepository(Entity\Type::class)->findBy([], ['type' => 'ASC']);
+        return $this->entityManager->getRepository(Entity\Type::class)->findBy([], ['type' => 'ASC']);
     }
 
-    /**
-     * Give a list of organisations. A flag can be triggered to toggle only active projects.
-     *
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
-     *
-     * @return \Doctrine\ORM\Query
-     */
     public function findOrganisations(
-        $onlyActiveProject = true,
-        $onlyActivePartner = true
-    ) {
+        bool $onlyActiveProject = true,
+        bool $onlyActivePartner = true
+    ): Query {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisations($onlyActiveProject, $onlyActivePartner);
     }
 
-    /**
-     * Give a list of organisations per country. A flag can be triggered to toggle only active projects.
-     *
-     * @param Country $country
-     * @param bool    $onlyActiveProject
-     * @param bool    $onlyActivePartner
-     *
-     * @return \Doctrine\ORM\Query
-     */
     public function findOrganisationByCountry(
         Country $country,
-        $onlyActiveProject = true,
-        $onlyActivePartner = true
-    ) {
+        bool $onlyActiveProject = true,
+        bool $onlyActivePartner = true
+    ): Query {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
     }
 
-    /**
-     * @param  Entity\Organisation $organisation
-     *
-     * @return array
-     */
     public function findBranchesByOrganisation(Entity\Organisation $organisation): array
     {
         //always include the <empty> branch
@@ -349,48 +264,31 @@ class OrganisationService extends AbstractService
         return array_unique($branches);
     }
 
-    public function parseOrganisationWithBranch(string $branch = null, Entity\Organisation $organisation): string
+    public function parseOrganisationWithBranch(?string $branch, Entity\Organisation $organisation): string
     {
-        return self::parseBranch((string)$branch, $organisation);
+        return self::parseBranch($branch, $organisation);
     }
 
-    public static function parseBranch(string $branch = null, Entity\Organisation $organisation): string
+    public static function parseBranch(?string $branch, Entity\Organisation $organisation): string
     {
-        if (\is_string($branch) && \strpos($branch, '!') === 0) {
-            return substr($branch, 1);
+        if (null !== $branch && \strpos($branch, '!') === 0) {
+            return \substr($branch, 1);
         }
 
-        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . (string)$organisation . ' ${3}', $branch));
+        return \trim(\preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . (string)$organisation . ' ${3}', $branch));
     }
 
-    /**
-     * Find a country based on three criteria: Name, CountryObject and the email address.
-     *
-     * @param string  $name
-     * @param Country $country
-     * @param string  $emailAddress
-     *
-     * @return Entity\Organisation[]
-     */
     public function findOrganisationByNameCountryAndEmailAddress(
-        $name,
+        string $name,
         Country $country,
-        $emailAddress
+        string $emailAddress
     ): array {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
     }
 
-    /**
-     * @param string  $name
-     * @param Country $country
-     * @param int     $typeId
-     * @param string  $email
-     *
-     * @return Entity\Organisation
-     */
     public function createOrganisationFromNameCountryTypeAndEmail(
         string $name,
         Country $country,
@@ -400,7 +298,11 @@ class OrganisationService extends AbstractService
         $organisation = new Entity\Organisation();
         $organisation->setOrganisation($name);
         $organisation->setCountry($country);
-        $organisation->setType($this->findEntityById(Entity\Type::class, $typeId));
+
+        /** @var Entity\Type $type */
+        $type = $this->find(Entity\Type::class, (int) $typeId);
+
+        $organisation->setType($type);
         /*
          * Add the domain in the saved domains for this new company
          * Use the ZF2 EmailAddress validator to strip the hostname out of the EmailAddress
@@ -414,71 +316,115 @@ class OrganisationService extends AbstractService
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
         if (!\in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
-            $this->newEntity($organisationWeb);
+            $this->save($organisationWeb);
         }
 
         return $organisation;
     }
 
-    /**
-     * @param $vat
-     *
-     * @return Entity\Financial|null|object
-     */
-    public function findFinancialOrganisationWithVAT($vat)
+    public function save(Entity\AbstractEntity $abstractEntity): Entity\AbstractEntity
     {
-        return $this->getEntityManager()->getRepository(Entity\Financial::class)->findOneBy(['vat' => $vat]);
+        parent::save($abstractEntity);
+
+        if ($abstractEntity instanceof Entity\Organisation) {
+            $this->updateEntityInSearchEngine($abstractEntity);
+        }
+
+        return $abstractEntity;
     }
 
     /**
-     * Find a country based on three criteria: Name, CountryObject.
-     *
-     * @param string  $name
-     * @param Country $country
-     * @param bool    $onlyMain
-     *
-     * @return Entity\Organisation
+     * @param Entity\Organisation $organisation
      */
-    public function findOrganisationByNameCountry($name, Country $country, bool $onlyMain = true)
+    public function updateEntityInSearchEngine($organisation): void
+    {
+        $document = $this->prepareSearchUpdate($organisation);
+
+        $this->organisationSearchService->executeUpdateDocument($document);
+    }
+
+    /**
+     * @param Entity\Organisation $organisation
+     *
+     * @return AbstractQuery
+     */
+    public function prepareSearchUpdate($organisation): AbstractQuery
+    {
+        $searchClient = new Client();
+        $update = $searchClient->createUpdate();
+
+        // Add the organisation data as the document
+        $organisationDocument = $update->createDocument();
+        // Organisation properties
+        $organisationDocument->id = $organisation->getResourceId();
+        $organisationDocument->organisation_id = $organisation->getId();
+
+        $organisationDocument->organisation = $organisation->getOrganisation();
+        $organisationDocument->organisation_sort = $organisation->getOrganisation();
+        $organisationDocument->organisation_search = $organisation->getOrganisation();
+        $organisationDocument->organisation_docref = $organisation->getDocRef();
+
+        if (null !== $organisation->getDescription()) {
+            $organisationDocument->description = $organisation->getDescription()->getDescription();
+            $organisationDocument->description_search = $organisation->getDescription()->getDescription();
+        }
+
+        $organisationDocument->organisation_type = $organisation->getType()->getDescription();
+        $organisationDocument->organisation_type_sort = $organisation->getType()->getDescription();
+        $organisationDocument->organisation_type_search = $organisation->getType()->getDescription();
+
+        $organisationDocument->country = $organisation->getCountry()->getCountry();
+        $organisationDocument->country_sort = $organisation->getCountry()->getCountry();
+        $organisationDocument->country_search = $organisation->getCountry()->getCountry();
+
+
+        if (null !== $organisation->getDateCreated()) {
+            $organisationDocument->date_created = $organisation->getDateCreated()->format(
+                AbstractSearchService::DATE_SOLR
+            );
+        }
+        if (null !== $organisation->getDateUpdated()) {
+            $organisationDocument->date_updated = $organisation->getDateUpdated()->format(
+                AbstractSearchService::DATE_SOLR
+            );
+        }
+
+        $update->addDocument($organisationDocument);
+        $update->addCommit();
+
+        return $update;
+    }
+
+    public function findFinancialOrganisationWithVAT(string $vat): ?Entity\Financial
+    {
+        return $this->entityManager->getRepository(Entity\Financial::class)->findOneBy(['vat' => $vat]);
+    }
+
+    public function findOrganisationByNameCountry(string $name, Country $country, bool $onlyMain = true)
     {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByNameCountry($name, $country, $onlyMain);
     }
 
-
-    /**
-     * @param Meeting    $meeting
-     * @param Parameters $search
-     *
-     * @return Entity\Organisation[]
-     */
     public function findOrganisationByMeetingAndDescriptionSearch(
         Meeting $meeting,
         Parameters $search
-    ) {
+    ): array {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
     }
 
-    /**
-     * Produce a list of organisations for a project (only active).
-     *
-     * @param Project $project
-     * @param bool    $onlyActiveProject
-     *
-     * @return Entity\Organisation[]
-     */
     public function findOrganisationByProject(
         Project $project,
-        $onlyActiveProject = true
-    ) {
+        bool $onlyActiveProject = true
+    ): array {
         $organisations = [];
         foreach ($project->getAffiliation() as $affiliation) {
-            if ($onlyActiveProject && \is_null($affiliation->getDateEnd())) {
+            if ($onlyActiveProject && $affiliation->isActive()) {
                 //Add the organisation in the key to sort on it
                 $organisations[sprintf(
                     '%s-%s',
@@ -489,18 +435,11 @@ class OrganisationService extends AbstractService
             }
         }
         //Sort on the key (ASC)
-        ksort($organisations);
+        \ksort($organisations);
 
         return $organisations;
     }
 
-    /**
-     * Checks if the affiliation has a DOA.
-     *
-     * @param Affiliation $affiliation
-     *
-     * @return bool
-     */
     public function hasDoaForProgram(Affiliation $affiliation): bool
     {
         //When the organisation has a DOA on parent level, check that first
@@ -521,47 +460,46 @@ class OrganisationService extends AbstractService
         return false;
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     *
-     * @return bool
-     */
     public function hasValidVat(Entity\Organisation $organisation): bool
     {
-        if (\is_null($organisation->getFinancial())) {
+        if (null === $organisation->getFinancial()) {
             return false;
         }
 
         return $organisation->getFinancial()->getVatStatus() === Entity\Financial::VAT_STATUS_VALID;
     }
 
-    /**
-     * Search for organisations based on a search-item.
-     *
-     * @param      $searchItem
-     * @param      $maxResults
-     * @param null $countryId
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
-     *
-     * @return Entity\Organisation[]
-     */
+    public function delete(Entity\AbstractEntity $abstractEntity): void
+    {
+        if ($abstractEntity instanceof Entity\Organisation) {
+            $this->organisationSearchService->deleteDocument($abstractEntity);
+        }
+
+        parent::delete($abstractEntity);
+    }
+
+    public function updateCollectionInSearchEngine(bool $clearIndex = false): void
+    {
+        $organisationItems = $this->findAll(Entity\Organisation::class);
+        $collection = [];
+
+        /** @var Entity\Organisation $organisation */
+        foreach ($organisationItems as $organisation) {
+            $collection[] = $this->prepareSearchUpdate($organisation);
+        }
+
+        $this->organisationSearchService->updateIndexWithCollection($collection, $clearIndex);
+    }
+
     public function searchOrganisation(
-        $searchItem,
-        $maxResults,
-        $countryId = null,
-        $onlyActiveProject = true,
-        $onlyActivePartner = true
+        string $searchItem,
+        int $maxResults = 20
     ) {
         /** @var Repository\Organisation $repository */
-        $repository = $this->getEntityManager()->getRepository(Entity\Organisation::class);
-
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
         return $repository->searchOrganisations(
             $searchItem,
-            $maxResults,
-            $countryId,
-            $onlyActiveProject,
-            $onlyActivePartner
+            $maxResults
         );
     }
 }

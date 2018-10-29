@@ -16,31 +16,64 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Entity\VatType;
+use General\Service\GeneralService;
 use Organisation\Entity\Financial;
 use Organisation\Form;
+use Organisation\Service\FormService;
+use Organisation\Service\OrganisationService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
+ * Class OrganisationFinancialController
  *
+ * @package Organisation\Controller
  */
-class OrganisationFinancialController extends OrganisationAbstractController
+final class OrganisationFinancialController extends OrganisationAbstractController
 {
     /**
-     * @return ViewModel
+     * @var OrganisationService
      */
+    private $organisationService;
+    /**
+     * @var FormService
+     */
+    private $formService;
+    /**
+     * @var GeneralService
+     */
+    private $generalService;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        OrganisationService $organisationService,
+        FormService $formService,
+        GeneralService $generalService,
+        TranslatorInterface $translator
+    ) {
+        $this->organisationService = $organisationService;
+        $this->formService = $formService;
+        $this->generalService = $generalService;
+        $this->translator = $translator;
+    }
+
+
     public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $organisationQuery = $this->getOrganisationService()->findOrganisationFinancialList($filterPlugin->getFilter());
+        $organisationQuery = $this->organisationService->findOrganisationFinancialList($filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\OrganisationFilter($this->getOrganisationService());
+        $form = new Form\OrganisationFilter($this->organisationService);
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -55,12 +88,9 @@ class OrganisationFinancialController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
-        $organisation = $this->getOrganisationService()->findOrganisationById((int) $this->params('id'));
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
 
         if (null === $organisation) {
             return $this->notFoundAction();
@@ -78,19 +108,21 @@ class OrganisationFinancialController extends OrganisationAbstractController
             $this->getRequest()->getPost()->toArray()
         );
 
-        $form = $this->getFormService()->prepare($financial, $financial, $data);
+        $form = $this->formService->prepare($financial, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['delete'])) {
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-financial-organisation-of-%s-has-successfully-been-removed"),
+                            $this->translator->translate(
+                                'txt-financial-organisation-of-%s-has-successfully-been-removed'
+                            ),
                             $organisation
                         )
                     );
 
-                $this->getOrganisationService()->removeEntity($financial);
+                $this->organisationService->delete($financial);
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/view',
@@ -118,22 +150,22 @@ class OrganisationFinancialController extends OrganisationAbstractController
                     $financial->setVat(null);
                 }
 
-                if ($data['vatType'] == 0) {
+                if ($data['vatType'] === '0') {
                     $financial->setVatType(null);
                 } else {
-                    $vatType = $this->generalService->find(VatType::class, (int) $data['vatType']);
+                    $vatType = $this->generalService->find(VatType::class, (int)$data['vatType']);
                     $arrayCollection = new ArrayCollection();
                     $arrayCollection->add($vatType);
                     $financial->setVatType($arrayCollection);
                 }
 
 
-                $this->getOrganisationService()->updateEntity($financial);
+                $this->organisationService->save($financial);
 
                 $this->flashMessenger()->setNamespace('success')
                     ->addMessage(
                         sprintf(
-                            $this->translate("txt-financial-organisation-%s-has-successfully-been-updated"),
+                            $this->translator->translate('txt-financial-organisation-%s-has-successfully-been-updated'),
                             $organisation
                         )
                     );
@@ -150,7 +182,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'organisationService' => $this->getOrganisationService(),
+                'organisationService' => $this->organisationService,
                 'organisation'        => $organisation,
                 'financial'           => $financial,
                 'form'                => $form,
@@ -158,15 +190,11 @@ class OrganisationFinancialController extends OrganisationAbstractController
         );
     }
 
-
-    /**
-     * @return ViewModel
-     */
     public function noFinancialAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $organisationQuery = $this->getOrganisationService()
+        $organisationQuery = $this->organisationService
             ->findActiveOrganisationWithoutFinancial($filterPlugin->getFilter());
 
         $paginator
@@ -175,7 +203,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\OrganisationFilter($this->getOrganisationService());
+        $form = new Form\OrganisationFilter($this->organisationService);
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -186,7 +214,7 @@ class OrganisationFinancialController extends OrganisationAbstractController
                 'encodedFilter'       => urlencode($filterPlugin->getHash()),
                 'order'               => $filterPlugin->getOrder(),
                 'direction'           => $filterPlugin->getDirection(),
-                'organisationService' => $this->getOrganisationService(),
+                'organisationService' => $this->organisationService,
             ]
         );
     }

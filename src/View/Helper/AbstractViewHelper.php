@@ -24,6 +24,7 @@ use Invoice\Service\InvoiceService;
 use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Router\Http\RouteMatch;
 use Zend\View\Helper\AbstractHelper;
@@ -42,13 +43,17 @@ abstract class AbstractViewHelper extends AbstractHelper
      */
     protected $serviceManager;
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+    /**
      * @var HelperPluginManager
      */
     protected $helperPluginManager;
     /**
      * @var RouteMatch
      */
-    protected $routeMatch = null;
+    protected $routeMatch;
     /**
      * @var ContactService
      */
@@ -173,7 +178,7 @@ abstract class AbstractViewHelper extends AbstractHelper
     /**
      * @return ParentService
      */
-    public function getParentService(): ParentService
+    public function parentService(): ParentService
     {
         return $this->parentService;
     }
@@ -248,7 +253,9 @@ abstract class AbstractViewHelper extends AbstractHelper
         $this->versionService = $versionService;
 
         return $this;
-    }/**
+    }
+
+    /**
      * @return InvoiceService
      */
     public function getInvoiceService(): InvoiceService
@@ -266,5 +273,21 @@ abstract class AbstractViewHelper extends AbstractHelper
         $this->invoiceService = $invoiceService;
 
         return $this;
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    public function getTranslator()
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator): void
+    {
+        $this->translator = $translator;
     }
 }

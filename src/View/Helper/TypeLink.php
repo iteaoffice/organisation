@@ -67,19 +67,19 @@ class TypeLink extends AbstractLink
         switch ($this->getAction()) {
             case 'new':
                 $this->setRouter('zfcadmin/organisation-type/new');
-                $this->setText($this->translate('txt-new-organisation-type'));
+                $this->setText($this->translator->translate('txt-new-organisation-type'));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/organisation-type/edit');
-                $this->setText(sprintf($this->translate('txt-edit-organisation-type-%s'), $this->getType()));
+                $this->setText(sprintf($this->translator->translate('txt-edit-organisation-type-%s'), $this->getType()));
                 break;
             case 'list':
                 $this->setRouter('zfcadmin/organisation-type/list');
-                $this->setText($this->translate('txt-list-organisation-types'));
+                $this->setText($this->translator->translate('txt-list-organisation-types'));
                 break;
             case 'view':
                 $this->setRouter('zfcadmin/organisation-type/view');
-                $this->setText(sprintf($this->translate('txt-view-organisation-type-%s'), $this->getType()));
+                $this->setText(sprintf($this->translator->translate('txt-view-organisation-type-%s'), $this->getType()));
                 break;
             default:
                 throw new \InvalidArgumentException(

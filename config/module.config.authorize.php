@@ -24,9 +24,9 @@ return [
              */
             Route::class => [
                 ['route' => 'image/organisation-logo', 'roles' => []],
-                ['route' => 'organisation/search', 'roles' => []],
                 ['route' => 'organisation/json/get-branches', 'roles' => []],
                 ['route' => 'organisation/json/check-vat', 'roles' => ['office']],
+                ['route' => 'organisation/json/search', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list-duplicate', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],

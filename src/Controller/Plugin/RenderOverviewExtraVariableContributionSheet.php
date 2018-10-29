@@ -17,51 +17,95 @@ declare(strict_types=1);
 
 namespace Organisation\Controller\Plugin;
 
+use Affiliation\Service\AffiliationService;
+use Contact\Service\ContactService;
 use Organisation\Entity\OParent;
+use Organisation\Options\ModuleOptions;
+use Organisation\Service\ParentService;
 use Program\Entity\Program;
+use Project\Service\ProjectService;
+use Project\Service\VersionService;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use ZfcTwig\View\TwigRenderer;
 
 /**
  * Class RenderOverviewExtraVariableContributionSheet
  *
- * @package Parent\Controller\Plugin
+ * @package Organisation\Controller\Plugin
  */
-class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationPlugin
+final class RenderOverviewExtraVariableContributionSheet extends AbstractPlugin
 {
     /**
-     * @param OParent $parent
-     * @param Program $program
-     * @param int     $year
-     *
-     * @return OrganisationPdf
+     * @var ParentService
      */
+    private $parentService;
+    /**
+     * @var ModuleOptions
+     */
+    private $moduleOptions;
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
+    /**
+     * @var VersionService
+     */
+    private $versionService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var AffiliationService
+     */
+    private $affiliationService;
+    /**
+     * @var TwigRenderer
+     */
+    private $renderer;
+
+    public function __construct(
+        ParentService $parentService,
+        ModuleOptions $moduleOptions,
+        ProjectService $projectService,
+        VersionService $versionService,
+        ContactService $contactService,
+        AffiliationService $affiliationService,
+        TwigRenderer $renderer
+    ) {
+        $this->parentService = $parentService;
+        $this->moduleOptions = $moduleOptions;
+        $this->projectService = $projectService;
+        $this->versionService = $versionService;
+        $this->contactService = $contactService;
+        $this->affiliationService = $affiliationService;
+        $this->renderer = $renderer;
+    }
+
     public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
     {
-        /**
-         * @var $pdf OrganisationPdf|\TCPDF
-         */
         $pdf = new OrganisationPdf();
-        $pdf->setTemplate($this->getModuleOptions()->getOverviewVariableContributionTemplate());
-
+        $pdf->setTemplate($this->moduleOptions->getOverviewVariableContributionTemplate());
 
         $pdf->SetMargins(10, 30, -1, true);
         $pdf->SetAutoPageBreak(true, 30);
         $pdf->AddPage();
         $pdf->SetFontSize(8);
 
-        $content = $this->getTwigRenderer()->render(
+        $content = $this->renderer->render(
             'organisation/pdf/overview-extra-variable-contribution',
             [
                 'year'               => $year,
                 'parent'             => $parent,
-                'contactService'     => $this->getContactService(),
-                'versionService'     => $this->getVersionService(),
-                'parentService'      => $this->getParentService(),
-                'affiliationService' => $this->getAffiliationService(),
-                'projectService'     => $this->getProjectService(),
+                'contactService'     => $this->contactService,
+                'versionService'     => $this->versionService,
+                'parentService'      => $this->parentService,
+                'affiliationService' => $this->affiliationService,
+                'projectService'     => $this->projectService,
                 'program'            => $program,
-                'financialContact'   => $this->getParentService()->getFinancialContact($parent),
-                'projects'           => $this->getProjectService()->findProjectsByParent($parent, $program),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $program),
+                'financialContact'   => $this->parentService->getFinancialContact($parent),
+                'projects'           => $this->projectService->findProjectsByParent($parent, $program),
+                'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
 
             ]
         );

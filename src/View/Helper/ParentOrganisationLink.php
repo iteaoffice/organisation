@@ -48,7 +48,7 @@ class ParentOrganisationLink extends AbstractLink
                 'organisation'  => (string)$this->getParentOrganisation()->getOrganisation(),
                 'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()
                     ->getParent()->getType()->getType() : '',
-                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translate(
+                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translator->translate(
                     $this->getParentOrganisation()->getParent()->getMemberType(true)
                 ) : '',
             ]
@@ -65,23 +65,23 @@ class ParentOrganisationLink extends AbstractLink
         switch ($this->getAction()) {
             case 'add-affiliation':
                 $this->setRouter('zfcadmin/parent/organisation/add-affiliation');
-                $this->setText($this->translate('txt-parent-organisation-add-affiliation'));
+                $this->setText($this->translator->translate('txt-parent-organisation-add-affiliation'));
                 break;
             case 'merge':
                 $this->setRouter('zfcadmin/parent/organisation/merge');
-                $this->setText($this->translate('txt-merge-parent-organisation'));
+                $this->setText($this->translator->translate('txt-merge-parent-organisation'));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent/organisation/edit');
-                $this->setText(sprintf($this->translate('txt-edit-organisation-%s'), $this->getOrganisation()));
+                $this->setText(sprintf($this->translator->translate('txt-edit-organisation-%s'), $this->getOrganisation()));
                 break;
             case 'list':
                 $this->setRouter('zfcadmin/parent/organisation/list');
-                $this->setText($this->translate('txt-list-organisations'));
+                $this->setText($this->translator->translate('txt-list-organisations'));
                 break;
             case 'view':
                 $this->setRouter('zfcadmin/parent/organisation/view');
-                $this->setText(sprintf($this->translate('txt-view-organisation-%s'), $this->getOrganisation()));
+                $this->setText(sprintf($this->translator->translate('txt-view-organisation-%s'), $this->getOrganisation()));
                 break;
             default:
                 throw new \InvalidArgumentException(

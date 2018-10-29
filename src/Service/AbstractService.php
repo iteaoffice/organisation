@@ -2,210 +2,244 @@
 /**
  * ITEA Office all rights reserved
  *
+ * PHP Version 7
+ *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
+ *
+ * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
 
 namespace Organisation\Service;
 
-use Affiliation\Service\AffiliationService;
+use Admin\Entity\Access;
+use Admin\Entity\Permit;
+use Admin\Repository\Permit\Role;
+use Organisation\Entity;
+use Contact\Entity\Contact;
+use Contact\Service\SelectionContactService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
-use Interop\Container\ContainerInterface;
-use Organisation\Entity;
-use Project\Service\ProjectService;
-use Project\Service\VersionService;
+use Doctrine\ORM\QueryBuilder;
 
 /**
- * AbstractService.
+ * Class AbstractService
+ *
+ * @package Organisation\Service
  */
-abstract class AbstractService implements ServiceInterface
+abstract class AbstractService
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     protected $entityManager;
     /**
-     * @var ContainerInterface
+     * @var SelectionContactService
      */
-    protected $serviceLocator;
-    /**
-     * @var OrganisationService
-     */
-    protected $organisationService;
-    /**
-     * @var AffiliationService
-     */
-    protected $affiliationService;
-    /**
-     * @var ProjectService
-     */
-    protected $projectService;
-    /**
-     * @var VersionService
-     */
-    protected $versionService;
+    protected $selectionContactService;
 
-    /**
-     * @param      $entity
-     * @param bool $toArray
-     *
-     * @return array
-     */
-    public function findAll(string $entity, bool $toArray = false)
-    {
-        return $this->getEntityManager()->getRepository($entity)->findAll();
-    }
-
-    /**
-     * @return \Doctrine\ORM\EntityManager
-     */
-    public function getEntityManager(): EntityManager
-    {
-        return $this->entityManager;
-    }
-
-    /**
-     * @param \Doctrine\ORM\EntityManager $entityManager
-     *
-     * @return AbstractService
-     */
-    public function setEntityManager($entityManager)
+    public function __construct(EntityManager $entityManager, SelectionContactService $selectionContactService = null)
     {
         $this->entityManager = $entityManager;
-
-        return $this;
+        $this->selectionContactService = $selectionContactService;
     }
 
-    /**
-     * @param string $entity
-     * @param        $filter
-     *
-     * @return Query
-     */
-    public function findEntitiesFiltered($entity, $filter): Query
+    public function findFilteredByContact(string $entity, $filter, Contact $contact): QueryBuilder
     {
-        return $this->getEntityManager()->getRepository($entity)
-            ->findFiltered($filter, AbstractQuery::HYDRATE_SIMPLEOBJECT);
+        //The 'filter' should always be there to support the repositories
+        if (!\array_key_exists('filter', $filter)) {
+            $filter['filter'] = [];
+        }
+
+        $qb = $this->findFiltered($entity, $filter);
+
+        return $this->limitQueryBuilderByPermissions($qb, $contact, $entity);
     }
 
-    /**
-     * @param $entity
-     * @param $id
-     *
-     * @return null|object
-     */
-    public function findEntityById($entity, $id)
+    public function findFiltered(string $entity, array $filter): QueryBuilder
     {
-        return $this->getEntityManager()->getRepository($entity)->find($id);
+        return $this->entityManager->getRepository($entity)->findFiltered(
+            $filter,
+            AbstractQuery::HYDRATE_SIMPLEOBJECT
+        );
     }
 
-    /**
-     * @param Entity\AbstractEntity $entity
-     *
-     * @return Entity\AbstractEntity
-     */
-    public function newEntity(Entity\AbstractEntity $entity): Entity\AbstractEntity
-    {
-        return $this->updateEntity($entity);
+    protected function limitQueryBuilderByPermissions(
+        QueryBuilder $qb,
+        Contact $contact,
+        string $entity,
+        string $permit = 'list'
+    ): QueryBuilder {
+
+        //Create an entity from the name
+        /** @var Entity\AbstractEntity $entity */
+        $entity = new $entity();
+
+        switch ($permit) {
+            case 'edit':
+                $limitQueryBuilder = $this->parseWherePermit($entity, 'edit', $contact);
+                break;
+            case 'list':
+            default:
+                $limitQueryBuilder = $this->parseWherePermit($entity, 'list', $contact);
+                break;
+        }
+
+
+        /*
+         * Limit the organisations based on the rights
+         */
+        if (null !== $limitQueryBuilder) {
+            $qb->andWhere(
+                $qb->expr()
+                    ->in(strtolower($entity->get('underscore_entity_name')), $limitQueryBuilder->getDQL())
+            );
+        } else {
+            $qb->andWhere(
+                $qb->expr()->isNull(
+                    strtolower($entity->get('underscore_entity_name'))
+                    . '.id'
+                )
+            );
+        }
+
+        return $qb;
     }
 
-    /**
-     * @param Entity\AbstractEntity $entity
-     *
-     * @return Entity\AbstractEntity
-     */
-    public function updateEntity(Entity\AbstractEntity $entity): Entity\AbstractEntity
+    public function parseWherePermit(Entity\AbstractEntity $entity, string $roleName, Contact $contact): ?QueryBuilder
     {
-        $this->getEntityManager()->persist($entity);
-        $this->getEntityManager()->flush();
+        $permitEntity = $this->findPermitEntityByEntity($entity);
+
+        if (null === $permitEntity) {
+            throw new \InvalidArgumentException(sprintf("Entity '%s' cannot be found as permit", $entity));
+        }
+
+        //Try to find the corresponding role
+        $role = $this->entityManager->getRepository(Permit\Role::class)->findOneBy(
+            [
+                'entity' => $permitEntity,
+                'role'   => $roleName,
+            ]
+        );
+
+
+        if (null === $role) {
+            //We have no roles found, so return a query which gives always zeros
+            //We will simply return NULL
+            print sprintf("Role '%s' on entity '%s' could not be found", $roleName, $entity);
+
+            return null;
+        }
+
+        //@todo; fix this when no role is found (equals to NULL for example)
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('permit_contact.keyId');
+        $qb->from(Permit\Contact::class, 'permit_contact');
+        $qb->andWhere('permit_contact.contact = ' . $contact->getId());
+        $qb->andWhere('permit_contact.role = ' . $role->getId());
+
+        return $qb;
+    }
+
+    public function findPermitEntityByEntity(Entity\AbstractEntity $entity): ?Permit\Entity
+    {
+        return $this->entityManager->getRepository(Permit\Entity::class)
+            ->findOneBy(['underscoreFullEntityName' => $entity->get('underscore_entity_name')]);
+    }
+
+    public function findAll(string $entity): array
+    {
+        return $this->entityManager->getRepository($entity)->findAll();
+    }
+
+    public function find(string $entity, int $id): ?Entity\AbstractEntity
+    {
+        return $this->entityManager->getRepository($entity)->find($id);
+    }
+
+    public function findByName(string $entity, string $column, string $name): ?Entity\AbstractEntity
+    {
+        return $this->entityManager->getRepository($entity)->findOneBy([$column => $name]);
+    }
+
+    public function save(Entity\AbstractEntity $entity): Entity\AbstractEntity
+    {
+        if (!$this->entityManager->contains($entity)) {
+            $this->entityManager->persist($entity);
+        }
+
+        $this->entityManager->flush();
+
+        $this->flushPermitsByEntityAndId($entity, (int)$entity->getId());
 
         return $entity;
     }
 
-    /**
-     * @param Entity\AbstractEntity $entity
-     *
-     * @return bool
-     */
-    public function removeEntity(Entity\AbstractEntity $entity): bool
+    public function flushPermitsByEntityAndId(Entity\AbstractEntity $entity, int $id): void
     {
-        $this->getEntityManager()->remove($entity);
-        $this->getEntityManager()->flush();
-
-        return true;
-    }
-
-    /**
-     * @return OrganisationService
-     */
-    public function getOrganisationService(): OrganisationService
-    {
-        if (\is_null($this->organisationService)) {
-            $this->organisationService = $this->getServiceLocator()->get(OrganisationService::class);
+        $permitEntity = $this->findPermitEntityByEntity($entity);
+        /**
+         * Do not do anything when the permit cannot be found
+         */
+        if (null === $permitEntity) {
+            return;
         }
 
-        return $this->organisationService;
+        $repository = $this->entityManager->getRepository(Permit\Entity::class);
+        $repository->flushPermitsByEntityAndId($permitEntity, $id);
+
+        $this->flushAccessPermitsByEntityAndId($permitEntity, $id);
     }
 
-    /**
-     * @return ContainerInterface
-     */
-    public function getServiceLocator(): ContainerInterface
+    private function flushAccessPermitsByEntityAndId(Permit\Entity $permitEntity, int $id): void
     {
-        return $this->serviceLocator;
+        /**
+         * Add the role based on the role_selections
+         */
+        foreach ($permitEntity->getRole() as $role) {
+            foreach ($role->getAccess() as $accessRole) {
+                $this->flushPermitsPerRoleByAccessRoleAndId($role, $accessRole, $id);
+            }
+        }
     }
 
-    /**
-     * @param ContainerInterface $serviceLocator
-     *
-     * @return AbstractService
-     */
-    public function setServiceLocator($serviceLocator)
+    private function flushPermitsPerRoleByAccessRoleAndId(Permit\Role $role, Access $access, $id): void
     {
-        $this->serviceLocator = $serviceLocator;
+        /** @var Role $repository */
+        $repository = $this->entityManager->getRepository(Permit\Role::class);
 
-        return $this;
-    }
-
-    /**
-     * @return AffiliationService
-     */
-    public function getAffiliationService(): AffiliationService
-    {
-        if (\is_null($this->affiliationService)) {
-            $this->affiliationService = $this->getServiceLocator()->get(AffiliationService::class);
+        /*
+         * Go over te contacts in the selection
+         */
+        foreach ($access->getContact() as $contact) {
+            if (null === $contact->getDateEnd()) {
+                $repository->insertPermitsForRoleByContactAndId($role, $contact, $id);
+            }
         }
 
-        return $this->affiliationService;
+        /*
+         * Go over the selections in having the access role
+         */
+        foreach ($access->getSelection() as $selection) {
+            foreach ($this->selectionContactService->findContactsInSelection($selection) as $contact) {
+                $repository->insertPermitsForRoleByContactAndId($role, $contact, $id);
+            }
+        }
     }
 
-    /**
-     * @return VersionService
-     */
-    public function getVersionService(): VersionService
+    public function delete(Entity\AbstractEntity $abstractEntity): void
     {
-        if (\is_null($this->versionService)) {
-            $this->versionService = $this->getServiceLocator()->get(VersionService::class);
-        }
-
-        return $this->versionService;
+        $this->entityManager->remove($abstractEntity);
+        $this->entityManager->flush();
     }
 
-    /**
-     * @return ProjectService
-     */
-    public function getProjectService(): ProjectService
+    public function refresh(Entity\AbstractEntity $abstractEntity): void
     {
-        if (\is_null($this->projectService)) {
-            $this->projectService = $this->getServiceLocator()->get(ProjectService::class);
-        }
-
-        return $this->projectService;
+        $this->entityManager->refresh($abstractEntity);
     }
 }

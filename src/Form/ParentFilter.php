@@ -17,9 +17,9 @@ declare(strict_types=1);
 
 namespace Organisation\Form;
 
+use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Organisation\Entity;
-use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Zend\Form\Element\MultiCheckbox;
 use Zend\Form\Fieldset;
@@ -30,12 +30,9 @@ use Zend\Form\Form;
  *
  * @package Organisation\Form
  */
-class ParentFilter extends Form
+final class ParentFilter extends Form
 {
-    /**
-     * @param ParentService $parentService
-     */
-    public function __construct(ParentService $parentService)
+    public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
         $this->setAttribute('method', 'get');
@@ -104,7 +101,7 @@ class ParentFilter extends Form
                         ],
                     ],
                     'inline'         => true,
-                    'object_manager' => $parentService->getEntityManager(),
+                    'object_manager' => $entityManager,
                     'label'          => _("txt-type"),
                 ],
             ]
@@ -126,7 +123,7 @@ class ParentFilter extends Form
                         ],
                     ],
                     'inline'         => true,
-                    'object_manager' => $parentService->getEntityManager(),
+                    'object_manager' => $entityManager,
                     'label'          => _("txt-has-doa-for"),
                 ],
             ]

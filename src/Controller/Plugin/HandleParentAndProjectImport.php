@@ -14,6 +14,9 @@ namespace Organisation\Controller\Plugin;
 
 use Affiliation\Entity\Affiliation;
 use Contact\Entity\Contact;
+use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
+use General\Service\CountryService;
 use Organisation\Entity\Name;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
@@ -21,30 +24,80 @@ use Organisation\Entity\Parent\Doa;
 use Organisation\Entity\Parent\Financial;
 use Organisation\Entity\Parent\Organisation as ParentOrganisation;
 use Organisation\Entity\Parent\Type as ParentType;
+use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
 use Program\Entity\Call\Call;
 use Program\Entity\Program;
+use Program\Service\CallService;
+use Program\Service\ProgramService;
 use Project\Entity\Funding\Funded;
 use Project\Entity\Project;
+use Project\Service\ProjectService;
 
 /**
  * Class HandleImport.
  */
-class HandleParentAndProjectImport extends AbstractImportPlugin
+final class HandleParentAndProjectImport extends AbstractImportPlugin
 {
     /**
-     * $this function extracts the data and created local arrays.
-     *
-     * @param array|string $data
+     * @var CountryService
      */
-    public function setData(string $data)
+    private $countryService;
+    /**
+     * @var ParentService
+     */
+    private $parentService;
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var OrganisationService
+     */
+    private $organisationService;
+    /**
+     * @var CallService
+     */
+    private $callService;
+    /**
+     * @var ProgramService
+     */
+    private $programService;
+
+    public function __construct(
+        EntityManager $entityManager,
+        CountryService $countryService,
+        ParentService $parentService,
+        ProjectService $projectService,
+        ContactService $contactService,
+        OrganisationService $organisationService,
+        CallService $callService,
+        ProgramService $programService
+    ) {
+        parent::__construct($entityManager);
+
+        $this->countryService = $countryService;
+        $this->parentService = $parentService;
+        $this->projectService = $projectService;
+        $this->contactService = $contactService;
+        $this->organisationService = $organisationService;
+        $this->callService = $callService;
+        $this->programService = $programService;
+    }
+
+    public function setData(string $sourceData): void
     {
-        $data = trim($data);
+        $data = \trim($sourceData);
 
         //Explode first on the \n to have the different rows
-        $data = explode(PHP_EOL, $data);
+        $data = \explode(PHP_EOL, $data);
 
         //Apply a general trim to remove unwated characters
-        $data = array_map('trim', $data);
+        $data = \array_map('trim', $data);
 
         $this->header = explode($this->delimiter, trim($data[0]));
 
@@ -75,7 +128,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
                 $this->content[] = $row;
             } else {
                 $this->warnings[] = sprintf(
-                    "Row %s has been skipped, does not contain %s elements but %s",
+                    'Row %s has been skipped, does not contain %s elements but %s',
                     $i + 1,
                     \count($this->header),
                     \count($row)
@@ -84,11 +137,6 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         }
     }
 
-    /**
-     * With this function we will do some basic testing to see if the least amount of information is available.
-     *
-     * @return bool
-     */
     public function validateData(): bool
     {
         $minimalRequiredElements = [
@@ -121,7 +169,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         /*
          * Create the lookup-table
          */
-        $this->headerKeys = array_flip($this->header);
+        $this->headerKeys = \array_flip($this->header);
 
         /*
          * Validate the elements.
@@ -138,8 +186,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
                     $counter
                 );
             } else {
-                if (null === $this->getGeneralService()
-                        ->findCountryByCD($content[$this->headerKeys['EPS']])
+                if (null === $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']])
                 ) {
                     $this->errors[] = sprintf(
                         'EPS (%s) in row %s cannot be found',
@@ -158,8 +205,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
                     $counter
                 );
             } else {
-                if (null === $this->getGeneralService()
-                        ->findCountryByCD($content[$this->headerKeys['Parent EPS']])
+                if (null === $this->countryService->findCountryByCD($content[$this->headerKeys['Parent EPS']])
                 ) {
                     $this->errors[] = sprintf(
                         'Parent EPS (%s) in row %s cannot be found',
@@ -171,7 +217,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
 
             if (!empty($content[$this->headerKeys['Member Type']])) {
                 //Try to find the status
-                $type = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['Member Type']]);
+                $type = $this->parentService->findParentTypeByName($content[$this->headerKeys['Member Type']]);
 
                 if (null === $type) {
                     $this->errors[] = sprintf(
@@ -189,32 +235,26 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         return true;
     }
 
-
-    /**
-     * @param array $keys
-     *
-     * @return void
-     */
     public function prepareContent(array $keys = []): void
     {
         foreach ($this->content as $key => $content) {
-            $contact = $this->getContactService()->findContactById(1);
+            $contact = $this->contactService->findContactById(1);
 
             //Find the country
-            $country = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['EPS']]);
-            $parentCountry = $this->getGeneralService()->findCountryByCD($content[$this->headerKeys['Parent EPS']]);
+            $country = $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']]);
+            $parentCountry = $this->countryService->findCountryByCD($content[$this->headerKeys['Parent EPS']]);
 
             if (null === $contact || null === $country || null === $parentCountry) {
                 continue;
             }
 
             //Extract some data form the callId
-            [$programName, $year, $id] = explode('-', $content[$this->headerKeys['Call']]);
+            [$programName, $year, $id] = \explode('-', $content[$this->headerKeys['Call']]);
 
-            $callName = sprintf('%s %s', $year, $id);
+            $callName = \sprintf('%s %s', $year, $id);
 
             //Try to find the program
-            $program = $this->getProgramService()->findProgramByName($programName);
+            $program = $this->programService->findProgramByName($programName);
 
             if (null === $program) {
                 $program = new Program();
@@ -222,7 +262,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             //Try to find the call
-            $call = $this->getCallService()->findCallByName($callName);
+            $call = $this->callService->findCallByName($callName);
 
             if (null === $call) {
                 $call = new Call();
@@ -232,7 +272,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
                 $program->getCall()->add($call);
             }
 
-            $project = $this->getProjectService()->findProjectByName($content[$this->headerKeys['Proposal Acronym']]);
+            $project = $this->projectService->findProjectByName($content[$this->headerKeys['Proposal Acronym']]);
 
             if (null === $project) {
                 $project = new Project();
@@ -252,7 +292,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             $project->setCall($call);
 
             //Try to find the parent organisation
-            $organisationForParent = $this->getOrganisationService()->findOrganisationByNameCountry(
+            $organisationForParent = $this->organisationService->findOrganisationByNameCountry(
                 $content[$this->headerKeys['Parent']],
                 $parentCountry,
                 false
@@ -267,7 +307,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             //Try to find the organisation
-            $organisation = $this->getOrganisationService()->findOrganisationByNameCountry(
+            $organisation = $this->organisationService->findOrganisationByNameCountry(
                 $content[$this->headerKeys['Applicant Legal Name']],
                 $country,
                 false
@@ -378,8 +418,8 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //Only persist when the key is given
             if (\in_array($key, $keys, false)) {
-                $this->getEntityManager()->persist($affiliation);
-                $this->getEntityManager()->flush();
+                $this->entityManager->persist($affiliation);
+                $this->entityManager->flush();
                 $this->importedAffiliation[] = $affiliation;
             }
 
@@ -388,13 +428,6 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         }
     }
 
-    /**
-     * @param Organisation $organisation
-     * @param Contact      $contact
-     * @param array        $content
-     *
-     * @return OParent
-     */
     public function handleParentInformation(
         Organisation $organisation,
         Contact $contact,
@@ -410,10 +443,10 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
             $parent->setOrganisation($organisation);
         }
 
-        $parentType = $this->getParentService()->findParentTypeByName($content[$this->headerKeys['Member Type']]);
+        $parentType = $this->parentService->findParentTypeByName($content[$this->headerKeys['Member Type']]);
 
         if (null === $parentType) {
-            $parentType = $this->getParentService()->findEntityById(ParentType::class, ParentType::TYPE_OTHER);
+            $parentType = $this->parentService->find(ParentType::class, ParentType::TYPE_OTHER);
         }
 
         $parent->setType($parentType);
@@ -424,7 +457,7 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         //Fix the DOA's
         $ecselDoa = (string)$content[$this->headerKeys['AENEAS DOA']] === '1';
 
-        $hasDoa = $this->getParentService()->hasDoaForProgram($parent, $program);
+        $hasDoa = $this->parentService->hasDoaForProgram($parent, $program);
 
         if ($ecselDoa && !$hasDoa) {
             $doa = new Doa();
@@ -451,11 +484,6 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         return $parent;
     }
 
-    /**
-     * @param array $content
-     *
-     * @return int
-     */
     public function parseMemberType(array $content): int
     {
         $member = $content[$this->headerKeys['Member AENEAS']] === '1';
@@ -469,11 +497,6 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         }
     }
 
-    /**
-     * @param array $content
-     *
-     * @return int
-     */
     public function parseArtimisiaMemberType(array $content): int
     {
         $artemisiaDOA = (string)$content[$this->headerKeys['ARTEMIS-IA DOA']] === '1';
@@ -490,11 +513,6 @@ class HandleParentAndProjectImport extends AbstractImportPlugin
         }
     }
 
-    /**
-     * @param array $content
-     *
-     * @return int
-     */
     public function parseEpossMemberType(array $content): int
     {
         $epossMember = (string)$content[$this->headerKeys['Member EPoSS']] === '1';

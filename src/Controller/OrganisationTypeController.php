@@ -21,23 +21,40 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Organisation\Entity;
 use Organisation\Form;
+use Organisation\Service\FormService;
+use Organisation\Service\OrganisationService;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * @category    Organisation
+ * Class OrganisationTypeController
+ *
+ * @package Organisation\Controller
  */
-class OrganisationTypeController extends OrganisationAbstractController
+final class OrganisationTypeController extends OrganisationAbstractController
 {
     /**
-     * @return ViewModel
+     * @var OrganisationService
      */
-    public function listAction()
+    private $organisationService;
+    /**
+     * @var FormService
+     */
+    private $formService;
+
+    public function __construct(OrganisationService $organisationService, FormService $formService)
+    {
+        $this->organisationService = $organisationService;
+        $this->formService = $formService;
+    }
+
+
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $organisationQuery = $this->getOrganisationService()
-            ->findEntitiesFiltered(Entity\Type::class, $filterPlugin->getFilter());
+        $organisationQuery = $this->organisationService
+            ->findFiltered(Entity\Type::class, $filterPlugin->getFilter());
 
         $paginator
             = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -45,7 +62,7 @@ class OrganisationTypeController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\OrganisationFilter($this->getOrganisationService());
+        $form = new Form\OrganisationFilter($this->organisationService);
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -60,31 +77,25 @@ class OrganisationTypeController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
     public function newAction()
     {
         $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare(Entity\Type::class, null, $data);
+        $form = $this->formService->prepare(Entity\Type::class, null, $data);
         $form->remove('delete');
 
-        $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/organisation-type/list');
+                return $this->redirect()->toRoute('zfcadmin/organisation-type/list');
             }
 
             if ($form->isValid()) {
                 /* @var $type Entity\Type */
                 $type = $form->getData();
 
-                $result = $this->getOrganisationService()->newEntity($type);
-                $this->redirect()->toRoute(
+                $result = $this->organisationService->save($type);
+                return $this->redirect()->toRoute(
                     'zfcadmin/organisation-type/view',
                     [
                         'id' => $result->getId(),
@@ -96,27 +107,21 @@ class OrganisationTypeController extends OrganisationAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
     public function editAction()
     {
-        $type = $this->getOrganisationService()->findEntityById(Entity\Type::class, $this->params('id'));
+        $type = $this->organisationService->find(Entity\Type::class, (int)$this->params('id'));
 
-        if ($type->isEmpty()) {
+        if (null === $type) {
             return $this->notFoundAction();
         }
 
         $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare($type, $type, $data);
-        $form->setAttribute('class', 'form-horizontal');
+        $form = $this->formService->prepare($type, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/organisation-type/view',
                     [
                         'id' => $type->getId(),
@@ -128,11 +133,11 @@ class OrganisationTypeController extends OrganisationAbstractController
                 /* @var $type Entity\Type */
                 $type = $form->getData();
 
-                $result = $this->getOrganisationService()->newEntity($type);
-                $this->redirect()->toRoute(
+                $this->organisationService->save($type);
+                return $this->redirect()->toRoute(
                     'zfcadmin/organisation-type/view',
                     [
-                        'id' => $result->getId(),
+                        'id' => $type->getId(),
                     ]
                 );
             }
@@ -141,15 +146,11 @@ class OrganisationTypeController extends OrganisationAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-
-    /**
-     * @return array|ViewModel
-     */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
-        $type = $this->getOrganisationService()->findEntityById(Entity\Type::class, $this->params('id'));
+        $type = $this->organisationService->find(Entity\Type::class, (int)$this->params('id'));
 
-        if ($type->isEmpty()) {
+        if (null === $type) {
             return $this->notFoundAction();
         }
 

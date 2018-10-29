@@ -50,7 +50,7 @@ class OrganisationFormElement extends FormElement
         $this->view->inlineScript()->appendScript(
             "var options = {
         ajax: {
-            url: '" . $this->view->url('zfcadmin/organisation/search-form') . "',
+            url: '" . $this->view->url('organisation/json/search') . "',
             type: 'POST',
             dataType: 'json',
             data: {

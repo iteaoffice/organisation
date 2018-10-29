@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Organisation\Acl\Assertion;
 
+use Interop\Container\ContainerInterface;
 use Organisation\Entity\Organisation as OrganisationEntity;
+use Organisation\Service\OrganisationService;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -20,22 +22,20 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 /**
  * Class Organisation.
  */
-class Organisation extends AssertionAbstract
+final class Organisation extends AbstractAssertion
 {
     /**
-     * Returns true if and only if the assertion conditions are met.
-     *
-     * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
-     * $role, $organisation, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
-     * privileges, respectively.
-     *
-     * @param Acl $acl
-     * @param RoleInterface $role
-     * @param ResourceInterface|OrganisationEntity $organisation
-     * @param string $privilege
-     *
-     * @return bool
+     * @var OrganisationService
      */
+    private $organisationService;
+
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct($container);
+
+        $this->organisationService = $container->get(OrganisationService::class);
+    }
+
     public function assert(
         Acl $acl,
         RoleInterface $role = null,
@@ -45,18 +45,18 @@ class Organisation extends AssertionAbstract
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (!$organisation instanceof OrganisationEntity && !\is_null($id)) {
-            $organisation = $this->getOrganisationService()->findOrganisationById((int) $id);
+        if (!$organisation instanceof OrganisationEntity && null !== $id) {
+            $organisation = $this->organisationService->findOrganisationById((int)$id);
         }
 
         switch ($this->getPrivilege()) {
             case 'view-community':
-                if ($this->getContactService()->contactHasPermit($this->getContact(), 'view', $organisation)) {
+                if ($this->contactService->contactHasPermit($this->contact, 'view', $organisation)) {
                     return true;
                 }
                 break;
             case 'edit-community':
-                if ($this->getContactService()->contactHasPermit($this->getContact(), 'edit', $organisation)) {
+                if ($this->contactService->contactHasPermit($this->contact, 'edit', $organisation)) {
                     return true;
                 }
                 break;

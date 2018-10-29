@@ -58,7 +58,7 @@ class HandleParentAndProjectImportTest extends AbstractServiceTest
         /** @var GeneralService|\PHPUnit_Framework_MockObject_MockObject $generalServiceMock */
         $generalServiceMock = $this->getMockBuilder(GeneralService::class)->disableOriginalConstructor()
             ->setMethods([
-                'findEntityById',
+                'find',
                 'findCountryByCD',
             ])
             ->getMock();

@@ -26,16 +26,13 @@ use Program\Entity\Program;
 use Project\Entity\Version\Version;
 
 /**
- * @category    Parent
+ * Class OParent
+ *
+ * @package Organisation\Repository
  */
-class OParent extends EntityRepository
+final class OParent extends EntityRepository implements FilteredObjectRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
-    public function findFiltered(array $filter): Query
+    public function findFiltered(array $filter = []): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
@@ -60,7 +57,7 @@ class OParent extends EntityRepository
                     $queryBuilder->expr()->like('organisation_entity_financial_organisation_financial.vat', ':like')
                 )
             );
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', \sprintf("%%%s%%", $filter['search']));
         }
 
         if (array_key_exists('type', $filter)) {
@@ -112,12 +109,9 @@ class OParent extends EntityRepository
                 $queryBuilder->addOrderBy('organisation_entity_parent.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
-    /**
-     * @return array
-     */
     public function findActiveParents(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -128,12 +122,7 @@ class OParent extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
-    public function findActiveParentWithoutFinancial(array $filter): Query
+    public function findActiveParentWithoutFinancial(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
@@ -152,12 +141,6 @@ class OParent extends EntityRepository
         $queryBuilder->andWhere(
             $queryBuilder->expr()
                 ->notIn('organisation_entity_parent', $subSelect2->getDQL())
-        );
-
-        //Exclude the free-riders
-        $queryBuilder->andWhere(
-            $queryBuilder->expr()
-                ->notIn('organisation_entity_parent_status.id', [Entity\Parent\Status::STATUS_FREE_RIDER])
         );
 
         if (array_key_exists('search', $filter)) {
@@ -211,14 +194,9 @@ class OParent extends EntityRepository
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
     public function findActiveParentWhichAreNoMember(array $filter): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -325,12 +303,6 @@ class OParent extends EntityRepository
         return $queryBuilder->getQuery();
     }
 
-
-    /**
-     * @param Program $program
-     *
-     * @return array
-     */
     public function findParentsForInvoicing(Program $program): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -380,9 +352,6 @@ class OParent extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * @return array
-     */
     public function findParentsForExtraInvoicing(): array
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -398,16 +367,25 @@ class OParent extends EntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function limitCChambers(QueryBuilder $queryBuilder): QueryBuilder
+    {
+        //Select projects based on a type
+        $subSelect = $this->_em->createQueryBuilder();
+        $subSelect->select('organisation_entity_parent_c_chamber.id');
+        $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_c_chamber');
+        $subSelect->join('organisation_entity_parent_c_chamber.type', 'organisation_entity_parent_c_chamber_type');
 
-    /**
-     * This function returns all the free-riders in the program. They are not member and have no signed DOA of the program
-     *
-     * @param QueryBuilder $queryBuilder
-     * @param Program      $program
-     *
-     * @return QueryBuilder
-     *
-     */
+        $subSelect->andWhere('organisation_entity_parent_c_chamber_type.id = :type');
+        $subSelect->andWhere('organisation_entity_parent_c_chamber.memberType = :memberType');
+
+        $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_C_CHAMBER);
+        $queryBuilder->setParameter('memberType', Entity\OParent::MEMBER_TYPE_MEMBER);
+
+        $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_parent', $subSelect->getDQL()));
+
+        return $queryBuilder;
+    }
+
     public function limitFreeRiders(QueryBuilder $queryBuilder, Program $program): QueryBuilder
     {
         //Limit parents based on membership
@@ -434,32 +412,6 @@ class OParent extends EntityRepository
 
         $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_parent', $subSelect->getDQL()));
         $queryBuilder->andWhere($queryBuilder->expr()->notIn('organisation_entity_parent', $doaSubselect->getDQL()));
-
-        return $queryBuilder;
-    }
-
-    /**
-     * This subselect returns all free riders and limits the query automatically
-     *
-     * @param QueryBuilder $queryBuilder
-     *
-     * @return QueryBuilder
-     */
-    public function limitCChambers(QueryBuilder $queryBuilder): QueryBuilder
-    {
-        //Select projects based on a type
-        $subSelect = $this->_em->createQueryBuilder();
-        $subSelect->select('organisation_entity_parent_c_chamber.id');
-        $subSelect->from(Entity\OParent::class, 'organisation_entity_parent_c_chamber');
-        $subSelect->join('organisation_entity_parent_c_chamber.type', 'organisation_entity_parent_c_chamber_type');
-
-        $subSelect->andWhere('organisation_entity_parent_c_chamber_type.id = :type');
-        $subSelect->andWhere('organisation_entity_parent_c_chamber.memberType = :memberType');
-
-        $queryBuilder->setParameter('type', Entity\Parent\Type::TYPE_C_CHAMBER);
-        $queryBuilder->setParameter('memberType', Entity\OParent::MEMBER_TYPE_MEMBER);
-
-        $queryBuilder->andWhere($queryBuilder->expr()->in('organisation_entity_parent', $subSelect->getDQL()));
 
         return $queryBuilder;
     }

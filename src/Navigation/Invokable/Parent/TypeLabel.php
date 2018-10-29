@@ -41,7 +41,7 @@ class TypeLabel extends AbstractNavigationInvokable
 
             $label = (string)$type;
         } else {
-            $label = $this->translate('txt-nav-view');
+            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

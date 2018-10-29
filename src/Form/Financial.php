@@ -19,7 +19,7 @@ namespace Organisation\Form;
 
 use Contact\Entity\Contact;
 use General\Entity\Country;
-use General\Service\GeneralService;
+use General\Service\CountryService;
 use Organisation\Entity;
 use Organisation\Entity\OParent;
 use Organisation\Service\OrganisationService;
@@ -30,18 +30,11 @@ use Zend\Form\Form;
  *
  * @package Organisation\Form
  */
-class Financial extends Form
+final class Financial extends Form
 {
-    /**
-     * Financial constructor.
-     *
-     * @param OParent             $parent
-     * @param GeneralService      $generalService
-     * @param OrganisationService $organisationService
-     */
     public function __construct(
         OParent $parent,
-        GeneralService $generalService,
+        CountryService $countryService,
         OrganisationService $organisationService
     ) {
         parent::__construct();
@@ -49,7 +42,8 @@ class Financial extends Form
         $this->setAttribute('action', '');
         $this->setAttribute('class', 'form-horizontal');
         $countries = [];
-        foreach ($generalService->findAll(Country::class) as $country) {
+        /** @var Country $country */
+        foreach ($countryService->findAll(Country::class) as $country) {
             $countries[$country->getId()] = $country->getCountry();
         }
         asort($countries);
@@ -83,8 +77,8 @@ class Financial extends Form
                 'name'       => 'organisationFinancial',
                 'options'    => [
                     'value_options' => $financialOrganisationValueOptions,
-                    'label'         => _("txt-financial-organisation-name"),
-                    'help-block'    => _("txt-parent-financial-financial-organisation-name-help-block"),
+                    'label'         => _('txt-financial-organisation-name'),
+                    'help-block'    => _('txt-parent-financial-financial-organisation-name-help-block'),
                 ],
                 'attributes' => [
                     'class' => 'form-control',
@@ -96,12 +90,12 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Text',
                 'name'       => 'branch',
                 'options'    => [
-                    'label'      => _("txt-branch"),
-                    'help-block' => _("txt-financial-organisation-branch-explanation"),
+                    'label'      => _('txt-branch'),
+                    'help-block' => _('txt-financial-organisation-branch-explanation'),
                 ],
                 'attributes' => [
                     'class'       => 'form-control',
-                    'placeholder' => _("txt-financial-organisation-branch-placeholder"),
+                    'placeholder' => _('txt-financial-organisation-branch-placeholder'),
                 ],
             ]
         );
@@ -127,10 +121,10 @@ class Financial extends Form
                 'name'       => 'contact',
                 'options'    => [
                     'value_options' => $financialContactValueOptions,
-                    'label'         => _("txt-financial-contact"),
+                    'label'         => _('txt-financial-contact'),
                 ],
                 'attributes' => [
-                    'class'    => 'form-control',
+                    'class' => 'form-control',
                 ],
             ]
         );
@@ -141,7 +135,7 @@ class Financial extends Form
                 'name'       => 'omitContact',
                 'options'    => [
                     'value_options' => Entity\Financial::getOmitContactTemplates(),
-                    'label'         => _("txt-omit-contact"),
+                    'label'         => _('txt-omit-contact'),
                 ],
                 'attributes' => [
                     'required' => true,
@@ -153,11 +147,11 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Textarea',
                 'name'       => 'address',
                 'options'    => [
-                    'label' => _("txt-address"),
+                    'label' => _('txt-address'),
                 ],
                 'attributes' => [
                     'class'       => 'form-control',
-                    'placeholder' => _("txt-address-placeholder"),
+                    'placeholder' => _('txt-address-placeholder'),
                     'required'    => true,
                 ],
             ]
@@ -167,11 +161,11 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Text',
                 'name'       => 'zipCode',
                 'options'    => [
-                    'label' => _("txt-zip-code"),
+                    'label' => _('txt-zip-code'),
                 ],
                 'attributes' => [
                     'class'       => 'form-control',
-                    'placeholder' => _("txt-zip-code-placeholder"),
+                    'placeholder' => _('txt-zip-code-placeholder'),
                     'required'    => true,
                 ],
             ]
@@ -181,11 +175,11 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Text',
                 'name'       => 'city',
                 'options'    => [
-                    'label' => _("txt-city"),
+                    'label' => _('txt-city'),
                 ],
                 'attributes' => [
                     'class'       => 'form-control',
-                    'placeholder' => _("txt-city-placeholder"),
+                    'placeholder' => _('txt-city-placeholder'),
                     'required'    => true,
                 ],
             ]
@@ -196,7 +190,7 @@ class Financial extends Form
                 'name'       => 'country',
                 'options'    => [
                     'value_options' => $countries,
-                    'label'         => _("txt-country"),
+                    'label'         => _('txt-country'),
                 ],
                 'attributes' => [
                     'class'    => 'form-control',
@@ -210,7 +204,7 @@ class Financial extends Form
                 'name'       => 'preferredDelivery',
                 'options'    => [
                     'value_options' => Entity\Financial::getEmailTemplates(),
-                    'label'         => _("txt-preferred-delivery"),
+                    'label'         => _('txt-preferred-delivery'),
                 ],
                 'attributes' => [
                     'required' => true,
@@ -222,8 +216,8 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'submit',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-update"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-update'),
                 ],
             ]
         );
@@ -232,8 +226,8 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'delete',
                 'attributes' => [
-                    'class' => "btn btn-danger",
-                    'value' => _("txt-delete"),
+                    'class' => 'btn btn-danger',
+                    'value' => _('txt-delete'),
                 ],
             ]
         );
@@ -242,8 +236,8 @@ class Financial extends Form
                 'type'       => 'Zend\Form\Element\Submit',
                 'name'       => 'cancel',
                 'attributes' => [
-                    'class' => "btn btn-warning",
-                    'value' => _("txt-cancel"),
+                    'class' => 'btn btn-warning',
+                    'value' => _('txt-cancel'),
                 ],
             ]
         );

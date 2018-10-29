@@ -18,20 +18,18 @@ declare(strict_types=1);
 namespace Organisation\Repository\Parent;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
+use Organisation\Repository\FilteredObjectRepository;
 
 /**
- * @category    Member
+ * Class Type
+ *
+ * @package Organisation\Repository\Parent
  */
-class Type extends EntityRepository
+final class Type extends EntityRepository implements FilteredObjectRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter = []): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent_type');
@@ -58,6 +56,6 @@ class Type extends EntityRepository
                 $queryBuilder->addOrderBy('organisation_entity_parent_type.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 }
