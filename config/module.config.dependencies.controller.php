@@ -44,17 +44,6 @@ return [
             TranslatorInterface::class,
             Logging::class
         ],
-        View\Handler\OrganisationHandler::class           => [
-            'Application',
-            'ViewHelperManager',
-            TwigRenderer::class,
-            AuthenticationService::class,
-            TranslatorInterface::class,
-            Service\OrganisationService::class,
-            ModuleOptions::class,
-            ProjectService::class,
-            ArticleService::class
-        ],
         Controller\JsonController::class                  => [
             Service\OrganisationService::class,
             TranslatorInterface::class

@@ -37,13 +37,14 @@
     <field name="country_sort" type="string_ci" indexed="true" stored="true" omitNorms="true"/>
     <field name="country_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
 
-    <field name="all_projects" type="int" indexed="true" stored="true" omitNorms="true"/>
-    <field name="active_projects" type="int" indexed="true" stored="true" omitNorms="true"/>
-    <field name="all_contacts" type="int" indexed="true" stored="true" omitNorms="true"/>
-    <field name="contacts" type="int" indexed="true" stored="true" omitNorms="true"/>
-
     <field name="date_created" type="date" indexed="true" stored="true" omitNorms="true"/>
     <field name="date_updated" type="date" indexed="true" stored="true" omitNorms="true"/>
+
+    <field name="projects" type="int" indexed="true" stored="true"/>
+    <field name="affiliations" type="int" indexed="true" stored="true"/>
+    <field name="contacts" type="int" indexed="true" stored="true"/>
+    <field name="has_projects" type="boolean" indexed="true" stored="true"/>
+    <field name="has_affiliations" type="boolean" indexed="true" stored="true"/>
 
     <uniqueKey>id</uniqueKey>
 

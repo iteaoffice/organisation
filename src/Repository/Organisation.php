@@ -258,6 +258,13 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         return $queryBuilder->getQuery();
     }
 
+    /**
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
+     *
+     * @return Query
+     * @deprecated
+     */
     public function findOrganisations(bool $onlyActiveProject, bool $onlyActivePartner): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();
@@ -281,6 +288,14 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         return $queryBuilder->getQuery();
     }
 
+    /**
+     * @param Country $country
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
+     *
+     * @return Query
+     * @deprecated
+     */
     public function findOrganisationByCountry(Country $country, bool $onlyActiveProject, bool $onlyActivePartner): Query
     {
         $queryBuilder = $this->_em->createQueryBuilder();

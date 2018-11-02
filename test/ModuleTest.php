@@ -20,9 +20,9 @@ use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Zend\View\HelperPluginManager;
 
 /**
- * Class GeneralTest
+ * Class ModuleTest
  *
- * @package GeneralTest\Entity
+ * @package OrganisationTest\InputFilter
  */
 class ModuleTest extends AbstractServiceTest
 {

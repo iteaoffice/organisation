@@ -22,18 +22,11 @@ use Organisation\Entity\Organisation;
 
 /**
  * Class OrganisationLogo
+ *
  * @package Organisation\View\Helper
  */
-class OrganisationLogo extends ImageAbstract
+final class OrganisationLogo extends ImageAbstract
 {
-    /**
-     * @param Organisation $organisation
-     * @param null $width
-     * @param bool $onlyUrl
-     * @param bool $responsive
-     * @param array $classes
-     * @return string
-     */
     public function __invoke(
         Organisation $organisation,
         $width = null,
@@ -58,7 +51,6 @@ class OrganisationLogo extends ImageAbstract
         $this->setImageId('organisation_logo_' . $logo->getId());
 
         $this->setWidth($width);
-
         if ($responsive) {
             $this->addClasses('img-responsive img-fluid');
         }

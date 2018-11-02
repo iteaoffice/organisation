@@ -45,7 +45,7 @@ class OrganisationSearchService extends AbstractSearchService
         if ($hasSort) {
             switch ($order) {
                 default:
-                    $this->getQuery()->addSort('date_published', Query::SORT_DESC);
+                    $this->getQuery()->addSort('organisation', Query::SORT_DESC);
                     break;
             }
         }
@@ -53,11 +53,48 @@ class OrganisationSearchService extends AbstractSearchService
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
         } else {
-            $this->getQuery()->addSort('organisation_number_sort', Query::SORT_DESC);
+            $this->getQuery()->addSort('organisation', Query::SORT_DESC);
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
-        $facetSet->createFacetField('year')->setField('year')->setSort('year')->setMinCount(1)->setExcludes(['year']);
+        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('organisation_type')->setMinCount(1)->setExcludes(['organisation_type']);
+        $facetSet->createFacetField('country')->setField('country')->setSort('country')->setMinCount(1)->setExcludes(['country']);
+
+        return $this;
+    }
+
+    public function setSearchForWebsite(
+        string $searchTerm,
+        array $searchFields = [],
+        string $order = '',
+        string $direction = Query::SORT_ASC
+    ): SearchServiceInterface {
+        $this->setQuery($this->getSolrClient()->createSelect());
+
+        $query = '(has_projects:true) AND ' . static::parseQuery($searchTerm, $searchFields);
+
+        $this->getQuery()->setQuery($query);
+
+        $hasTerm = !\in_array($searchTerm, ['*', ''], true);
+        $hasSort = ($order !== '');
+
+        if ($hasSort) {
+            switch ($order) {
+                default:
+                    $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
+                    break;
+            }
+        }
+
+        if ($hasTerm) {
+            $this->getQuery()->addSort('score', Query::SORT_DESC);
+        } else {
+            $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
+        }
+
+        $facetSet = $this->getQuery()->getFacetSet();
+        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('organisation_type')->setMinCount(1)->setExcludes(['organisation_type']);
+        $facetSet->createFacetField('country')->setField('country')->setSort('country')->setMinCount(1)->setExcludes(['country']);
 
         return $this;
     }

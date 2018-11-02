@@ -26,11 +26,9 @@ use General\Service\CountryService;
 use General\Service\GeneralService;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller;
-use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
-use Project\Options\ModuleOptions;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Zend\Authentication\AuthenticationService;
@@ -40,10 +38,6 @@ use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
-        Service\OrganisationService::class                                    => [
-            EntityManager::class,
-            OrganisationSearchService::class
-        ],
         Search\Service\OrganisationSearchService::class                       => [
             'Config'
         ],
@@ -54,7 +48,7 @@ return [
             AuthenticationService::class,
             TranslatorInterface::class,
             Service\OrganisationService::class,
-            ModuleOptions::class,
+            Search\Service\OrganisationSearchService::class,
             ProjectService::class,
             ArticleService::class
         ],

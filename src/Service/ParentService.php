@@ -40,6 +40,10 @@ use Project\Service\VersionService;
 class ParentService extends AbstractService
 {
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+    /**
      * @var ProjectService
      */
     private $projectService;
@@ -47,10 +51,7 @@ class ParentService extends AbstractService
      * @var VersionService
      */
     private $versionService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
+
 
     /**
      * Because of circular dependencies between parentService and AffiliationService we choose here to use an invokable
@@ -63,7 +64,8 @@ class ParentService extends AbstractService
 
         $this->projectService = $container->get(ProjectService::class);
         $this->versionService = $container->get(VersionService::class);
-        $this->affiliationService = $container->get(AffiliationService::class);
+
+        $this->container = $container;
     }
 
     public function findParentById(int $id): ?Entity\OParent
@@ -251,7 +253,7 @@ class ParentService extends AbstractService
             $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
-                $contribution += $this->affiliationService->parseContribution(
+                $contribution += $this->getAffiliationService()->parseContribution(
                     $affiliation,
                     $latestVersion,
                     null,
@@ -261,6 +263,11 @@ class ParentService extends AbstractService
         }
 
         return (float)$contribution;
+    }
+
+    private function getAffiliationService(): AffiliationService
+    {
+        return $this->container->get(AffiliationService::class);
     }
 
     public function parseBalance(Entity\OParent $parent, Program $program, int $year): float
@@ -274,7 +281,11 @@ class ParentService extends AbstractService
             $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
-                $contributionBalance += $this->affiliationService->parseBalance($affiliation, $latestVersion, $year);
+                $contributionBalance += $this->getAffiliationService()->parseBalance(
+                    $affiliation,
+                    $latestVersion,
+                    $year
+                );
             }
         }
 
@@ -396,7 +407,7 @@ class ParentService extends AbstractService
                 $affiliation,
                 $latestVersion
             );
-            $contribution = $this->affiliationService->parseContribution(
+            $contribution = $this->getAffiliationService()->parseContribution(
                 $affiliation,
                 $latestVersion,
                 null,
@@ -404,8 +415,8 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation'  => $affiliation,
-                'funding'      => $funding,
+                'affiliation' => $affiliation,
+                'funding' => $funding,
                 'contribution' => $contribution
             ];
 
@@ -480,7 +491,7 @@ class ParentService extends AbstractService
             $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
-                $contributionTotal += $this->affiliationService->parseTotal(
+                $contributionTotal += $this->getAffiliationService()->parseTotal(
                     $affiliation,
                     $latestVersion,
                     $year
@@ -489,7 +500,7 @@ class ParentService extends AbstractService
         }
 
         //Parent invoices are always rounded on 2 digits
-        return round($contributionTotal, 0);
+        return \round($contributionTotal, 0);
     }
 
     public function findActiveParents(): ArrayCollection

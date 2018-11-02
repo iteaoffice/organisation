@@ -13,14 +13,15 @@ namespace Organisation\View\Handler;
 
 use Content\Entity\Content;
 use Content\Service\ArticleService;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\View\Helper\CountryMap;
 use Organisation\Entity\Organisation;
+use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
 use Organisation\View\Helper\OrganisationLink;
-use Project\Options\ModuleOptions;
 use Project\Service\ProjectService;
+use Search\Form\SearchResult;
+use Search\Paginator\Adapter\SolariumPaginator;
+use Solarium\QueryType\Select\Query\Query as SolariumQuery;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
@@ -39,19 +40,19 @@ final class OrganisationHandler extends AbstractHandler
     /**
      * @var OrganisationService
      */
-    protected $organisationService;
+    private $organisationService;
+    /**
+     * @var OrganisationSearchService
+     */
+    private $organisationSearchService;
     /**
      * @var ProjectService
      */
-    protected $projectService;
-    /**
-     * @var ModuleOptions
-     */
-    protected $moduleOptions;
+    private $projectService;
     /**
      * @var ArticleService
      */
-    protected $articleService;
+    private $articleService;
 
     public function __construct(
         Application $application,
@@ -60,7 +61,7 @@ final class OrganisationHandler extends AbstractHandler
         AuthenticationService $authenticationService,
         TranslatorInterface $translator,
         OrganisationService $organisationService,
-        ModuleOptions $moduleOptions,
+        OrganisationSearchService $organisationSearchService,
         ProjectService $projectService,
         ArticleService $articleService
     ) {
@@ -73,8 +74,8 @@ final class OrganisationHandler extends AbstractHandler
         );
 
         $this->projectService = $projectService;
-        $this->moduleOptions = $moduleOptions;
         $this->organisationService = $organisationService;
+        $this->organisationSearchService = $organisationSearchService;
         $this->articleService = $articleService;
     }
 
@@ -113,11 +114,6 @@ final class OrganisationHandler extends AbstractHandler
         }
     }
 
-    /**
-     * @param array $params
-     *
-     * @return Organisation|null
-     */
     private function getOrganisationByParams(array $params): ?Organisation
     {
         $organisation = null;
@@ -133,34 +129,24 @@ final class OrganisationHandler extends AbstractHandler
         return $organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return string
-     */
     private function parseOrganisation(Organisation $organisation): string
     {
         return $this->renderer->render(
             'cms/organisation/organisation',
             [
-                'organisation' => $organisation,
+                'organisation'   => $organisation,
                 'projectService' => $this->projectService,
-                'projects'     => $this->projectService->findProjectByOrganisation(
+                'projects'       => $this->projectService->findProjectByOrganisation(
                     $organisation,
                     ProjectService::WHICH_ONLY_ACTIVE,
                     true
                 ),
-                'map'          => $this->parseOrganisationMap($organisation),
-                'articles'     => $this->articleService->findArticlesByOrganisation($organisation, 25),
+                'map'            => $this->parseOrganisationMap($organisation),
+                'articles'       => $this->articleService->findArticlesByOrganisation($organisation, 25),
             ]
         );
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return string
-     */
     private function parseOrganisationMap(Organisation $organisation): string
     {
         /*
@@ -173,8 +159,8 @@ final class OrganisationHandler extends AbstractHandler
 
         $mapOptions = [
             'clickable' => true,
-            'colorMin'  => $this->moduleOptions->getCountryColorFaded(),
-            'colorMax'  => $this->moduleOptions->getCountryColor(),
+            'colorMin'  => '#00a651',
+            'colorMax'  => '#005C00',
             'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
             'height'    => '340px',
         ];
@@ -184,23 +170,83 @@ final class OrganisationHandler extends AbstractHandler
         return $countryMap($countries, null, $mapOptions);
     }
 
-    /**
-     * @param int $page
-     *
-     * @return string
-     */
-    private function parseOrganisationList(int $page = 1): string
+    private function parseOrganisationList(): string
     {
-        $organisationQuery = $this->organisationService->findOrganisations(true, true);
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $page = $this->routeMatch->getParam('page', 1);
+
+        $form = new SearchResult();
+        $data = array_merge(
+            [
+                'order'     => '',
+                'direction' => '',
+                'query'     => '',
+                'facet'     => [],
+            ],
+            $this->request->getQuery()->toArray()
+        );
+        $searchFields = ['organisation_search','country_search','organisation_type_search'];
+        $hasTerm = !\in_array($data['query'], ['*', ''], true);
+
+        if ($this->request->isGet()) {
+            $this->organisationSearchService->setSearchForWebsite(
+                $data['query'],
+                $searchFields,
+                $data['order'],
+                $data['direction']
+            );
+            if (isset($data['facet'])) {
+                foreach ($data['facet'] as $facetField => $values) {
+                    $quotedValues = [];
+
+                    foreach ($values as $value) {
+                        $quotedValues[] = \sprintf('"%s"', $value);
+                    }
+
+                    $this->organisationSearchService->addFilterQuery(
+                        $facetField,
+                        implode(' ' . SolariumQuery::QUERY_OPERATOR_OR . ' ', $quotedValues)
+                    );
+                }
+            }
+
+            $form->addSearchResults(
+                $this->organisationSearchService->getQuery()->getFacetSet(),
+                $this->organisationSearchService->getResultSet()->getFacetSet()
+            );
+            $form->setData($data);
+        }
+
+        $paginator = new Paginator(
+            new SolariumPaginator(
+                $this->organisationSearchService->getSolrClient(),
+                $this->organisationSearchService->getQuery()
+            )
+        );
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? 1000 : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+
+        // Remove order and direction from the GET params to prevent duplication
+        $filteredData = array_filter(
+            $data,
+            function ($key) {
+                return !\in_array($key, ['order', 'direction'], true);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
 
         return $this->renderer->render(
             'cms/organisation/list',
             [
-                'paginator' => $paginator,
+                'form'                => $form,
+                'order'               => $data['order'],
+                'direction'           => $data['direction'],
+                'query'               => $data['query'],
+                'arguments'           => http_build_query($filteredData),
+                'paginator'           => $paginator,
+                'page'                => $page,
+                'hasTerm'             => $hasTerm,
+                'organisationService' => $this->organisationService
             ]
         );
     }

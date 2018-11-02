@@ -21,11 +21,13 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
+use Interop\Container\ContainerInterface;
 use Organisation\Entity;
 use Organisation\Repository;
 use Organisation\Search\Service\OrganisationSearchService;
 use Project\Entity\Project;
 use Project\Entity\Result\Result;
+use Project\Service\ProjectService;
 use Search\Service\AbstractSearchService;
 use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
@@ -41,15 +43,20 @@ use Zend\Validator\EmailAddress;
 class OrganisationService extends AbstractService implements SearchUpdateInterface
 {
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+    /**
      * @var OrganisationSearchService
      */
     private $organisationSearchService;
 
-    public function __construct(EntityManager $entityManager, OrganisationSearchService $organisationSearchService)
+    public function __construct(ContainerInterface $container)
     {
-        parent::__construct($entityManager);
+        parent::__construct($container->get(EntityManager::class));
 
-        $this->organisationSearchService = $organisationSearchService;
+        $this->container = $container;
+        $this->organisationSearchService = $container->get(OrganisationSearchService::class);
     }
 
     public static function determineBranch(string $givenName, string $organisation): string
@@ -216,7 +223,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
         $contactId = \array_keys($values)[0];
 
-        return $this->entityManager->find(Contact::class, (int) $contactId);
+        return $this->entityManager->find(Contact::class, (int)$contactId);
     }
 
     public function findOrganisationByDocRef(string $docRef)
@@ -229,6 +236,13 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $this->entityManager->getRepository(Entity\Type::class)->findBy([], ['type' => 'ASC']);
     }
 
+    /**
+     * @param bool $onlyActiveProject
+     * @param bool $onlyActivePartner
+     *
+     * @return Query
+     * @deprecated
+     */
     public function findOrganisations(
         bool $onlyActiveProject = true,
         bool $onlyActivePartner = true
@@ -239,6 +253,14 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $repository->findOrganisations($onlyActiveProject, $onlyActivePartner);
     }
 
+    /**
+     * @param Country $country
+     * @param bool    $onlyActiveProject
+     * @param bool    $onlyActivePartner
+     *
+     * @return Query
+     *              @deprecated
+     */
     public function findOrganisationByCountry(
         Country $country,
         bool $onlyActiveProject = true,
@@ -300,7 +322,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $organisation->setCountry($country);
 
         /** @var Entity\Type $type */
-        $type = $this->find(Entity\Type::class, (int) $typeId);
+        $type = $this->find(Entity\Type::class, (int)$typeId);
 
         $organisation->setType($type);
         /*
@@ -389,10 +411,43 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             );
         }
 
+        //Find all the projects and partners
+        $projects = [];
+        $affiliations = [];
+
+        foreach ($organisation->getAffiliation() as $affiliation) {
+            if (!$affiliation->isActive()) {
+                continue;
+            }
+
+            $project = $affiliation->getProject();
+            if (!$this->getProjectService()->onWebsite($project)) {
+                continue;
+            }
+
+            $projectId = $project->getId();
+            $affiliationId = $affiliation->getId();
+
+            $projects[$projectId] = $projectId;
+            $affiliations[$affiliation->getOrganisation()->getId()] = $affiliationId;
+        }
+
+
+        $organisationDocument->projects = \count($projects);
+        $organisationDocument->has_projects = \count($projects) > 0;
+        $organisationDocument->affiliations = \count($affiliations);
+        $organisationDocument->has_affiliations = \count($affiliations) > 0;
+        $organisationDocument->contacts = $organisation->getContactOrganisation()->count();
+
         $update->addDocument($organisationDocument);
         $update->addCommit();
 
         return $update;
+    }
+
+    private function getProjectService(): ProjectService
+    {
+        return $this->container->get(ProjectService::class);
     }
 
     public function findFinancialOrganisationWithVAT(string $vat): ?Entity\Financial
