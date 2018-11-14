@@ -21,13 +21,8 @@ use Zend\Form\Form;
  *
  * @package Organisation\Form
  */
-class OrganisationForm extends Form
+final class OrganisationForm extends Form
 {
-    /**
-     * OrganisationForm constructor.
-     *
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         $organisation = new Entity\Organisation();

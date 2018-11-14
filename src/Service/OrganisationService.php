@@ -32,6 +32,7 @@ use Search\Service\AbstractSearchService;
 use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
 use Solarium\Core\Query\AbstractQuery;
+use Solarium\QueryType\Update\Query\Document\Document;
 use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
@@ -259,7 +260,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
      * @param bool    $onlyActivePartner
      *
      * @return Query
-     *              @deprecated
+     * @deprecated
      */
     public function findOrganisationByCountry(
         Country $country,
@@ -283,7 +284,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $branches[$branch] = $this->parseOrganisationWithBranch($branch, $organisation);
         }
 
-        return array_unique($branches);
+        return \array_unique($branches);
     }
 
     public function parseOrganisationWithBranch(?string $branch, Entity\Organisation $organisation): string
@@ -297,7 +298,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             return \substr($branch, 1);
         }
 
-        return \trim(\preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . (string)$organisation . ' ${3}', $branch));
+        return \trim(\preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
     }
 
     public function findOrganisationByNameCountryAndEmailAddress(
@@ -375,40 +376,40 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $searchClient = new Client();
         $update = $searchClient->createUpdate();
 
-        // Add the organisation data as the document
+        /** @var Document $organisationDocument */
         $organisationDocument = $update->createDocument();
+        
         // Organisation properties
-        $organisationDocument->id = $organisation->getResourceId();
-        $organisationDocument->organisation_id = $organisation->getId();
-
-        $organisationDocument->organisation = $organisation->getOrganisation();
-        $organisationDocument->organisation_sort = $organisation->getOrganisation();
-        $organisationDocument->organisation_search = $organisation->getOrganisation();
-        $organisationDocument->organisation_docref = $organisation->getDocRef();
+        $organisationDocument->setField('id', $organisation->getResourceId());
+        $organisationDocument->setField('organisation_id', $organisation->getId());
+        $organisationDocument->setField('organisation', $organisation->getOrganisation());
+        $organisationDocument->setField('organisation_sort', $organisation->getOrganisation());
+        $organisationDocument->setField('organisation_search', $organisation->getOrganisation());
+        $organisationDocument->setField('organisation_docref', $organisation->getDocRef());
 
         if (null !== $organisation->getDescription()) {
-            $organisationDocument->description = $organisation->getDescription()->getDescription();
-            $organisationDocument->description_search = $organisation->getDescription()->getDescription();
+            $organisationDocument->setField('description', $organisation->getDescription()->getDescription());
+            $organisationDocument->setField('description_search', $organisation->getDescription()->getDescription());
         }
 
-        $organisationDocument->organisation_type = $organisation->getType()->getDescription();
-        $organisationDocument->organisation_type_sort = $organisation->getType()->getDescription();
-        $organisationDocument->organisation_type_search = $organisation->getType()->getDescription();
+        $organisationDocument->setField('organisation_type', $organisation->getType()->getDescription());
+        $organisationDocument->setField('organisation_type_sort', $organisation->getType()->getDescription());
+        $organisationDocument->setField('organisation_type_search', $organisation->getType()->getDescription());
 
-        $organisationDocument->country = $organisation->getCountry()->getCountry();
-        $organisationDocument->country_sort = $organisation->getCountry()->getCountry();
-        $organisationDocument->country_search = $organisation->getCountry()->getCountry();
+        $organisationDocument->setField('country', $organisation->getCountry()->getCountry());
+        $organisationDocument->setField('country_sort', $organisation->getCountry()->getCountry());
+        $organisationDocument->setField('country_search', $organisation->getCountry()->getCountry());
 
 
         if (null !== $organisation->getDateCreated()) {
-            $organisationDocument->date_created = $organisation->getDateCreated()->format(
+            $organisationDocument->setField('date_created', $organisation->getDateCreated()->format(
                 AbstractSearchService::DATE_SOLR
-            );
+            ));
         }
         if (null !== $organisation->getDateUpdated()) {
-            $organisationDocument->date_updated = $organisation->getDateUpdated()->format(
+            $organisationDocument->setField('date_updated', $organisation->getDateUpdated()->format(
                 AbstractSearchService::DATE_SOLR
-            );
+            ));
         }
 
         //Find all the projects and partners
@@ -433,11 +434,11 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         }
 
 
-        $organisationDocument->projects = \count($projects);
-        $organisationDocument->has_projects = \count($projects) > 0;
-        $organisationDocument->affiliations = \count($affiliations);
-        $organisationDocument->has_affiliations = \count($affiliations) > 0;
-        $organisationDocument->contacts = $organisation->getContactOrganisation()->count();
+        $organisationDocument->setField('projects', \count($projects));
+        $organisationDocument->setField('has_projects', \count($projects) > 0);
+        $organisationDocument->setField('affiliations', \count($affiliations));
+        $organisationDocument->setField('has_affiliations', \count($affiliations) > 0);
+        $organisationDocument->setField('contacts', $organisation->getContactOrganisation()->count());
 
         $update->addDocument($organisationDocument);
         $update->addCommit();

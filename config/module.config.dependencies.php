@@ -38,6 +38,9 @@ use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
+        Form\OrganisationForm::class                                          => [
+            EntityManager::class
+        ],
         Search\Service\OrganisationSearchService::class                       => [
             'Config'
         ],

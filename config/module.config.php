@@ -103,6 +103,7 @@ $config = [
     'service_manager'    => [
         'factories' => [
             Options\ModuleOptions::class                         => Factory\ModuleOptionsFactory::class,
+            Form\OrganisationForm::class                         => ConfigAbstractFactory::class,
             Service\OrganisationService::class                   => Factory\InvokableFactory::class,
             Service\ParentService::class                         => Factory\InvokableFactory::class,
             Service\FormService::class                           => Factory\FormServiceFactory::class,
@@ -127,7 +128,6 @@ $config = [
             Navigation\Invokable\Parent\TypeLabel::class         => Factory\InvokableFactory::class,
             Navigation\Invokable\Parent\DoaLabel::class          => Factory\InvokableFactory::class,
             Navigation\Invokable\Parent\FinancialLabel::class    => Factory\InvokableFactory::class,
-
         ],
     ],
     'doctrine'           => [

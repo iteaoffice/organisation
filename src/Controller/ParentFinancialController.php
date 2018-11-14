@@ -181,15 +181,14 @@ final class ParentFinancialController extends OrganisationAbstractController
                 $country = $this->countryService->find(Country::class, (int)$formData['country']);
                 $financialAddress->setCountry($country);
                 $this->contactService->save($financialAddress);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                'txt-financial-organisation-for-parent-%s-has-successfully-been-created'
-                            ),
-                            $financial->getParent()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-financial-organisation-for-parent-%s-has-successfully-been-created'
+                        ),
+                        $financial->getParent()
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -260,15 +259,14 @@ final class ParentFinancialController extends OrganisationAbstractController
             if (isset($data['delete'])) {
                 $this->parentService->delete($financial);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                'txt-financial-organisation-of-parent-%s-has-successfully-been-deleted'
-                            ),
-                            $financial->getParent()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-financial-organisation-of-parent-%s-has-successfully-been-deleted'
+                        ),
+                        $financial->getParent()
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -324,13 +322,12 @@ final class ParentFinancialController extends OrganisationAbstractController
                 $country = $this->countryService->find(Country::class, (int)$formData['country']);
                 $financialAddress->setCountry($country);
                 $this->contactService->save($financialAddress);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate('txt-parent-%s-has-successfully-been-updated'),
-                            $financial->getParent()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate('txt-parent-%s-has-successfully-been-updated'),
+                        $financial->getParent()
+                    )
+                );
             }
 
             return $this->redirect()->toRoute(

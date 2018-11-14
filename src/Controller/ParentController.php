@@ -401,10 +401,9 @@ final class ParentController extends OrganisationAbstractController
             }
 
             if (isset($data['delete']) && $this->parentService->parentCanBeDeleted($parent)) {
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-deleted'), $parent)
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-deleted'), $parent)
+                );
 
                 $this->parentService->delete($parent);
 
@@ -419,10 +418,9 @@ final class ParentController extends OrganisationAbstractController
                     $parent->setDateParentTypeUpdate(new \DateTime());
                 }
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-updated'), $parent)
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-updated'), $parent)
+                );
 
                 $parent = $this->parentService->save($parent);
 
@@ -469,14 +467,13 @@ final class ParentController extends OrganisationAbstractController
                 }
             }
 
-            $this->flashMessenger()->setNamespace('success')
-                ->addMessage(
-                    sprintf(
-                        $this->translator->translate('txt-%s-parent-doa-have-been-created-for-%s'),
-                        $counter,
-                        $parent
-                    )
-                );
+            $this->flashMessenger()->addSuccessMessage(
+                sprintf(
+                    $this->translator->translate('txt-%s-parent-doa-have-been-created-for-%s'),
+                    $counter,
+                    $parent
+                )
+            );
 
             return $this->redirect()->toRoute(
                 'zfcadmin/parent/view',

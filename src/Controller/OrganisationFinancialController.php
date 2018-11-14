@@ -112,15 +112,14 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['delete'])) {
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                'txt-financial-organisation-of-%s-has-successfully-been-removed'
-                            ),
-                            $organisation
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-financial-organisation-of-%s-has-successfully-been-removed'
+                        ),
+                        $organisation
+                    )
+                );
 
                 $this->organisationService->delete($financial);
 
@@ -162,13 +161,12 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
 
                 $this->organisationService->save($financial);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate('txt-financial-organisation-%s-has-successfully-been-updated'),
-                            $organisation
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate('txt-financial-organisation-%s-has-successfully-been-updated'),
+                        $organisation
+                    )
+                );
 
 
                 return $this->redirect()->toRoute(

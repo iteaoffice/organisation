@@ -287,9 +287,6 @@ final class OrganisationAdminController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
@@ -507,16 +504,15 @@ final class OrganisationAdminController extends OrganisationAbstractController
 
                 $this->affiliationService->save($affiliation);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                'txt-organisation-%s-has-successfully-been-added-to-project-%s'
-                            ),
-                            $organisation,
-                            $project
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-organisation-%s-has-successfully-been-added-to-project-%s'
+                        ),
+                        $organisation,
+                        $project
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/view',

@@ -114,15 +114,14 @@ final class ParentOrganisationController extends OrganisationAbstractController
             }
 
             if (isset($data['delete']) && $this->parentService->canDeleteParentOrganisation($organisation)) {
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                'txt-organisation-%s-has-been-removed-from-the-parent-successfully'
-                            ),
-                            $organisation
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-organisation-%s-has-been-removed-from-the-parent-successfully'
+                        ),
+                        $organisation
+                    )
+                );
 
                 $this->parentService->delete($organisation);
 
@@ -140,13 +139,12 @@ final class ParentOrganisationController extends OrganisationAbstractController
 
                 $organisation = $this->parentService->save($organisation);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate('txt-organisation-%s-has-been-updated-successfully'),
-                            $organisation
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate('txt-organisation-%s-has-been-updated-successfully'),
+                        $organisation
+                    )
+                );
 
 
                 return $this->redirect()->toRoute(
@@ -278,16 +276,15 @@ final class ParentOrganisationController extends OrganisationAbstractController
 
                 $this->affiliationService->save($affiliation);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate(
-                                'txt-organisation-%s-has-successfully-been-added-to-project-%s'
-                            ),
-                            $parentOrganisation,
-                            $project
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate(
+                            'txt-organisation-%s-has-successfully-been-added-to-project-%s'
+                        ),
+                        $parentOrganisation,
+                        $project
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/affiliation/view',

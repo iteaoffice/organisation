@@ -115,13 +115,12 @@ final class ParentDoaController extends OrganisationAbstractController
                 $doa->setParent($parent);
                 $doaObject->setDoa($doa);
                 $this->parentService->save($doaObject);
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate('txt-doa-for-parent-%s-has-been-uploaded'),
-                            $parent->getOrganisation()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate('txt-doa-for-parent-%s-has-been-uploaded'),
+                        $parent->getOrganisation()
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
@@ -224,13 +223,12 @@ final class ParentDoaController extends OrganisationAbstractController
 
                 $this->parentService->save($doa);
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(
-                        sprintf(
-                            $this->translator->translate('txt-doa-for-parent-%s-has-been-uploaded'),
-                            $doa->getParent()->getOrganisation()
-                        )
-                    );
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf(
+                        $this->translator->translate('txt-doa-for-parent-%s-has-been-uploaded'),
+                        $doa->getParent()->getOrganisation()
+                    )
+                );
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
