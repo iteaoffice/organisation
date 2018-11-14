@@ -11,8 +11,10 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
@@ -28,8 +30,8 @@ class ParentTypeLink extends AbstractLink
 {
     /**
      * @param Entity\Parent\Type|null $parentType
-     * @param string                  $action
-     * @param string                  $show
+     * @param string $action
+     * @param string $show
      *
      * @return string
      */
@@ -42,7 +44,7 @@ class ParentTypeLink extends AbstractLink
         $this->setAction($action);
         $this->setShow($show);
 
-        if (! $this->hasAccess($this->getParentType(), ParentTypeAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getParentType(), ParentTypeAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -50,7 +52,7 @@ class ParentTypeLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'type' => $this->getParentType(),
+                'type' => (string) $this->getParentType(),
             ]
         );
 
@@ -60,24 +62,24 @@ class ParentTypeLink extends AbstractLink
     /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'new':
                 $this->setRouter('zfcadmin/parent-type/new');
-                $this->setText($this->translate('txt-new-parent-type'));
+                $this->setText($this->translator->translate('txt-new-parent-type'));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent-type/edit');
-                $this->setText(sprintf($this->translate('txt-edit-parent-type-%s'), $this->getParentType()));
+                $this->setText(sprintf($this->translator->translate('txt-edit-parent-type-%s'), $this->getParentType()));
                 break;
             case 'list':
                 $this->setRouter('zfcadmin/parent-type/list');
-                $this->setText($this->translate('txt-list-parent-types'));
+                $this->setText($this->translator->translate('txt-list-parent-types'));
                 break;
             case 'view':
                 $this->setRouter('zfcadmin/parent-type/view');
-                $this->setText(sprintf($this->translate('txt-view-parent-type-%s'), $this->getParentType()));
+                $this->setText(sprintf($this->translator->translate('txt-view-parent-type-%s'), $this->getParentType()));
                 break;
             default:
                 throw new \InvalidArgumentException(

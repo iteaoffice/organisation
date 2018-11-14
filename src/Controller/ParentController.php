@@ -10,19 +10,27 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Controller;
 
-use Contact\Entity\Address;
-use Contact\Entity\AddressType;
+use Contact\Service\ContactService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use General\Entity\Country;
+use Invoice\Service\InvoiceService;
 use Organisation\Entity;
-use Organisation\Entity\Financial;
 use Organisation\Form;
+use Organisation\Service\FormService;
+use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
+use Program\Entity\Program;
+use Program\Service\ProgramService;
+use Zend\Http\Response;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Paginator\Paginator;
 use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
@@ -30,28 +38,77 @@ use Zend\View\Model\ViewModel;
 /**
  * @category    Parent
  */
-class ParentController extends OrganisationAbstractController
+final class ParentController extends OrganisationAbstractController
 {
-
     /**
-     * @return ViewModel
+     * @var ParentService
      */
-    public function listAction()
+    private $parentService;
+    /**
+     * @var OrganisationService
+     */
+    private $organisationService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var ProgramService
+     */
+    private $programService;
+    /**
+     * @var InvoiceService
+     */
+    private $invoiceService;
+    /**
+     * @var FormService
+     */
+    private $formService;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        ParentService $parentService,
+        OrganisationService $organisationService,
+        ContactService $contactService,
+        ProgramService $programService,
+        InvoiceService $invoiceService,
+        FormService $formService,
+        EntityManager $entityManager,
+        TranslatorInterface $translator
+    ) {
+        $this->parentService = $parentService;
+        $this->organisationService = $organisationService;
+        $this->contactService = $contactService;
+        $this->programService = $programService;
+        $this->invoiceService = $invoiceService;
+        $this->formService = $formService;
+        $this->entityManager = $entityManager;
+        $this->translator = $translator;
+    }
+
+
+    public function listAction(): ViewModel
     {
         $page = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $query = $this->getParentService()->findEntitiesFiltered(
+        $query = $this->parentService->findFiltered(
             Entity\OParent::class,
             $filterPlugin->getFilter()
         );
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($query, false)));
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($query, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentFilter($this->getParentService());
+        $form = new Form\ParentFilter($this->entityManager);
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -66,31 +123,150 @@ class ParentController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
+    public function listNoMemberAction(): ViewModel
+    {
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
+        $parentQuery = $this->parentService
+            ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
+
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+
+        $form = new Form\ParentFilter($this->entityManager);
+
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
+
+        return new ViewModel(
+            [
+                'paginator'           => $paginator,
+                'form'                => $form,
+                'encodedFilter'       => urlencode($filterPlugin->getHash()),
+                'order'               => $filterPlugin->getOrder(),
+                'direction'           => $filterPlugin->getDirection(),
+                'organisationService' => $this->organisationService,
+                'contactService'      => $this->contactService,
+                'parentService'       => $this->parentService,
+            ]
+        );
+    }
+
+    public function listNoMemberExportAction()
+    {
+        $filterPlugin = $this->getOrganisationFilter();
+        $parentQuery = $this->parentService
+            ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
+
+        /** @var Entity\OParent[] $parents */
+        $parents = $parentQuery->getResult();
+
+        // Open the output stream
+        $fh = fopen('php://output', 'wb');
+
+
+        ob_start();
+
+        fputcsv(
+            $fh,
+            [
+                'id',
+                'name',
+                'country',
+                'iso3',
+                'type',
+                'member type',
+                'artemisia type',
+                'eposs type',
+                'projects',
+                'contact',
+                'email',
+                'street and number',
+                'zip',
+                'city',
+                'country',
+            ]
+        );
+
+        if (!empty($parents)) {
+            foreach ($parents as $parent) {
+                $projects = [];
+                foreach ($parent->getParentOrganisation() as $parentOrganisation) {
+                    foreach ($parentOrganisation->getAffiliation() as $affiliation) {
+                        $projects[] = $affiliation->getProject()->parseFullName();
+                    }
+                }
+
+                $address = $this->contactService->getMailAddress($parent->getContact());
+
+                fputcsv(
+                    $fh,
+                    [
+                        $parent->getId(),
+                        $parent->getOrganisation()->getOrganisation(),
+                        $parent->getOrganisation()->getCountry()->getCountry(),
+                        $parent->getOrganisation()->getCountry()->getIso3(),
+                        $parent->getType()->getType(),
+                        $this->translator->translate($parent->getMemberType(true)),
+                        $this->translator->translate($parent->getArtemisiaMemberType(true)),
+                        $this->translator->translate($parent->getEpossMemberType(true)),
+                        implode($projects, ';'),
+                        $parent->getContact()->parseFullName(),
+                        $parent->getContact()->getEmail(),
+                        null !== $address ? $address->getAddress() : '',
+                        null !== $address ? $address->getZipCode() : '',
+                        null !== $address ? $address->getCity() : '',
+                        null !== $address ? $address->getCountry()->getCountry() : '',
+                    ]
+                );
+            }
+        }
+
+        $string = \ob_get_clean();
+
+        // Convert to UTF-16LE
+        $string = \mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
+
+        // Prepend BOM
+        $string = '\xFF\xFE' . $string;
+
+        /** @var Response $response */
+        $response = $this->getResponse();
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine('Content-Type', 'text/csv');
+        $headers->addHeaderLine(
+            'Content-Disposition',
+            'attachment; filename=\'export-members-with-are-no-member-and-have-no-doa.csv\''
+        );
+        $headers->addHeaderLine('Accept-Ranges', 'bytes');
+        $headers->addHeaderLine('Content-Length', \strlen($string));
+
+        $response->setContent($string);
+
+        return $response;
+    }
+
     public function newAction()
     {
         $organisation = null;
-        if (!is_null($this->params('organisationId'))) {
-            $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
+        if (null !== $this->params('organisationId')) {
+            $organisation = $this->organisationService->findOrganisationById((int)$this->params('organisationId'));
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
         $parent = new Entity\OParent();
-        $form = $this->getFormService()->prepare($parent, null, $data);
+        $form = $this->formService->prepare($parent, $data);
         $form->remove('delete');
 
-        if (!is_null($organisation)) {
+        if (null !== $organisation) {
             //Inject the organisation in the form
             $form->get($parent->get('underscore_entity_name'))->get('organisation')
                 ->setValueOptions([$organisation->getId() => $organisation->getOrganisation()]);
 
             $contactsInOrganisation = [];
-            foreach ($this->getContactService()->findContactsInOrganisation($organisation) as $contact) {
+            foreach ($this->contactService->findContactsInOrganisation($organisation) as $contact) {
                 $contactsInOrganisation[$contact->getId()] = $contact->getFormName();
             }
             asort($contactsInOrganisation);
@@ -100,12 +276,9 @@ class ParentController extends OrganisationAbstractController
                 ->setValueOptions($contactsInOrganisation);
         }
 
-
-        $form->setAttribute('class', 'form-horizontal');
-
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/parent/list');
+                return $this->redirect()->toRoute('zfcadmin/parent/list');
             }
 
             if ($form->isValid()) {
@@ -114,11 +287,11 @@ class ParentController extends OrganisationAbstractController
 
                 $parent->setDateParentTypeUpdate(new \DateTime());
 
-                $result = $this->getParentService()->newEntity($parent);
-                $this->redirect()->toRoute(
+                $this->parentService->save($parent);
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
                     [
-                        'id' => $result->getId(),
+                        'id' => $parent->getId(),
                     ]
                 );
             }
@@ -127,30 +300,29 @@ class ParentController extends OrganisationAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
     public function addOrganisationAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
 
-        $organisation = null;
-        if (!is_null($this->params('organisationId'))) {
-            $organisation = $this->getOrganisationService()->findOrganisationById($this->params('organisationId'));
+        if (null === $parent) {
+            return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $organisation = null;
+        if (null !== $this->params('organisationId')) {
+            $organisation = $this->organisationService->findOrganisationById((int)$this->params('organisationId'));
+        }
+
+        $data = $this->getRequest()->getPost()->toArray();
 
         $form = new Form\AddOrganisation();
 
-        if (!is_null($organisation)) {
+        if (null !== $organisation) {
             //Inject the organisation in the form
             $form->get('organisation')->setValueOptions([$organisation->getId() => $organisation->getOrganisation()]);
 
             $contactsInOrganisation = [];
-            foreach ($this->getContactService()->findContactsInOrganisation($organisation) as $contact) {
+            foreach ($this->contactService->findContactsInOrganisation($organisation) as $contact) {
                 $contactsInOrganisation[$contact->getId()] = $contact->getFormName();
             }
             asort($contactsInOrganisation);
@@ -159,12 +331,11 @@ class ParentController extends OrganisationAbstractController
             $form->get('contact')->setValueOptions($contactsInOrganisation);
         }
 
-        $form->setAttribute('class', 'form-horizontal');
         $form->setData($data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
                     [
                         'id' => $parent->getId(),
@@ -177,16 +348,16 @@ class ParentController extends OrganisationAbstractController
                 $parentOrganisation->setParent($parent);
 
                 //Find the organiation from the form
-                $organisation = $this->getOrganisationService()->findOrganisationById($data['organisation']);
+                $organisation = $this->organisationService->findOrganisationById((int)$data['organisation']);
                 $parentOrganisation->setOrganisation($organisation);
 
                 //Find the contact from the form.
-                $contact = $this->getContactService()->findContactById($data['contact']);
+                $contact = $this->contactService->findContactById((int)$data['contact']);
                 $parentOrganisation->setContact($contact);
 
 
-                $parentOrganisation = $this->getParentService()->newEntity($parentOrganisation);
-                $this->redirect()->toRoute(
+                $parentOrganisation = $this->parentService->save($parentOrganisation);
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent/organisation/view',
                     [
                         'id' => $parentOrganisation->getId(),
@@ -203,27 +374,24 @@ class ParentController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
 
-        if (is_null($parent)) {
+        if (null === $parent) {
             return $this->notFoundAction();
         }
 
         $currentParentType = $parent->getType()->getId();
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
-        $form = $this->getFormService()->prepare($parent, $parent, $data);
+        $data = $this->getRequest()->getPost()->toArray();
+        $form = $this->formService->prepare($parent, $data);
 
         $form->get($parent->get('underscore_entity_name'))->get('contact')->injectContact($parent->getContact());
         $form->get($parent->get('underscore_entity_name'))->get('organisation')
             ->injectOrganisation($parent->getOrganisation());
 
-        if (!$this->getParentService()->parentCanBeDeleted($parent)) {
+        if (!$this->parentService->parentCanBeDeleted($parent)) {
             $form->remove('delete');
         }
 
@@ -232,11 +400,12 @@ class ParentController extends OrganisationAbstractController
                 return $this->redirect()->toRoute('zfcadmin/parent/list');
             }
 
-            if (isset($data['delete']) && $this->getParentService()->parentCanBeDeleted($parent)) {
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-deleted"), $parent));
+            if (isset($data['delete']) && $this->parentService->parentCanBeDeleted($parent)) {
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-deleted'), $parent)
+                );
 
-                $this->getParentService()->removeEntity($parent);
+                $this->parentService->delete($parent);
 
                 return $this->redirect()->toRoute('zfcadmin/parent/list');
             }
@@ -249,146 +418,62 @@ class ParentController extends OrganisationAbstractController
                     $parent->setDateParentTypeUpdate(new \DateTime());
                 }
 
-                $this->flashMessenger()->setNamespace('success')
-                    ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-updated"), $parent));
+                $this->flashMessenger()->addSuccessMessage(
+                    sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-updated'), $parent)
+                );
 
-                $result = $this->getParentService()->updateEntity($parent);
+                $parent = $this->parentService->save($parent);
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
                     [
-                        'id' => $result->getId(),
+                        'id' => $parent->getId(),
                     ]
                 );
             }
         }
 
-        return new ViewModel([
-            'form'   => $form,
-            'parent' => $parent,
-        ]);
-    }
-
-
-    /**
-     * @return array|ViewModel
-     */
-    public function viewAction()
-    {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
-
-        if (is_null($parent)) {
-            return $this->notFoundAction();
-        }
-
-        $year = date("Y");
-
         return new ViewModel(
             [
-                'parent'              => $parent,
-                'organisationService' => $this->getOrganisationService(),
-                'contactService'      => $this->getContactService(),
-                'year'                => $year,
-                'invoiceFactor'       => $this->getParentService()->parseInvoiceFactor($parent, $year),
-                'membershipFactor'    => $this->getParentService()->parseMembershipFactor($parent),
+                'form'   => $form,
+                'parent' => $parent,
             ]
         );
     }
 
-    /**
-     * @return array|\Zend\Http\Response|ViewModel
-     */
-    public function editFinancialAction()
+    public function viewAction()
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
 
-        if (is_null($parent)) {
+        if (null === $parent) {
             return $this->notFoundAction();
         }
 
-        $formData = [
-            'preferredDelivery' => \Organisation\Entity\Financial::EMAIL_DELIVERY,
-            'omitContact'       => \Organisation\Entity\Financial::OMIT_CONTACT,
-        ];
+        $year = (int)date('Y');
 
-        $financialAddress = null;
-
-        $form = new Form\Financial($parent, $this->getGeneralService(), $this->getOrganisationService());
-
-        if (!is_null($parent->getFinancial())) {
-            $branch = $parent->getFinancial()->getBranch();
-            $formData['organisationFinancial'] = $parent->getFinancial()->getOrganisation()->getFinancial()->getId();
-            $formData['attention'] = $parent->getFinancial()->getContact()->getDisplayName();
-            $formData['contact'] = $parent->getFinancial()->getContact()->getId();
-            $form->get('contact')->injectContact($parent->getFinancial()->getContact());
-
-            if (!is_null(
-                $financialAddress = $this->getContactService()->getFinancialAddress(
-                    $parent->getFinancial()
-                        ->getContact()
-                )
-            )
-            ) {
-                $formData['address'] = $financialAddress->getAddress();
-                $formData['zipCode'] = $financialAddress->getZipCode();
-                $formData['city'] = $financialAddress->getCity();
-                $formData['country'] = $financialAddress->getCountry()->getId();
-            }
-        }
-
-        $data = array_merge($formData, $this->getRequest()->getPost()->toArray());
-
-        $form->setData($data);
-
-
+        $form = new Form\CreateParentDoa($this->entityManager);
+        $form->setData($this->getRequest()->getPost()->toArray());
         if ($this->getRequest()->isPost() && $form->isValid()) {
-            $formData = $form->getData();
-
-            /** @var Financial $financialOrganisation */
-            $financialOrganisation = $this->getOrganisationService()
-                ->findEntityById(Financial::class, $formData['organisationFinancial']);
-
-            /**
-             *
-             * Update the parentFinancial
-             */
-            $parentFinancial = $parent->getFinancial();
-            if (is_null($parentFinancial)) {
-                $parentFinancial = new Entity\Parent\Financial();
-                $parentFinancial->setParent($parent);
+            $counter = 0;
+            foreach ((array)$form->getData()['program'] as $programId) {
+                $program = $this->programService->findProgramById((int)$programId);
+                if (null !== $program) {
+                    $doa = new Entity\Parent\Doa();
+                    $doa->setContact($parent->getContact());
+                    $doa->setParent($parent);
+                    $doa->setProgram($program);
+                    $this->parentService->save($doa);
+                    $counter++;
+                }
             }
-            $parentFinancial->setContact($this->getContactService()->findContactById($formData['contact']));
-            $parentFinancial->setOrganisation($financialOrganisation->getOrganisation());
-            $parentFinancial->setBranch($formData['branch']);
-            $this->getParentService()->updateEntity($parentFinancial);
 
-            /*
-             * save the financial address
-             */
-
-            if (is_null(
-                $financialAddress = $this->getContactService()->getFinancialAddress($parentFinancial->getContact())
-            )) {
-                $financialAddress = new Address();
-                $financialAddress->setContact($parent->getFinancial()->getContact());
-                /**
-                 * @var $addressType AddressType
-                 */
-                $addressType = $this->getContactService()
-                    ->findEntityById(AddressType::class, AddressType::ADDRESS_TYPE_FINANCIAL);
-                $financialAddress->setType($addressType);
-            }
-            $financialAddress->setAddress($formData['address']);
-            $financialAddress->setZipCode($formData['zipCode']);
-            $financialAddress->setCity($formData['city']);
-            /**
-             * @var Country $country
-             */
-            $country = $this->getGeneralService()->findEntityById(Country::class, $formData['country']);
-            $financialAddress->setCountry($country);
-            $this->getContactService()->updateEntity($financialAddress);
-            $this->flashMessenger()->setNamespace('success')
-                ->addMessage(sprintf($this->translate("txt-parent-%s-has-successfully-been-updated"), $parent));
+            $this->flashMessenger()->addSuccessMessage(
+                sprintf(
+                    $this->translator->translate('txt-%s-parent-doa-have-been-created-for-%s'),
+                    $counter,
+                    $parent
+                )
+            );
 
             return $this->redirect()->toRoute(
                 'zfcadmin/parent/view',
@@ -396,148 +481,161 @@ class ParentController extends OrganisationAbstractController
                     'id' => $parent->getId(),
                 ],
                 [
-                    'fragment' => 'financial',
+                    'fragment' => 'doa'
                 ]
             );
         }
 
         return new ViewModel(
             [
-                'parent'         => $parent,
-                'parentService'  => $this->getParentService(),
-                'projectService' => $this->getProjectService(),
-                'form'           => $form,
+                'parent'              => $parent,
+                'organisationService' => $this->organisationService,
+                'contactService'      => $this->contactService,
+                'year'                => $year,
+                'form'                => $form,
+                'programs'            => $this->programService->findAll(Program::class),
+                'parentService'       => $this->parentService
             ]
         );
     }
 
-    /**
-     * @return ViewModel
-     */
-    public function overviewVariableContributionAction()
+    public function overviewVariableContributionAction(): ViewModel
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
 
-        if (is_null($parent)) {
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        $program = $this->programService->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
             return $this->notFoundAction();
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
+
+        $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
 
         return new ViewModel(
             [
                 'year'          => $year,
-                'period'        => $period,
                 'parent'        => $parent,
-                'invoiceFactor' => $this->getParentService()->parseInvoiceFactor($parent, $year)
+                'program'       => $program,
+                'invoiceMethod' => $invoiceMethod,
+                'invoiceFactor' => $this->parentService->parseInvoiceFactor($parent, $program)
 
             ]
         );
     }
 
-    /**
-     * @return array|\Zend\Stdlib\ResponseInterface
-     */
-    public function overviewVariableContributionPdfAction()
+    public function overviewVariableContributionPdfAction(): Response
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        /** @var Response $response */
+        $response = $this->getResponse();
 
-        if (is_null($parent)) {
-            return $this->notFoundAction();
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
+
+        if (null === $parent) {
+            return $response->setStatusCode(Response::STATUS_CODE_404);
+        }
+
+        $program = $this->programService->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
+            return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
 
+        $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $program, $year);
 
-        $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $year, $period);
-        $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
             ->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename="' . sprintf(
-                    "overview_variable_contribution_%s_%s_%sH.pdf",
+                'attachment; filename=\'' . sprintf(
+                    'overview_variable_contribution_%s_%s.pdf',
                     $parent->getOrganisation()->getDocRef(),
-                    $year,
-                    $period
-                ) . '"'
+                    $year
+                ) . '\''
             )
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
+            ->addHeaderLine('Content-Length', \strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
 
         return $response;
     }
 
-    /**
-     * @return array|ViewModel
-     */
-    public function overviewExtraVariableContributionAction()
+    public function overviewExtraVariableContributionAction(): ViewModel
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
 
-        if (is_null($parent)) {
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        $program = $this->programService->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
             return $this->notFoundAction();
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
 
         return new ViewModel(
             [
-                'year'   => $year,
-                'period' => $period,
-                'parent' => $parent,
+                'year'    => $year,
+                'parent'  => $parent,
+                'program' => $program
 
             ]
         );
     }
 
-    /**
-     * @return array|\Zend\Stdlib\ResponseInterface
-     */
-    public function overviewExtraVariableContributionPdfAction()
+    public function overviewExtraVariableContributionPdfAction(): Response
     {
-        $parent = $this->getParentService()->findParentById($this->params('id'));
+        /** @var Response $response */
+        $response = $this->getResponse();
 
-        if (is_null($parent)) {
-            return $this->notFoundAction();
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
+
+        if (null === $parent) {
+            return $response->setStatusCode(Response::STATUS_CODE_404);
+        }
+
+        $program = $this->programService->findProgramById((int)$this->params('program'));
+
+        if (null === $program) {
+            return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 
         $year = (int)$this->params('year');
-        $period = (int)$this->params('period');
 
+        $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $program, $year);
 
-        $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $year, $period);
-        $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine("Cache-Control: max-age=36000, must-revalidate")->addHeaderLine("Pragma: public")
+            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
             ->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename="' . sprintf(
-                    "overview_extra_variable_contribution_%s_%s_%sH.pdf",
+                'attachment; filename=\'' . sprintf(
+                    'overview_extra_variable_contribution_%s_%s.pdf',
                     $parent->getOrganisation()->getDocRef(),
-                    $year,
-                    $period
-                ) . '"'
+                    $year
+                ) . '\''
             )
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
+            ->addHeaderLine('Content-Length', \strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
 
         return $response;
     }
 
-    /**
-     * @return ViewModel
-     */
-    public function ImportParentAction()
+    public function importProjectAction(): ViewModel
     {
-        set_time_limit(0);
+        \set_time_limit(0);
 
-        $data = array_merge_recursive(
+        $data = \array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
@@ -550,55 +648,7 @@ class ParentController extends OrganisationAbstractController
         $handleImport = null;
         if ($this->getRequest()->isPost()) {
             if (isset($data['upload']) && $form->isValid()) {
-                $fileData = file_get_contents($data['file']['tmp_name'], FILE_TEXT);
-
-                $importSession->active = true;
-                $importSession->fileData = $fileData;
-
-                $handleImport = $this->handleParentImport(
-                    $fileData,
-                    [],
-                    false
-                );
-            }
-
-            if (isset($data['import'], $data['key']) && $importSession->active) {
-                $handleImport = $this->handleParentImport(
-                    $importSession->fileData,
-                    $data['key'],
-                    true
-                );
-            }
-        }
-
-        return new ViewModel([
-            'form'           => $form,
-            'handleImport'   => $handleImport,
-            'contactService' => $this->getContactService()
-        ]);
-    }
-
-    /**
-     * @return ViewModel
-     */
-    public function ImportProjectAction()
-    {
-        set_time_limit(0);
-
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
-        $form = new Form\Import();
-        $form->setData($data);
-
-        /** store the data in the session, so we can use it when we really handle the import */
-        $importSession = new Container('import');
-
-        $handleImport = null;
-        if ($this->getRequest()->isPost()) {
-            if (isset($data['upload']) && $form->isValid()) {
-                $fileData = file_get_contents($data['file']['tmp_name'], FILE_TEXT);
+                $fileData = file_get_contents($data['file']['tmp_name']);
 
                 $importSession->active = true;
                 $importSession->fileData = $fileData;

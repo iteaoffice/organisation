@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity\Parent;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -65,7 +67,7 @@ class Doa extends AbstractEntity
      */
     private $contentType;
     /**
-     * @ORM\Column(name="size", type="integer", nullable=false)
+     * @ORM\Column(name="size", type="integer", nullable=true)
      *
      * @var integer
      */
@@ -78,7 +80,7 @@ class Doa extends AbstractEntity
      */
     private $dateUpdated;
     /**
-     * @ORM\Column(name="date_created", type="datetime", nullable=true)
+     * @ORM\Column(name="date_created", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
      *
      * @var \DateTime
@@ -112,7 +114,7 @@ class Doa extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="parentDoa", cascade={"persist"})
      * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id")
+     * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
      * })
      *
      * @var \Program\Entity\Program
@@ -165,7 +167,7 @@ class Doa extends AbstractEntity
      */
     public function __toString(): string
     {
-        return sprintf("Partner doa: %s", $this->id);
+        return sprintf('%s DOA', $this->program);
     }
 
 

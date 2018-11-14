@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +22,7 @@ use Zend\Form\Annotation;
  * @ORM\Entity
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_description")
+ * @Annotation\Instance("Organisation\Entity\Description")
  */
 class Description extends AbstractEntity
 {
@@ -27,24 +30,24 @@ class Description extends AbstractEntity
      * @ORM\Column(name="description_id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Exclude()
      *
      * @var integer
      */
     private $id;
     /**
-     * @ORM\Column(name="description", length=65535, type="text", nullable=false)
+     * @ORM\Column(name="description", type="text", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Textarea")
-     * @Annotation\Options({"label":"txt-description","help-block":"txt-organisation-description-help-block"})
-     * @Annotation\Attributes({"rows":12})
+     * @Annotation\Options({"label":"txt-organisation-description-label","help-block":"txt-organisation-description-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-organisation-description-placeholder","rows":10})
      *
      * @var string
      */
     private $description;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="description")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="description", cascade="persist")
+     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false, unique=true)
-     * @Annotation\Exclude()
+     * })
      *
      * @var \Organisation\Entity\Organisation
      */
@@ -61,9 +64,8 @@ class Description extends AbstractEntity
     }
 
     /**
-     * @param string $property
-     * @param mixed $value
-     * @return void
+     * @param $property
+     * @param $value
      */
     public function __set($property, $value)
     {

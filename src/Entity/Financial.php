@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
@@ -22,16 +24,16 @@ use Zend\Form\Annotation;
  */
 class Financial extends AbstractEntity
 {
-    const VAT_STATUS_UNDEFINED = 0;
-    const VAT_STATUS_VALID = 1;
-    const VAT_STATUS_INVALID = 2;
-    const VAT_STATUS_UNCHECKED = 3;
-    const NO_OMIT_CONTACT = 0;
-    const OMIT_CONTACT = 1;
-    const NO_REQUIRED_PURCHASE_ORDER = 0;
-    const REQUIRED_PURCHASE_ORDER = 1;
-    const NO_EMAIL_DELIVERY = 0;
-    const EMAIL_DELIVERY = 1;
+    public const VAT_STATUS_UNDEFINED = 0;
+    public const VAT_STATUS_VALID = 1;
+    public const VAT_STATUS_INVALID = 2;
+    public const VAT_STATUS_UNCHECKED = 3;
+    public const NO_OMIT_CONTACT = 0;
+    public const OMIT_CONTACT = 1;
+    public const NO_REQUIRED_PURCHASE_ORDER = 0;
+    public const REQUIRED_PURCHASE_ORDER = 1;
+    public const NO_EMAIL_DELIVERY = 0;
+    public const EMAIL_DELIVERY = 1;
     /**
      * Textual versions of the vat status.
      *
@@ -183,13 +185,6 @@ class Financial extends AbstractEntity
      */
     private $organisation;
     /**
-     * @ORM\OneToMany(targetEntity="\Invoice\Entity\Financial\Row", cascade={"persist"}, mappedBy="financial")
-     * @Annotation\Exclude()
-     *
-     * @var \Invoice\Entity\Financial\Row[]
-     */
-    private $financialRow;
-    /**
      * @ORM\ManyToMany(targetEntity="General\Entity\VatType", cascade="persist", inversedBy="organisationFinancial")
      * @ORM\JoinTable(name="vat_type_financial",
      *            joinColumns={@ORM\JoinColumn(name="financial_id", referencedColumnName="financial_id")},
@@ -213,12 +208,12 @@ class Financial extends AbstractEntity
      */
     public function __construct()
     {
-        $this->vatStatus             = self::VAT_STATUS_UNCHECKED;
-        $this->omitContact           = self::NO_OMIT_CONTACT;
+        $this->vatStatus = self::VAT_STATUS_UNCHECKED;
+        $this->omitContact = self::NO_OMIT_CONTACT;
         $this->requiredPurchaseOrder = self::NO_REQUIRED_PURCHASE_ORDER;
-        $this->email                 = self::EMAIL_DELIVERY;
-        $this->vatType               = new Collections\ArrayCollection();
-        $this->reminder              = new Collections\ArrayCollection();
+        $this->email = self::EMAIL_DELIVERY;
+        $this->vatType = new Collections\ArrayCollection();
+        $this->reminder = new Collections\ArrayCollection();
     }
 
     /**
@@ -346,7 +341,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getEmail($textual = false)
+    public function getEmail(bool $textual = false)
     {
         if ($textual) {
             return self::$emailTemplates[$this->email];
@@ -361,22 +356,6 @@ class Financial extends AbstractEntity
     public function setEmail($email)
     {
         $this->email = $email;
-    }
-
-    /**
-     * @return \Invoice\Entity\Financial\Row[]
-     */
-    public function getFinancialRow()
-    {
-        return $this->financialRow;
-    }
-
-    /**
-     * @param \Invoice\Entity\Financial\Row[] $financialRow
-     */
-    public function setFinancialRow($financialRow)
-    {
-        $this->financialRow = $financialRow;
     }
 
     /**
@@ -416,7 +395,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getOmitContact($textual = false)
+    public function getOmitContact(bool $textual = false)
     {
         if ($textual) {
             return self::$omitContactTemplates[$this->omitContact];
@@ -454,7 +433,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getRequiredPurchaseOrder($textual = false)
+    public function getRequiredPurchaseOrder(bool $textual = false)
     {
         if ($textual) {
             return self::$requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder];
@@ -508,7 +487,7 @@ class Financial extends AbstractEntity
      *
      * @return int|string
      */
-    public function getVatStatus($textual = false)
+    public function getVatStatus(bool $textual = false)
     {
         if ($textual) {
             return self::$vatStatusTemplates[$this->vatStatus];

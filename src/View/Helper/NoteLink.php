@@ -11,8 +11,10 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
@@ -32,20 +34,24 @@ class NoteLink extends AbstractLink
     private $note;
 
     /**
-     * @param Note|null         $note
+     * @param Note|null $note
      * @param Organisation|null $organisation
-     * @param string            $action
-     * @param string            $show
+     * @param string $action
+     * @param string $show
      * @return string
      */
-    public function __invoke(Note $note = null, Organisation $organisation = null, $action = 'edit', $show = 'icon')
-    {
+    public function __invoke(
+        Note $note = null,
+        Organisation $organisation = null,
+        $action = 'edit',
+        $show = 'icon'
+    ): string {
         $this->setNote($note);
         $this->setOrganisation($organisation);
         $this->setAction($action);
         $this->setShow($show);
 
-        if (! $this->hasAccess($this->getNote(), NoteAssertion::class, $this->getAction())) {
+        if (!$this->hasAccess($this->getNote(), NoteAssertion::class, $this->getAction())) {
             return '';
         }
 
@@ -57,35 +63,14 @@ class NoteLink extends AbstractLink
     }
 
     /**
-     * Parse the action.
-     */
-    public function parseAction()
-    {
-        switch ($this->getAction()) {
-            case 'new':
-                $this->setRouter('zfcadmin/organisation/note/new');
-                $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
-                $this->setText($this->translate('txt-new-note'));
-                break;
-            case 'edit':
-                $this->setRouter('zfcadmin/organisation/note/edit');
-                $this->setText($this->translate('txt-edit-note'));
-                break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf('%s is an incorrect action for %s', $this->getAction(), __CLASS__)
-                );
-        }
-    }
-
-    /**
      * @return Note
      */
     public function getNote(): Note
     {
-        if (is_null($this->note)) {
+        if (\is_null($this->note)) {
             $this->note = new Note();
         }
+
         return $this->note;
     }
 
@@ -96,6 +81,29 @@ class NoteLink extends AbstractLink
     public function setNote(Note $note = null): NoteLink
     {
         $this->note = $note;
+
         return $this;
+    }
+
+    /**
+     * Parse the action.
+     */
+    public function parseAction(): void
+    {
+        switch ($this->getAction()) {
+            case 'new':
+                $this->setRouter('zfcadmin/organisation/note/new');
+                $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
+                $this->setText($this->translator->translate('txt-new-note'));
+                break;
+            case 'edit':
+                $this->setRouter('zfcadmin/organisation/note/edit');
+                $this->setText($this->translator->translate('txt-edit-note'));
+                break;
+            default:
+                throw new \InvalidArgumentException(
+                    sprintf('%s is an incorrect action for %s', $this->getAction(), __CLASS__)
+                );
+        }
     }
 }

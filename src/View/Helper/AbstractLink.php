@@ -9,14 +9,18 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
 use BjyAuthorize\Controller\Plugin\IsAllowed;
 use BjyAuthorize\Service\Authorize;
+use Organisation\Acl\Assertion\AbstractAssertion;
 use Organisation\Acl\Assertion\AssertionAbstract;
 use Organisation\Entity;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Service\OrganisationService;
+use Program\Entity\Program;
 use Zend\View\Helper\ServerUrl;
 use Zend\View\Helper\Url;
 
@@ -74,6 +78,10 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $parent;
     /**
+     * @var Entity\Parent\Financial
+     */
+    protected $financial;
+    /**
      * @var Entity\Parent\Organisation
      */
     protected $parentOrganisation;
@@ -82,13 +90,13 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $parentType;
     /**
-     * @var Entity\Parent\Status
-     */
-    protected $parentStatus;
-    /**
      * @var Entity\Parent\Doa
      */
     protected $doa;
+    /**
+     * @var Program
+     */
+    protected $program;
     /**
      * @var int
      */
@@ -98,22 +106,11 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     protected $period;
 
-
-    /**
-     * This function produces the link in the end.
-     *
-     * @return string
-     */
-    public function createLink()
+    public function createLink(): string
     {
-        /**
-         * @var $url Url
-         */
-        $url = $this->getHelperPluginManager()->get('url');
-        /**
-         * @var $serverUrl ServerUrl
-         */
-        $serverUrl = $this->getHelperPluginManager()->get('serverUrl');
+        $url = $this->getHelperPluginManager()->get(Url::class);
+        $serverUrl = $this->getHelperPluginManager()->get(ServerUrl::class);
+
         $this->linkContent = [];
         $this->classes = [];
         $this->parseAction();
@@ -126,17 +123,14 @@ abstract class AbstractLink extends AbstractViewHelper
         return sprintf(
             $uri,
             $serverUrl() . $url($this->router, $this->routerParams),
-            htmlentities($this->text),
+            htmlentities((string)$this->text),
             implode(' ', $this->classes),
-            in_array($this->getShow(), ['icon', 'button', 'alternativeShow'], true) ? implode('', $this->linkContent)
+            \in_array($this->getShow(), ['icon', 'button', 'alternativeShow'], true) ? implode('', $this->linkContent)
                 : htmlentities(implode('', $this->linkContent))
         );
     }
 
-    /**
-     *
-     */
-    public function parseAction()
+    public function parseAction(): void
     {
         $this->action = null;
     }
@@ -144,12 +138,26 @@ abstract class AbstractLink extends AbstractViewHelper
     /**
      * @throws \Exception
      */
-    public function parseShow()
+    public function parseShow(): void
     {
         switch ($this->getShow()) {
             case 'icon':
             case 'button':
                 switch ($this->getAction()) {
+                    case 'new':
+                    case 'add-affiliation':
+                        $this->addLinkContent('<i class="fa fa-plus"></i>');
+                        break;
+                    case 'upload':
+                    case 'import-project':
+                        $this->addLinkContent('<i class="fa fa-cloud-upload" aria-hidden="true"></i>');
+                        break;
+                    case 'merge':
+                        $this->addLinkContent('<i class="fa fa-compress" aria-hidden="true"></i>');
+                        break;
+                    case 'download':
+                        $this->addLinkContent('<i class="fa fa-download" aria-hidden="true"></i>');
+                        break;
                     case 'edit':
                     case 'edit-financial':
                         $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
@@ -165,7 +173,7 @@ abstract class AbstractLink extends AbstractViewHelper
 
                 if ($this->getShow() === 'button') {
                     $this->addLinkContent(' ' . $this->getText());
-                    $this->addClasses("btn btn-primary");
+                    $this->addClasses('btn btn-primary');
                 }
 
                 break;
@@ -173,10 +181,8 @@ abstract class AbstractLink extends AbstractViewHelper
                 $this->addLinkContent($this->getText());
                 break;
             case 'paginator':
-                if (is_null($this->getAlternativeShow())) {
-                    throw new \InvalidArgumentException(
-                        sprintf("alternativeShow cannot be null for a paginator link")
-                    );
+                if (null === $this->getAlternativeShow()) {
+                    throw new \InvalidArgumentException('alternativeShow cannot be null for a paginator link');
                 }
                 $this->addLinkContent($this->getAlternativeShow());
                 break;
@@ -240,28 +246,8 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function addLinkContent($linkContent)
     {
-        if (!is_array($linkContent)) {
-            $linkContent = [$linkContent];
-        }
-        foreach ($linkContent as $content) {
-            $this->linkContent[] = $content;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param $classes
-     *
-     * @return $this
-     */
-    public function addClasses($classes)
-    {
-        if (!is_array($classes)) {
-            $classes = (array)$classes;
-        }
-        foreach ($classes as $class) {
-            $this->classes[] = $class;
+        foreach ((array)$linkContent as $content) {
+            $this->linkContent[] = (string)$content;
         }
 
         return $this;
@@ -281,6 +267,20 @@ abstract class AbstractLink extends AbstractViewHelper
     public function setText($text)
     {
         $this->text = $text;
+    }
+
+    /**
+     * @param $classes
+     *
+     * @return $this
+     */
+    public function addClasses($classes)
+    {
+        foreach ((array)$classes as $class) {
+            $this->classes[] = $class;
+        }
+
+        return $this;
     }
 
     /**
@@ -315,17 +315,10 @@ abstract class AbstractLink extends AbstractViewHelper
         $this->showOptions = $showOptions;
     }
 
-    /**
-     * @param AbstractEntity $entity
-     * @param string $assertion
-     * @param string $action
-     *
-     * @return bool
-     */
-    public function hasAccess(AbstractEntity $entity, $assertion, $action)
+    public function hasAccess(AbstractEntity $entity, $assertion, $action): bool
     {
         $assertion = $this->getAssertion($assertion);
-        if (!is_null($entity) && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
+        if (null !== $entity && !$this->getAuthorizeService()->getAcl()->hasResource($entity)) {
             $this->getAuthorizeService()->getAcl()->addResource($entity);
             $this->getAuthorizeService()->getAcl()->allow([], $entity, [], $assertion);
         }
@@ -336,12 +329,7 @@ abstract class AbstractLink extends AbstractViewHelper
         return true;
     }
 
-    /**
-     * @param string $assertion
-     *
-     * @return AssertionAbstract
-     */
-    public function getAssertion($assertion)
+    public function getAssertion($assertion): AbstractAssertion
     {
         return $this->getServiceManager()->get($assertion);
     }
@@ -354,13 +342,7 @@ abstract class AbstractLink extends AbstractViewHelper
         return $this->getServiceManager()->get(Authorize::class);
     }
 
-    /**
-     * @param null|AbstractEntity $resource
-     * @param string $privilege
-     *
-     * @return bool
-     */
-    public function isAllowed($resource, $privilege = null)
+    public function isAllowed($resource, $privilege = null): bool
     {
         /**
          * @var $isAllowed IsAllowed
@@ -370,10 +352,7 @@ abstract class AbstractLink extends AbstractViewHelper
         return $isAllowed($resource, $privilege);
     }
 
-    /**
-     * @return OrganisationService
-     */
-    public function getOrganisationService()
+    public function getOrganisationService(): OrganisationService
     {
         return $this->getServiceManager()->get(OrganisationService::class);
     }
@@ -383,14 +362,14 @@ abstract class AbstractLink extends AbstractViewHelper
      *
      * @param string $key
      * @param        $value
-     * @param bool $allowNull
+     * @param bool   $allowNull
      */
     public function addRouterParam($key, $value, $allowNull = true)
     {
-        if (!$allowNull && is_null($value)) {
+        if (!$allowNull && null === $value) {
             throw new \InvalidArgumentException(sprintf("null is not allowed for %s", $key));
         }
-        if (!is_null($value)) {
+        if (null !== $value) {
             $this->routerParams[$key] = $value;
         }
     }
@@ -424,7 +403,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getOrganisation(): Entity\Organisation
     {
-        if (is_null($this->organisation)) {
+        if (\is_null($this->organisation)) {
             $this->organisation = new Entity\Organisation();
         }
 
@@ -444,11 +423,35 @@ abstract class AbstractLink extends AbstractViewHelper
     }
 
     /**
+     * @return Program
+     */
+    public function getProgram(): Program
+    {
+        if (\is_null($this->program)) {
+            $this->program = new Program();
+        }
+
+        return $this->program;
+    }
+
+    /**
+     * @param Program $program
+     *
+     * @return AbstractLink
+     */
+    public function setProgram($program): AbstractLink
+    {
+        $this->program = $program;
+
+        return $this;
+    }
+
+    /**
      * @return Entity\Type
      */
     public function getType(): Entity\Type
     {
-        if (is_null($this->type)) {
+        if (\is_null($this->type)) {
             $this->type = new Entity\Type();
         }
 
@@ -472,7 +475,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getParent(): Entity\OParent
     {
-        if (is_null($this->parent)) {
+        if (\is_null($this->parent)) {
             $this->parent = new Entity\OParent();
         }
 
@@ -496,7 +499,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getParentType(): Entity\Parent\Type
     {
-        if (is_null($this->parentType)) {
+        if (\is_null($this->parentType)) {
             $this->parentType = new Entity\Parent\Type();
         }
 
@@ -516,35 +519,11 @@ abstract class AbstractLink extends AbstractViewHelper
     }
 
     /**
-     * @return Entity\Parent\Status
-     */
-    public function getParentStatus(): Entity\Parent\Status
-    {
-        if (is_null($this->parentStatus)) {
-            $this->parentStatus = new Entity\Parent\Status();
-        }
-
-        return $this->parentStatus;
-    }
-
-    /**
-     * @param \Organisation\Entity\Parent\Status $parentStatus
-     *
-     * @return AbstractLink
-     */
-    public function setParentStatus(Entity\Parent\Status $parentStatus = null): AbstractLink
-    {
-        $this->parentStatus = $parentStatus;
-
-        return $this;
-    }
-
-    /**
      * @return Entity\Parent\Organisation
      */
     public function getParentOrganisation(): Entity\Parent\Organisation
     {
-        if (is_null($this->parentOrganisation)) {
+        if (\is_null($this->parentOrganisation)) {
             $this->parentOrganisation = new Entity\Parent\Organisation();
         }
 
@@ -568,7 +547,7 @@ abstract class AbstractLink extends AbstractViewHelper
      */
     public function getDoa(): Entity\Parent\Doa
     {
-        if (is_null($this->doa)) {
+        if (\is_null($this->doa)) {
             $this->doa = new Entity\Parent\Doa();
         }
 
@@ -583,6 +562,30 @@ abstract class AbstractLink extends AbstractViewHelper
     public function setDoa(Entity\Parent\Doa $doa = null): AbstractLink
     {
         $this->doa = $doa;
+
+        return $this;
+    }
+
+    /**
+     * @return Entity\Parent\Financial
+     */
+    public function getFinancial(): Entity\Parent\Financial
+    {
+        if (\is_null($this->financial)) {
+            $this->financial = new Entity\Parent\Financial();
+        }
+
+        return $this->financial;
+    }
+
+    /**
+     * @param Entity\Parent\Financial $financial
+     *
+     * @return AbstractLink
+     */
+    public function setFinancial(Entity\Parent\Financial $financial = null): AbstractLink
+    {
+        $this->financial = $financial;
 
         return $this;
     }

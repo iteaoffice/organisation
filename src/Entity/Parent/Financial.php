@@ -11,8 +11,10 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Entity\Parent;
 
@@ -42,7 +44,7 @@ class Financial extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\OParent", inversedBy="financial", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="financial", cascade="persist")
      * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      * })

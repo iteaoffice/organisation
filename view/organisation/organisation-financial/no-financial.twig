@@ -1,7 +1,5 @@
 {% do headTitle().append(translate("txt-organisation-financial-list")) %}
 
-{{ form().closeTag()|raw }}
-
 {% do form.prepare() %}
 
 {{ form().openTag(form)|raw }}
@@ -16,7 +14,7 @@
 
     <div class="col-md-9">
 
-        <h1>{{ translate("txt-organisation-no-financial-list") }}</h1>
+        <h1 class="display-4">{{ translate("txt-organisation-no-financial-list") }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -30,14 +28,14 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed">
+            <table class="table table-hover table-striped table-condensed table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
                     <th>{{ translate("txt-contacts") }}</th>
                     <th>{{ translate("txt-projects") }}</th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
                     <th>{{ translate("txt-actions") }}</th>
                 </tr>
                 </thead>
@@ -67,7 +65,7 @@
             <fieldset>
                 {{ ztbformelement(filter.get('type')) }}
 
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
                 </div>

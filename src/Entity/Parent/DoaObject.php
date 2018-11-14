@@ -11,6 +11,8 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity\Parent;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -128,7 +130,7 @@ class DoaObject extends AbstractEntity
     }
 
     /**
-     * @param resource $object
+     * @param string $object
      *
      * @return DoaObject
      */

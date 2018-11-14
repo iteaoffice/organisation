@@ -1,6 +1,6 @@
-{% do headTitle().append(translate("txt-overview-extra-variable-contribution-for-parent-%s-in-year-%s")|format(parent, year)) %}
+{% do headTitle().append(translate("txt-overview-extra-variable-contribution-for-parent-%s-in-program-%s-in-year-%s")|format(parent, program, year)) %}
 
-<h1>{{ translate("txt-overview-extra-variable-contribution-for-parent-%s-in-year-%s")|format(parent, year) }} {{ parentLink(parent, 'overview-extra-variable-contribution-pdf','icon',null, year,period) }}</h1>
+<h1 class="display-4">{{ translate("txt-overview-extra-variable-contribution-for-parent-%s-in-program-%s-in-year-%s")|format(parent, program, year) }} {{ parentLink(parent, 'overview-extra-variable-contribution-pdf','icon',null, program, year) }}</h1>
 
-{{ overviewExtraVariableContribution(parent,year,period) }}
+{{ overviewExtraVariableContribution(parent, program, year) }}
 

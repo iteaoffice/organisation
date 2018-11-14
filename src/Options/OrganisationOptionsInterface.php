@@ -12,70 +12,26 @@
  * @link       https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Options;
 
 /**
  * Interface OrganisationOptionsInterface
+ *
  * @package Organisation\Options
  */
 interface OrganisationOptionsInterface
 {
-    /**
-     * @return bool
-     */
-    public function getUseOrganisationMap();
+    public function getOverviewVariableContributionTemplate(): string;
 
-    /**
-     * @param $useOrganisationMap
-     *
-     * @return OrganisationOptionsInterface
-     */
-    public function setUseOrganisationMap($useOrganisationMap);
-    /**
-     * @param $countryColor
-     *
-     * @return ModuleOptions
-     */
-    public function setCountryColor($countryColor);
+    public function setOverviewVariableContributionTemplate(
+        string $overviewVariableContributionTemplate
+    ): ModuleOptions;
 
-    /**
-     * @return string
-     */
-    public function getCountryColor();
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @param string $countryColorFaded
-     *
-     * @return ModuleOptions
-     */
-    public function setCountryColorFaded($countryColorFaded);
-    /**
-     * Returns the assigned hex color of the country map.
-     *
-     * @return string
-     */
-    public function getCountryColorFaded();
+    public function getOverviewExtraVariableContributionTemplate(): string;
 
-    /**
-     * @return string
-     */
-    public function getOverviewVariableContributionTemplate();
-
-    /**
-     * @param string $overviewVariableContributionTemplate
-     *
-     * @return ModuleOptions
-     */
-    public function setOverviewVariableContributionTemplate($overviewVariableContributionTemplate);
-    /**
-     * @return string
-     */
-    public function getOverviewExtraVariableContributionTemplate();
-    /**
-     * @param string $overviewExtraVariableContributionTemplate
-     *
-     * @return ModuleOptions
-     */
-    public function setOverviewExtraVariableContributionTemplate($overviewExtraVariableContributionTemplate);
+    public function setOverviewExtraVariableContributionTemplate(
+        string $overviewExtraVariableContributionTemplate
+    ): ModuleOptions;
 }

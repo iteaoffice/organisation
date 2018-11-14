@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-new-parent-type")) %}
 
-<h1>{{ translate("txt-new-parent-type") }}</h1>
+<h1 class="display-4">{{ translate("txt-new-parent-type") }}</h1>
 
 {% do form.prepare() %}
 {% do form.setAttribute('class','form-horizontal') %}
@@ -14,8 +14,8 @@
 {{ ztbformelement(type.get('type')) }}
 {{ ztbformelement(type.get('description')) }}
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
     </div>

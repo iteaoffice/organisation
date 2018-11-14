@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -20,8 +22,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Web extends AbstractEntity
 {
-    const NOT_MAIN = 0;
-    const MAIN = 1;
+    public const NOT_MAIN = 0;
+    public const MAIN = 1;
+
+    protected static $mainTemplates
+        = [
+            self::NOT_MAIN => 'txt-not-main-web-address',
+            self::MAIN     => 'txt-main-web-address',
+        ];
+
     /**
      * @ORM\Column(name="web_id", type="integer", nullable=false)
      * @ORM\Id
@@ -44,53 +53,40 @@ class Web extends AbstractEntity
     private $main;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation", cascade={"persist"}, inversedBy="web")
-     * @ORM\JoinColumns({
-     *  @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=true)
-     * })
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=true)
      *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return sprintf($this->web);
     }
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * Magic Setter.
-     *
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
+    }
+
+    public function isMain(): bool
+    {
+        return $this->main === self::MAIN;
+    }
+
+    public static function getMainTemplates(): array
+    {
+        return self::$mainTemplates;
     }
 
     /**

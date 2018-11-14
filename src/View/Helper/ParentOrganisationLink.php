@@ -11,8 +11,10 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
@@ -26,13 +28,6 @@ use Organisation\Entity\Parent\Organisation;
  */
 class ParentOrganisationLink extends AbstractLink
 {
-    /**
-     * @param Organisation|null $organisation
-     * @param string $action
-     * @param string $show
-     *
-     * @return string
-     */
     public function __invoke(
         Organisation $organisation = null,
         $action = 'view',
@@ -50,9 +45,12 @@ class ParentOrganisationLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'organisation'  => $this->getParentOrganisation()->getOrganisation(),
-                'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent()->getType()->getType() : '',
-                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()->getParent()->getStatus()->getStatus() : '',
+                'organisation'  => (string)$this->getParentOrganisation()->getOrganisation(),
+                'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()
+                    ->getParent()->getType()->getType() : '',
+                'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translator->translate(
+                    $this->getParentOrganisation()->getParent()->getMemberType(true)
+                ) : '',
             ]
         );
 
@@ -62,24 +60,28 @@ class ParentOrganisationLink extends AbstractLink
     /**
      * Parse the action.
      */
-    public function parseAction()
+    public function parseAction(): void
     {
         switch ($this->getAction()) {
             case 'add-affiliation':
                 $this->setRouter('zfcadmin/parent/organisation/add-affiliation');
-                $this->setText($this->translate('txt-parent-organisation-add-affiliation'));
+                $this->setText($this->translator->translate('txt-parent-organisation-add-affiliation'));
+                break;
+            case 'merge':
+                $this->setRouter('zfcadmin/parent/organisation/merge');
+                $this->setText($this->translator->translate('txt-merge-parent-organisation'));
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent/organisation/edit');
-                $this->setText(sprintf($this->translate('txt-edit-organisation-%s'), $this->getOrganisation()));
+                $this->setText(sprintf($this->translator->translate('txt-edit-organisation-%s'), $this->getOrganisation()));
                 break;
             case 'list':
                 $this->setRouter('zfcadmin/parent/organisation/list');
-                $this->setText($this->translate('txt-list-organisations'));
+                $this->setText($this->translator->translate('txt-list-organisations'));
                 break;
             case 'view':
                 $this->setRouter('zfcadmin/parent/organisation/view');
-                $this->setText(sprintf($this->translate('txt-view-organisation-%s'), $this->getOrganisation()));
+                $this->setText(sprintf($this->translator->translate('txt-view-organisation-%s'), $this->getOrganisation()));
                 break;
             default:
                 throw new \InvalidArgumentException(

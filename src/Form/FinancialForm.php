@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
@@ -16,15 +18,12 @@ use Organisation\Entity;
 use Zend\Form\Form;
 
 /**
+ * Class FinancialForm
  *
+ * @package Organisation\Form
  */
-class FinancialForm extends Form
+final class FinancialForm extends Form
 {
-    /**
-     * Financial constructor.
-     *
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         $financial = new Entity\Financial();
@@ -40,9 +39,7 @@ class FinancialForm extends Form
 
         $vatTypes = [0 => '-- No enforcement'];
 
-        /**
-         * @var $vatType VatType
-         */
+        /** @var VatType $vatType */
         foreach ($entityManager->getRepository(VatType::class)->findAll() as $vatType) {
             $vatTypes[$vatType->getId()] = $vatType->getType();
         }

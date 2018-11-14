@@ -10,18 +10,22 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Controller\Plugin;
+
+use setasign\Fpdi\TcpdfFpdi;
 
 /**
  * Class PDF.
  */
-class OrganisationPdf extends \FPDI
+final class OrganisationPdf extends TcpdfFpdi
 {
     /**
-     * "Remembers" the template id of the imported page.
+     * 'Remembers' the template id of the imported page.
      */
     protected $_tplIdx;
     /**
@@ -31,42 +35,33 @@ class OrganisationPdf extends \FPDI
      */
     protected $template;
 
-    /**
-     * Draw an imported PDF logo on every page.
-     */
-    public function header()
+    public function header(): void
     {
-        if (is_null($this->_tplIdx)) {
+        if (null === $this->_tplIdx) {
             if (!file_exists($this->template)) {
-                throw new \InvalidArgumentException(sprintf("Template %s cannot be found", $this->template));
+                throw new \InvalidArgumentException(sprintf('Template %s cannot be found', $this->template));
             }
             $this->setSourceFile($this->template);
             $this->_tplIdx = $this->importPage(1);
         }
-        $size = $this->useTemplate($this->_tplIdx, 0, 0);
+
+        $this->useTemplate($this->_tplIdx, 0, 0);
         $this->SetFont('freesans', 'N', 15);
         $this->SetTextColor(0);
         $this->SetXY(PDF_MARGIN_LEFT, 5);
     }
 
-    public function footer()
+    public function footer(): void
     {
         // emtpy method body
     }
 
-    /**
-     * @param $template
-     */
-    public function setTemplate($template)
+    public function setTemplate(string $template): void
     {
         $this->template = $template;
     }
 
-    /**
-     * @param $header
-     * @param $data
-     */
-    public function coloredTable($header, $data, array $width = null, $lastRow = false)
+    public function coloredTable(array $header, array $data, array $width = null, $lastRow = false): void
     {
         // Colors, line width and bold font
         $this->SetDrawColor(205, 205, 205);
@@ -74,7 +69,7 @@ class OrganisationPdf extends \FPDI
         $this->SetLineWidth(0.1);
         $this->SetFont('', 'B');
         // Header
-        if (is_null($width)) {
+        if (null === $width) {
             $w = [40, 35, 40, 45, 40];
         } else {
             $w = $width;
@@ -105,7 +100,7 @@ class OrganisationPdf extends \FPDI
             $counter = 0;
 
             foreach ($row as $column) {
-                if ($lastRow && $rowCounter === (count($data))) {
+                if ($lastRow && $rowCounter === \count($data)) {
                     $this->SetFont('', 'B');
                 }
 

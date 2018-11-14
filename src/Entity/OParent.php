@@ -10,11 +10,14 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use Contact\Entity\Contact;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -31,21 +34,29 @@ use Zend\Form\Annotation;
  */
 class OParent extends AbstractEntity
 {
-    const EPOSS_MEMBER_TYPE_NO_MEMBER = 1;
-    const EPOSS_MEMBER_TYPE_MEMBER = 2;
-    const EPOSS_MEMBER_TYPE_DOA_SIGNER = 3;
+    public const MEMBER_TYPE_NO_MEMBER = 1;
+    public const MEMBER_TYPE_MEMBER = 2;
+    public const MEMBER_TYPE_APPLICANT = 3;
 
-    const ARTEMISIA_MEMBER_TYPE_NO_MEMBER = 1;
-    const ARTEMISIA_MEMBER_TYPE_MEMBER = 2;
-    const ARTEMISIA_MEMBER_TYPE_DOA_SIGNER = 3;
+    public const EPOSS_MEMBER_TYPE_NO_MEMBER = 1;
+    public const EPOSS_MEMBER_TYPE_MEMBER = 2;
+    public const EPOSS_MEMBER_TYPE_DOA_SIGNER = 3;
+
+    public const ARTEMISIA_MEMBER_TYPE_NO_MEMBER = 1;
+    public const ARTEMISIA_MEMBER_TYPE_MEMBER = 2;
+    public const ARTEMISIA_MEMBER_TYPE_DOA_SIGNER = 3;
 
     //Create a set of criteria as dedicated constants as they don't fit in the normal type/status tables
-    const CRITERION_C_CHAMBER = 1;
-    const CRITERION_FREE_RIDER = 2;
+    public const CRITERION_C_CHAMBER = 1;
+    public const CRITERION_FREE_RIDER = 2;
 
-    /**
-     * @var array
-     */
+    protected static $memberTypeTemplates
+        = [
+            self::MEMBER_TYPE_NO_MEMBER => 'txt-no-member',
+            self::MEMBER_TYPE_MEMBER    => 'txt-member',
+            self::MEMBER_TYPE_APPLICANT => 'txt-applicant-member',
+        ];
+
     protected static $epossMemberTypeTemplates
         = [
             self::EPOSS_MEMBER_TYPE_NO_MEMBER  => 'txt-not-eposs-member',
@@ -53,9 +64,6 @@ class OParent extends AbstractEntity
             self::EPOSS_MEMBER_TYPE_DOA_SIGNER => 'txt-eposs-doa-signer',
         ];
 
-    /**
-     * @var array
-     */
     protected static $artemisiaMemberTypeTemplates
         = [
             self::ARTEMISIA_MEMBER_TYPE_NO_MEMBER  => 'txt-not-artemisia-member',
@@ -82,7 +90,7 @@ class OParent extends AbstractEntity
      * @Annotation\Attributes({"label":"txt-parent-contact-label"})
      * @Annotation\Options({"help-block":"txt-parent-contact-help-block"})
      *
-     * @var \Contact\Entity\Contact
+     * @var Contact
      */
     private $contact;
     /**
@@ -110,29 +118,15 @@ class OParent extends AbstractEntity
      */
     private $type;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Parent\Status", inversedBy="parent", cascade={"persist"})
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="status_id", referencedColumnName="status_id", nullable=false)
-     * })
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
-     * @Annotation\Options({
-     *      "help-block":"txt-parent-status-help-block",
-     *      "target_class":"Organisation\Entity\Parent\Status",
-     *      "find_method":{
-     *          "name":"findBy",
-     *          "params": {
-     *              "criteria":{},
-     *              "orderBy":{
-     *                  "status":"ASC"}
-     *              }
-     *          }
-     *      }
-     * )
-     * @Annotation\Attributes({"label":"txt-parent-status-label"})
+     * @ORM\Column(name="member_type", type="smallint", nullable=false)
+     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"memberTypeTemplates"})
+     * @Annotation\Attributes({"label":"txt-member-type"})
+     * @Annotation\Options({"help-block":"txt-member-type-help-block"})
      *
-     * @var \Organisation\Entity\Parent\Status
+     * @var int
      */
-    private $status;
+    private $memberType;
     /**
      * @ORM\Column(name="eposs_member_type", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -154,15 +148,16 @@ class OParent extends AbstractEntity
      */
     private $artemisiaMemberType;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Parent\Financial", cascade={"persist","remove"}, mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Financial", cascade={"persist","remove"}, mappedBy="parent")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\Financial
+     * @var \Organisation\Entity\Parent\Financial[]|Collections\ArrayCollection
      */
     private $financial;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="parent", cascade={"persist"})
      * @ORM\JoinColumns({
+     *
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      * })
      * @Annotation\Type("Organisation\Form\Element\Organisation")
@@ -221,6 +216,13 @@ class OParent extends AbstractEntity
      */
     private $invoice;
     /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\InvoiceExtra", cascade={"persist"}, mappedBy="parent")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Parent\InvoiceExtra[]|Collections\ArrayCollection()
+     */
+    private $invoiceExtra;
+    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Doa", cascade={"persist"}, mappedBy="parent")
      * @Annotation\Exclude()
      *
@@ -228,17 +230,27 @@ class OParent extends AbstractEntity
      */
     private $doa;
 
-
     /**
      * Class constructor.
      */
     public function __construct()
     {
         $this->invoice = new Collections\ArrayCollection();
+        $this->financial = new Collections\ArrayCollection();
+        $this->invoiceExtra = new Collections\ArrayCollection();
         $this->parentOrganisation = new Collections\ArrayCollection();
         $this->doa = new Collections\ArrayCollection();
+        $this->memberType = self::MEMBER_TYPE_NO_MEMBER;
         $this->epossMemberType = self::EPOSS_MEMBER_TYPE_NO_MEMBER;
         $this->artemisiaMemberType = self::ARTEMISIA_MEMBER_TYPE_NO_MEMBER;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getMemberTypeTemplates(): array
+    {
+        return self::$memberTypeTemplates;
     }
 
     /**
@@ -297,7 +309,15 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return int
+     * @return bool
+     */
+    public function isMember(): bool
+    {
+        return $this->memberType === self::MEMBER_TYPE_MEMBER;
+    }
+
+    /**
+     * @return int|string|null
      */
     public function getId()
     {
@@ -317,19 +337,19 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return \Contact\Entity\Contact
+     * @return Contact|null
      */
-    public function getContact()
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }
 
     /**
-     * @param \Contact\Entity\Contact $contact
+     * @param Contact $contact
      *
      * @return OParent
      */
-    public function setContact(\Contact\Entity\Contact $contact): OParent
+    public function setContact($contact): OParent
     {
         $this->contact = $contact;
 
@@ -339,7 +359,7 @@ class OParent extends AbstractEntity
     /**
      * @return Parent\Type
      */
-    public function getType()
+    public function getType(): ?parent\Type
     {
         return $this->type;
     }
@@ -349,29 +369,9 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setType(Parent\Type $type): OParent
+    public function setType($type): OParent
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return Parent\Status
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param Parent\Status $status
-     *
-     * @return OParent
-     */
-    public function setStatus(Parent\Status $status): OParent
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -381,7 +381,33 @@ class OParent extends AbstractEntity
      *
      * @return int|string
      */
-    public function getEpossMemberType($textual = false)
+    public function getMemberType(bool $textual = false)
+    {
+        if ($textual) {
+            return self::$memberTypeTemplates[$this->memberType];
+        }
+
+        return $this->memberType;
+    }
+
+    /**
+     * @param int $memberType
+     *
+     * @return OParent
+     */
+    public function setMemberType($memberType): OParent
+    {
+        $this->memberType = $memberType;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $textual
+     *
+     * @return int|string
+     */
+    public function getEpossMemberType(bool $textual = false)
     {
         if ($textual) {
             return self::$epossMemberTypeTemplates[$this->epossMemberType];
@@ -395,7 +421,7 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setEpossMemberType(int $epossMemberType): OParent
+    public function setEpossMemberType($epossMemberType): OParent
     {
         $this->epossMemberType = $epossMemberType;
 
@@ -407,7 +433,7 @@ class OParent extends AbstractEntity
      *
      * @return int|string
      */
-    public function getArtemisiaMemberType($textual = false)
+    public function getArtemisiaMemberType(bool $textual = false)
     {
         if ($textual) {
             return self::$artemisiaMemberTypeTemplates[$this->artemisiaMemberType];
@@ -421,7 +447,7 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setArtemisiaMemberType(int $artemisiaMemberType): OParent
+    public function setArtemisiaMemberType($artemisiaMemberType): OParent
     {
         $this->artemisiaMemberType = $artemisiaMemberType;
 
@@ -429,19 +455,14 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return Financial
+     * @return Collections\ArrayCollection|Financial[]
      */
     public function getFinancial()
     {
         return $this->financial;
     }
 
-    /**
-     * @param Financial $financial
-     *
-     * @return OParent
-     */
-    public function setFinancial(Financial $financial): OParent
+    public function setFinancial($financial): OParent
     {
         $this->financial = $financial;
 
@@ -451,7 +472,7 @@ class OParent extends AbstractEntity
     /**
      * @return Organisation
      */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
@@ -481,7 +502,7 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setParentOrganisation($parentOrganisation)
+    public function setParentOrganisation($parentOrganisation): OParent
     {
         $this->parentOrganisation = $parentOrganisation;
 
@@ -489,9 +510,9 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getDateCreated()
+    public function getDateCreated(): ?\DateTime
     {
         return $this->dateCreated;
     }
@@ -509,9 +530,9 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return \DateTime|null
      */
-    public function getDateParentTypeUpdate()
+    public function getDateParentTypeUpdate(): ?\DateTime
     {
         return $this->dateParentTypeUpdate;
     }
@@ -529,9 +550,9 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getDateUpdated()
+    public function getDateUpdated(): ?\DateTime
     {
         return $this->dateUpdated;
     }
@@ -549,9 +570,9 @@ class OParent extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return \DateTime|null
      */
-    public function getDateEnd()
+    public function getDateEnd(): ?\DateTime
     {
         return $this->dateEnd;
     }
@@ -581,9 +602,29 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setInvoice($invoice)
+    public function setInvoice($invoice): OParent
     {
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collections\ArrayCollection|Parent\InvoiceExtra[]
+     */
+    public function getInvoiceExtra()
+    {
+        return $this->invoiceExtra;
+    }
+
+    /**
+     * @param Collections\ArrayCollection|Parent\InvoiceExtra[] $invoiceExtra
+     *
+     * @return OParent
+     */
+    public function setInvoiceExtra($invoiceExtra): OParent
+    {
+        $this->invoiceExtra = $invoiceExtra;
 
         return $this;
     }
@@ -601,7 +642,7 @@ class OParent extends AbstractEntity
      *
      * @return OParent
      */
-    public function setDoa($doa)
+    public function setDoa($doa): OParent
     {
         $this->doa = $doa;
 

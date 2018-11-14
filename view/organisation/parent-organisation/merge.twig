@@ -1,0 +1,72 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-merge-organiation-%s-in-%s")|format(organisation, organisation.parent)) %}
+
+<h1 class="display-4">{{ translate("txt-merge-organiation-%s-in-%s")|format(organisation, organisation.parent) }}</h1>
+
+<h2>{{ translate("txt-parent-information") }}</h2>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-parent-name") }}</dt>
+    <dd>{{ parentLink(organisation.parent,'view','parent') }}</dd>
+    <dt>{{ translate("txt-parent-type") }}</dt>
+    <dd>{{ translate(organisation.parent.getMemberType(true)) }}</dd>
+    <dt>{{ translate("txt-parent-status") }}</dt>
+    <dd>{{ parentStatusLink(organisation.parent.status,'view','status') }}</dd>
+    <dt>{{ translate("txt-organisation") }}</dt>
+    <dd>{{ organisationLink(organisation.organisation,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-representative") }}</dt>
+    <dd>{{ contactLink(organisation.contact,'view-admin','name') }}</dd>
+</dl>
+
+<h2>{{ translate("txt-select-parent-organisation") }}</h2>
+
+
+<form method="post" action="">
+    <table class="table table-hover table-striped table-condensed table-sm">
+        <thead>
+        <tr>
+            <th colspan="2">{{ translate("txt-parent-organisation") }}</th>
+            <th>{{ translate("txt-country") }}</th>
+            <th>{{ translate("txt-type") }}</th>
+            <th>{{ translate("txt-representative") }}</th>
+            <th>{{ translate("txt-projects") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="success">
+            <td>
+                {% if merge %}
+                    {{ translate("txt-main") }}:
+                {% endif %}
+            </td>
+            <td>{{ parentOrganisationLink(organisation,'view','organisation') }} {{ parentOrganisationLink(organisation,'edit','icon') }}</td>
+            <td>{{ countryLink(organisation.organisation.country,'view-admin', 'name') }}</td>
+            <td>{{ organisationTypeLink(organisation.organisation.type,'view', 'type') }}</td>
+            <td>{{ contactLink(organisation.contact,'view-admin','name') }}</td>
+            <td>{{ organisation.affiliation.count() }}</td>
+        </tr>
+        {% for otherOrganisation in organisation.parent.parentOrganisation if organisation.id != otherOrganisation.id %}
+            <tr  {% if otherOrganisation == affiliation.id %}class="info"{% endif %}>
+                <td>
+                    {% if merge != otherOrganisation.id %}
+                        <input type="radio" name="merge" value="{{ otherOrganisation.id }}">
+                    {% else %}
+                        <input type="hidden" name="merge" value="{{ otherOrganisation.id }}">
+                        {{ translate("txt-sub") }}:
+                    {% endif %}
+                </td>
+                <td>{{ parentOrganisationLink(otherOrganisation,'merge','organisation') }} {{ parentOrganisationLink(otherOrganisation, 'view','icon') }} {{ parentOrganisationLink(organisation,'edit','icon') }}</td>
+                <td>{{ countryLink(otherOrganisation.organisation.country,'view-admin', 'name') }}</td>
+                <td>{{ organisationTypeLink(otherOrganisation.organisation.type,'view', 'type') }}</td>
+                <td>{{ contactLink(otherOrganisation.contact,'view-admin','name') }}</td>
+                <td>{{ otherOrganisation.affiliation.count() }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <input type="submit" name="select" class="btn btn-info" value="{{ translate("txt-select") }}">
+    {% if merge %}
+        <input type="submit" name="submit" class="btn btn-primary " value="{{ translate("txt-merge") }}">
+    {% endif %}
+</form>

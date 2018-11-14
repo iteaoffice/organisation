@@ -11,11 +11,15 @@
     {% if financial %}
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-vat-number") }}</dt>
-            <dd>{{ financial.vat }}
-                (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
-                    - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
-                <i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i>
-            </dd>
+            {% if financial.vat %}
+                <dd>{{ financial.vat }}
+                    (<span id="vatStatus">{{ translate(financial.vatStatus(true)) }}
+                        - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
+                    <i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i>
+                </dd>
+            {% else %}
+                <dd>{{ translate("txt-no-VAT-number-known") }}</dd>
+            {% endif %}
             <dt>{{ translate("txt-vat-type") }}</dt>
             {% for vatType in financial.vatType %}
                 <dd>{{ vatType.type }}</dd>
@@ -29,11 +33,11 @@
             <dt>{{ translate("txt-require-purchace-order") }}</dt>
             <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
             <dt>{{ translate("txt-iban") }}</dt>
-            <dd>{{ financial.iban }}</dd>
+            <dd>{{ financial.iban|default(translate("txt-not-provided")) }}</dd>
             <dt>{{ translate("txt-bic") }}</dt>
-            <dd>{{ financial.bic }}</dd>
+            <dd>{{ financial.bic|default(translate("txt-not-provided")) }}</dd>
             <dt>{{ translate("txt-supplier-number") }}</dt>
-            <dd>{{ financial.supplierNumber }}</dd>
+            <dd>{{ financial.supplierNumber|default(translate("txt-not-provided")) }}</dd>
             <dt>{{ translate("txt-amount-of-invoices") }}</dt>
             <dd>
                 <a href="{{ url('zfcadmin/organisation/view',{'id': organisation.id}) }}#invoices">{{ organisation.invoice.count() }}</a>

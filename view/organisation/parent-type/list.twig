@@ -16,7 +16,7 @@
 
     <div class="col-md-9">
 
-        <h1>{{ translate("txt-parent-type-list") }} {{ parentTypeLink(null,'new', 'button') }}</h1>
+        <h1 class="display-4">{{ translate("txt-parent-type-list") }} {{ parentTypeLink(null,'new', 'button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -30,7 +30,7 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed">
+            <table class="table table-hover table-striped table-condensed table-sm">
                 <thead>
                 <tr>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent-type/view', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
@@ -59,7 +59,7 @@
     <div class="col-md-3">
         <div class="well well-sm">
             <fieldset>
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
                 </div>

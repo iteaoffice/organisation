@@ -23,7 +23,7 @@ return [
                         'order' => 10,
                         'route' => 'zfcadmin/organisation/list',
                         'pages' => [
-                            'organisation' => [
+                            'organisation'     => [
                                 'label'   => _("txt-nav-project-partner"),
                                 'route'   => 'zfcadmin/organisation/view',
                                 'visible' => false,
@@ -39,6 +39,16 @@ return [
                                     'edit'            => [
                                         'label'   => _('txt-nav-edit'),
                                         'route'   => 'zfcadmin/organisation/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => \Organisation\Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'manage-web'            => [
+                                        'label'   => _('txt-nav-manage-web'),
+                                        'route'   => 'zfcadmin/organisation/manage-web',
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
@@ -66,12 +76,12 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'add-note' => [
+                                    'add-note'        => [
                                         'label'   => _('txt-nav-add-note'),
                                         'route'   => 'zfcadmin/organisation/note/new',
                                         'visible' => false,
                                         'params'  => [
-                                            'entities' => [
+                                            'entities'   => [
                                                 'id' => \Organisation\Entity\Organisation::class,
                                             ],
                                             'routeParam' => [
@@ -79,7 +89,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'edit-note' => [
+                                    'edit-note'       => [
                                         'label'   => _('txt-nav-edit-note'),
                                         'route'   => 'zfcadmin/organisation/note/edit',
                                         'visible' => false,
@@ -89,12 +99,12 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'merge' => [
+                                    'merge'           => [
                                         'label'   => _('txt-nav-merge'),
                                         'route'   => 'zfcadmin/organisation/merge',
                                         'visible' => false,
                                         'params'  => [
-                                            'entities' => [
+                                            'entities'   => [
                                                 'id' => \Organisation\Entity\Organisation::class,
                                             ],
                                             'routeParam' => [
@@ -111,19 +121,9 @@ return [
                             ],
                         ],
                     ],
-                    'financial-organisation-list' => [
-                        'label' => _("txt-nav-financial-organisation-list"),
-                        'order' => 20,
-                        'route' => 'zfcadmin/organisation/financial/list',
-                    ],
-                    'financial-check'             => [
-                        'label' => _("txt-nav-financial-check"),
-                        'order' => 30,
-                        'route' => 'zfcadmin/organisation/financial/no-financial',
-                    ],
                     'parent-list'                 => [
                         'label' => _("txt-nav-parent-list"),
-                        'order' => 50,
+                        'order' => 20,
                         'route' => 'zfcadmin/parent/list',
                         'pages' => [
                             'parent-view'    => [
@@ -148,14 +148,30 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'parent-edit-financial'                => [
-                                        'label'   => _("txt-edit-financial-parent"),
-                                        'route'   => 'zfcadmin/parent/edit-financial',
+                                    'edit-parent-financial'                => [
+                                        'label'   => _("txt-edit-parent-financial"),
+                                        'route'   => 'zfcadmin/parent/financial/edit',
                                         'visible' => false,
                                         'params'  => [
-                                            'entities' => [
+                                            'entities'   => [
+                                                'id' => Organisation\Entity\Parent\Financial::class,
+                                            ],
+                                            'invokables' => [
+                                                Organisation\Navigation\Invokable\Parent\FinancialLabel::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'new-parent-financial'                 => [
+                                        'label'   => _("txt-new-parent-financial"),
+                                        'route'   => 'zfcadmin/parent/financial/new',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities'   => [
                                                 'id' => Organisation\Entity\OParent::class,
                                             ],
+                                            'routeParam' => [
+                                                'id' => 'parentId'
+                                            ]
                                         ],
                                     ],
                                     'parent-add-organisation'              => [
@@ -196,7 +212,7 @@ return [
                                                 'id' => Organisation\Entity\Parent\Organisation::class,
                                             ],
                                             'invokables' => [
-                                                Organisation\Navigation\Invokable\OrganisationLabel::class,
+                                                Organisation\Navigation\Invokable\Parent\OrganisationLabel::class,
                                             ],
                                         ],
                                         'pages'   => [
@@ -213,6 +229,16 @@ return [
                                             'add-affiliation'   => [
                                                 'label'   => _("txt-add-affiliation"),
                                                 'route'   => 'zfcadmin/parent/organisation/add-affiliation',
+                                                'visible' => false,
+                                                'params'  => [
+                                                    'entities' => [
+                                                        'id' => Organisation\Entity\Parent\Organisation::class,
+                                                    ],
+                                                ],
+                                            ],
+                                            'merge'   => [
+                                                'label'   => _("txt-merge"),
+                                                'route'   => 'zfcadmin/parent/organisation/merge',
                                                 'visible' => false,
                                                 'params'  => [
                                                     'entities' => [
@@ -255,20 +281,21 @@ return [
                                 'label' => _("txt-create-new-parent"),
                                 'route' => 'zfcadmin/parent/new',
                             ],
-                            'import-parent'  => [
-                                'label' => _("txt-import-parents"),
-                                'route' => 'zfcadmin/parent/import/parent',
-                            ],
                             'import-project' => [
                                 'label' => _("txt-import-project"),
                                 'route' => 'zfcadmin/parent/import/project',
                             ],
                         ],
                     ],
+                    'financial-organisation-list' => [
+                        'label' => _("txt-nav-financial-organisation-list"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/financial/list',
+                    ],
 
                 ],
             ],
-            'management'   => [
+            'config'       => [
                 'pages' => [
                     'organisation-type-list' => [
                         'label' => _("txt-organisation-type-list"),
@@ -298,7 +325,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'organisation-type-new' => [
+                            'organisation-type-new'  => [
                                 'label' => _("txt-create-new-organisation-type"),
                                 'route' => 'zfcadmin/organisation-type/new',
                             ],
@@ -372,8 +399,32 @@ return [
                             ],
                         ],
                     ],
-                ],
+                ]
             ],
+            'tools'        => [
+                'pages' => [
+                    'list-duplicate-organisations' => [
+                        'label' => _("txt-nav-list-duplicate-organisations"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/list-duplicate',
+                    ],
+                    'financial-check'              => [
+                        'label' => _("txt-nav-financial-check"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/financial/no-financial',
+                    ],
+                    'parent-financial-check'       => [
+                        'label' => _("txt-nav-parent-financial-check"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/parent/financial/no-financial',
+                    ],
+                    'parent-list-no-member'        => [
+                        'label' => _("txt-nav-parent-list-no-member-no-doa"),
+                        'order' => 30,
+                        'route' => 'zfcadmin/parent/list-no-member',
+                    ],
+                ]
+            ]
         ],
     ],
 ];

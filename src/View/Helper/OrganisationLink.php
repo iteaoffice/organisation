@@ -9,9 +9,13 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\View\Helper;
 
+use Content\Entity\Route;
 use Organisation\Entity\Organisation;
+use Organisation\Service\OrganisationService;
 
 /**
  * Create a link to an organisation.
@@ -27,19 +31,6 @@ class OrganisationLink extends AbstractLink
      */
     protected $branch;
 
-    /**
-     * @param Organisation $organisation
-     * @param string $action
-     * @param string $show
-     * @param null $branch
-     * @param null $page
-     * @param null $alternativeShow
-     *
-     * @return string
-     *
-     * @throws \RuntimeException
-     * @throws \Exception
-     */
     public function __invoke(
         Organisation $organisation = null,
         $action = 'view',
@@ -56,25 +47,23 @@ class OrganisationLink extends AbstractLink
          * If the alternativeShow is not null, use it an otherwise take the page
          */
         $this->setAlternativeShow($alternativeShow);
-        if (!is_null($organisation)) {
+        if (null !== $organisation) {
             /*
              * Set the non-standard options needed to give an other link value
              */
             $this->setShowOptions(
                 [
-                    'more'             => $this->translate("txt-read-more"),
-                    'name'             => $this->getOrganisationService()
-                        ->parseOrganisationWithBranch(
+                    'more'             => $this->translator->translate("txt-read-more"),
+                    'name'             => OrganisationService::parseBranch(
+                        $this->getBranch(),
+                        $this->getOrganisation()
+                    ),
+                    'name-and-country' => sprintf(
+                        '%s (%s)',
+                        OrganisationService::parseBranch(
                             $this->getBranch(),
                             $this->getOrganisation()
                         ),
-                    'name-and-country' => sprintf(
-                        "%s (%s)",
-                        $this->getOrganisationService()
-                            ->parseOrganisationWithBranch(
-                                $this->getBranch(),
-                                $this->getOrganisation()
-                            ),
                         $this->getOrganisation()->getCountry()
                     ),
                     'alternativeShow'  => $this->getAlternativeShow(),
@@ -85,102 +74,6 @@ class OrganisationLink extends AbstractLink
         $this->addRouterParam('page', $page);
 
         return $this->createLink();
-    }
-
-
-    /**
-     * @throws \Exception
-     */
-    public function parseAction(): void
-    {
-        if (in_array($this->getAction(), ['view', 'view-article'], true)) {
-            if (is_null($this->getOrganisation())) {
-                throw new \InvalidArgumentException(
-                    sprintf("Organisation is cannot be null for %s", $this->getAction())
-                );
-            }
-            $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
-        }
-        switch ($this->getAction()) {
-            case 'new':
-                $this->setRouter('zfcadmin/organisation/new');
-                $this->setText($this->translate("txt-new-organisation"));
-                break;
-            case 'view-admin':
-                $this->setRouter('zfcadmin/organisation/view');
-                $this->setText(sprintf($this->translate("txt-view-organisation-%s"), $this->getOrganisation()));
-                break;
-            case 'edit':
-                $this->setRouter('zfcadmin/organisation/edit');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-edit-organisation-%s"),
-                        $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
-                    )
-                );
-                break;
-            case 'edit-financial':
-                $this->setRouter('zfcadmin/organisation/financial/edit');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-edit-financial-organisation-%s"),
-                        $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
-                    )
-                );
-                break;
-            case 'list-financial':
-                $this->setRouter('zfcadmin/organisation/financial/list');
-                $this->setText(sprintf($this->translate("txt-list-financial-organisations")));
-                break;
-            case 'add-affiliation':
-                $this->setRouter('zfcadmin/organisation/add-affiliation');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-add-organisation-%s-to-project"),
-                        $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
-                    )
-                );
-                break;
-            case 'list':
-                // For a list in the front-end simply use the MatchedRouteName
-                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
-                // Push the docRef in the params array
-                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
-                $this->setText($this->translate("txt-list-organisations"));
-                break;
-            case 'list-admin':
-                $this->setRouter('zfcadmin/organisation/list');
-                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
-                $this->setText($this->translate('txt-list-organisations'));
-                break;
-            case 'view':
-                $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
-                $this->setRouter('route-organisation_entity_organisation');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-view-organisation-%s"),
-                        $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
-                    )
-                );
-                break;
-            case 'view-article':
-                $this->setRouter('route-organisation_entity_organisation-article');
-                $this->setText(
-                    sprintf(
-                        $this->translate("txt-view-article-for-organisation-%s"),
-                        $this->getOrganisationService()
-                            ->parseOrganisationWithBranch($this->getBranch(), $this->getOrganisation())
-                    )
-                );
-                $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
-                break;
-            default:
-                throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
-        }
     }
 
     /**
@@ -197,5 +90,96 @@ class OrganisationLink extends AbstractLink
     public function setBranch($branch)
     {
         $this->branch = $branch;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function parseAction(): void
+    {
+        if (\in_array($this->getAction(), ['view', 'view-article'], true)) {
+            if (null === $this->getOrganisation()) {
+                throw new \InvalidArgumentException(
+                    sprintf("Organisation is cannot be null for %s", $this->getAction())
+                );
+            }
+            $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
+        }
+        switch ($this->getAction()) {
+            case 'new':
+                $this->setRouter('zfcadmin/organisation/new');
+                $this->setText($this->translator->translate("txt-new-organisation"));
+                break;
+            case 'view-admin':
+                $this->setRouter('zfcadmin/organisation/view');
+                $this->setText(
+                    sprintf($this->translator->translate("txt-view-organisation-%s"), $this->getOrganisation())
+                );
+                break;
+            case 'edit':
+                $this->setRouter('zfcadmin/organisation/edit');
+                $this->setText(
+                    sprintf(
+                        $this->translator->translate("txt-edit-organisation-%s"),
+                        OrganisationService::parseBranch($this->getBranch(), $this->getOrganisation())
+                    )
+                );
+                break;
+            case 'manage-web':
+                $this->setRouter('zfcadmin/organisation/manage-web');
+                $this->setText(
+                    sprintf(
+                        $this->translator->translate("txt-manage-web-organisation-%s"),
+                        OrganisationService::parseBranch($this->getBranch(), $this->getOrganisation())
+                    )
+                );
+                break;
+            case 'edit-financial':
+                $this->setRouter('zfcadmin/organisation/financial/edit');
+                $this->setText(
+                    sprintf(
+                        $this->translator->translate("txt-edit-financial-organisation-%s"),
+                        OrganisationService::parseBranch($this->getBranch(), $this->getOrganisation())
+                    )
+                );
+                break;
+            case 'list-financial':
+                $this->setRouter('zfcadmin/organisation/financial/list');
+                $this->setText(sprintf($this->translator->translate("txt-list-financial-organisations")));
+                break;
+            case 'add-affiliation':
+                $this->setRouter('zfcadmin/organisation/add-affiliation');
+                $this->setText(
+                    sprintf(
+                        $this->translator->translate("txt-add-organisation-%s-to-project"),
+                        OrganisationService::parseBranch($this->getBranch(), $this->getOrganisation())
+                    )
+                );
+                break;
+            case 'list':
+                // For a list in the front-end simply use the MatchedRouteName
+                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
+                // Push the docRef in the params array
+                $this->addRouterParam('docRef', $this->getRouteMatch()->getParam('docRef'));
+                $this->setText($this->translator->translate("txt-list-organisations"));
+                break;
+            case 'list-admin':
+                $this->setRouter('zfcadmin/organisation/list');
+                $this->setRouter($this->getRouteMatch()->getMatchedRouteName());
+                $this->setText($this->translator->translate('txt-list-organisations'));
+                break;
+            case 'view':
+                $this->addRouterParam('docRef', $this->getOrganisation()->getDocRef());
+                $this->setRouter(Route::parseRouteName(Route::DEFAULT_ROUTE_ORGANISATION));
+                $this->setText(
+                    sprintf(
+                        $this->translator->translate("txt-view-organisation-%s"),
+                        OrganisationService::parseBranch($this->getBranch(), $this->getOrganisation())
+                    )
+                );
+                break;
+            default:
+                throw new \Exception(sprintf("%s is an incorrect action for %s", $this->getAction(), __CLASS__));
+        }
     }
 }

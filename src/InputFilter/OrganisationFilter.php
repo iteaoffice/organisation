@@ -10,30 +10,25 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\InputFilter;
 
-use Doctrine\ORM\EntityManager;
 use Zend\InputFilter\InputFilter;
 
 /**
- * ITEA Office all rights reserved
- *
- * @category    Partner
- *
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * Class OrganisationFilter
+ * @package Organisation\InputFilter
  */
 class OrganisationFilter extends InputFilter
 {
     /**
-     * PartnerFilter constructor.
-     *
-     * @param EntityManager $entityManager
+     * OrganisationFilter constructor.
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct()
     {
         $inputFilter = new InputFilter();
 

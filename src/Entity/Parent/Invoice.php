@@ -10,8 +10,10 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Entity\Parent;
 
@@ -38,12 +40,6 @@ class Invoice extends AbstractEntity
      * @var integer
      */
     private $id;
-    /**
-     * @ORM\Column(name="period", type="integer", nullable=false)
-     *
-     * @var integer
-     */
-    private $period;
     /**
      * @ORM\Column(name="year", type="integer", nullable=false)
      *
@@ -73,6 +69,14 @@ class Invoice extends AbstractEntity
      * @var \Invoice\Entity\Invoice
      */
     private $invoice;
+    /**
+     * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="parentInvoice", cascade={"persist"})
+     * @ORM\JoinColumns({
+     * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
+     * })
+     * @var \Program\Entity\Program
+     */
+    private $program;
 
     /**
      * Class constructor.
@@ -143,27 +147,7 @@ class Invoice extends AbstractEntity
     /**
      * @return int
      */
-    public function getPeriod()
-    {
-        return $this->period;
-    }
-
-    /**
-     * @param int $period
-     *
-     * @return Invoice
-     */
-    public function setPeriod(int $period): Invoice
-    {
-        $this->period = $period;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear(): ?int
     {
         return $this->year;
     }
@@ -183,9 +167,9 @@ class Invoice extends AbstractEntity
     /**
      * @return float
      */
-    public function getAmountInvoiced()
+    public function getAmountInvoiced(): ?float
     {
-        return $this->amountInvoiced;
+        return (float) $this->amountInvoiced;
     }
 
     /**
@@ -203,7 +187,7 @@ class Invoice extends AbstractEntity
     /**
      * @return \Organisation\Entity\OParent
      */
-    public function getParent()
+    public function getParent(): \Organisation\Entity\OParent
     {
         return $this->parent;
     }
@@ -223,7 +207,7 @@ class Invoice extends AbstractEntity
     /**
      * @return \Invoice\Entity\Invoice
      */
-    public function getInvoice()
+    public function getInvoice(): \Invoice\Entity\Invoice
     {
         return $this->invoice;
     }
@@ -236,6 +220,26 @@ class Invoice extends AbstractEntity
     public function setInvoice(\Invoice\Entity\Invoice $invoice): Invoice
     {
         $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    /**
+     * @return \Program\Entity\Program
+     */
+    public function getProgram(): \Program\Entity\Program
+    {
+        return $this->program;
+    }
+
+    /**
+     * @param \Program\Entity\Program $program
+     *
+     * @return Invoice
+     */
+    public function setProgram(\Program\Entity\Program $program): Invoice
+    {
+        $this->program = $program;
 
         return $this;
     }

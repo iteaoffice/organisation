@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
@@ -28,20 +30,20 @@ class Type extends AbstractEntity implements ResourceInterface
     /**
      * Constant for a type without invoice.
      */
-    const NO_INVOICE = 0;
+    public const NO_INVOICE = 0;
     /**
      * Constant for a type with a invoice.
      */
-    const INVOICE = 1;
+    public const INVOICE = 1;
 
-    const TYPE_UNKNOWN = 0;
-    const TYPE_IFC = 1;
-    const TYPE_LARGE_INDUSTRY = 2;
-    const TYPE_SME = 3;
-    const TYPE_RESEARCH = 4;
-    const TYPE_UNIVERSITY = 5;
-    const TYPE_GOVERNMENT = 6;
-    const TYPE_OTHER = 7;
+    public const TYPE_UNKNOWN = 0;
+    public const TYPE_IFC = 1;
+    public const TYPE_LARGE_INDUSTRY = 2;
+    public const TYPE_SME = 3;
+    public const TYPE_RESEARCH = 4;
+    public const TYPE_UNIVERSITY = 5;
+    public const TYPE_GOVERNMENT = 6;
+    public const TYPE_OTHER = 7;
 
     /**
      * Textual versions of the invoice.
@@ -86,7 +88,7 @@ class Type extends AbstractEntity implements ResourceInterface
      * @Annotation\Attributes({"array":"invoiceTemplates"})
      * @Annotation\Attributes({"label":"txt-invoice"})
      *
-     * @var \int
+     * @var int
      */
     private $invoice;
     /**
@@ -110,7 +112,7 @@ class Type extends AbstractEntity implements ResourceInterface
     public function __construct()
     {
         $this->organisation = new Collections\ArrayCollection();
-        $this->meetingCost  = new Collections\ArrayCollection();
+        $this->meetingCost = new Collections\ArrayCollection();
     }
 
     /**
@@ -226,7 +228,7 @@ class Type extends AbstractEntity implements ResourceInterface
      *
      * @return int|string
      */
-    public function getInvoice($textual = false)
+    public function getInvoice(bool $textual = false)
     {
         if ($textual) {
             return self::$invoiceTemplates[$this->invoice];

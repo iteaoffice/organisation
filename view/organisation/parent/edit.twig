@@ -6,7 +6,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-edit-parent")) %}
 
-<h1>{{ translate("txt-edit-parent") }}</h1>
+<h1 class="display-4">{{ translate("txt-edit-parent") }}</h1>
 
 {% do form.prepare() %}
 {% do form.setAttribute('class','form-horizontal') %}
@@ -14,27 +14,37 @@
 {{ form().openTag(form)|raw }}
 
 
-<div class="form-group">
-    <label class="col-sm-3 control-label">{{ translate("txt-parent") }}</label>
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static">{{ parentLink(parent,'view','parent') }}</p>
+        <p class="form-control-static form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
     </div>
 </div>
 
-{% set parent = form.get('organisation_entity_oparent') %}
+{% set parentForm = form.get('organisation_entity_oparent') %}
 
-{{ ztbformelement(parent.get('id')) }}
-{{ ztbformelement(parent.get('type')) }}
-{{ ztbformelement(parent.get('status')) }}
-{{ ztbformelement(parent.get('epossMemberType')) }}
-{{ ztbformelement(parent.get('artemisiaMemberType')) }}
-{{ organisationformelement(parent.get('organisation')) }}
-{{ contactformelement(parent.get('contact')) }}
-{{ ztbformelement(parent.get('dateEnd')) }}
+{{ ztbformelement(parentForm.get('id')) }}
+{{ ztbformelement(parentForm.get('type')) }}
+{{ ztbformelement(parentForm.get('status')) }}
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-program-doa") }}</label>
+
+    <div class="col-sm-9">
+        <p class="form-control-static form-control-plaintext">{% for doa in parent.doa %}{{ parentDoaLink(doa,'view','name') }}{% if not loop.last %} &middot; {% endif %}{% else %}{{ translate("txt-no-doa-signed") }}{% endfor %}</p>
+    </div>
+</div>
+
+{{ ztbformelement(parentForm.get('memberType')) }}
+{{ ztbformelement(parentForm.get('epossMemberType')) }}
+{{ ztbformelement(parentForm.get('artemisiaMemberType')) }}
+{{ organisationformelement(parentForm.get('organisation')) }}
+{{ contactformelement(parentForm.get('contact')) }}
+{{ ztbformelement(parentForm.get('dateEnd')) }}
+
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {% if form.has('delete') %}
             {{ ztbformelement(form.get('delete')) }}

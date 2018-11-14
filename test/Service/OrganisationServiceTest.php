@@ -13,6 +13,8 @@
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
+declare(strict_types=1);
+
 namespace OrganisationTest\Service;
 
 use Organisation\Entity\Organisation;
@@ -77,8 +79,8 @@ class OrganisationServiceTest extends AbstractServiceTest
         $service = new OrganisationService();
 
         $organisation = new Organisation();
-        $name         = 'TestName';
-        $project      = new Project();
+        $name = 'TestName';
+        $project = new Project();
 
         $this->assertNull($service->findOrganisationNameByNameAndProject($organisation, $name, $project));
     }

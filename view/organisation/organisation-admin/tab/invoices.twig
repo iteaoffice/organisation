@@ -28,7 +28,7 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed">
+            <table class="table table-hover table-striped table-condensed table-sm">
                 <thead>
                 <tr>
                     <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'number', 'text': translate('txt-number')} %}</a></th>
@@ -70,7 +70,7 @@
             <fieldset>
                 {{ ztbformelement(filter.get('type')) }}
 
-                <div class="form-group">
+                <div class="form-group row">
                     {{ ztbformelement(invoiceFilter.get('submit')) }}
                     {{ ztbformelement(invoiceFilter.get('clear')) }}
                 </div>

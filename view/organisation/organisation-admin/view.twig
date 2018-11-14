@@ -1,26 +1,25 @@
 {% do headTitle().append(organisation.organisation) %}
-<h1>{{ organisation }}, {{ organisation.country }}</h1>
+<h1 class="display-4">{{ organisation }}, {{ organisation.country }}</h1>
 
 <div role="tabpanel">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab"
+        <li class="nav-item"><a class="nav-link active" href="#general" aria-controls="general" role="tab"
                                                   data-toggle="tab">{{ translate("txt-general") }}</a></li>
-        <li role="presentation"><a href="#financial" aria-controls="financial" role="tab"
+        <li class="nav-item"><a class="nav-link" href="#financial" aria-controls="financial" role="tab"
                                    data-toggle="tab">{{ translate("txt-financial") }}</a></li>
-        <li role="presentation"><a href="#invoices" aria-controls="invoices" role="tab"
+        <li class="nav-item"><a class="nav-link" href="#invoices" aria-controls="invoices" role="tab"
                                    data-toggle="tab">{{ translate("txt-invoices") }}</a></li>
-        <li role="presentation"><a href="#contact" aria-controls="contact" role="tab"
-                                   data-toggle="tab">{{ translate("txt-contact") }}</a></li>
-        <li role="presentation"><a href="#project" aria-controls="project" role="tab"
-                                   data-toggle="tab">{{ translate("txt-project") }}</a></li>
-        <li role="presentation"><a href="#parent" aria-controls="parent" role="tab"
+        <li class="nav-item"><a class="nav-link" href="#contact" aria-controls="contact" role="tab"  data-toggle="tab">{{ translate("txt-contact") }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="#project" aria-controls="project" role="tab" data-toggle="tab">{{ translate("txt-project") }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="#idea" aria-controls="idea" role="tab" data-toggle="tab">{{ translate("txt-idea") }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="#parent" aria-controls="parent" role="tab"
                                    data-toggle="tab">{{ translate("txt-parent") }}</a></li>
-        <li role="presentation"><a href="#doa" aria-controls="doa" role="tab"
+        <li class="nav-item"><a class="nav-link" href="#doa" aria-controls="doa" role="tab"
                                    data-toggle="tab">{{ translate("txt-doa") }}</a></li>
-        <li role="presentation"><a href="#note" aria-controls="general" role="tab"
+        <li class="nav-item"><a class="nav-link" href="#note" aria-controls="general" role="tab"
                                    data-toggle="tab">{{ translate("txt-notes") }}</a></li>
-        <li role="presentation"><a href="#merge" aria-controls="general" role="tab"
+        <li class="nav-item"><a class="nav-link" href="#merge" aria-controls="general" role="tab"
                                    data-toggle="tab">{{ translate("txt-merge") }}</a></li>
 
     </ul>
@@ -30,12 +29,12 @@
              id="general">{% include 'organisation/organisation-admin/tab/general' %}</div>
         <div role="tabpanel" class="tab-pane"
              id="financial">{% include 'organisation/organisation-admin/tab/financial' %}</div>
-        <div role="tabpanel" class="tab-pane"
-             id="invoices">{% include 'organisation/organisation-admin/tab/invoices' %}</div>
-        <div role="tabpanel" class="tab-pane"
-             id="contact">{% include 'organisation/organisation-admin/tab/contact' %}</div>
+        <div role="tabpanel" class="tab-pane" id="invoices">{% include 'organisation/organisation-admin/tab/invoices' %}</div>
+        <div role="tabpanel" class="tab-pane" id="contact">{% include 'organisation/organisation-admin/tab/contact' %}</div>
         <div role="tabpanel" class="tab-pane"
              id="project">{% include 'organisation/organisation-admin/tab/project' %}</div>
+        <div role="tabpanel" class="tab-pane"
+             id="idea">{% include 'organisation/organisation-admin/tab/idea' %}</div>
         <div role="tabpanel" class="tab-pane"
              id="parent">{% include 'organisation/organisation-admin/tab/parent' %}</div>
         <div role="tabpanel" class="tab-pane"

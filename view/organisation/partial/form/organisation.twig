@@ -1,6 +1,4 @@
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 {% set organisationForm = form.get('organisation_entity_organisation') %}
@@ -12,11 +10,11 @@
     {{ ztbformelement(organisationForm.get('type')) }}
     {{ ztbformelement(organisationForm.get('country')) }}
 
-    <div class="form-group">
-        <label class="col-sm-3 control-label">{{ translate("txt-current-logo") }}</label>
+    <div class="form-group row">
+        <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-current-logo") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static">{{ organisationLogo(organisation, null, false) }}</p>
+            <p class="form-control-static form-control-plaintext">{{ organisationLogo(organisation, 300, false) }}</p>
         </div>
     </div>
 
@@ -24,8 +22,8 @@
 </fieldset>
 
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
         {% if form.has('delete') %}

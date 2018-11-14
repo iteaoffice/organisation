@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace OrganisationTest\Controller\Plugin;
 
 use Affiliation\Entity\Affiliation;
-use Affiliation\Entity\Financial as AffiliationFinancial;
 use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Event\Entity\Booth\Financial as BoothFinancial;
+use ErrorHeroModule\Handler\Logging;
 use General\Entity\Country;
 use Invoice\Entity\Invoice;
 use Invoice\Entity\Journal;
@@ -39,15 +38,14 @@ use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
 use Organisation\Entity\Web;
-use Program\Entity\Doa as ProgramDoa;
-use Program\Entity\Call\Doa as CallDoa;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Program\Entity\Doa;
 use Program\Entity\Technology;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
 use Zend\I18n\Translator\Translator;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
-use Zend\Log\Logger;
+use Zend\Stdlib\DispatchableInterface;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
@@ -93,7 +91,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
      * Test the pre-merge checks
      *
      * @covers \Organisation\Controller\Plugin\MergeOrganisation::checkMerge
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::translate
      */
     public function testCheckMerge()
     {
@@ -111,144 +108,113 @@ final class MergeOrganisationTest extends AbstractServiceTest
         // Run the merge check
         $errors = $mergeOrganisation()->checkMerge($this->source, $this->target);
 
-        $this->assertEquals(true, in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-both-be-parents', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-have-different-countries', $errors));
+        $this->assertEquals(true, \in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
+        $this->assertEquals(true, \in_array('txt-organisations-cant-both-be-parents', $errors));
+        $this->assertEquals(true, \in_array('txt-organisations-cant-have-different-countries', $errors));
     }
 
     /**
      * Test the actual merge
      *
      * @covers \Organisation\Controller\Plugin\MergeOrganisation::merge
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::persist
      */
     public function testMerge()
     {
+        /** @var DispatchableInterface $controllerMock */
+        $controllerMock = $this->setUpControllerMock();
         $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(), $this->translator);
-        $mergeOrganisation->setController($this->createControllerMock());
+        $mergeOrganisation->setController($controllerMock);
 
         $result = $mergeOrganisation()->merge($this->source, $this->target);
 
-        // Basic properties
-        $this->assertSame(true, $result['success']);
-        $this->assertSame('', $result['errorMessage']);
-        $this->assertSame(1, $this->target->getType()->getId());
-        $this->assertEquals(new \DateTime('2017-01-01'), $this->target->getDateCreated());
-        $this->assertEquals(new \DateTime('2017-01-03'), $this->target->getDateUpdated());
-        $this->assertSame(1, $this->target->getDescription()->getId());
-        $this->assertSame(2, $this->target->getDescription()->getOrganisation()->getId());
-        $this->assertSame(1, $this->target->getFinancial()->getId());
-        $this->assertSame(2, $this->target->getFinancial()->getOrganisation()->getId());
-        $this->assertSame(1, $this->target->getLogo()->first()->getId());
-        $this->assertSame(2, $this->target->getLogo()->first()->getOrganisation()->getId());
+        $this->assertEquals(true, $result['success']);
+        $this->assertEquals('', $result['errorMessage']);
+        $this->assertEquals(1, $this->target->getType()->getId());
 
-        // Collections
-        /** @var Log $log */
-        $log = $this->target->getLog()->first();
-        $this->assertInstanceOf(Log::class, $log);
-        $this->assertSame(1, $log->getId());
+        $this->assertEquals($this->source->getDateCreated(), $this->target->getDateCreated());
+        $this->assertEquals($this->source->getDateUpdated(), $this->target->getDateUpdated());
 
-        /** @var Technology $technology */
-        $technology = $this->target->getTechnology()->first();
-        $this->assertInstanceOf(Technology::class, $technology);
-        $this->assertSame(1, $technology->getId());
+        $this->assertEquals(1, $this->target->getDescription()->getId());
+        $this->assertEquals($this->target, $this->target->getDescription()->getOrganisation());
 
-        /** @var Web $web */
-        $web = $this->target->getWeb()->first();
-        $this->assertInstanceOf(Web::class, $web);
-        $this->assertSame(1, $web->getId());
+        $this->assertEquals(1, $this->target->getFinancial()->getId());
+        $this->assertEquals($this->target, $this->target->getFinancial()->getOrganisation());
 
-        /** @var Note $mergeNote */
-        $mergeNote = $this->target->getNote()->first();
-        $this->assertInstanceOf(Note::class, $mergeNote);
-        $this->assertSame(1, $mergeNote->getContact()->getId());
-        $note = 'Merged organisation Organisation 1 (1) into Organisation 2 (2)';
-        $this->assertSame($note, $mergeNote->getNote());
+        $this->assertEquals(1, $this->target->getLogo()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getLogo()->first()->getOrganisation());
 
-        /** @var Note $movedNote */
-        $movedNote = $this->target->getNote()->get(1);
-        $this->assertInstanceOf(Note::class, $movedNote);
-        $this->assertSame(1, $movedNote->getId());
+        $this->assertEquals(1, $this->target->getLog()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getLog()->first()->getOrganisation());
 
-        /** @var Name $name */
-        $name = $this->target->getNames()->first();
-        $this->assertInstanceOf(Name::class, $name);
-        $this->assertSame(1, $name->getId());
+        $this->assertEquals(1, $this->target->getTechnology()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getTechnology()->first()->getOrganisation()->first());
 
-        /** @var Affiliation $affiliation */
-        $affiliation = $this->target->getAffiliation()->first();
-        $this->assertInstanceOf(Affiliation::class, $affiliation);
-        $this->assertSame(1, $affiliation->getId());
+        $this->assertEquals(1, $this->target->getWeb()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getWeb()->first()->getOrganisation());
 
-        /** @var AffiliationFinancial $affiliationFinancial */
-        $affiliationFinancial = $this->target->getAffiliationFinancial()->first();
-        $this->assertInstanceOf(AffiliationFinancial::class, $affiliationFinancial);
-        $this->assertSame(1, $affiliationFinancial->getId());
+        $this->assertEquals(
+            'Merged organisation Organisation 1 (1) into Organisation 2 (2)',
+            $this->target->getNote()->first()->getNote()
+        );
+        $this->assertEquals(1, $this->target->getNote()->last()->getId());
+        $this->assertEquals($this->target, $this->target->getNote()->first()->getOrganisation());
 
-        /** @var IctOrganisation $ictOrganisation */
-        $ictOrganisation = $this->target->getIctOrganisation()->first();
-        $this->assertInstanceOf(IctOrganisation::class, $ictOrganisation);
-        $this->assertSame(1, $ictOrganisation->getId());
+        $this->assertEquals(1, $this->target->getNames()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getNames()->first()->getOrganisation());
 
-        /** @var Cluster $cluster */
-        $cluster = $this->target->getCluster()->first();
-        $this->assertInstanceOf(Cluster::class, $cluster);
-        $this->assertSame(1, $cluster->getId());
+        $this->assertEquals(1, $this->target->getAffiliation()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getAffiliation()->first()->getOrganisation());
 
-        /** @var Cluster $clusterMember */
-        $clusterMember = $this->target->getClusterMember()->first();
-        $this->assertInstanceOf(Cluster::class, $clusterMember);
-        $this->assertSame(1, $clusterMember->getId());
+        $this->assertEquals(1, $this->target->getAffiliationFinancial()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getAffiliationFinancial()->first()->getOrganisation());
 
-        /** @var ContactOrganisation $contactOrganisation */
-        $contactOrganisation = $this->target->getContactOrganisation()->first();
-        $this->assertInstanceOf(ContactOrganisation::class, $contactOrganisation);
-        $this->assertSame(1, $contactOrganisation->getId());
+        $this->assertEquals(1, $this->target->getParent()->getId());
+        $this->assertEquals($this->target, $this->target->getParent()->getOrganisation());
 
-        /** @var Booth $booth */
-        $booth = $this->target->getOrganisationBooth()->first();
-        $this->assertInstanceOf(Booth::class, $booth);
-        $this->assertSame(1, $booth->getId());
+        $this->assertEquals(1, $this->target->getParentFinancial()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getParentFinancial()->first()->getOrganisation());
 
-        /** @var BoothFinancial $boothFinancial */
-        $boothFinancial = $this->target->getBoothFinancial()->first();
-        $this->assertInstanceOf(BoothFinancial::class, $boothFinancial);
-        $this->assertSame(1, $boothFinancial->getId());
+        $this->assertEquals(1, $this->target->getParentOrganisation()->getId());
+        $this->assertEquals($this->target, $this->target->getParentOrganisation()->getOrganisation());
 
-        /** @var Partner $ideaPartner */
-        $ideaPartner = $this->target->getIdeaPartner()->first();
-        $this->assertInstanceOf(Partner::class, $ideaPartner);
-        $this->assertSame(1, $ideaPartner->getId());
+        $this->assertEquals(1, $this->target->getIctOrganisation()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getIctOrganisation()->first()->getOrganisation());
 
-        /** @var Invoice $invoice */
-        $invoice = $this->target->getInvoice()->first();
-        $this->assertInstanceOf(Invoice::class, $invoice);
-        $this->assertSame(1, $invoice->getId());
+        $this->assertEquals(1, $this->target->getCluster()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getCluster()->first()->getOrganisation());
 
-        /** @var Journal $journal */
-        $journal = $this->target->getJournal()->first();
-        $this->assertInstanceOf(Journal::class, $journal);
-        $this->assertSame(1, $journal->getId());
+        $this->assertEquals(2, $this->target->getClusterMember()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getClusterMember()->first()->getOrganisation());
 
-        /** @var ProgramDoa $programDoa */
-        $programDoa = $this->target->getProgramDoa()->first();
-        $this->assertInstanceOf(ProgramDoa::class, $programDoa);
-        $this->assertSame(1, $programDoa->getId());
+        $this->assertEquals(1, $this->target->getContactOrganisation()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getContactOrganisation()->first()->getOrganisation());
 
-        /** @var CallDoa $callDoa */
-        $callDoa = $this->target->getDoa()->first();
-        $this->assertInstanceOf(CallDoa::class, $callDoa);
-        $this->assertSame(1, $callDoa->getId());
+        $this->assertEquals(1, $this->target->getOrganisationBooth()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getOrganisationBooth()->first()->getOrganisation());
 
-        /** @var Reminder $reminder */
-        $reminder = $this->target->getReminder()->first();
-        $this->assertInstanceOf(Reminder::class, $reminder);
-        $this->assertSame(1, $reminder->getId());
+        $this->assertEquals(1, $this->target->getBoothFinancial()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getBoothFinancial()->first()->getOrganisation());
 
-        /** @var Result $result */
-        $result = $this->target->getResult()->first();
-        $this->assertInstanceOf(Result::class, $result);
-        $this->assertSame(1, $result->getId());
+        $this->assertEquals(1, $this->target->getIdeaPartner()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getIdeaPartner()->first()->getOrganisation());
+
+        $this->assertEquals(1, $this->target->getInvoice()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getInvoice()->first()->getOrganisation());
+
+        $this->assertEquals(1, $this->target->getJournal()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getJournal()->first()->getOrganisation());
+
+        $this->assertEquals(1, $this->target->getProgramDoa()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getProgramDoa()->first()->getOrganisation());
+
+        $this->assertEquals(1, $this->target->getDoa()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getDoa()->first()->getOrganisation());
+
+        $this->assertEquals(1, $this->target->getReminder()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getReminder()->first()->getOrganisation());
+
+        $this->assertEquals(1, $this->target->getResult()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getResult()->first()->getOrganisation()->first());
     }
 
     /**
@@ -258,13 +224,26 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     public function testMergeFail()
     {
-        $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(true), $this->translator);
-        $logger = $this->createLoggerMock('err');
+        $entityManagerMock = $this->setUpEntityManagerMock(true);
 
-        $response = $mergeOrganisation()->merge($this->source, $this->target, $logger);
+        $mergeOrganisationNoLog = new MergeOrganisation($entityManagerMock, $this->translator);
+        $responseNoLog          = $mergeOrganisationNoLog->merge($this->source, $this->target);
+        $this->assertEquals(false, $responseNoLog['success']);
+        $this->assertEquals('Oops!', $responseNoLog['errorMessage']);
 
-        $this->assertEquals(false, $response['success']);
-        $this->assertEquals('Oops!', $response['errorMessage']);
+        $errorLoggerMock = $this->getMockBuilder(Logging::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['handleErrorException'])
+            ->getMock();
+
+        $errorLoggerMock->expects($this->once())
+            ->method('handleErrorException')
+            ->with($this->isInstanceOf('Exception'));
+
+        $mergeOrganisationLog = new MergeOrganisation($entityManagerMock, $this->translator, $errorLoggerMock);
+        $responseLog          = $mergeOrganisationLog()->merge($this->source, $this->target);
+
+        $this->assertEquals(false, $responseLog['success']);
     }
 
     /**
@@ -279,9 +258,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $description->setId(1);
         $description->setOrganisation($source);
 
-        $logo = new Logo();
-        $logo->setId(1);
-
         $country = new Country();
         $country->setId(1);
 
@@ -290,11 +266,13 @@ final class MergeOrganisationTest extends AbstractServiceTest
 
         $financial = new Financial();
         $financial->setId(1);
-        $financial->setOrganisation($source);
+
+        $logo = new Logo();
+        $logo->setId(1);
+        $logo->setOrganisation($source);
 
         $log = new Log();
         $log->setId(1);
-        $log->setOrganisation($source);
 
         $technology = new Technology();
         $technology->setId(1);
@@ -302,11 +280,9 @@ final class MergeOrganisationTest extends AbstractServiceTest
 
         $web = new Web();
         $web->setId(1);
-        $web->setOrganisation($source);
 
         $note = new Note();
         $note->setId(1);
-        $note->setOrganisation($source);
 
         $name = new Name();
         $name->setId(1);
@@ -316,9 +292,21 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $affiliation->setId(1);
         $affiliation->setOrganisation($source);
 
-        $affiliationFinancial = new AffiliationFinancial();
+        $affiliationFinancial = new \Affiliation\Entity\Financial();
         $affiliationFinancial->setId(1);
         $affiliationFinancial->setOrganisation($source);
+
+        $parent = new OParent();
+        $parent->setId(1);
+        $parent->setOrganisation($source);
+
+        $parentFinancial = new \Organisation\Entity\Parent\Financial();
+        $parentFinancial->setId(1);
+        $parentFinancial->setOrganisation($source);
+
+        $parentOrganisation = new \Organisation\Entity\Parent\Organisation();
+        $parentOrganisation->setId(1);
+        $parentOrganisation->setOrganisation($source);
 
         $ictOrganisation = new IctOrganisation();
         $ictOrganisation->setId(1);
@@ -327,7 +315,10 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $cluster = new Cluster();
         $cluster->setId(1);
         $cluster->setOrganisation($source);
-        $cluster->setMember(new ArrayCollection([$source]));
+
+        $clusterMember = new Cluster();
+        $clusterMember->setId(2);
+        $clusterMember->setMember(new ArrayCollection([$source]));
 
         $contactOrganisation = new ContactOrganisation();
         $contactOrganisation->setId(1);
@@ -337,7 +328,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $booth->setId(1);
         $booth->setOrganisation($source);
 
-        $boothFinancial = new BoothFinancial();
+        $boothFinancial = new \Event\Entity\Booth\Financial();
         $boothFinancial->setId(1);
         $boothFinancial->setOrganisation($source);
 
@@ -349,17 +340,17 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $invoice->setId(1);
         $invoice->setOrganisation($source);
 
-        $journal = new Journal();
-        $journal->setId(1);
-        $journal->setOrganisation($source);
+        $invoiceJournal = new Journal();
+        $invoiceJournal->setId(1);
+        $invoiceJournal->setOrganisation($source);
 
-        $programDoa = new ProgramDoa();
+        $programDoa = new Doa();
         $programDoa->setId(1);
         $programDoa->setOrganisation($source);
 
-        $callDoa = new CallDoa();
-        $callDoa->setId(1);
-        $callDoa->setOrganisation($source);
+        $doa = new \Program\Entity\Call\Doa();
+        $doa->setId(1);
+        $doa->setOrganisation($source);
 
         $reminder = new Reminder();
         $reminder->setId(1);
@@ -372,10 +363,10 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $source->setOrganisation('Organisation 1');
         $source->setDateCreated(new \DateTime('2017-01-01'));
         $source->setDateUpdated(new \DateTime('2017-01-03'));
+        $source->setDescription($description);
         $source->setCountry($country);
         $source->setType($type);
         $source->setFinancial($financial);
-        $source->setDescription($description);
         $source->setLogo(new ArrayCollection([$logo]));
         $source->setLog(new ArrayCollection([$log]));
         $source->setTechnology(new ArrayCollection([$technology]));
@@ -384,17 +375,20 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $source->setNames(new ArrayCollection([$name]));
         $source->setAffiliation(new ArrayCollection([$affiliation]));
         $source->setAffiliationFinancial(new ArrayCollection([$affiliationFinancial]));
+        $source->setParent($parent);
+        $source->setParentFinancial(new ArrayCollection([$parentFinancial]));
+        $source->setParentOrganisation($parentOrganisation);
         $source->setIctOrganisation(new ArrayCollection([$ictOrganisation]));
         $source->setCluster(new ArrayCollection([$cluster]));
-        $source->setClusterMember(new ArrayCollection([$cluster]));
+        $source->setClusterMember(new ArrayCollection([$clusterMember]));
         $source->setContactOrganisation(new ArrayCollection([$contactOrganisation]));
         $source->setOrganisationBooth(new ArrayCollection([$booth]));
         $source->setBoothFinancial(new ArrayCollection([$boothFinancial]));
         $source->setIdeaPartner(new ArrayCollection([$ideaPartner]));
         $source->setInvoice(new ArrayCollection([$invoice]));
-        $source->setJournal(new ArrayCollection([$journal]));
+        $source->setJournal(new ArrayCollection([$invoiceJournal]));
         $source->setProgramDoa(new ArrayCollection([$programDoa]));
-        $source->setDoa(new ArrayCollection([$callDoa]));
+        $source->setDoa(new ArrayCollection([$doa]));
         $source->setReminder(new ArrayCollection([$reminder]));
         $source->setResult(new ArrayCollection([$result]));
 
@@ -406,16 +400,14 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     private function createTarget(): Organisation
     {
-        $target = new Organisation();
-        $target->setId(2);
-
         $country = new Country();
         $country->setId(1);
 
         $financial = new Financial();
         $financial->setId(2);
-        $financial->setOrganisation($target);
 
+        $target = new Organisation();
+        $target->setId(2);
         $target->setOrganisation('Organisation 2');
         $target->setDateCreated(new \DateTime('2017-01-02'));
         $target->setDateUpdated(new \DateTime('2017-01-02'));
@@ -426,57 +418,11 @@ final class MergeOrganisationTest extends AbstractServiceTest
     }
 
     /**
-     * Get a mocked logger instance
-     *
-     * @param string $method
-     * @return MockObject
-     */
-    private function createLoggerMock(string $method): MockObject
-    {
-        /** @var MockObject|Logger $mergeOrganisationMock */
-        $loggerMock = $this->getMockBuilder(Logger::class)
-            ->setMethods([$method])
-            ->getMock();
-        $loggerMock->expects($this->once())
-            ->method($method)
-            ->with($this->isType('string'));
-
-        return $loggerMock;
-    }
-
-    /**
-     * Create a controller mock object to get dummy authentication info.
-     *
-     * @return OrganisationAdminController|MockObject
-     */
-    private function createControllerMock(): MockObject
-    {
-        $contact = new Contact();
-        $contact->setId(1);
-
-        $zfcUserAuthenticationMock = $this->getMockBuilder(ZfcUserAuthentication::class)
-            ->setMethods(['getIdentity'])
-            ->getMock();
-        $zfcUserAuthenticationMock->expects($this->once())
-            ->method('getIdentity')
-            ->will($this->returnValue($contact));
-
-        $controllerMock = $this->getMockBuilder(OrganisationAdminController::class)
-            ->setMethods(['zfcUserAuthentication'])
-            ->getMock();
-        $controllerMock->expects($this->once())
-            ->method('zfcUserAuthentication')
-            ->will($this->returnValue($zfcUserAuthenticationMock));
-
-        return $controllerMock;
-    }
-
-    /**
      * Set up the translator mock object.
      *
      * @return Translator|MockObject
      */
-    private function setUpTranslatorMock(): MockObject
+    private function setUpTranslatorMock()
     {
         $translatorMock = $this->getMockBuilder(Translator::class)
             ->setMethods(['translate'])
@@ -491,12 +437,34 @@ final class MergeOrganisationTest extends AbstractServiceTest
     }
 
     /**
+     * Set up the translator mock object.
+     *
+     * @return Translator|MockObject
+     */
+    private function setUpControllerMock()
+    {
+        $contact = new Contact();
+        $contact->setId(1);
+
+        $controllerMock = $this->getMockBuilder(OrganisationAdminController::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['identity'])
+            ->getMock();
+
+        $controllerMock->expects($this->once())
+            ->method('identity')
+            ->will($this->returnValue($contact));
+
+        return $controllerMock;
+    }
+
+    /**
      * Set up the entity manager mock object with expectations depending on the chosen merge strategy.
      * @param bool $throwException
      *
      * @return EntityManager|MockObject
      */
-    private function setUpEntityManagerMock($throwException = false): MockObject
+    private function setUpEntityManagerMock(bool $throwException = false)
     {
         $entityManagerMock = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
@@ -515,32 +483,11 @@ final class MergeOrganisationTest extends AbstractServiceTest
 
         // Setup the parameters depending on merge strategy
         $params = [
-            [$this->identicalTo($this->source->getLog()->first())],
-            [$this->identicalTo($this->source->getTechnology()->first())],
-            [$this->identicalTo($this->source->getWeb()->first())],
-            [$this->identicalTo($this->source->getNote()->first())],
-            [$this->identicalTo($this->source->getNames()->first())],
-            [$this->identicalTo($this->source->getAffiliation()->first())],
-            [$this->identicalTo($this->source->getAffiliationFinancial()->first())],
-            [$this->identicalTo($this->source->getIctOrganisation()->first())],
-            [$this->identicalTo($this->source->getCluster()->first())],
-            [$this->identicalTo($this->source->getClusterMember()->first())],
-            [$this->identicalTo($this->source->getContactOrganisation()->first())],
-            [$this->identicalTo($this->source->getOrganisationBooth()->first())],
-            [$this->identicalTo($this->source->getBoothFinancial()->first())],
-            [$this->identicalTo($this->source->getIdeaPartner()->first())],
-            [$this->identicalTo($this->source->getInvoice()->first())],
-            [$this->identicalTo($this->source->getJournal()->first())],
-            [$this->identicalTo($this->source->getProgramDoa()->first())],
-            [$this->identicalTo($this->source->getDoa()->first())],
-            [$this->identicalTo($this->source->getReminder()->first())],
-            [$this->identicalTo($this->source->getResult()->first())],
-            [$this->identicalTo($this->target)],
             [$this->isInstanceOf(Log::class)],
-            [$this->isInstanceOf(Note::class)]
+            [$this->isInstanceOf(Note::class)],
         ];
 
-        $entityManagerMock->expects($this->exactly(count($params)))->method('persist')->withConsecutive(...$params);
+        $entityManagerMock->expects($this->exactly(\count($params)))->method('persist')->withConsecutive(...$params);
         $entityManagerMock->expects($this->once())->method('remove')->with($this->source);
         $entityManagerMock->expects($this->exactly(2))->method('flush');
 

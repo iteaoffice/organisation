@@ -11,13 +11,17 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
+use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Organisation\Entity;
-use Organisation\Service\ParentService;
+use Program\Entity\Program;
+use Zend\Form\Element\MultiCheckbox;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
@@ -26,12 +30,9 @@ use Zend\Form\Form;
  *
  * @package Organisation\Form
  */
-class ParentFilter extends Form
+final class ParentFilter extends Form
 {
-    /**
-     * @param ParentService $parentService
-     */
-    public function __construct(ParentService $parentService)
+    public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
         $this->setAttribute('method', 'get');
@@ -52,22 +53,34 @@ class ParentFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'    => EntityMultiCheckbox::class,
-                'name'    => 'status',
+                'type'    => MultiCheckbox::class,
+                'name'    => 'memberType',
                 'options' => [
-                    'target_class'   => Entity\Parent\Status::class,
-                    'find_method'    => [
-                        'name'   => 'findBy',
-                        'params' => [
-                            'criteria' => [],
-                            'orderBy'  => [
-                                'status' => 'ASC',
-                            ],
-                        ],
-                    ],
-                    'inline'         => true,
-                    'object_manager' => $parentService->getEntityManager(),
-                    'label'          => _("txt-status"),
+                    'inline'        => true,
+                    'value_options' => Entity\OParent::getMemberTypeTemplates(),
+                    'label'         => _("txt-member-type"),
+                ],
+            ]
+        );
+        $filterFieldset->add(
+            [
+                'type'    => MultiCheckbox::class,
+                'name'    => 'artemisiaMemberType',
+                'options' => [
+                    'inline'        => true,
+                    'value_options' => Entity\OParent::getArtemisiaMemberTypeTemplates(),
+                    'label'         => _("txt-artemisia-member-type"),
+                ],
+            ]
+        );
+        $filterFieldset->add(
+            [
+                'type'    => MultiCheckbox::class,
+                'name'    => 'epossMemberType',
+                'options' => [
+                    'inline'        => true,
+                    'value_options' => Entity\OParent::getEpossMemberTypeTemplates(),
+                    'label'         => _("txt-eposs-member-type"),
                 ],
             ]
         );
@@ -88,8 +101,30 @@ class ParentFilter extends Form
                         ],
                     ],
                     'inline'         => true,
-                    'object_manager' => $parentService->getEntityManager(),
+                    'object_manager' => $entityManager,
                     'label'          => _("txt-type"),
+                ],
+            ]
+        );
+
+        $filterFieldset->add(
+            [
+                'type'    => EntityMultiCheckbox::class,
+                'name'    => 'program',
+                'options' => [
+                    'target_class'   => Program::class,
+                    'find_method'    => [
+                        'name'   => 'findBy',
+                        'params' => [
+                            'criteria' => [],
+                            'orderBy'  => [
+                                'program' => 'ASC',
+                            ],
+                        ],
+                    ],
+                    'inline'         => true,
+                    'object_manager' => $entityManager,
+                    'label'          => _("txt-has-doa-for"),
                 ],
             ]
         );

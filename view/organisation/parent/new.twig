@@ -5,7 +5,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-new-parent")) %}
 
-<h1>{{ translate("txt-new-parent") }}</h1>
+<h1 class="display-4">{{ translate("txt-new-parent") }}</h1>
 
 {% do form.prepare() %}
 {% do form.setAttribute('class','form-horizontal') %}
@@ -15,17 +15,20 @@
 {% set parent = form.get('organisation_entity_oparent') %}
 
 {{ ztbformelement(parent.get('id')) }}
-{{ organisationformelement(parent.get('organisation')) }}
+
 
 {{ ztbformelement(parent.get('type')) }}
 {{ ztbformelement(parent.get('status')) }}
+
+{{ ztbformelement(parent.get('memberType')) }}
 {{ ztbformelement(parent.get('epossMemberType')) }}
 {{ ztbformelement(parent.get('artemisiaMemberType')) }}
 
+{{ organisationformelement(parent.get('organisation')) }}
 {{ contactformelement(parent.get('contact')) }}
 
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
+<div class="form-group row">
+    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
     </div>

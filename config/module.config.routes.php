@@ -7,30 +7,22 @@
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
+
 use Organisation\Controller;
 
 return [
     'router' => [
         'routes' => [
-            'assets'       => [
-                'type'          => 'Literal',
-                'options'       => [
-                    'route'    => '/assets/' . (defined("ITEAOFFICE_HOST") ? ITEAOFFICE_HOST : 'test'),
-                    'defaults' => [
-                        'controller' => Controller\OrganisationController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes'  => [
+            'image'        => [
+                'child_routes' => [
                     'organisation-logo' => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => "/organisation-logo/[:id]-[:hash]-[:width].[:ext]",
+                            'route'    => '/o/[:id]-[:last-update].[:ext]',
                             'defaults' => [
                                 //Explicitly add the controller here as the assets are collected
-                                'controller' => Controller\OrganisationController::class,
-                                'action'     => 'logo',
+                                'controller' => Controller\ImageController::class,
+                                'action'     => 'organisation-logo',
                             ],
                         ],
                     ],
@@ -40,15 +32,11 @@ return [
                 'type'          => 'Literal',
                 'priority'      => 1000,
                 'options'       => [
-                    'route'    => '/organisation',
-                    'defaults' => [
-                        'controller' => Controller\OrganisationController::class,
-                        'action'     => 'index',
-                    ],
+                    'route' => '/organisation',
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'json'   => [
+                    'json' => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route'    => '/json',
@@ -84,19 +72,20 @@ return [
                                     ],
                                 ],
                             ],
+                            'search'       => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/search.json',
+                                    'defaults' => [
+                                        'controller' => Controller\JsonController::class,
+                                        'action'     => 'search',
+                                    ],
+                                ],
+                            ],
                         ],
 
                     ],
-                    'search' => [
-                        'type'    => 'Segment',
-                        'options' => [
-                            'route'    => '/search',
-                            'defaults' => [
-                                'action' => 'search',
-                            ],
-                        ],
-                    ],
-                    'logo'   => [
+                    'logo' => [
                         'type'    => 'Segment',
                         'options' => [
                             'route'       => '/logo/[:id].[:ext]',
@@ -134,6 +123,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'list-duplicate'  => [
+                                'type'     => 'Segment',
+                                'priority' => 1000,
+                                'options'  => [
+                                    'route'    => '/list/duplicate[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list-duplicate',
+                                    ],
+                                ],
+                            ],
                             'new'             => [
                                 'type'    => 'Segment',
                                 'options' => [
@@ -161,21 +160,21 @@ return [
                                     ],
                                 ],
                             ],
+                            'manage-web'      => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/manage-web/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'manage-web',
+                                    ],
+                                ],
+                            ],
                             'add-affiliation' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/add-affiliation/[:id].html',
                                     'defaults' => [
                                         'action' => 'add-affiliation',
-                                    ],
-                                ],
-                            ],
-                            'search-form'     => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/search-form.html',
-                                    'defaults' => [
-                                        'action' => 'search-form',
                                     ],
                                 ],
                             ],
@@ -334,7 +333,7 @@ return [
                         ],
                         'may_terminate' => false,
                         'child_routes'  => [
-                            'list'   => [
+                            'list'                                     => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/list[/f-:encodedFilter][/page-:page].html',
@@ -343,7 +342,25 @@ return [
                                     ],
                                 ],
                             ],
-                            'import' => [
+                            'list-no-member'                           => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list/no-member-doa[/f-:encodedFilter][/page-:page].html',
+                                    'defaults' => [
+                                        'action' => 'list-no-member',
+                                    ],
+                                ],
+                            ],
+                            'list-no-member-export'                    => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/list/no-member-doa-export[/f-:encodedFilter].csv',
+                                    'defaults' => [
+                                        'action' => 'list-no-member-export',
+                                    ],
+                                ],
+                            ],
+                            'import'                                   => [
                                 'type'         => 'Literal',
                                 'options'      => [
                                     'route'    => '/import',
@@ -352,15 +369,6 @@ return [
                                     ],
                                 ],
                                 'child_routes' => [
-                                    'parent'  => [
-                                        'type'    => 'Segment',
-                                        'options' => [
-                                            'route'    => '/parent.html',
-                                            'defaults' => [
-                                                'action' => 'import-parent',
-                                            ],
-                                        ],
-                                    ],
                                     'project' => [
                                         'type'    => 'Segment',
                                         'options' => [
@@ -372,7 +380,45 @@ return [
                                     ],
                                 ],
                             ],
-
+                            'financial'                                => [
+                                'type'         => 'Literal',
+                                'options'      => [
+                                    'route'    => '/financial',
+                                    'defaults' => [
+                                        'action'     => 'not-found',
+                                        'controller' => Controller\ParentFinancialController::class
+                                    ],
+                                ],
+                                'child_routes' => [
+                                    'new'          => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/new/parent-[:parentId].html',
+                                            'defaults' => [
+                                                'action' => 'new',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit'         => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'no-financial' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/no-financial.html',
+                                            'defaults' => [
+                                                'action' => 'no-financial',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                             'new'                                      => [
                                 'type'    => 'Segment',
                                 'options' => [
@@ -400,15 +446,6 @@ return [
                                     ],
                                 ],
                             ],
-                            'edit-financial'                           => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/edit-financial/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'edit-financial',
-                                    ],
-                                ],
-                            ],
                             'view'                                     => [
                                 'type'    => 'Segment',
                                 'options' => [
@@ -421,7 +458,7 @@ return [
                             'overview-variable-contribution'           => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year]/period-[:period].html',
+                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year]/program-[:program].html',
                                     'defaults' => [
                                         'action' => 'overview-variable-contribution',
                                     ],
@@ -430,7 +467,7 @@ return [
                             'overview-variable-contribution-pdf'       => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year]/period-[:period].pdf',
+                                    'route'    => '/overview-variable-contribution/[:id]/year-[:year]/program-[:program].pdf',
                                     'defaults' => [
                                         'action' => 'overview-variable-contribution-pdf',
                                     ],
@@ -439,7 +476,7 @@ return [
                             'overview-extra-variable-contribution'     => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year]/period-[:period].html',
+                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year]/program-[:program].html',
                                     'defaults' => [
                                         'action' => 'overview-extra-variable-contribution',
                                     ],
@@ -448,7 +485,7 @@ return [
                             'overview-extra-variable-contribution-pdf' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year]/period-[:period].pdf',
+                                    'route'    => '/overview-extra-variable-contribution/[:id]/year-[:year]/program-[:program].pdf',
                                     'defaults' => [
                                         'action' => 'overview-extra-variable-contribution-pdf',
                                     ],
@@ -498,6 +535,15 @@ return [
                                             'route'    => '/add-affiliation/[:id].html',
                                             'defaults' => [
                                                 'action' => 'add-affiliation',
+                                            ],
+                                        ],
+                                    ],
+                                    'merge'           => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/merge/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'merge',
                                             ],
                                         ],
                                     ],

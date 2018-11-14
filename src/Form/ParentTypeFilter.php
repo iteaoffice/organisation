@@ -11,11 +11,12 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
-use Organisation\Service\ParentService;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 
@@ -27,9 +28,9 @@ use Zend\Form\Form;
 class ParentTypeFilter extends Form
 {
     /**
-     * @param ParentService $parentService
+     * ParentTypeFilter constructor.
      */
-    public function __construct(ParentService $parentService)
+    public function __construct()
     {
         parent::__construct();
         $this->setAttribute('method', 'get');

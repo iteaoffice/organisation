@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 Jield BV (http://jield.nl)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form\View\Helper;
 
 use Zend\Form\Element\Select;
@@ -48,7 +50,7 @@ class OrganisationFormElement extends FormElement
         $this->view->inlineScript()->appendScript(
             "var options = {
         ajax: {
-            url: '" . $this->view->url('zfcadmin/organisation/search-form') . "',
+            url: '" . $this->view->url('organisation/json/search') . "',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -107,7 +109,7 @@ class OrganisationFormElement extends FormElement
         if ($label && !$element->getOption('skipLabel')) {
             $controlLabel .= $labelHelper->openTag(
                 [
-                    'class' => 'col-lg-3 ' . ($element->getOption('wrapCheckboxInLabel') ? 'checkbox'
+                    'class' => 'col-md-3 ' . ($element->getOption('wrapCheckboxInLabel') ? 'checkbox'
                             : 'control-label'),
                 ] + ($element->hasAttribute('id') ? ['for' => $id] : [])
             );

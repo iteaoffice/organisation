@@ -6,7 +6,6 @@
          stopOnFailure="false"
          processIsolation="false"
          backupGlobals="false"
-         syntaxCheck="true"
 >
     <testsuite name="iteaoffice/organisation">
         <directory>./test</directory>

@@ -8,6 +8,8 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Organisation\Entity;
@@ -16,19 +18,15 @@ use Project\Service\ProjectService;
 use Zend\Form\Form;
 
 /**
+ * Class AddAffiliation
  *
+ * @package Organisation\Form
  */
-class AddAffiliation extends Form
+final class AddAffiliation extends Form
 {
-    /**
-     * AddAffiliation constructor.
-     *
-     * @param ProjectService             $projectService
-     * @param Entity\Parent\Organisation $parentOrganisation
-     */
     public function __construct(
         ProjectService $projectService,
-        Entity\Parent\Organisation $parentOrganisation
+        Entity\Organisation $organisation
     ) {
         parent::__construct();
 
@@ -36,7 +34,10 @@ class AddAffiliation extends Form
         /**
          * @var $projectService ProjectService
          */
-        foreach ($projectService->findProjectByParentOrganisation($parentOrganisation, ProjectService::WHICH_ALL) as $project) {
+        foreach ($projectService->findProjectByOrganisation(
+            $organisation,
+            ProjectService::WHICH_ALL
+        ) as $project) {
             $currentProjects[] = $project->getId();
         }
 
@@ -45,7 +46,7 @@ class AddAffiliation extends Form
          * @var $newProject Project
          */
         foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)->getResult() as $newProject) {
-            if (! in_array($newProject->getId(), $currentProjects, true)) {
+            if (!\in_array($newProject->getId(), $currentProjects, true)) {
                 $projects[$newProject->getId()] = sprintf('%s', $newProject);
             }
         }
@@ -81,7 +82,7 @@ class AddAffiliation extends Form
         );
 
         $contacts = [];
-        foreach ($parentOrganisation->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
+        foreach ($organisation->getContactOrganisation() as $contactOrganisation) {
             $contacts[$contactOrganisation->getContact()->getId()] = $contactOrganisation->getContact()->getFormName();
         }
 

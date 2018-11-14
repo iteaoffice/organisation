@@ -13,6 +13,8 @@
  * @link        https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Zend\Form\Form;
@@ -74,7 +76,7 @@ class ParentImport extends Form implements InputFilterProviderInterface
      *
      * @return array
      */
-    public function getInputFilterSpecification()
+    public function getInputFilterSpecification(): array
     {
         return [
             'file' => [

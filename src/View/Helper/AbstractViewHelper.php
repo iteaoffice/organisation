@@ -10,17 +10,21 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Interop\Container\ContainerInterface;
+use Invoice\Service\InvoiceService;
 use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\I18n\View\Helper\Translate;
 use Zend\Router\Http\RouteMatch;
 use Zend\View\Helper\AbstractHelper;
@@ -39,13 +43,17 @@ abstract class AbstractViewHelper extends AbstractHelper
      */
     protected $serviceManager;
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+    /**
      * @var HelperPluginManager
      */
     protected $helperPluginManager;
     /**
      * @var RouteMatch
      */
-    protected $routeMatch = null;
+    protected $routeMatch;
     /**
      * @var ContactService
      */
@@ -54,6 +62,10 @@ abstract class AbstractViewHelper extends AbstractHelper
      * @var ParentService
      */
     protected $parentService;
+    /**
+     * @var InvoiceService
+     */
+    protected $invoiceService;
     /**
      * @var AffiliationService
      */
@@ -75,7 +87,7 @@ abstract class AbstractViewHelper extends AbstractHelper
      */
     public function getRouteMatch()
     {
-        if (is_null($this->routeMatch)) {
+        if (null === $this->routeMatch) {
             $this->routeMatch = $this->getServiceManager()->get('application')->getMvcEvent()->getRouteMatch();
         }
 
@@ -166,7 +178,7 @@ abstract class AbstractViewHelper extends AbstractHelper
     /**
      * @return ParentService
      */
-    public function getParentService(): ParentService
+    public function parentService(): ParentService
     {
         return $this->parentService;
     }
@@ -241,5 +253,41 @@ abstract class AbstractViewHelper extends AbstractHelper
         $this->versionService = $versionService;
 
         return $this;
+    }
+
+    /**
+     * @return InvoiceService
+     */
+    public function getInvoiceService(): InvoiceService
+    {
+        return $this->invoiceService;
+    }
+
+    /**
+     * @param InvoiceService $invoiceService
+     *
+     * @return AbstractViewHelper
+     */
+    public function setInvoiceService(InvoiceService $invoiceService): AbstractViewHelper
+    {
+        $this->invoiceService = $invoiceService;
+
+        return $this;
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    public function getTranslator()
+    {
+        return $this->translator;
+    }
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function setTranslator(TranslatorInterface $translator): void
+    {
+        $this->translator = $translator;
     }
 }

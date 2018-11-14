@@ -10,12 +10,15 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\OParent;
+use Program\Entity\Program;
 
 /**
  * Class OverviewExtraVariableContribution
@@ -24,29 +27,25 @@ use Organisation\Entity\OParent;
  */
 class OverviewExtraVariableContribution extends AbstractViewHelper
 {
-    /**
-     * @param OParent $parent
-     * @param int $year
-     * @param int $period
-     *
-     * @return string
-     */
-    public function __invoke(OParent $parent, int $year, int $period): string
+    public function __invoke(OParent $parent, Program $program, int $year): string
     {
+        $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
+
         return $this->getRenderer()->render(
             'organisation/partial/overview-extra-variable-contribution',
             [
                 'year'               => $year,
-                'period'             => $period,
                 'parent'             => $parent,
-                'contactService'     => $this->getContactService(),
-                'versionService'     => $this->getVersionService(),
-                'parentService'      => $this->getParentService(),
-                'affiliationService' => $this->getAffiliationService(),
-                'projectService'     => $this->getProjectService(),
-                'financialContact'   => $this->getParentService()->getFinancialContact($parent),
-                'projects'           => $this->getProjectService()->findProjectsByParent($parent),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $year),
+                'contactService'     => $this->contactService,
+                'versionService'     => $this->versionService,
+                'parentService'      => $this->parentService,
+                'affiliationService' => $this->affiliationService,
+                'projectService'     => $this->projectService,
+                'financialContact'   => $this->parentService->getFinancialContact($parent),
+                'projects'           => $this->projectService->findProjectsByParent($parent, $program),
+                'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
+                'invoiceMethod'      => $invoiceMethod,
+                'program'            => $program,
             ]
         );
     }

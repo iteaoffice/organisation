@@ -13,6 +13,8 @@
  * @link        https://itea3.org
  */
 
+declare(strict_types=1);
+
 namespace Organisation\Form;
 
 use Zend\Form\Form;
@@ -74,18 +76,12 @@ class Import extends Form implements InputFilterProviderInterface
      *
      * @return array
      */
-    public function getInputFilterSpecification()
+    public function getInputFilterSpecification(): array
     {
         return [
             'file' => [
                 'required'   => true,
                 'validators' => [
-                    new Size(
-                        [
-                            'min' => '1kB',
-                            'max' => '8MB',
-                        ]
-                    ),
                     new MimeType(
                         [
                             'text/plain',

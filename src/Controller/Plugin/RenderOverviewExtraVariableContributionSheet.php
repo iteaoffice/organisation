@@ -10,55 +10,107 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Controller\Plugin;
 
+use Affiliation\Service\AffiliationService;
+use Contact\Service\ContactService;
 use Organisation\Entity\OParent;
+use Organisation\Options\ModuleOptions;
+use Organisation\Service\ParentService;
+use Program\Entity\Program;
+use Project\Service\ProjectService;
+use Project\Service\VersionService;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use ZfcTwig\View\TwigRenderer;
 
 /**
  * Class RenderOverviewExtraVariableContributionSheet
- * @package Parent\Controller\Plugin
+ *
+ * @package Organisation\Controller\Plugin
  */
-class RenderOverviewExtraVariableContributionSheet extends AbstractOrganisationPlugin
+final class RenderOverviewExtraVariableContributionSheet extends AbstractPlugin
 {
     /**
-     * @param OParent $parent
-     * @param $year
-     * @param $period
-     * @return OrganisationPdf|\TCPDF
+     * @var ParentService
      */
-    public function __invoke(OParent $parent, $year, $period): OrganisationPdf
+    private $parentService;
+    /**
+     * @var ModuleOptions
+     */
+    private $moduleOptions;
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
+    /**
+     * @var VersionService
+     */
+    private $versionService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var AffiliationService
+     */
+    private $affiliationService;
+    /**
+     * @var TwigRenderer
+     */
+    private $renderer;
+
+    public function __construct(
+        ParentService $parentService,
+        ModuleOptions $moduleOptions,
+        ProjectService $projectService,
+        VersionService $versionService,
+        ContactService $contactService,
+        AffiliationService $affiliationService,
+        TwigRenderer $renderer
+    ) {
+        $this->parentService = $parentService;
+        $this->moduleOptions = $moduleOptions;
+        $this->projectService = $projectService;
+        $this->versionService = $versionService;
+        $this->contactService = $contactService;
+        $this->affiliationService = $affiliationService;
+        $this->renderer = $renderer;
+    }
+
+    public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
     {
-        /**
-         * @var $pdf OrganisationPdf|\TCPDF
-         */
         $pdf = new OrganisationPdf();
-        $pdf->setTemplate($this->getModuleOptions()->getOverviewVariableContributionTemplate());
+        $pdf->setTemplate($this->moduleOptions->getOverviewVariableContributionTemplate());
+
+        $pdf->SetMargins(10, 30, -1, true);
+        $pdf->SetAutoPageBreak(true, 30);
         $pdf->AddPage();
-        $pdf->SetMargins(10, 40, 10, true);
         $pdf->SetFontSize(8);
 
-        $content = $this->getTwigRenderer()->render(
+        $content = $this->renderer->render(
             'organisation/pdf/overview-extra-variable-contribution',
             [
                 'year'               => $year,
-                'period'             => $period,
                 'parent'             => $parent,
-                'contactService'     => $this->getContactService(),
-                'versionService'     => $this->getVersionService(),
-                'parentService'      => $this->getParentService(),
-                'affiliationService' => $this->getAffiliationService(),
-                'projectService'     => $this->getProjectService(),
-                'financialContact'   => $this->getParentService()->getFinancialContact($parent),
-                'projects'           => $this->getProjectService()->findProjectsByParent($parent),
-                'invoiceFactor'      => $this->getParentService()->parseInvoiceFactor($parent, $year),
+                'contactService'     => $this->contactService,
+                'versionService'     => $this->versionService,
+                'parentService'      => $this->parentService,
+                'affiliationService' => $this->affiliationService,
+                'projectService'     => $this->projectService,
+                'program'            => $program,
+                'financialContact'   => $this->parentService->getFinancialContact($parent),
+                'projects'           => $this->projectService->findProjectsByParent($parent, $program),
+                'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
 
             ]
         );
 
-        $pdf->writeHTMLCell(0, 0, 10, 30, $content);
+        $pdf->writeHTMLCell(0, 0, '', '', $content);
 
         return $pdf;
     }

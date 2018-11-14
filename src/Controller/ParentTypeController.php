@@ -10,8 +10,10 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Controller;
 
@@ -19,31 +21,45 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Organisation\Entity;
 use Organisation\Form;
+use Organisation\Service\FormService;
+use Organisation\Service\ParentService;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
 /**
- * @category    Parent
+ * Class ParentTypeController
+ *
+ * @package Organisation\Controller
  */
-class ParentTypeController extends OrganisationAbstractController
+final class ParentTypeController extends OrganisationAbstractController
 {
     /**
-     * @return ViewModel
+     * @var ParentService
      */
-    public function listAction()
-    {
-        $page              = $this->params()->fromRoute('page', 1);
-        $filterPlugin      = $this->getOrganisationFilter();
-        $organisationQuery = $this->getParentService()
-                                  ->findEntitiesFiltered(Entity\Parent\Type::class, $filterPlugin->getFilter());
+    private $parentService;
+    /**
+     * @var FormService
+     */
+    private $formService;
 
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
+    public function __construct(ParentService $parentService, FormService $formService)
+    {
+        $this->parentService = $parentService;
+        $this->formService = $formService;
+    }
+
+    public function listAction(): ViewModel
+    {
+        $page = $this->params()->fromRoute('page', 1);
+        $filterPlugin = $this->getOrganisationFilter();
+        $organisationQuery = $this->parentService->findFiltered(Entity\Parent\Type::class, $filterPlugin->getFilter());
+
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentTypeFilter($this->getParentService());
+        $form = new Form\ParentTypeFilter();
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -58,31 +74,24 @@ class ParentTypeController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
     public function newAction()
     {
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare(Entity\Parent\Type::class, null, $data);
+        $form = $this->formService->prepare(Entity\Parent\Type::class, null, $data);
         $form->remove('delete');
-
-        $form->setAttribute('class', 'form-horizontal');
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute('zfcadmin/parent-type/list');
+                return $this->redirect()->toRoute('zfcadmin/parent-type/list');
             }
 
             if ($form->isValid()) {
                 /* @var $parentType Entity\Parent\Type */
                 $parentType = $form->getData();
 
-                $result = $this->getParentService()->newEntity($parentType);
-                $this->redirect()->toRoute(
+                $result = $this->parentService->save($parentType);
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent-type/view',
                     [
                         'id' => $result->getId(),
@@ -94,27 +103,22 @@ class ParentTypeController extends OrganisationAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-    /**
-     * Create a new template.
-     *
-     * @return \Zend\View\Model\ViewModel
-     */
+
     public function editAction()
     {
-        $parentType = $this->getParentService()->findEntityById(Entity\Parent\Type::class, $this->params('id'));
+        $parentType = $this->parentService->find(Entity\Parent\Type::class, (int)$this->params('id'));
 
-        if ($parentType->isEmpty()) {
+        if (null === $parentType) {
             return $this->notFoundAction();
         }
 
-        $data = array_merge($this->getRequest()->getPost()->toArray());
+        $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->getFormService()->prepare($parentType, $parentType, $data);
-        $form->setAttribute('class', 'form-horizontal');
+        $form = $this->formService->prepare($parentType, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                $this->redirect()->toRoute(
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent-type/view',
                     [
                         'id' => $parentType->getId(),
@@ -126,8 +130,8 @@ class ParentTypeController extends OrganisationAbstractController
                 /* @var $parentType Entity\Parent\Type */
                 $parentType = $form->getData();
 
-                $result = $this->getParentService()->newEntity($parentType);
-                $this->redirect()->toRoute(
+                $result = $this->parentService->save($parentType);
+                return $this->redirect()->toRoute(
                     'zfcadmin/parent-type/view',
                     [
                         'id' => $result->getId(),
@@ -140,14 +144,11 @@ class ParentTypeController extends OrganisationAbstractController
     }
 
 
-    /**
-     * @return array|ViewModel
-     */
-    public function viewAction()
+    public function viewAction(): ViewModel
     {
-        $type = $this->getParentService()->findEntityById(Entity\Parent\Type::class, $this->params('id'));
+        $type = $this->parentService->find(Entity\Parent\Type::class, (int)$this->params('id'));
 
-        if (is_null($type)) {
+        if (null === $type) {
             return $this->notFoundAction();
         }
 

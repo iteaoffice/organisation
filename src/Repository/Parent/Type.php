@@ -10,26 +10,26 @@
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/project for the canonical source repository
+ * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Repository\Parent;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
+use Organisation\Repository\FilteredObjectRepository;
 
 /**
- * @category    Member
+ * Class Type
+ *
+ * @package Organisation\Repository\Parent
  */
-class Type extends EntityRepository
+final class Type extends EntityRepository implements FilteredObjectRepository
 {
-    /**
-     * @param array $filter
-     *
-     * @return Query
-     */
-    public function findFiltered(array $filter)
+    public function findFiltered(array $filter = []): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent_type');
@@ -41,7 +41,7 @@ class Type extends EntityRepository
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -56,6 +56,6 @@ class Type extends EntityRepository
                 $queryBuilder->addOrderBy('organisation_entity_parent_type.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 }

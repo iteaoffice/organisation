@@ -4,7 +4,7 @@
  *
  * PHP Version 7
  *
- * @category    Partner
+ * @category    Parent
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
@@ -12,6 +12,8 @@
  *
  * @link        http://github.com/iteaoffice/partner for the canonical source repository
  */
+
+declare(strict_types=1);
 
 namespace Organisation\Navigation\Invokable;
 
@@ -31,7 +33,7 @@ class ParentLabel extends AbstractNavigationInvokable
      *
      * @return void
      */
-    public function __invoke(Mvc $page)
+    public function __invoke(Mvc $page): void
     {
         if ($this->getEntities()->containsKey(OParent::class)) {
             /** @var OParent $parent */
@@ -48,7 +50,7 @@ class ParentLabel extends AbstractNavigationInvokable
 
             $label = (string)$parent;
         } else {
-            $label = $this->translate('txt-nav-view');
+            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }
