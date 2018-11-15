@@ -104,6 +104,7 @@ $config = [
         'factories' => [
             Options\ModuleOptions::class                         => Factory\ModuleOptionsFactory::class,
             Form\OrganisationForm::class                         => ConfigAbstractFactory::class,
+            Form\FinancialForm::class                            => ConfigAbstractFactory::class,
             Service\OrganisationService::class                   => Factory\InvokableFactory::class,
             Service\ParentService::class                         => Factory\InvokableFactory::class,
             Service\FormService::class                           => Factory\FormServiceFactory::class,

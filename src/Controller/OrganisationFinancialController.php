@@ -150,7 +150,7 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
                 }
 
                 if ($data['vatType'] === '0') {
-                    $financial->setVatType(null);
+                    $financial->setVatType(new ArrayCollection());
                 } else {
                     $vatType = $this->generalService->find(VatType::class, (int)$data['vatType']);
                     $arrayCollection = new ArrayCollection();

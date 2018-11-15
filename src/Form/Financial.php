@@ -29,6 +29,7 @@ use Zend\Form\Form;
  * Class Financial
  *
  * @package Organisation\Form
+ * @deprecated
  */
 final class Financial extends Form
 {

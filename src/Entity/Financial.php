@@ -34,11 +34,7 @@ class Financial extends AbstractEntity
     public const REQUIRED_PURCHASE_ORDER = 1;
     public const NO_EMAIL_DELIVERY = 0;
     public const EMAIL_DELIVERY = 1;
-    /**
-     * Textual versions of the vat status.
-     *
-     * @var array
-     */
+
     protected static $vatStatusTemplates
         = [
             self::VAT_STATUS_UNDEFINED => 'txt-vat-status-undefined',
@@ -46,31 +42,19 @@ class Financial extends AbstractEntity
             self::VAT_STATUS_INVALID   => 'txt-vat-status-invalid',
             self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
         ];
-    /**
-     * Textual versions of the omit contact
-     *
-     * @var array
-     */
+
     protected static $omitContactTemplates
         = [
             self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
             self::OMIT_CONTACT    => 'txt-omit-contact',
         ];
-    /**
-     * Textual versions of the email templates.
-     *
-     * @var array
-     */
+
     protected static $emailTemplates
         = [
             self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
             self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
         ];
-    /**
-     * Textual versions of the require purchase order
-     *
-     * @var array
-     */
+
     protected static $requiredPurchaseOrderTemplates
         = [
             self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
@@ -203,9 +187,6 @@ class Financial extends AbstractEntity
      */
     private $reminder;
 
-    /**
-     *
-     */
     public function __construct()
     {
         $this->vatStatus = self::VAT_STATUS_UNCHECKED;

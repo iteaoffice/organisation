@@ -99,6 +99,9 @@ return [
         ],
         Controller\Plugin\MergeParentOrganisation::class                      => [
             EntityManager::class
+        ],
+        Form\FinancialForm::class                                             => [
+            EntityManager::class
         ]
     ]
 ];
