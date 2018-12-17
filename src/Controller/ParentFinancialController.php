@@ -145,7 +145,7 @@ final class ParentFinancialController extends OrganisationAbstractController
                 /** @var Entity\Financial $financialOrganisation */
                 $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
-                    $formData['organisationFinancial']
+                    (int) $formData['organisationFinancial']
                 );
 
                 $financial = new Entity\Parent\Financial();
@@ -289,7 +289,7 @@ final class ParentFinancialController extends OrganisationAbstractController
                 /** @var Entity\Financial $financialOrganisation */
                 $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
-                    $formData['organisationFinancial']
+                    (int) $formData['organisationFinancial']
                 );
 
                 $financial->setContact($this->contactService->findContactById((int)$formData['contact']));
