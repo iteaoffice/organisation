@@ -22,13 +22,6 @@ use Zend\Form\Element;
  */
 class Organisation extends Element\Select
 {
-
-    /**
-     * Organisation constructor.
-     *
-     * @param null $name
-     * @param array $options
-     */
     public function __construct($name = null, $options = [])
     {
         parent::__construct($name, $options);
@@ -36,13 +29,10 @@ class Organisation extends Element\Select
         $this->setDisableInArrayValidator(true);
     }
 
-    /**
-     * @param Entity\Organisation $organisation
-     */
-    public function injectOrganisation(Entity\Organisation $organisation)
+    public function injectOrganisation(Entity\Organisation $organisation): void
     {
         $this->valueOptions[$organisation->getId()] = sprintf(
-            "%s (%s)",
+            '%s (%s)',
             $organisation->getOrganisation(),
             $organisation->getCountry()->getIso3()
         );

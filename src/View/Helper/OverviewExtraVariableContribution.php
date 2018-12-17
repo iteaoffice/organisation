@@ -17,14 +17,10 @@ declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
+use Affiliation\Service\AffiliationService;
 use Organisation\Entity\OParent;
 use Program\Entity\Program;
 
-/**
- * Class OverviewExtraVariableContribution
- *
- * @package Organisation\View\Helper
- */
 class OverviewExtraVariableContribution extends AbstractViewHelper
 {
     public function __invoke(OParent $parent, Program $program, int $year): string
@@ -42,7 +38,7 @@ class OverviewExtraVariableContribution extends AbstractViewHelper
                 'affiliationService' => $this->affiliationService,
                 'projectService'     => $this->projectService,
                 'financialContact'   => $this->parentService->getFinancialContact($parent),
-                'projects'           => $this->projectService->findProjectsByParent($parent, $program),
+                'projects'           => $this->projectService->findProjectsByParent($parent, $program, AffiliationService::WHICH_INVOICING, $year),
                 'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
                 'invoiceMethod'      => $invoiceMethod,
                 'program'            => $program,

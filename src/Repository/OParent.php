@@ -122,6 +122,21 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function findParentByOrganisationName(string $name): ?Entity\OParent
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_parent');
+        $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
+        $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
+        $queryBuilder->andWhere('organisation_entity_organisation.organisation = :organisation');
+        $queryBuilder->setParameter('organisation', $name);
+        $queryBuilder->setMaxResults(1);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+
     public function findActiveParentWithoutFinancial(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();

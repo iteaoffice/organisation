@@ -142,19 +142,18 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         $minimalRequiredElements = [
             'Call',
             'Proposal Acronym',
-            'Applicant Legal Name',
-            'EPS',
+            'Legal Name',
             'Parent',
-            'Parent EPS',
-            'EU Funding',
-            'National Funding',
+            'EPS',
+            'EU funding',
+            'National funding',
             'Member Type',
             'Member AENEAS',
-            'Member ARTEMIS-IA',
-            'Member EPoSS',
-            'AENEAS DOA',
-            'ARTEMIS-IA DOA',
-            'EPoSS DOA'
+            'Member ARTEMISIA',
+            'Member EPOSS',
+            'AENEAS ECSEL DoA',
+            'ARTEMISIA DoA',
+            'EPoSS DoA'
         ];
 
         /*
@@ -196,25 +195,6 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 }
             }
 
-            /**
-             * Validate the country
-             */
-            if (empty($content[$this->headerKeys['Parent EPS']])) {
-                $this->errors[] = sprintf(
-                    'Parent EPS in row %s is empty',
-                    $counter
-                );
-            } else {
-                if (null === $this->countryService->findCountryByCD($content[$this->headerKeys['Parent EPS']])
-                ) {
-                    $this->errors[] = sprintf(
-                        'Parent EPS (%s) in row %s cannot be found',
-                        $content[$this->headerKeys['Parent EPS']],
-                        $counter
-                    );
-                }
-            }
-
             if (!empty($content[$this->headerKeys['Member Type']])) {
                 //Try to find the status
                 $type = $this->parentService->findParentTypeByName($content[$this->headerKeys['Member Type']]);
@@ -224,7 +204,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                         'Type (%s) in row %s (%s) cannot be found',
                         $content[$this->headerKeys['Member Type']],
                         $counter,
-                        $content[$this->headerKeys['Applicant Legal Name']]
+                        $content[$this->headerKeys['Legal Name']]
                     );
                 }
             }
@@ -242,9 +222,9 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //Find the country
             $country = $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']]);
-            $parentCountry = $this->countryService->findCountryByCD($content[$this->headerKeys['Parent EPS']]);
 
-            if (null === $contact || null === $country || null === $parentCountry) {
+
+            if (null === $contact || null === $country) {
                 continue;
             }
 
@@ -292,23 +272,23 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             $project->setCall($call);
 
             //Try to find the parent organisation
-            $organisationForParent = $this->organisationService->findOrganisationByNameCountry(
-                $content[$this->headerKeys['Parent']],
-                $parentCountry,
-                false
+            $organisationForParent = $this->parentService->findParentByOrganisationName(
+                $content[$this->headerKeys['Parent']]
             );
 
 
             if (null === $organisationForParent) {
                 $organisationForParent = $this->createOrganisation(
                     $content[$this->headerKeys['Parent']],
-                    $parentCountry
+                    $country
                 );
+            } else {
+                $organisationForParent = $organisationForParent->getOrganisation();
             }
 
             //Try to find the organisation
             $organisation = $this->organisationService->findOrganisationByNameCountry(
-                $content[$this->headerKeys['Applicant Legal Name']],
+                $content[$this->headerKeys['Legal Name']],
                 $country,
                 false
             );
@@ -316,7 +296,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             if (null === $organisation) {
                 $organisation = $this->createOrganisation(
-                    $content[$this->headerKeys['Applicant Legal Name']],
+                    $content[$this->headerKeys['Legal Name']],
                     $country
                 );
             }
@@ -352,7 +332,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
                 //Add the $parentOrganisation to the parent for further lookups
                 $parent->getParentOrganisation()->add($parentOrganisation);
-                //Inject the parentOrganisation in the organisation for futher lookups
+                //Inject the parentOrganisation in the organisation for further lookups
                 $organisation->setParentOrganisation($parentOrganisation);
             }
 
@@ -382,16 +362,18 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 $funding->setAffiliation($affiliation);
             }
 
-            $funding->setFundingEu((float)trim(str_replace(',', '', $content[$this->headerKeys['EU Funding']]), '"'));
+            $funding->setFundingEu(
+                (float)(\trim(\str_replace(['.', ','], '', $content[$this->headerKeys['EU funding']]), '"') / 100)
+            );
             $funding->setFundingNational(
-                (float)trim(
-                    str_replace(
-                        ',',
+                (float)(\trim(
+                    \str_replace(
+                        ['.', ','],
                         '',
-                        $content[$this->headerKeys['National Funding']]
+                        $content[$this->headerKeys['National funding']]
                     ),
                     '"'
-                )
+                ) / 100)
             );
 
             $affiliation->getFunded()->add($funding);
@@ -409,7 +391,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             if (!$organisationNameStored) {
                 $organisationName = new Name();
-                $organisationName->setName($content[$this->headerKeys['Applicant Legal Name']]);
+                $organisationName->setName($content[$this->headerKeys['Legal Name']]);
                 $organisationName->setProject($project);
                 $organisationName->setOrganisation($organisation);
                 $organisation->getNames()->add($organisationName);
@@ -455,7 +437,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         $parent->setEpossMemberType($this->parseEpossMemberType($content));
 
         //Fix the DOA's
-        $ecselDoa = (string)$content[$this->headerKeys['AENEAS DOA']] === '1';
+        $ecselDoa = (string)$content[$this->headerKeys['AENEAS ECSEL DoA']] === '1';
 
         $hasDoa = $this->parentService->hasDoaForProgram($parent, $program);
 
@@ -499,8 +481,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
     public function parseArtimisiaMemberType(array $content): int
     {
-        $artemisiaDOA = (string)$content[$this->headerKeys['ARTEMIS-IA DOA']] === '1';
-        $artemisiaMember = (string)$content[$this->headerKeys['Member ARTEMIS-IA']] === '1';
+        $artemisiaDOA = (string)$content[$this->headerKeys['ARTEMISIA DoA']] === '1';
+        $artemisiaMember = (string)$content[$this->headerKeys['Member ARTEMISIA']] === '1';
 
         //Derive the member type
         switch (true) {
@@ -515,8 +497,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
     public function parseEpossMemberType(array $content): int
     {
-        $epossMember = (string)$content[$this->headerKeys['Member EPoSS']] === '1';
-        $epossDOA = (string)$content[$this->headerKeys['EPoSS DOA']] === '1';
+        $epossMember = (string)$content[$this->headerKeys['Member EPOSS']] === '1';
+        $epossDOA = (string)$content[$this->headerKeys['EPoSS DoA']] === '1';
 
         //Derive the member type
         switch (true) {

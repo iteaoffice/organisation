@@ -22,14 +22,10 @@ use ZfcTwitterBootstrap\Form\View\Helper\FormElement;
 class OrganisationFormElement extends FormElement
 {
     /**
-     * Magical Invoke.
-     *
-     * @param \Zend\Form\ElementInterface $element
-     * @param string $groupWrapper
-     * @param string $controlWrapper
-     *
-     * @return string|self
+     * @var string
      */
+    protected $groupWrapper = '<div class="form-group row %s" id="control-group-%s">%s</div>';
+
     public function __invoke(ElementInterface $element = null, $groupWrapper = null, $controlWrapper = null)
     {
         //Inject the javascript in the header
@@ -73,16 +69,7 @@ class OrganisationFormElement extends FormElement
         return $this;
     }
 
-    /**
-     * Render.
-     *
-     * @param Select|ElementInterface $element
-     * @param string $groupWrapper
-     * @param string $controlWrapper
-     *
-     * @return string
-     */
-    public function render(ElementInterface $element, $groupWrapper = null, $controlWrapper = null)
+    public function render(ElementInterface $element, $groupWrapper = null, $controlWrapper = null): string
     {
         $labelHelper = $this->getLabelHelper();
         $escapeHelper = $this->getEscapeHtmlHelper();
@@ -110,7 +97,7 @@ class OrganisationFormElement extends FormElement
             $controlLabel .= $labelHelper->openTag(
                 [
                     'class' => 'col-md-3 ' . ($element->getOption('wrapCheckboxInLabel') ? 'checkbox'
-                            : 'control-label'),
+                            : 'control-label col-form-label'),
                 ] + ($element->hasAttribute('id') ? ['for' => $id] : [])
             );
 

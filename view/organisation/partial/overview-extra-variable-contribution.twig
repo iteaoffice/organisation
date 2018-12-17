@@ -94,7 +94,7 @@
     <tr>
         <th colspan="4">{{ translate("txt-total-extra-%s-contribution-in-program-%s-in-year-%s")|format(parent, program, year) }}</th>
         <th>
-            <span class="pull-right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent, program)|round_currency }}</span>
+            <span class="pull-right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent, program, year)|round_currency }}</span>
         </th>
     </tr>
     </tfoot>

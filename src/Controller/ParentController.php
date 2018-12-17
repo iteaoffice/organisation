@@ -160,7 +160,7 @@ final class ParentController extends OrganisationAbstractController
             ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
 
         /** @var Entity\OParent[] $parents */
-        $parents = $parentQuery->getResult();
+        $parents = $parentQuery->getQuery()->getResult();
 
         // Open the output stream
         $fh = fopen('php://output', 'wb');
@@ -430,6 +430,8 @@ final class ParentController extends OrganisationAbstractController
                         'id' => $parent->getId(),
                     ]
                 );
+            } else {
+                var_dump($form->getInputFilter()->getMessages());
             }
         }
 

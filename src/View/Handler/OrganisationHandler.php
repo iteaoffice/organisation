@@ -184,7 +184,7 @@ final class OrganisationHandler extends AbstractHandler
             ],
             $this->request->getQuery()->toArray()
         );
-        $searchFields = ['organisation_search','country_search','organisation_type_search'];
+        $searchFields = ['organisation_search', 'country_search', 'organisation_type_search'];
         $hasTerm = !\in_array($data['query'], ['*', ''], true);
 
         if ($this->request->isGet()) {
@@ -246,7 +246,9 @@ final class OrganisationHandler extends AbstractHandler
                 'paginator'           => $paginator,
                 'page'                => $page,
                 'hasTerm'             => $hasTerm,
-                'organisationService' => $this->organisationService
+                'organisationService' => $this->organisationService,
+                'matchedRouteName'    => $this->routeMatch->getMatchedRouteName(),
+                'docRef'              => $this->routeMatch->getParam('docRef')
             ]
         );
     }

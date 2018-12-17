@@ -258,68 +258,24 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         return $queryBuilder->getQuery();
     }
 
-    /**
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
-     *
-     * @return Query
-     * @deprecated
-     */
-    public function findOrganisations(bool $onlyActiveProject, bool $onlyActivePartner): Query
+
+
+    public function findAmountOfActiveOrganisations(): int
     {
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('organisation_entity_organisation');
-        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->select($queryBuilder->expr()->count('organisation_entity_organisation'));
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+
         $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
         $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
 
-        //Limit to only the active projects
-        if ($onlyActiveProject) {
-            /** @var Project $projectRepository */
-            $projectRepository = $this->_em->getRepository(\Project\Entity\Project::class);
-            $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
-        }
-        if ($onlyActivePartner) {
-            $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
-        }
-        $queryBuilder->orderBy('organisation_entity_organisation.organisation', 'ASC');
+        /** @var Project $projectRepository */
+        $projectRepository = $this->_em->getRepository(\Project\Entity\Project::class);
+        $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
 
-        return $queryBuilder->getQuery();
-    }
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
 
-    /**
-     * @param Country $country
-     * @param bool    $onlyActiveProject
-     * @param bool    $onlyActivePartner
-     *
-     * @return Query
-     * @deprecated
-     */
-    public function findOrganisationByCountry(Country $country, bool $onlyActiveProject, bool $onlyActivePartner): Query
-    {
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('organisation_entity_organisation');
-        $queryBuilder->distinct('organisation_entity_organisation.id');
-        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
-        $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
-        $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
-
-        //Limit to only the active projects
-        if ($onlyActiveProject) {
-            /** @var Project $projectRepository */
-            $projectRepository = $this->_em->getRepository(\Project\Entity\Project::class);
-            $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
-        }
-        if ($onlyActivePartner) {
-            $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
-        }
-
-        $queryBuilder->andWhere('organisation_entity_organisation.country = ?8');
-        $queryBuilder->setParameter(8, $country);
-        $queryBuilder->orderBy('organisation_entity_organisation.organisation', 'ASC');
-
-        return $queryBuilder->getQuery();
+        return (int)$queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getSingleScalarResult();
     }
 
     public function findOrganisationByNameCountryAndEmailAddress(

@@ -99,7 +99,6 @@ final class RenderOverviewVariableContributionSheet extends AbstractPlugin
         $projects = $this->parentService->renderProjectsByParentInYear($parent, $program, $year);
         $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
 
-
         $content = $this->renderer->render(
             'organisation/pdf/overview-variable-contribution',
             [

@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Organisation\Service;
 
-use Affiliation\Entity\AbstractEntity;
+use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -52,7 +52,6 @@ class ParentService extends AbstractService
      */
     private $versionService;
 
-
     /**
      * Because of circular dependencies between parentService and AffiliationService we choose here to use an invokable
      *
@@ -71,6 +70,11 @@ class ParentService extends AbstractService
     public function findParentById(int $id): ?Entity\OParent
     {
         return $this->entityManager->find(Entity\OParent::class, $id);
+    }
+
+    public function findParentByOrganisationName(string $name): ?Entity\OParent
+    {
+        return $this->entityManager->getRepository(Entity\OParent::class)->findParentByOrganisationName($name);
     }
 
     public function findParentTypeByName(string $name): ?Entity\Parent\Type
@@ -184,13 +188,15 @@ class ParentService extends AbstractService
         return null;
     }
 
-    public function parseTotalFundedByParent(Entity\OParent $parent, Program $program): float
+    public function parseTotalFundedByParent(Entity\OParent $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $totalFunded = 0;
         foreach ($this->findAffiliationByParentAndProgramAndWhich(
             $parent,
-            $program
+            $program,
+            AffiliationService::WHICH_INVOICING,
+            $year
         ) as $affiliation) {
             $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
 
@@ -208,11 +214,12 @@ class ParentService extends AbstractService
     public function findAffiliationByParentAndProgramAndWhich(
         Entity\OParent $parent,
         Program $program,
-        int $which = AffiliationService::WHICH_ONLY_ACTIVE
+        int $which = AffiliationService::WHICH_ONLY_ACTIVE,
+        ?int $year = null
     ): ArrayCollection {
         /** @var \Affiliation\Repository\Affiliation $repository */
-        $repository = $this->entityManager->getRepository(AbstractEntity::class);
-        $affiliations = $repository->findAffiliationByParentAndProgramAndWhich($parent, $program, $which);
+        $repository = $this->entityManager->getRepository(Affiliation::class);
+        $affiliations = $repository->findAffiliationByParentAndProgramAndWhich($parent, $program, $which, $year);
 
         if (null === $affiliations) {
             $affiliations = [];
@@ -221,26 +228,30 @@ class ParentService extends AbstractService
         return new ArrayCollection($affiliations);
     }
 
-    public function parseTotalFundingEuByParent(Entity\OParent $parent, Program $program): float
-    {
-        //Go over each affiliation and sum up what has been paid already
-        $totalFunded = 0;
-        foreach ($this->findAffiliationByParentAndProgramAndWhich(
-            $parent,
-            $program
-        ) as $affiliation) {
-            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
-
-            if (null !== $latestVersion) {
-                $totalFunded += $this->versionService->findTotalFundingEuVersionByAffiliationAndVersion(
-                    $affiliation,
-                    $latestVersion
-                );
-            }
-        }
-
-        return (float)$totalFunded;
-    }
+//    public function parseTotalFundingEuByParent(Entity\OParent $parent, Program $program, int $year): float
+//    {
+//        //Go over each affiliation and sum up what has been paid already
+//        $totalFunded = 0;
+//        foreach (
+//            $this->findAffiliationByParentAndProgramAndWhich(
+//                $parent,
+//                $program,
+//                AffiliationService::WHICH_INVOICING,
+//                $year
+//            ) as $affiliation
+//        ) {
+//            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
+//
+//            if (null !== $latestVersion) {
+//                $totalFunded += $this->versionService->findTotalFundingEuVersionByAffiliationAndVersion(
+//                    $affiliation,
+//                    $latestVersion
+//                );
+//            }
+//        }
+//
+//        return (float)$totalFunded;
+//    }
 
     public function parseContribution(Entity\OParent $parent, Program $program, int $year): float
     {
@@ -248,7 +259,9 @@ class ParentService extends AbstractService
         $contribution = 0;
         foreach ($this->findAffiliationByParentAndProgramAndWhich(
             $parent,
-            $program
+            $program,
+            AffiliationService::WHICH_INVOICING,
+            $year
         ) as $affiliation) {
             $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
 
@@ -276,7 +289,9 @@ class ParentService extends AbstractService
         $contributionBalance = 0;
         foreach ($this->findAffiliationByParentAndProgramAndWhich(
             $parent,
-            $program
+            $program,
+            AffiliationService::WHICH_INVOICING,
+            $year
         ) as $affiliation) {
             $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
 
@@ -292,12 +307,12 @@ class ParentService extends AbstractService
         return (float)$contributionBalance;
     }
 
-    public function parseTotalExtraVariableBalanceByParent(Entity\OParent $parent, Program $program): float
+    public function parseTotalExtraVariableBalanceByParent(Entity\OParent $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $balanceTotal = 0;
 
-        foreach ($this->projectService->findProjectsByParent($parent, $program) as $project) {
+        foreach ($this->projectService->findProjectsByParent($parent, $program, AffiliationService::WHICH_INVOICING, $year) as $project) {
             $version = $this->projectService->getLatestProjectVersion($project);
 
             //Only add the balance when there is a version
@@ -383,7 +398,9 @@ class ParentService extends AbstractService
         $projects = [];
         foreach ($this->findAffiliationByParentAndProgramAndWhich(
             $parent,
-            $program
+            $program,
+            AffiliationService::WHICH_INVOICING,
+            $year
         ) as $affiliation) {
             /** @var Call $call */
             $call = $affiliation->getProject()->getCall();
@@ -415,8 +432,8 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation' => $affiliation,
-                'funding' => $funding,
+                'affiliation'  => $affiliation,
+                'funding'      => $funding,
                 'contribution' => $contribution
             ];
 
@@ -444,7 +461,7 @@ class ParentService extends AbstractService
             return 0;
         }
 
-        return 2.5;
+        return 2.1;
     }
 
     public function hasDoaForProgram(Entity\OParent $parent, Program $program): bool
@@ -479,9 +496,12 @@ class ParentService extends AbstractService
         //Go over each affiliation and sum up what has been paid already
         $contributionTotal = 0;
 
+        /** @var Affiliation $affiliation */
         foreach ($this->findAffiliationByParentAndProgramAndWhich(
             $parent,
-            $program
+            $program,
+            AffiliationService::WHICH_INVOICING,
+            $year
         ) as $affiliation) {
             //Skip the affiliations which are not in the $include affiliations table
             if (null !== $includeAffiliations && !\in_array($affiliation, $includeAffiliations, true)) {

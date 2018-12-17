@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
+use Affiliation\Service\AffiliationService;
 use Organisation\Entity\OParent;
 use Program\Entity\Program;
 
@@ -25,14 +26,8 @@ use Program\Entity\Program;
  *
  * @package Parent\View\Helper
  */
-class OverviewVariableContribution extends AbstractViewHelper
+final class OverviewVariableContribution extends AbstractViewHelper
 {
-    /**
-     * @param OParent $parent
-     * @param Program $program
-     * @param int $year
-     * @return string
-     */
     public function __invoke(OParent $parent, Program $program, int $year): string
     {
         $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
@@ -53,7 +48,9 @@ class OverviewVariableContribution extends AbstractViewHelper
                 'invoiceMethod' => $invoiceMethod,
                 'affiliations'       => $this->affiliationService->findAffiliationByParentAndProgramAndWhich(
                     $parent,
-                    $program
+                    $program,
+                    AffiliationService::WHICH_INVOICING,
+                    $year
                 ),
             ]
         );

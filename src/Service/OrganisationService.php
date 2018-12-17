@@ -237,41 +237,6 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $this->entityManager->getRepository(Entity\Type::class)->findBy([], ['type' => 'ASC']);
     }
 
-    /**
-     * @param bool $onlyActiveProject
-     * @param bool $onlyActivePartner
-     *
-     * @return Query
-     * @deprecated
-     */
-    public function findOrganisations(
-        bool $onlyActiveProject = true,
-        bool $onlyActivePartner = true
-    ): Query {
-        /** @var Repository\Organisation $repository */
-        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
-
-        return $repository->findOrganisations($onlyActiveProject, $onlyActivePartner);
-    }
-
-    /**
-     * @param Country $country
-     * @param bool    $onlyActiveProject
-     * @param bool    $onlyActivePartner
-     *
-     * @return Query
-     * @deprecated
-     */
-    public function findOrganisationByCountry(
-        Country $country,
-        bool $onlyActiveProject = true,
-        bool $onlyActivePartner = true
-    ): Query {
-        /** @var Repository\Organisation $repository */
-        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
-
-        return $repository->findOrganisationByCountry($country, $onlyActiveProject, $onlyActivePartner);
-    }
 
     public function findBranchesByOrganisation(Entity\Organisation $organisation): array
     {

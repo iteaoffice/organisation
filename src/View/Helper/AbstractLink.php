@@ -146,6 +146,7 @@ abstract class AbstractLink extends AbstractViewHelper
                 switch ($this->getAction()) {
                     case 'new':
                     case 'add-affiliation':
+                    case 'create-from-organisation':
                         $this->addLinkContent('<i class="fa fa-plus"></i>');
                         break;
                     case 'upload':

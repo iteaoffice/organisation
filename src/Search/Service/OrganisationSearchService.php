@@ -57,8 +57,11 @@ class OrganisationSearchService extends AbstractSearchService
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
-        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('organisation_type')->setMinCount(1)->setExcludes(['organisation_type']);
-        $facetSet->createFacetField('country')->setField('country')->setSort('country')->setMinCount(1)->setExcludes(['country']);
+        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('organisation_type')
+            ->setMinCount(1)->setExcludes(['organisation_type']);
+        $facetSet->createFacetField('country')->setField('country')->setSort('country')->setMinCount(1)->setExcludes(
+            ['country']
+        );
 
         return $this;
     }
@@ -80,6 +83,18 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasSort) {
             switch ($order) {
+                case 'name':
+                    $this->getQuery()->addSort('organisation_sort', $direction);
+                    break;
+                case 'country':
+                    $this->getQuery()->addSort('country_sort', $direction);
+                    break;
+                case 'type':
+                    $this->getQuery()->addSort('organisation_type_sort', $direction);
+                    break;
+                case 'projects':
+                    $this->getQuery()->addSort('projects', $direction);
+                    break;
                 default:
                     $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
                     break;
@@ -88,13 +103,14 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
-        } else {
-            $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
-        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('organisation_type')->setMinCount(1)->setExcludes(['organisation_type']);
-        $facetSet->createFacetField('country')->setField('country')->setSort('country')->setMinCount(1)->setExcludes(['country']);
+        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('organisation_type')
+            ->setMinCount(1)->setExcludes(['organisation_type']);
+        $facetSet->createFacetField('country')->setField('country')->setSort('country')->setMinCount(1)->setExcludes(
+            ['country']
+        );
 
         return $this;
     }

@@ -65,14 +65,6 @@ return [
             CallService::class,
             ProgramService::class
         ],
-        Controller\Plugin\HandleParentImport::class                           => [
-            EntityManager::class,
-            CountryService::class,
-            Service\ParentService::class,
-            ContactService::class,
-            Service\OrganisationService::class,
-            GeneralService::class
-        ],
         Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class => [
             Service\ParentService::class,
             Options\ModuleOptions::class,

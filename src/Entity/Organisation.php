@@ -361,32 +361,21 @@ class Organisation extends AbstractEntity
         $this->ictOrganisation = new Collections\ArrayCollection();
     }
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
+    public function hasLogo(): bool
+    {
+        return null !== $this->logo && !$this->logo->isEmpty();
+    }
+
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * @param string $property
-     * @param mixed $value
-     *
-     * @return void
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
@@ -1101,6 +1090,7 @@ class Organisation extends AbstractEntity
 
     /**
      * @param Collections\ArrayCollection|IctOrganisation[] $ictOrganisation
+     *
      * @return Organisation
      */
     public function setIctOrganisation($ictOrganisation)

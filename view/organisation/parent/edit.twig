@@ -1,6 +1,6 @@
 {% do headLink().appendStylesheet(
-'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
-) %}
+    '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
+    ) %}
 
 
 {% do headTitle().append(translate("txt-admin")) %}
@@ -26,7 +26,6 @@
 
 {{ ztbformelement(parentForm.get('id')) }}
 {{ ztbformelement(parentForm.get('type')) }}
-{{ ztbformelement(parentForm.get('status')) }}
 
 <div class="form-group row">
     <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-program-doa") }}</label>
@@ -42,6 +41,7 @@
 {{ organisationformelement(parentForm.get('organisation')) }}
 {{ contactformelement(parentForm.get('contact')) }}
 {{ ztbformelement(parentForm.get('dateEnd')) }}
+{{ ztbformelement(form.get('csrf')) }}
 
 <div class="form-group row">
     <div class="offset-md-3 col-sm-offset-3 col-sm-9">
