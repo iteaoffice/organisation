@@ -96,7 +96,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         //Explode first on the \n to have the different rows
         $data = \explode(PHP_EOL, $data);
 
-        //Apply a general trim to remove unwated characters
+        //Apply a general trim to remove unwanted characters
         $data = \array_map('trim', $data);
 
         $this->header = explode($this->delimiter, trim($data[0]));
@@ -248,6 +248,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 $call = new Call();
                 $call->setProgram($program);
                 $call->setCall($callName);
+                $call->setActive(Call::INACTIVE);
 
                 $program->getCall()->add($call);
             }
