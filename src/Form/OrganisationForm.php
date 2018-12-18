@@ -37,6 +37,13 @@ final class OrganisationForm extends Form
 
         $this->add(
             [
+                'type' => '\Zend\Form\Element\Csrf',
+                'name' => 'csrf',
+            ]
+        );
+
+        $this->add(
+            [
                 'type'    => '\Zend\Form\Element\File',
                 'name'    => 'file',
                 'options' => [

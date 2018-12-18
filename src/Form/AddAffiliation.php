@@ -53,6 +53,9 @@ final class AddAffiliation extends Form
 
         arsort($projects);
 
+        $this->setAttribute('method', 'post');
+        $this->setAttribute('class', 'form-horizontal');
+
         $this->add(
             [
                 'type'       => 'Zend\Form\Element\Select',

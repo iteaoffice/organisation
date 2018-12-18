@@ -13,6 +13,10 @@
     <dl class="dl-horizontal">
         <dt>{{ translate("txt-billing-organisation") }}</dt>
         <dd>{{ organisationLink(financial.organisation,'view-admin','name') }}</dd>
+        {% if financial.branch %}
+            <dt>{{ translate("txt-branch") }}</dt>
+            <dd>{{ financial.branch }}</dd>
+        {% endif %}
         <dt>{{ translate("txt-country") }}</dt>
         <dd>{{ countryLink(financial.organisation.country,'view-admin', 'name') }}</dd>
         <dt>{{ translate("txt-financial-contact") }}</dt>

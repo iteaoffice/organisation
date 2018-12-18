@@ -145,7 +145,7 @@ final class ParentFinancialController extends OrganisationAbstractController
                 /** @var Entity\Financial $financialOrganisation */
                 $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
-                    (int) $formData['organisationFinancial']
+                    (int)$formData['organisationFinancial']
                 );
 
                 $financial = new Entity\Parent\Financial();
@@ -208,9 +208,6 @@ final class ParentFinancialController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         /** @var Entity\Parent\Financial $financial */
@@ -223,6 +220,7 @@ final class ParentFinancialController extends OrganisationAbstractController
         $formData = [
             'preferredDelivery' => Entity\Financial::EMAIL_DELIVERY,
             'omitContact'       => Entity\Financial::OMIT_CONTACT,
+            'branch'            => $financial->getBranch()
         ];
 
         $financialAddress = null;
@@ -289,7 +287,7 @@ final class ParentFinancialController extends OrganisationAbstractController
                 /** @var Entity\Financial $financialOrganisation */
                 $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
-                    (int) $formData['organisationFinancial']
+                    (int)$formData['organisationFinancial']
                 );
 
                 $financial->setContact($this->contactService->findContactById((int)$formData['contact']));

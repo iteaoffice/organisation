@@ -29,7 +29,6 @@ use Zend\Form\Form;
  * Class Financial
  *
  * @package Organisation\Form
- * @deprecated
  */
 final class Financial extends Form
 {
@@ -52,8 +51,10 @@ final class Financial extends Form
         $financialOrganisationValueOptions = [];
 
         /** @var Financial $financial */
-        foreach ($organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
-                ->getArrayResult() as $financialOrganisation) {
+        foreach (
+            $organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
+                ->getArrayResult() as $financialOrganisation
+        ) {
             $country = $financialOrganisation['organisation']['country'];
 
             if (!array_key_exists($country['id'], $financialOrganisationValueOptions)) {
@@ -107,6 +108,15 @@ final class Financial extends Form
          */
         foreach ($parent->getParentOrganisation() as $parentOrganisation) {
             foreach ($parentOrganisation->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
+                /** @var Contact $contact */
+                $contact = $contactOrganisation->getContact();
+
+                $financialContactValueOptions[$contact->getId()] = $contact->getFormName();
+            }
+        }
+
+        foreach ($parent->getFinancial() as $financialOrganisation) {
+            foreach ($financialOrganisation->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
                 /** @var Contact $contact */
                 $contact = $contactOrganisation->getContact();
 

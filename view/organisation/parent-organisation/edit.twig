@@ -4,8 +4,6 @@
 <h1 class="display-4">{{ translate("txt-edit-parent-organisation") }}</h1>
 
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 {% set organisation = form.get('organisation_entity_parent_organisation') %}
@@ -14,6 +12,7 @@
 {{ ztbformelement(organisation.get('parent')) }}
 {{ organisationformelement(organisation.get('organisation')) }}
 {{ contactformelement(organisation.get('contact')) }}
+{{ formelement(form.get('csrf')) }}
 
 
 <div class="form-group row">
