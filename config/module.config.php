@@ -74,6 +74,7 @@ $config = [
         ],
         'invokables' => [
             'organisationformelement' => Form\View\Helper\OrganisationFormElement::class,
+            'parentformelement'       => Form\View\Helper\ParentFormElement::class,
         ],
         'factories'  => [
             View\Handler\OrganisationHandler::class              => ConfigAbstractFactory::class,
@@ -93,9 +94,11 @@ $config = [
     'form_elements'      => [
         'aliases'   => [
             'Organisation' => Form\Element\Organisation::class,
+            'OParent'      => Form\Element\OParent::class,
         ],
         'factories' => [
             Form\Element\Organisation::class => \Zend\Form\ElementFactory::class,
+            Form\Element\OParent::class      => \Zend\Form\ElementFactory::class,
         ],
     ],
     'service_manager'    => [

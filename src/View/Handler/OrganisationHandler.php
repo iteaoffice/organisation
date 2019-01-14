@@ -137,9 +137,7 @@ final class OrganisationHandler extends AbstractHandler
                 'organisation'   => $organisation,
                 'projectService' => $this->projectService,
                 'projects'       => $this->projectService->findProjectByOrganisation(
-                    $organisation,
-                    ProjectService::WHICH_ONLY_ACTIVE,
-                    true
+                    $organisation
                 ),
                 'map'            => $this->parseOrganisationMap($organisation),
                 'articles'       => $this->articleService->findArticlesByOrganisation($organisation, 25),
@@ -226,14 +224,6 @@ final class OrganisationHandler extends AbstractHandler
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        // Remove order and direction from the GET params to prevent duplication
-        $filteredData = array_filter(
-            $data,
-            function ($key) {
-                return !\in_array($key, ['order', 'direction'], true);
-            },
-            ARRAY_FILTER_USE_KEY
-        );
 
         return $this->renderer->render(
             'cms/organisation/list',
@@ -242,12 +232,14 @@ final class OrganisationHandler extends AbstractHandler
                 'order'               => $data['order'],
                 'direction'           => $data['direction'],
                 'query'               => $data['query'],
-                'arguments'           => http_build_query($filteredData),
+                'badges'              => $form->getBadges(),
+                'arguments'           => \http_build_query($form->getFilteredData()),
                 'paginator'           => $paginator,
                 'page'                => $page,
                 'hasTerm'             => $hasTerm,
                 'organisationService' => $this->organisationService,
-                'matchedRouteName'    => $this->routeMatch->getMatchedRouteName(),
+                'route'               => $this->routeMatch->getMatchedRouteName(),
+                'params'              => $this->routeMatch->getParams(),
                 'docRef'              => $this->routeMatch->getParam('docRef')
             ]
         );

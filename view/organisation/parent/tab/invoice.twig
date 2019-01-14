@@ -1,0 +1,52 @@
+<h2 class="pt-3">{{ translate("txt-invoices") }}</h2>
+
+{% set hasInvoice = false %}
+{% for varInvoice in parent.invoice %}
+    {% set hasInvoice = true %}
+{% endfor %}
+{% for varInvoice in parent.invoiceExtra %}
+    {% set hasInvoice = true %}
+{% endfor %}
+
+{% if hasInvoice %}
+
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-invoice") }}</th>
+            <th>{{ translate("txt-invoice-type") }}</th>
+            <th>{{ translate("txt-invoice-date") }}</th>
+            <th>{{ translate("txt-organisation") }}</th>
+            <th>{{ translate("txt-amount-invoiced") }}</th>
+            <th>{{ translate("txt-status") }}</th>
+            <th>{{ translate("txt-program") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for varInvoice in parent.invoice %}
+            <tr>
+                <td>{{ invoiceLink(varInvoice.invoice,'view', 'invoice') }}</td>
+                <td>{{ translate(invoiceService.parseType(varInvoice.invoice, true)) }}</td>
+                <td>{{ varInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
+                <td>{{ organisationLink(varInvoice.invoice.organisation,'view-admin', 'name') }}</td>
+                <td>{{ varInvoice.amountInvoiced|localizedcurrency('EUR') }}</td>
+                <td>{{ invoiceService.parseStatus(varInvoice.invoice, true) }}</td>
+                <td>{{ varInvoice.program }}</td>
+            </tr>
+        {% endfor %}
+        {% for extraVarInvoice in parent.invoiceExtra %}
+            <tr>
+                <td>{{ invoiceLink(extraVarInvoice.invoice,'view', 'invoice') }}</td>
+                <td>{{ translate(invoiceService.parseType(extraVarInvoice.invoice, true)) }}</td>
+                <td>{{ extraVarInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
+                <td>{{ organisationLink(extraVarInvoice.invoice.organisation,'view-admin', 'name') }}</td>
+                <td>{{ extraVarInvoice.amountInvoiced|localizedcurrency('EUR') }}</td>
+                <td>{{ invoiceService.parseStatus(extraVarInvoice.invoice, true) }}</td>
+                <td>{{ extraVarInvoice.program }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-this-parent-%s-has-no-invoices")|format(parent))|raw }}
+{% endif %}

@@ -54,26 +54,20 @@ class Invoice extends AbstractEntity
     private $amountInvoiced;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="invoice", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
-     * })
      *
      * @var \Organisation\Entity\OParent
      */
     private $parent;
     /**
      * @ORM\OneToOne(targetEntity="Invoice\Entity\Invoice", inversedBy="parentInvoice", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="invoice_id", referencedColumnName="invoice_id", nullable=false)
-     * })
      * @var \Invoice\Entity\Invoice
      */
     private $invoice;
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="parentInvoice", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
-     * })
      * @var \Program\Entity\Program
      */
     private $program;

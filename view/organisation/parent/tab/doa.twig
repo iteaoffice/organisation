@@ -1,4 +1,4 @@
-<h2>{{ translate("txt-parent-doa") }}</h2>
+<h2 class="pt-3">{{ translate("txt-parent-doa") }}</h2>
 
 {% if not parent.isMember() %}
     {% do form.prepare() %}
@@ -6,7 +6,7 @@
     {{ ztbformelement(form.get('program')) }}
 
     <div class="form-group row">
-        <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+        <div class="offset-sm-3 col-sm-9">
             {{ ztbformelement(form.get('submit')) }}
         </div>
     </div>
@@ -14,7 +14,7 @@
 {% endif %}
 
 {% if parent.doa.count() > 0 %}
-    <table class="table table-hover table-striped table-condensed table-sm">
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-doa") }}</th>

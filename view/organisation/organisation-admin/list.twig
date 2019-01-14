@@ -16,7 +16,7 @@
 
     <div class="col-md-9">
 
-        <h1 class="display-4">{{ translate("txt-organisation-list") }} {{ organisationLink(null,'new','button') }}</h1>
+        <h1>{{ translate("txt-organisation-list") }} {{ organisationLink(null,'new','button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -33,7 +33,7 @@
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
                     <th colspan="2">{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
@@ -79,15 +79,13 @@
     </div>
     <div class="col-md-3">
         <div class="well well-sm">
-            <fieldset>
-                {{ ztbformelement(filter.get('type')) }}
-                {{ ztbformelement(filter.get('options')) }}
 
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-                </div>
-            </fieldset>
+            {{ ztbformelement(filter.get('type'), true) }}
+            {{ ztbformelement(filter.get('options'), true) }}
+
+            {{ ztbformelement(form.get('submit')) }}
+            {{ ztbformelement(form.get('clear')) }}
+
         </div>
     </div>
 </div>

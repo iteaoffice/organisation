@@ -1,0 +1,106 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-import-parents")) %}
+
+<h1>{{ translate("txt-import-parents") }}</h1>
+
+{% do form.prepare() %}
+
+{{ form().openTag(form)|raw }}
+
+{{ ztbformelement(form.get('file')) }}
+
+<div class="form-group row">
+    <div class="offset-sm-3 col-sm-9">
+        {% if handleImport.hasErrors() %}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    {% for error in handleImport.getErrors() %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if handleImport.hasWarnings() %}
+            <div class="alert alert-warning" role="alert">
+                <ul>
+                    {% for warning in handleImport.getWarnings() %}
+                        <li>{{ warning }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+
+
+</div>
+
+
+<div class="form-group row">
+    <div class="offset-sm-3 col-sm-9">
+        {{ ztbformelement(form.get('upload')) }}
+        {{ ztbformelement(form.get('import')) }}
+    </div>
+</div>
+
+
+{{ form().closeTag()|raw }}
+
+
+
+{% if  handleImport.getImportedparents()|length > 0 %}
+    {{ ztbalert().info(translate("txt-%s-parents-imported")|format(handleImport.getImportedparents()|length))|raw }}
+{% endif %}
+
+
+    {% if  handleImport.getparents()|length > 0 %}
+        <table class="table table-hover table-striped table-sm">
+            <thead>
+            <tr>
+                <th>{{ translate("txt-program") }}</th>
+                <th>{{ translate("txt-call") }}</th>
+                <th>{{ translate("txt-project") }}</th>
+                <th>{{ translate("txt-contact") }}</th>
+                <th>{{ translate("txt-organisation") }}</th>
+                <th>{{ translate("txt-parent") }}</th>
+                <th>{{ translate("txt-parent-type") }}</th>
+                <th>{{ translate("txt-parent-status") }}</th>
+                <th>{{ translate("txt-artemisia-status") }}</th>
+                <th>{{ translate("txt-eposs-status") }}</th>
+                <th>{{ translate("txt-status-update") }}</th>
+                <th>{{ translate("txt-parent-organisation") }}</th>
+                <th>{{ translate("txt-affiliation") }}</th>
+                <th>{{ translate("txt-funding-national") }}</th>
+                <th>{{ translate("txt-funding-eu") }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for key, parent in handleImport.getparents() %}
+                <tr>
+                    <td>{{ handleImport.getProgram()[key].program }}{% if handleImport.getProgram()[key].id %}*{% endif %}</td>
+                    <td>{{ handleImport.getCall()[key].call }}{% if handleImport.getCall()[key].id %}*{% endif %}</td>
+                    <td>{{ handleImport.getProject()[key].project }}{% if handleImport.getProject()[key].id %}*{% endif %}</td>
+                    <td>{{ handleImport.getContact()[key].email }}{% if handleImport.getContact()[key].id %}*{% endif %}</td>
+                    <td>{{ handleImport.getOrganisation()[key].organisation }}{% if handleImport.getOrganisation()[key].id %}*{% endif %}</td>
+                    <td>{{ parent.legalName }}{% if parent.id %}*{% endif %}</td>
+                    <td>{{ parent.type }}{% if parent.id %}*{% endif %}</td>
+                    <td>{{ parent.status }}</td>
+                    <td>{{ translate(parent.artemisiaMemberType(true)) }}</td>
+                    <td>{{ translate(parent.epossMemberType(true)) }}</td>
+                    <td>{{ parent.dateparentTypeUpdate|date('d-m-Y') }}</td>
+                    <td>{{ handleImport.getparentOrganisation()[key].organisation }}{% if handleImport.getparentOrganisation()[key].id %}*{% endif %}</td>
+                    <td>{{ handleImport.getparentAffiliation()[key].organisation }}{% if handleImport.getparentAffiliation()[key].id %}*{% endif %}</td>
+                    <td>{{ handleImport.getFunding()[key].fundingNational }}</td>
+                    <td>{{ handleImport.getFunding()[key].fundingEU }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="form-group row">
+            <div class="offset-sm-3 col-sm-9">
+                {{ ztbformelement(form.get('import')) }}
+            </div>
+        </div>
+
+    {% endif %}

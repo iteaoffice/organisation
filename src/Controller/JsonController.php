@@ -15,6 +15,7 @@ namespace Organisation\Controller;
 use DragonBe\Vies\Vies;
 use Organisation\Entity\Financial;
 use Organisation\Service\OrganisationService;
+use Organisation\Service\ParentService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
@@ -31,13 +32,18 @@ final class JsonController extends OrganisationAbstractController
      */
     private $organisationService;
     /**
+     * @var ParentService
+     */
+    private $parentService;
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(OrganisationService $organisationService, TranslatorInterface $translator)
+    public function __construct(OrganisationService $organisationService, ParentService $parentService, TranslatorInterface $translator)
     {
         $this->organisationService = $organisationService;
+        $this->parentService = $parentService;
         $this->translator = $translator;
     }
 
@@ -69,7 +75,18 @@ final class JsonController extends OrganisationAbstractController
         $search = $this->getRequest()->getPost()->get('search');
         $results = [];
         foreach ($this->organisationService->searchOrganisation($search, 1000) as $result) {
-            $text = trim(sprintf("%s (%s)", $result['organisation'], $result['iso3']));
+            $text = \trim(\sprintf('%s (%s)', $result['organisation'], $result['iso3']));
+            $results[] = ['value' => $result['id'], 'text' => $text,];
+        }
+        return new JsonModel($results);
+    }
+
+    public function searchParentAction(): ViewModel
+    {
+        $search = $this->getRequest()->getPost()->get('search');
+        $results = [];
+        foreach ($this->parentService->searchParent($search, 1000) as $result) {
+            $text = trim(sprintf('%s (%s)', $result['organisation'], $result['iso3']));
             $results[] = ['value' => $result['id'], 'text' => $text,];
         }
         return new JsonModel($results);

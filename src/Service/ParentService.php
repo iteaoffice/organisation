@@ -228,31 +228,6 @@ class ParentService extends AbstractService
         return new ArrayCollection($affiliations);
     }
 
-//    public function parseTotalFundingEuByParent(Entity\OParent $parent, Program $program, int $year): float
-//    {
-//        //Go over each affiliation and sum up what has been paid already
-//        $totalFunded = 0;
-//        foreach (
-//            $this->findAffiliationByParentAndProgramAndWhich(
-//                $parent,
-//                $program,
-//                AffiliationService::WHICH_INVOICING,
-//                $year
-//            ) as $affiliation
-//        ) {
-//            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
-//
-//            if (null !== $latestVersion) {
-//                $totalFunded += $this->versionService->findTotalFundingEuVersionByAffiliationAndVersion(
-//                    $affiliation,
-//                    $latestVersion
-//                );
-//            }
-//        }
-//
-//        return (float)$totalFunded;
-//    }
-
     public function parseContribution(Entity\OParent $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
@@ -640,5 +615,17 @@ class ParentService extends AbstractService
         }
 
         return new ArrayCollection($errors);
+    }
+
+    public function searchParent(
+        string $searchItem,
+        int $maxResults = 20
+    ) {
+        /** @var Repository\OParent $repository */
+        $repository = $this->entityManager->getRepository(Entity\OParent::class);
+        return $repository->searchParents(
+            $searchItem,
+            $maxResults
+        );
     }
 }

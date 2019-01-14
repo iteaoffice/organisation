@@ -8,7 +8,7 @@
 {{ ztbformelement(financialForm.get('id')) }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-debtor-number") }}</label>
+    <label class="col-sm-3 col-form-label">{{ translate("txt-debtor-number") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static form-control-plaintext">{{ organisationService.parseDebtorNumber(organisation) }}</p>
@@ -16,7 +16,7 @@
 </div>
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-credit-number") }}</label>
+    <label class="col-sm-3 col-form-label">{{ translate("txt-credit-number") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static form-control-plaintext">{{ organisationService.parseCreditNumber(organisation) }}</p>
@@ -28,7 +28,7 @@
 {{ ztbformelement(financialForm.get('vatStatus')) }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-vat-status") }}</label>
+    <label class="col-sm-3 col-form-label">{{ translate("txt-vat-status") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static form-control-plaintext"><span
@@ -49,7 +49,7 @@
 
 
 <div class="form-group row">
-    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+    <div class="offset-sm-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
         {% if form.has('delete') %}

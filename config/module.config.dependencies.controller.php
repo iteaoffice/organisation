@@ -46,6 +46,7 @@ return [
         ],
         Controller\JsonController::class                  => [
             Service\OrganisationService::class,
+            Service\ParentService::class,
             TranslatorInterface::class
         ],
         Controller\NoteController::class                  => [

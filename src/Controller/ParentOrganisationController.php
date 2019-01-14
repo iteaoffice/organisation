@@ -94,6 +94,8 @@ final class ParentOrganisationController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->formService->prepare($organisation, $data);
+        $form->get($organisation->get('underscore_entity_name'))->get('parent')
+            ->injectParent($organisation->getParent());
         $form->get($organisation->get('underscore_entity_name'))->get('contact')
             ->injectContact($organisation->getContact());
         $form->get($organisation->get('underscore_entity_name'))->get('organisation')

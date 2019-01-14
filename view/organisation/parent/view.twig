@@ -1,21 +1,21 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-view-parent-%s")|format(parent)) %}
 
-<h1 class="display-4">{{ translate("txt-view-parent-%s")|format(parent) }}</h1>
+<h1>{{ translate("txt-view-parent-%s")|format(parent) }}</h1>
 
 <div role="tabpanel">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item active"><a class="nav-link active" href="#general" aria-controls="general" role="tab"
-                                                  data-toggle="tab">{{ translate("txt-general") }}</a></li>
+                                       data-toggle="tab">{{ translate("txt-general") }}</a></li>
         <li class="nav-item"><a class="nav-link" href="#organisation" aria-controls="organisation" role="tab"
-                                   data-toggle="tab">{{ translate("txt-organisations") }}</a></li>
+                                data-toggle="tab">{{ translate("txt-organisations") }}</a></li>
         <li class="nav-item"><a class="nav-link" href="#doa" aria-controls="doa" role="tab"
-                                   data-toggle="tab">{{ translate("txt-doa") }}</a></li>
+                                data-toggle="tab">{{ translate("txt-doa") }}</a></li>
         <li class="nav-item"><a class="nav-link" href="#financial" aria-controls="financial" role="tab"
-                                   data-toggle="tab">{{ translate("txt-financial") }}</a></li>
-
-
+                                data-toggle="tab">{{ translate("txt-financial") }}</a></li>
+        <li class="nav-item"><a class="nav-link" href="#invoice" aria-controls="invoices" role="tab"
+                                data-toggle="tab">{{ translate("txt-invoices") }}</a></li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
@@ -27,6 +27,8 @@
              id="doa">{% include 'organisation/parent/tab/doa' %}</div>
         <div role="tabpanel" class="tab-pane"
              id="financial">{% include 'organisation/parent/tab/financial' %}</div>
+        <div role="tabpanel" class="tab-pane"
+             id="invoice">{% include 'organisation/parent/tab/invoice' %}</div>
 
     </div>
 </div>

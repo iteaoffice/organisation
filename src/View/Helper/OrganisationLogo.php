@@ -19,6 +19,8 @@ declare(strict_types=1);
 namespace Organisation\View\Helper;
 
 use Organisation\Entity\Organisation;
+use Zend\View\Helper\ServerUrl;
+use Zend\View\Helper\Url;
 
 /**
  * Class OrganisationLogo
@@ -52,7 +54,14 @@ final class OrganisationLogo extends ImageAbstract
 
         $this->setWidth($width);
         if ($responsive) {
-            $this->addClasses('img-responsive img-fluid');
+            $this->addClasses('img-fluid');
+        }
+
+        if ($onlyUrl) {
+            $url = $this->getHelperPluginManager()->get(Url::class);
+            $serverUrl = $this->getHelperPluginManager()->get(ServerUrl::class);
+
+            return $serverUrl() . $url($this->router, $this->routerParams);
         }
 
         return $this->createImageUrl($onlyUrl);

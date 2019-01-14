@@ -5,14 +5,14 @@
 ) %}
 
 
-<h1 class="display-4">{{ translate("txt-upload-doa-for-parent-%s")|
+<h1>{{ translate("txt-upload-doa-for-parent-%s")|
     format(parent)|raw }}</h1>
 
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-parent") }}</label>
+    <label class="col-sm-3 col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
         <p class="form-control-static form-control-plaintext">{{ parentLink(parent, 'view', 'parent') }}</p>
@@ -28,7 +28,7 @@
 {{ ztbformelement(form.get('file')) }}
 
 <div class="form-group row">
-    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+    <div class="offset-sm-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
     </div>

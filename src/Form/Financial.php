@@ -51,10 +51,8 @@ final class Financial extends Form
         $financialOrganisationValueOptions = [];
 
         /** @var Financial $financial */
-        foreach (
-            $organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
-                ->getArrayResult() as $financialOrganisation
-        ) {
+        foreach ($organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
+                ->getArrayResult() as $financialOrganisation) {
             $country = $financialOrganisation['organisation']['country'];
 
             if (!array_key_exists($country['id'], $financialOrganisationValueOptions)) {

@@ -82,6 +82,16 @@ return [
                                     ],
                                 ],
                             ],
+                            'search-parent'       => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/search-parent.json',
+                                    'defaults' => [
+                                        'controller' => Controller\JsonController::class,
+                                        'action'     => 'search-parent',
+                                    ],
+                                ],
+                            ],
                         ],
 
                     ],

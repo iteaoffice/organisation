@@ -430,8 +430,6 @@ final class ParentController extends OrganisationAbstractController
                         'id' => $parent->getId(),
                     ]
                 );
-            } else {
-                var_dump($form->getInputFilter()->getMessages());
             }
         }
 
@@ -496,7 +494,8 @@ final class ParentController extends OrganisationAbstractController
                 'year'                => $year,
                 'form'                => $form,
                 'programs'            => $this->programService->findAll(Program::class),
-                'parentService'       => $this->parentService
+                'parentService'       => $this->parentService,
+                'invoiceService'      => $this->invoiceService
             ]
         );
     }

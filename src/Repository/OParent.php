@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Organisation\Repository;
 
 use Affiliation\Entity\Affiliation;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -429,5 +430,36 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         $queryBuilder->andWhere($queryBuilder->expr()->notIn('organisation_entity_parent', $doaSubselect->getDQL()));
 
         return $queryBuilder;
+    }
+
+    public function searchParents(
+        string $searchItem,
+        int $maxResults
+    ): array {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select(
+            [
+                'organisation_entity_parent.id',
+                'organisation_entity_organisation.organisation',
+                'general_entity_country.iso3',
+            ]
+        );
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        //Do a full inner join on parent, so we only have parents
+        $queryBuilder->join('organisation_entity_organisation.parent', 'organisation_entity_parent');
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'),
+                $queryBuilder->expr()->like('general_entity_country.country', ':like'),
+                $queryBuilder->expr()->like('general_entity_country.iso3', ':like')
+            )
+        );
+        $queryBuilder->setParameter('like', sprintf("%%%s%%", $searchItem));
+
+        $queryBuilder->setMaxResults($maxResults);
+        $queryBuilder->orderBy('organisation_entity_organisation.organisation', Criteria::ASC);
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 }

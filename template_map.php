@@ -25,6 +25,8 @@ return array(
     'organisation/parent/tab/financial'                         => __DIR__ . '//view/organisation/parent/tab/financial.twig',
     'organisation/parent/tab/doa'                               => __DIR__ . '//view/organisation/parent/tab/doa.twig',
     'organisation/parent/tab/general'                           => __DIR__ . '//view/organisation/parent/tab/general.twig',
+    'organisation/parent/tab/invoice'                           => __DIR__ . '//view/organisation/parent/tab/invoice.twig',
+    'organisation/parent/import'                                => __DIR__ . '//view/organisation/parent/import.twig',
     'organisation/parent/list'                                  => __DIR__ . '//view/organisation/parent/list.twig',
     'organisation/parent/list-no-member'                        => __DIR__ . '//view/organisation/parent/list-no-member.twig',
     'organisation/parent/add-organisation'                      => __DIR__ . '//view/organisation/parent/add-organisation.twig',

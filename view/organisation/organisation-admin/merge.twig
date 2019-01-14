@@ -4,7 +4,7 @@
 {% do mergeForm.prepare() %}
 
 {{ form().openTag(mergeForm)|raw }}
-<h2 class="display-4">{{ translate("txt-merge-organisation-%s")|format(target) }}</h2>
+<h2parent>{{ translate("txt-merge-organisation-%s")|format(target) }}</h2>
 <p>{{ translate("txt-merge-organisation-explanation") }}</p>
 <p>{{ ztbformelement(mergeForm.get('swap')) }}</p>
 
