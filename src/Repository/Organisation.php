@@ -258,26 +258,6 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         return $queryBuilder->getQuery();
     }
 
-
-
-    public function findAmountOfActiveOrganisations(): int
-    {
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select($queryBuilder->expr()->count('organisation_entity_organisation'));
-        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
-
-        $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
-        $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
-
-        /** @var Project $projectRepository */
-        $projectRepository = $this->_em->getRepository(\Project\Entity\Project::class);
-        $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
-
-        $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
-
-        return (int)$queryBuilder->getQuery()->useQueryCache(true)->useResultCache(true)->getSingleScalarResult();
-    }
-
     public function findOrganisationByNameCountryAndEmailAddress(
         string $name,
         Country $country,

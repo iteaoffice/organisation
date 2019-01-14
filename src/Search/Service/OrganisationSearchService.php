@@ -74,7 +74,7 @@ class OrganisationSearchService extends AbstractSearchService
     ): SearchServiceInterface {
         $this->setQuery($this->getSolrClient()->createSelect());
 
-        $query = '(has_projects:true) AND ' . static::parseQuery($searchTerm, $searchFields);
+        $query = '(has_projects:true) AND (' . static::parseQuery($searchTerm, $searchFields) . ')';
 
         $this->getQuery()->setQuery($query);
 
@@ -113,5 +113,18 @@ class OrganisationSearchService extends AbstractSearchService
         );
 
         return $this;
+    }
+
+    public function findAmountOfActiveOrganisations(): int
+    {
+        $this->setQuery($this->getSolrClient()->createSelect());
+
+        $query = 'has_projects:true';
+        $this->getQuery()->setQuery($query);
+
+
+        $result = $this->getSolrClient()->execute($this->query);
+
+        return (int) ($result->getData()['response']['numFound'] ?? 0);
     }
 }
