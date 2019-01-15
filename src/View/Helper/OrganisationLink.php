@@ -46,7 +46,7 @@ class OrganisationLink extends AbstractLink
         $this->setBranch($branch);
 
         if (!$this->hasAccess($this->getOrganisation(), OrganisationAssertion::class, $this->getAction())) {
-            return $this->getAction() . ' is not allowed';
+            return '';//$this->getAction() . ' is not allowed';
         }
 
         /*
