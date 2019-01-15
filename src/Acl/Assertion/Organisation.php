@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Organisation\Acl\Assertion;
 
+use Admin\Entity\Access;
 use Interop\Container\ContainerInterface;
 use Organisation\Entity\Organisation as OrganisationEntity;
 use Organisation\Service\OrganisationService;
@@ -62,6 +63,6 @@ final class Organisation extends AbstractAssertion
                 break;
         }
 
-        return false;
+        return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
     }
 }

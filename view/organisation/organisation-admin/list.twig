@@ -14,7 +14,7 @@
 
 <div class="row">
 
-    <div class="col-md-9">
+    <div class="col-md-10">
 
         <h1>{{ translate("txt-organisation-list") }} {{ organisationLink(null,'new','button') }}</h1>
 
@@ -77,16 +77,12 @@
             {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
         {% endif %}
     </div>
-    <div class="col-md-3">
-        <div class="well well-sm">
+    <div class="col-md-2">
+        {{ ztbformelement(filter.get('type'), true) }}
+        {{ ztbformelement(filter.get('options'), true) }}
 
-            {{ ztbformelement(filter.get('type'), true) }}
-            {{ ztbformelement(filter.get('options'), true) }}
-
-            {{ ztbformelement(form.get('submit')) }}
-            {{ ztbformelement(form.get('clear')) }}
-
-        </div>
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('clear')) }}
     </div>
 </div>
 

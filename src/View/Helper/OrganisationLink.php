@@ -16,6 +16,7 @@ namespace Organisation\View\Helper;
 use Content\Entity\Route;
 use Organisation\Entity\Organisation;
 use Organisation\Service\OrganisationService;
+use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
 
 /**
  * Create a link to an organisation.
@@ -43,6 +44,11 @@ class OrganisationLink extends AbstractLink
         $this->setAction($action);
         $this->setShow($show);
         $this->setBranch($branch);
+
+        if (!$this->hasAccess($this->getOrganisation(), OrganisationAssertion::class, $this->getAction())) {
+            return $this->getAction() . ' is not allowed';
+        }
+
         /*
          * If the alternativeShow is not null, use it an otherwise take the page
          */
