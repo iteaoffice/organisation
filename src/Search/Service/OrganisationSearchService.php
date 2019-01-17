@@ -101,8 +101,12 @@ class OrganisationSearchService extends AbstractSearchService
             }
         }
 
+
+
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
+        } else {
+            $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
