@@ -51,6 +51,8 @@ final class Organisation extends AbstractAssertion
         }
 
         switch ($this->getPrivilege()) {
+            case 'view':
+                return true;
             case 'view-community':
                 if ($this->contactService->contactHasPermit($this->contact, 'view', $organisation)) {
                     return true;
