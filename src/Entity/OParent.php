@@ -83,9 +83,7 @@ class OParent extends AbstractEntity
     private $id;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="parent", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
-     * })
      * @Annotation\Type("Contact\Form\Element\Contact")
      * @Annotation\Attributes({"label":"txt-parent-contact-label"})
      * @Annotation\Options({"help-block":"txt-parent-contact-help-block"})
@@ -95,9 +93,7 @@ class OParent extends AbstractEntity
     private $contact;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Parent\Type", inversedBy="parent", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="type_id", referencedColumnName="type_id", nullable=false)
-     * })
      * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
      * @Annotation\Options({
      *      "help-block":"txt-parent-type-help-block",
@@ -156,10 +152,7 @@ class OParent extends AbstractEntity
     private $financial;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="parent", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     * })
      * @Annotation\Type("Organisation\Form\Element\Organisation")
      * @Annotation\Attributes({"label":"txt-parent-organisation-label"})
      * @Annotation\Options({"help-block":"txt-parent-organisation-help-block"})

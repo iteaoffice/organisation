@@ -267,7 +267,7 @@ final class ParentDoaController extends OrganisationAbstractController
         $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
             ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename=\'' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '\''
+                'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
             )
             ->addHeaderLine('Pragma: public')->addHeaderLine(
                 'Content-Type: ' . $doa->getContentType()->getContentType()

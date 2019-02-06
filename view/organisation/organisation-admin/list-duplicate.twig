@@ -34,12 +34,12 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
                     <th>{{ translate("txt-contacts") }}</th>
                     <th>{{ translate("txt-projects") }}</th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'amount', 'text': translate('txt-amount')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'amount', 'text': translate('txt-amount')} %}</a></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -61,7 +61,7 @@
                 </tbody>
             </table>
 
-            {% include 'organisation/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
         {% endif %}

@@ -36,9 +36,9 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
                     <th>{{ translate('txt-member') }}</th>
                     <th>{{ translate("txt-organisation") }}</th>
                     <th>{{ translate("txt-actions") }}</th>
@@ -60,7 +60,7 @@
                 </tbody>
             </table>
 
-            {% include 'organisation/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-parent-found"))|raw }}
         {% endif %}

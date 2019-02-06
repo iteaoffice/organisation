@@ -33,6 +33,7 @@ use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document\Document;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
@@ -51,6 +52,10 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
      * @var OrganisationSearchService
      */
     private $organisationSearchService;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     public function __construct(ContainerInterface $container)
     {
@@ -58,6 +63,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
         $this->container = $container;
         $this->organisationSearchService = $container->get(OrganisationSearchService::class);
+        $this->translator = $container->get(TranslatorInterface::class);
     }
 
     public static function determineBranch(string $givenName, string $organisation): string
@@ -91,19 +97,19 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             && $organisation->getResult()->isEmpty();
     }
 
-    public function findOrganisationById(int $id)
+    public function findOrganisationById(int $id):?Entity\Organisation
     {
         return $this->entityManager->getRepository(Entity\Organisation::class)->find($id);
     }
 
     public function parseDebtorNumber(Entity\Organisation $organisation): string
     {
-        return trim(sprintf("%'.06d\n", 100000 + $organisation->getId()));
+        return \trim(\sprintf("%'.06d\n", 100000 + $organisation->getId()));
     }
 
     public function parseCreditNumber(Entity\Organisation $organisation): string
     {
-        return trim(sprintf("%'.06d\n", 200000 + $organisation->getId()));
+        return \trim(\sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
 
     public function findActiveOrganisationWithoutFinancial($filter): Query
@@ -132,7 +138,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $organisations[$organisation->getOrganisation()] = $organisation;
         }
 
-        ksort($organisations);
+        \ksort($organisations);
 
         return $organisations;
     }
@@ -365,6 +371,18 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $organisationDocument->setField('country_sort', $organisation->getCountry()->getCountry());
         $organisationDocument->setField('country_search', $organisation->getCountry()->getCountry());
 
+        if (null !== $organisation->getParent()) {
+            $parent = $organisation->getParent();
+            $organisationDocument->setField('parent_id', $parent->getId());
+            $organisationDocument->setField('parent', $parent->getOrganisation()->getOrganisation());
+            $organisationDocument->setField('parent_sort', $parent->getOrganisation()->getOrganisation());
+            $organisationDocument->setField('parent_search', $parent->getOrganisation()->getOrganisation());
+        }
+
+        if (null !== $organisation->getFinancial() && !empty($organisation->getFinancial()->getVat())) {
+            $organisationDocument->setField('vat', $organisation->getFinancial()->getVat());
+            $organisationDocument->setField('vat_search', $organisation->getFinancial()->getVat());
+        }
 
         if (null !== $organisation->getDateCreated()) {
             $organisationDocument->setField('date_created', $organisation->getDateCreated()->format(
@@ -378,9 +396,8 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         }
 
         //Find all the projects and partners
-        $projects = [];
-        $affiliations = [];
 
+        $projectsOnWebsite = [];
         foreach ($organisation->getAffiliation() as $affiliation) {
             if (!$affiliation->isActive()) {
                 continue;
@@ -392,18 +409,62 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             }
 
             $projectId = $project->getId();
+            $projectsOnWebsite[$projectId] = $projectId;
+        }
+
+        $projects = [];
+        $affiliations = [];
+
+        foreach ($organisation->getAffiliation() as $affiliation) {
+            $project = $affiliation->getProject();
+
+            $projectId = $project->getId();
             $affiliationId = $affiliation->getId();
 
             $projects[$projectId] = $projectId;
-            $affiliations[$affiliation->getOrganisation()->getId()] = $affiliationId;
+            $affiliations[$affiliationId] = $affiliationId;
         }
 
-
         $organisationDocument->setField('projects', \count($projects));
-        $organisationDocument->setField('has_projects', \count($projects) > 0);
+        $organisationDocument->setField('projects_on_website', \count($projectsOnWebsite));
+
         $organisationDocument->setField('affiliations', \count($affiliations));
+        $organisationDocument->setField('invoices', $organisation->getInvoice()->count());
+        $organisationDocument->setField('parent_organisations', null !== $organisation->getParent() ? $organisation->getParent()->getParentOrganisation()->count() : 0);
+
+        $organisationDocument->setField('contacts', $this->getContactCount($organisation, ContactService::WHICH_ALL));
+        $organisationDocument->setField('active_contacts', $this->getContactCount($organisation));
+        $organisationDocument->setField('inactive_contacts', $this->getContactCount($organisation, ContactService::WHICH_ONLY_EXPIRED));
+
+        $organisationDocument->setField('has_projects', \count($projects) > 0);
+        $organisationDocument->setField('has_projects_text', \count($projects) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
+        $organisationDocument->setField('has_projects_on_website', \count($projectsOnWebsite) > 0);
+        $organisationDocument->setField('has_projects_on_website_text', \count($projectsOnWebsite) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
+        $organisationDocument->setField('is_parent', null !== $organisation->getParent());
+        $organisationDocument->setField('is_parent_text', null !== $organisation->getParent() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
+        $organisationDocument->setField('has_parent', null !== $organisation->getParentOrganisation());
+        $organisationDocument->setField('has_parent_text', null !== $organisation->getParentOrganisation() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
+        $isOwnParent = null !== $organisation->getParent() && $organisation->getParent()->getOrganisation() === $organisation;
+
+        $organisationDocument->setField('is_own_parent', $isOwnParent);
+        $organisationDocument->setField('is_own_parent_text', $isOwnParent ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
+        $organisationDocument->setField('has_financial', null !== $organisation->getFinancial());
+        $organisationDocument->setField('has_financial_text', null !== $organisation->getFinancial() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
         $organisationDocument->setField('has_affiliations', \count($affiliations) > 0);
-        $organisationDocument->setField('contacts', $organisation->getContactOrganisation()->count());
+        $organisationDocument->setField('has_affiliations_text', \count($affiliations) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
+        $organisationDocument->setField('has_contacts', $this->getContactCount($organisation, ContactService::WHICH_ALL) > 0);
+        $organisationDocument->setField('has_contacts_text', $this->getContactCount($organisation, ContactService::WHICH_ALL) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
+        $organisationDocument->setField('has_invoices', !$organisation->getInvoice()->isEmpty());
+        $organisationDocument->setField('has_invoices_text', !$organisation->getInvoice()->isEmpty() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+
 
         $update->addDocument($organisationDocument);
         $update->addCommit();
@@ -501,7 +562,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function updateCollectionInSearchEngine(bool $clearIndex = false): void
     {
-        $organisationItems = $this->findAll(Entity\Organisation::class);
+        $organisationItems = array_slice($this->findAll(Entity\Organisation::class), 0, 100);
         $collection = [];
 
         /** @var Entity\Organisation $organisation */

@@ -4,7 +4,7 @@
 {% do mergeForm.prepare() %}
 
 {{ form().openTag(mergeForm)|raw }}
-<h2parent>{{ translate("txt-merge-organisation-%s")|format(target) }}</h2>
+<h2>{{ translate("txt-merge-organisation-%s")|format(target) }}</h2>
 <p>{{ translate("txt-merge-organisation-explanation") }}</p>
 <p>{{ ztbformelement(mergeForm.get('swap')) }}</p>
 
@@ -20,11 +20,11 @@
 {% endif %}
 
 <div class="row">
-    <div class="col-md-5 col-sm-6">
+    <div class="col-5">
         <h2>{{ translate("txt-source") }}</h2>
         <hr>
         <h3>{{ translate("txt-general") }}</h3>
-        <dl class="dl-horizontal">
+        <dl>
             <dt>{{ translate("txt-name") }}</dt>
             <dd>{{ organisationLink(source, 'view-admin') }} {{ organisationLink(source, 'edit', 'icon') }}</dd>
             <dt>{{ translate("txt-description") }}</dt>
@@ -65,7 +65,7 @@
             {% endif %}
         </dl>
         <h3>{{ translate("txt-financial") }}</h3>
-        <dl class="dl-horizontal">
+        <dl>
             <dt>{{ translate("txt-debtor-number") }}</dt>
             <dd>{{ organisationService.parseDebtorNumber(source) }}</dd>
             <dt>{{ translate("txt-credit-number") }}</dt>
@@ -106,18 +106,14 @@
         {% endif %}
     </div>
 
-    <div class="col-md-2 hidden-sm hidden-xs text-center" style="margin-top:200px;">
+    <div class="col-1 text-center">
         <h2><i class="fa fa-arrow-circle-right fa-2x"></i></h2>
     </div>
-    <div class="hidden-lg hidden-md hidden-sm text-center">
-        <h2><i class="fa fa-arrow-circle-down fa-2x"></i></h2>
-    </div>
-
-    <div class="col-md-5 col-sm-6">
+    <div class="col-5">
         <h2>{{ translate("txt-target") }}</h2>
         <hr>
         <h3>{{ translate("txt-general") }}</h3>
-        <dl class="dl-horizontal">
+        <dl>
             <dt>{{ translate("txt-name") }}</dt>
             <dd>{{ organisationLink(target, 'view-admin') }} {{ organisationLink(target, 'edit', 'icon') }}</dd>
             <dt>{{ translate("txt-description") }}</dt>
@@ -156,7 +152,7 @@
             {% endif %}
         </dl>
         <h3>{{ translate("txt-financial") }}</h3>
-        <dl class="dl-horizontal">
+        <dl>
             <dt>{{ translate("txt-debtor-number") }}</dt>
             <dd>{{ organisationService.parseDebtorNumber(target) }}</dd>
             <dt>{{ translate("txt-credit-number") }}</dt>

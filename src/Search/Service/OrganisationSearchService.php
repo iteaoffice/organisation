@@ -44,24 +44,45 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasSort) {
             switch ($order) {
+                case 'organisation':
+                    $this->getQuery()->addSort('organisation_sort', $direction);
+                    break;
+                case 'country':
+                    $this->getQuery()->addSort('country_sort', $direction);
+                    break;
+                case 'type':
+                    $this->getQuery()->addSort('organisation_type_sort', $direction);
+                    break;
+                case 'projects':
+                    $this->getQuery()->addSort('projects', $direction);
+                    break;
+                case 'contacts':
+                    $this->getQuery()->addSort('contacts', $direction);
+                    break;
                 default:
-                    $this->getQuery()->addSort('organisation', Query::SORT_DESC);
+                    $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
                     break;
             }
         }
 
+
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
-        } else {
-            $this->getQuery()->addSort('organisation', Query::SORT_DESC);
+        } elseif (!$hasSort) {
+            $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
-        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('organisation_type')
+        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('index')
             ->setMinCount(1)->setExcludes(['organisation_type']);
-        $facetSet->createFacetField('country')->setField('country')->setSort('country')->setMinCount(1)->setExcludes(
+        $facetSet->createFacetField('country')->setField('country')->setSort('index')->setMinCount(1)->setExcludes(
             ['country']
         );
+        $facetSet->createFacetField('has_projects')->setField('has_projects_text')->setSort('index')->setExcludes(
+            ['has_projects']
+        );
+        $facetSet->createFacetField('has_contacts')->setField('has_contacts_text')->setSort('index')->setExcludes(['has_contacts']);
+        $facetSet->createFacetField('has_financial')->setField('has_financial_text')->setSort('index')->setExcludes(['has_financial']);
 
         return $this;
     }
@@ -74,7 +95,7 @@ class OrganisationSearchService extends AbstractSearchService
     ): SearchServiceInterface {
         $this->setQuery($this->getSolrClient()->createSelect());
 
-        $query = '(has_projects:true) AND (' . static::parseQuery($searchTerm, $searchFields) . ')';
+        $query = '(has_projects_on_website:true) AND (' . static::parseQuery($searchTerm, $searchFields) . ')';
 
         $this->getQuery()->setQuery($query);
 
@@ -83,7 +104,7 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasSort) {
             switch ($order) {
-                case 'name':
+                case 'organisation':
                     $this->getQuery()->addSort('organisation_sort', $direction);
                     break;
                 case 'country':
@@ -95,6 +116,9 @@ class OrganisationSearchService extends AbstractSearchService
                 case 'projects':
                     $this->getQuery()->addSort('projects', $direction);
                     break;
+                case 'contacts':
+                    $this->getQuery()->addSort('contacts', $direction);
+                    break;
                 default:
                     $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
                     break;
@@ -102,10 +126,9 @@ class OrganisationSearchService extends AbstractSearchService
         }
 
 
-
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
-        } else {
+        } elseif (!$hasSort) {
             $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 
@@ -129,6 +152,6 @@ class OrganisationSearchService extends AbstractSearchService
 
         $result = $this->getSolrClient()->execute($this->query);
 
-        return (int) ($result->getData()['response']['numFound'] ?? 0);
+        return (int)($result->getData()['response']['numFound'] ?? 0);
     }
 }

@@ -102,7 +102,7 @@ $config = [
         ],
     ],
     'service_manager'    => [
-        'factories' => [
+        'factories'  => [
             Options\ModuleOptions::class                         => Factory\ModuleOptionsFactory::class,
             Form\OrganisationForm::class                         => ConfigAbstractFactory::class,
             Form\FinancialForm::class                            => ConfigAbstractFactory::class,
@@ -131,6 +131,9 @@ $config = [
             Navigation\Invokable\Parent\DoaLabel::class          => Factory\InvokableFactory::class,
             Navigation\Invokable\Parent\FinancialLabel::class    => Factory\InvokableFactory::class,
         ],
+        'invokables' => [
+            InputFilter\NoteFilter::class
+        ]
     ],
     'doctrine'           => [
         'driver' => [

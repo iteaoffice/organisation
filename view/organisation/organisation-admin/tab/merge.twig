@@ -6,40 +6,39 @@
 <p>{{ translate("txt-merge-organisation-explanation-step-one") }}</p>
 
 <div class="row">
-    <div class="col-5 col-lg-5">
+    <div class="col-5">
         <h3>{{ translate("txt-source") }}</h3>
         <hr>
-        <div class="form-group row">
+        <div class="form-group">
             {% set main = mergeForm.get('source-main') %}
             {% if main.getValueOptions()|length == 0 %}
                 {{ ztbalert().info(translate("txt-no-suggestions-found"))|raw }}
             {% else %}
                 {% for value, label in main.getValueOptions() %}
-                    <div class="radio">
-                        <label>
-                            <input value="{{ value }}" type="radio" name="{{ main.getAttribute('name') }}">{{ label }}
-                        </label>
+                    <div class="form-check">
+
+                        <input class="form-check-input" id="option_{{ loop.index }}" value="{{ value }}" type="radio"
+                               name="{{ main.getAttribute('name') }}">
+                        <label class="form-check-label" for="option_{{ loop.index }}">{{ label }}</label>
                     </div>
                 {% endfor %}
             {% endif %}
-            <div class="radio">
-                <label>
-                    <input value="other" type="radio"
-                           name="{{ main.getAttribute('name') }}"{% if main.getValueOptions()|length == 0 %} checked{% endif %}>
-                    {{ translate("txt-use-search-below") }}
-                </label>
-                {{ organisationformelement(mergeForm.get('source-search')) }}
+            <div class="form-check">
+                <input class="form-check-input" value="other" type="radio" id="search"
+                       name="{{ main.getAttribute('name') }}"{% if main.getValueOptions()|length == 0 %} checked{% endif %}>
+                <label class="form-check-label"
+                       for="search">                    {{ translate("txt-use-search-below") }}                </label>
             </div>
+            {{ organisationformelement(mergeForm.get('source-search')) }}
         </div>
     </div>
 
-    <div class="col-1 col-lg-1 text-center" style="margin-top:150px;">
+    <div class="col-1 text-center" style="margin-top:150px;">
         <h3><i class="fa fa-arrow-circle-right fa-2x"></i></h3>
     </div>
 
-    <div class="col-5 col-lg-5">
+    <div class="col-5">
         <h3>{{ translate("txt-target") }}</h3>
-        <hr>
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-name") }}</dt>
             <dd>{{ organisation.organisation }}</dd>

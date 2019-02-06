@@ -555,11 +555,11 @@ final class ParentController extends OrganisationAbstractController
             ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
             ->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename=\'' . sprintf(
+                'attachment; filename="' . sprintf(
                     'overview_variable_contribution_%s_%s.pdf',
                     $parent->getOrganisation()->getDocRef(),
                     $year
-                ) . '\''
+                ) . '"'
             )
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', \strlen($renderPaymentSheet->getPDFData()));
@@ -619,11 +619,11 @@ final class ParentController extends OrganisationAbstractController
             ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine('Pragma: public')
             ->addHeaderLine(
                 'Content-Disposition',
-                'attachment; filename=\'' . sprintf(
+                'attachment; filename="' . sprintf(
                     'overview_extra_variable_contribution_%s_%s.pdf',
                     $parent->getOrganisation()->getDocRef(),
                     $year
-                ) . '\''
+                ) . '"'
             )
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', \strlen($renderPaymentSheet->getPDFData()));

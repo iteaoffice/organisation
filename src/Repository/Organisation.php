@@ -109,7 +109,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
                 $queryBuilder->addOrderBy('organisation_entity_type.type', $direction);
                 break;
             default:
-                $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', $direction);
         }
 
         return $queryBuilder;

@@ -44,10 +44,6 @@ abstract class ImageAbstract extends AbstractViewHelper
      */
     protected $classes = [];
     /**
-     * @var bool
-     */
-    protected $lightBox = false;
-    /**
      * @var int
      */
     protected $width;
@@ -80,10 +76,6 @@ abstract class ImageAbstract extends AbstractViewHelper
 
         if ($onlyUrl) {
             return (string)$thumberLink;
-        }
-
-        if (!$this->lightBox) {
-            return $image;
         }
 
         $thumberLinkFull = Builder::construct(
@@ -158,14 +150,6 @@ abstract class ImageAbstract extends AbstractViewHelper
         }
 
         return $this;
-    }
-
-    /**
-     * @param boolean $lightBox
-     */
-    public function setLightBox($lightBox): void
-    {
-        $this->lightBox = $lightBox;
     }
 
     /**

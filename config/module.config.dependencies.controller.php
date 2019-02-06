@@ -21,7 +21,6 @@ use Affiliation\Service\AffiliationService;
 use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use Contact\Service\ContactService;
-use Content\Service\ArticleService;
 use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
@@ -30,12 +29,9 @@ use Invoice\Service\InvoiceService;
 use Organisation\Controller;
 use Organisation\Service;
 use Program\Service\ProgramService;
-use Project\Options\ModuleOptions;
 use Project\Service\ProjectService;
-use Zend\Authentication\AuthenticationService;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
-use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
@@ -59,6 +55,7 @@ return [
         ],
         Controller\OrganisationAdminController::class     => [
             Service\OrganisationService::class,
+            Search\Service\OrganisationSearchService::class,
             InvoiceService::class,
             ProjectService::class,
             ContactService::class,

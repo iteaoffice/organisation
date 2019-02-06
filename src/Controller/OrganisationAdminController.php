@@ -31,13 +31,16 @@ use Organisation\Form\AddAffiliation;
 use Organisation\Form\ManageWeb;
 use Organisation\Form\OrganisationFilter;
 use Organisation\Form\OrganisationMerge;
+use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
+use Search\Form\SearchResult;
+use Search\Paginator\Adapter\SolariumPaginator;
+use Solarium\QueryType\Select\Query\Query as SolariumQuery;
 use Zend\Form\Fieldset;
 use Zend\Http\Request;
 use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Validator\File\ImageSize;
@@ -55,6 +58,10 @@ final class OrganisationAdminController extends OrganisationAbstractController
      * @var OrganisationService
      */
     private $organisationService;
+    /**
+     * @var OrganisationSearchService
+     */
+    private $searchService;
     /**
      * @var InvoiceService
      */
@@ -98,6 +105,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
 
     public function __construct(
         OrganisationService $organisationService,
+        OrganisationSearchService $organisationSearchService,
         InvoiceService $invoiceService,
         ProjectService $projectService,
         ContactService $contactService,
@@ -110,6 +118,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
         TranslatorInterface $translator
     ) {
         $this->organisationService = $organisationService;
+        $this->searchService = $organisationSearchService;
         $this->invoiceService = $invoiceService;
         $this->projectService = $projectService;
         $this->contactService = $contactService;
@@ -125,28 +134,65 @@ final class OrganisationAdminController extends OrganisationAbstractController
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
-        $organisationQuery = $this->organisationService
-            ->findFiltered(Organisation::class, $filterPlugin->getFilter());
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $page = $this->params('page', 1);
+        $form = new SearchResult();
+        $data = array_merge(
+            [
+                'order'     => '',
+                'direction' => '',
+                'query'     => '',
+                'facet'     => [],
+            ],
+            $request->getQuery()->toArray()
+        );
+        $searchFields = [
+            'organisation_search', //To search for numbers
+            'description_search',
+            'organisation_type_search',
+            'country_search',
+        ];
 
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        if ($request->isGet()) {
+            $this->searchService->setSearch($data['query'], $searchFields, $data['order'], $data['direction']);
+            if (isset($data['facet'])) {
+                foreach ($data['facet'] as $facetField => $values) {
+                    $quotedValues = [];
+                    foreach ($values as $value) {
+                        $quotedValues[] = \sprintf('"%s"', $value);
+                    }
+
+                    $this->searchService->addFilterQuery(
+                        $facetField,
+                        implode(' ' . SolariumQuery::QUERY_OPERATOR_OR . ' ', $quotedValues)
+                    );
+                }
+            }
+
+            $form->addSearchResults(
+                $this->searchService->getQuery()->getFacetSet(),
+                $this->searchService->getResultSet()->getFacetSet()
+            );
+            $form->setData($data);
+        }
+
+        $paginator = new Paginator(
+            new SolariumPaginator($this->searchService->getSolrClient(), $this->searchService->getQuery())
+        );
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? 1000 : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new OrganisationFilter($this->organisationService);
-
-        $form->setData(['filter' => $filterPlugin->getFilter()]);
-
         return new ViewModel(
             [
-                'paginator'           => $paginator,
-                'form'                => $form,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'organisationService' => $this->organisationService,
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
+                'form'      => $form,
+                'order'     => $data['order'],
+                'direction' => $data['direction'],
+                'query'     => $data['query'],
+                'badges'    => $form->getBadges(),
+                'arguments' => \http_build_query($form->getFilteredData()),
+                'paginator' => $paginator,
             ]
         );
     }

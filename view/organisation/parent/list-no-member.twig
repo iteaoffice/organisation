@@ -36,9 +36,9 @@
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
                     <th>{{ translate('txt-member-type') }}</th>
                     <th>{{ translate('txt-doa') }}</th>
                     <th>{{ translate('txt-projects') }}</th>
@@ -76,7 +76,7 @@
                 </tbody>
             </table>
 
-            {% include 'organisation/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
 
             <a href="{{ url('zfcadmin/parent/list-no-member-export',{'encodedFilter': encodedFilter}) }}" class="btn btn-primary btn-sm"><i
                         class="fa fa-file-excel-o"></i> {{ translate("txt-export-csv") }}</a>
