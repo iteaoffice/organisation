@@ -19,6 +19,7 @@ use Contact\Entity\ContactOrganisation;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Interop\Container\ContainerInterface;
@@ -97,7 +98,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             && $organisation->getResult()->isEmpty();
     }
 
-    public function findOrganisationById(int $id):?Entity\Organisation
+    public function findOrganisationById(int $id): ?Entity\Organisation
     {
         return $this->entityManager->getRepository(Entity\Organisation::class)->find($id);
     }
@@ -112,7 +113,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return \trim(\sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
 
-    public function findActiveOrganisationWithoutFinancial($filter): Query
+    public function findActiveOrganisationWithoutFinancial($filter): QueryBuilder
     {
         /** @var Repository\Organisation $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
@@ -183,26 +184,6 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         )->count();
     }
 
-    public function getContactCount(Entity\Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE): int
-    {
-        return $organisation->getContactOrganisation()->filter(
-            function (
-                ContactOrganisation $contactOrganisation
-            ) use (
-                $which
-            ) {
-                switch ($which) {
-                    case ContactService::WHICH_ONLY_ACTIVE:
-                        return $contactOrganisation->getContact()->isActive();
-                    case ContactService::WHICH_ONLY_EXPIRED:
-                        return !$contactOrganisation->getContact()->isActive();
-                    default:
-                        return true;
-                }
-            }
-        )->count();
-    }
-
     public function findOrganisationFinancialList(array $filter): Query
     {
         /** @var Repository\Financial $repository */
@@ -242,7 +223,6 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
     {
         return $this->entityManager->getRepository(Entity\Type::class)->findBy([], ['type' => 'ASC']);
     }
-
 
     public function findBranchesByOrganisation(Entity\Organisation $organisation): array
     {
@@ -349,7 +329,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
         /** @var Document $organisationDocument */
         $organisationDocument = $update->createDocument();
-        
+
         // Organisation properties
         $organisationDocument->setField('id', $organisation->getResourceId());
         $organisationDocument->setField('organisation_id', $organisation->getId());
@@ -385,14 +365,20 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         }
 
         if (null !== $organisation->getDateCreated()) {
-            $organisationDocument->setField('date_created', $organisation->getDateCreated()->format(
-                AbstractSearchService::DATE_SOLR
-            ));
+            $organisationDocument->setField(
+                'date_created',
+                $organisation->getDateCreated()->format(
+                    AbstractSearchService::DATE_SOLR
+                )
+            );
         }
         if (null !== $organisation->getDateUpdated()) {
-            $organisationDocument->setField('date_updated', $organisation->getDateUpdated()->format(
-                AbstractSearchService::DATE_SOLR
-            ));
+            $organisationDocument->setField(
+                'date_updated',
+                $organisation->getDateUpdated()->format(
+                    AbstractSearchService::DATE_SOLR
+                )
+            );
         }
 
         //Find all the projects and partners
@@ -430,40 +416,86 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
         $organisationDocument->setField('affiliations', \count($affiliations));
         $organisationDocument->setField('invoices', $organisation->getInvoice()->count());
-        $organisationDocument->setField('parent_organisations', null !== $organisation->getParent() ? $organisation->getParent()->getParentOrganisation()->count() : 0);
+        $organisationDocument->setField(
+            'parent_organisations',
+            null !== $organisation->getParent() ? $organisation->getParent()->getParentOrganisation()->count() : 0
+        );
 
         $organisationDocument->setField('contacts', $this->getContactCount($organisation, ContactService::WHICH_ALL));
         $organisationDocument->setField('active_contacts', $this->getContactCount($organisation));
-        $organisationDocument->setField('inactive_contacts', $this->getContactCount($organisation, ContactService::WHICH_ONLY_EXPIRED));
+        $organisationDocument->setField(
+            'inactive_contacts',
+            $this->getContactCount($organisation, ContactService::WHICH_ONLY_EXPIRED)
+        );
 
         $organisationDocument->setField('has_projects', \count($projects) > 0);
-        $organisationDocument->setField('has_projects_text', \count($projects) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'has_projects_text',
+            \count($projects) > 0 ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no')
+        );
 
         $organisationDocument->setField('has_projects_on_website', \count($projectsOnWebsite) > 0);
-        $organisationDocument->setField('has_projects_on_website_text', \count($projectsOnWebsite) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'has_projects_on_website_text',
+            \count($projectsOnWebsite) > 0
+            ? $this->translator->translate('txt-yes') : $this->translator->translate(
+                'txt-no'
+            )
+        );
 
         $organisationDocument->setField('is_parent', null !== $organisation->getParent());
-        $organisationDocument->setField('is_parent_text', null !== $organisation->getParent() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'is_parent_text',
+            null !== $organisation->getParent() ? $this->translator->translate('txt-yes')
+            : $this->translator->translate('txt-no')
+        );
 
         $organisationDocument->setField('has_parent', null !== $organisation->getParentOrganisation());
-        $organisationDocument->setField('has_parent_text', null !== $organisation->getParentOrganisation() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'has_parent_text',
+            null !== $organisation->getParentOrganisation() ? $this->translator->translate('txt-yes')
+            : $this->translator->translate('txt-no')
+        );
 
-        $isOwnParent = null !== $organisation->getParent() && $organisation->getParent()->getOrganisation() === $organisation;
+        $isOwnParent = null !== $organisation->getParent()
+            && $organisation->getParent()->getOrganisation() === $organisation;
 
         $organisationDocument->setField('is_own_parent', $isOwnParent);
-        $organisationDocument->setField('is_own_parent_text', $isOwnParent ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'is_own_parent_text',
+            $isOwnParent ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no')
+        );
 
         $organisationDocument->setField('has_financial', null !== $organisation->getFinancial());
-        $organisationDocument->setField('has_financial_text', null !== $organisation->getFinancial() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'has_financial_text',
+            null !== $organisation->getFinancial() ? $this->translator->translate('txt-yes')
+            : $this->translator->translate('txt-no')
+        );
 
         $organisationDocument->setField('has_affiliations', \count($affiliations) > 0);
-        $organisationDocument->setField('has_affiliations_text', \count($affiliations) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'has_affiliations_text',
+            \count($affiliations) > 0 ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no')
+        );
 
-        $organisationDocument->setField('has_contacts', $this->getContactCount($organisation, ContactService::WHICH_ALL) > 0);
-        $organisationDocument->setField('has_contacts_text', $this->getContactCount($organisation, ContactService::WHICH_ALL) > 0 ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'has_contacts',
+            $this->getContactCount($organisation, ContactService::WHICH_ALL) > 0
+        );
+        $organisationDocument->setField(
+            'has_contacts_text',
+            $this->getContactCount($organisation, ContactService::WHICH_ALL) > 0 ? $this->translator->translate(
+                'txt-yes'
+            ) : $this->translator->translate('txt-no')
+        );
 
         $organisationDocument->setField('has_invoices', !$organisation->getInvoice()->isEmpty());
-        $organisationDocument->setField('has_invoices_text', !$organisation->getInvoice()->isEmpty() ? $this->translator->translate('txt-yes'): $this->translator->translate('txt-no'));
+        $organisationDocument->setField(
+            'has_invoices_text',
+            !$organisation->getInvoice()->isEmpty() ? $this->translator->translate('txt-yes')
+            : $this->translator->translate('txt-no')
+        );
 
 
         $update->addDocument($organisationDocument);
@@ -475,6 +507,26 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
     private function getProjectService(): ProjectService
     {
         return $this->container->get(ProjectService::class);
+    }
+
+    public function getContactCount(Entity\Organisation $organisation, $which = ContactService::WHICH_ONLY_ACTIVE): int
+    {
+        return $organisation->getContactOrganisation()->filter(
+            function (
+                ContactOrganisation $contactOrganisation
+            ) use (
+                $which
+            ) {
+                switch ($which) {
+                    case ContactService::WHICH_ONLY_ACTIVE:
+                        return $contactOrganisation->getContact()->isActive();
+                    case ContactService::WHICH_ONLY_EXPIRED:
+                        return !$contactOrganisation->getContact()->isActive();
+                    default:
+                        return true;
+                }
+            }
+        )->count();
     }
 
     public function findFinancialOrganisationWithVAT(string $vat): ?Entity\Financial
@@ -562,7 +614,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function updateCollectionInSearchEngine(bool $clearIndex = false): void
     {
-        $organisationItems = array_slice($this->findAll(Entity\Organisation::class), 0, 100);
+        $organisationItems = $this->findAll(Entity\Organisation::class);
         $collection = [];
 
         /** @var Entity\Organisation $organisation */

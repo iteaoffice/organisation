@@ -179,7 +179,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         return $queryBuilder->getQuery();
     }
 
-    public function findActiveOrganisationWithoutFinancial(array $filter): Query
+    public function findActiveOrganisationWithoutFinancial(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_organisation');
@@ -255,7 +255,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     public function findOrganisationByNameCountryAndEmailAddress(

@@ -20,7 +20,6 @@ namespace Organisation\Repository;
 use Affiliation\Entity\Affiliation;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
 use Program\Entity\Program;
@@ -159,6 +158,30 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 ->notIn('organisation_entity_parent', $subSelect2->getDQL())
         );
 
+        $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
+        $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
+
+        //Include the DOA signers
+        $doaSigners = $this->_em->createQueryBuilder();
+        $doaSigners->select('doaParent.id');
+        $doaSigners->from(Entity\Parent\Doa::class, 'organisation_entity_parent_doa');
+        $doaSigners->join('organisation_entity_parent_doa.parent', 'doaParent');
+
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq(
+                    'organisation_entity_parent.memberType',
+                    Entity\OParent::MEMBER_TYPE_MEMBER
+                ),
+                $queryBuilder->expr()
+                    ->notIn(
+                        'organisation_entity_parent',
+                        $doaSigners->getDQL()
+                    )
+            )
+        );
+
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
@@ -213,7 +236,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         return $queryBuilder;
     }
 
-    public function findActiveParentWhichAreNoMember(array $filter): Query
+    public function findActiveParentWhichAreNoMember(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
@@ -267,7 +290,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
             $queryBuilder->expr()->eq('organisation_entity_parent.memberType', Entity\OParent::MEMBER_TYPE_APPLICANT)
         );
 
-        //Exlude the DOA signers
+        //Exclude the DOA signers
         $doaSigners = $this->_em->createQueryBuilder();
         $doaSigners->select('doaParent.id');
         $doaSigners->from(Entity\Parent\Doa::class, 'organisation_entity_parent_doa');
@@ -316,7 +339,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     public function findParentsForInvoicing(Program $program): array
