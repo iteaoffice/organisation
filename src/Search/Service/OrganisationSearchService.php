@@ -146,7 +146,7 @@ class OrganisationSearchService extends AbstractSearchService
     {
         $this->setQuery($this->getSolrClient()->createSelect());
 
-        $query = 'has_projects:true';
+        $query = 'has_projects_on_website:true';
         $this->getQuery()->setQuery($query);
 
 
