@@ -164,19 +164,16 @@ final class ParentOrganisationController extends OrganisationAbstractController
 
     public function viewAction(): ViewModel
     {
-        /** @var Entity\Parent\Organisation $organisation */
-        $organisation = $this->parentService->find(Entity\Parent\Organisation::class, (int)$this->params('id'));
+        /** @var Entity\Parent\Organisation $parentOrganisation */
+        $parentOrganisation = $this->parentService->find(Entity\Parent\Organisation::class, (int)$this->params('id'));
 
-        if (null === $organisation) {
+        if (null === $parentOrganisation) {
             return $this->notFoundAction();
         }
 
-        return new ViewModel(['organisation' => $organisation]);
+        return new ViewModel(['parentOrganisation' => $parentOrganisation]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function mergeAction()
     {
         /** @var Request $request */
@@ -226,8 +223,8 @@ final class ParentOrganisationController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'organisation' => $organisation,
-                'merge' => $data['merge'] ?? null,
+                'organisation'  => $organisation,
+                'merge'         => $data['merge'] ?? null,
                 'parentService' => $this->parentService
             ]
         );

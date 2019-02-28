@@ -45,8 +45,8 @@ class ParentOrganisationLink extends AbstractLink
 
         $this->setShowOptions(
             [
-                'organisation'  => (string)$this->getParentOrganisation()->getOrganisation(),
-                'member-type'   => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()
+                'organisation' => (string)$this->getParentOrganisation()->getOrganisation(),
+                'member-type' => !$this->getParentOrganisation()->isEmpty() ? $this->getParentOrganisation()
                     ->getParent()->getType()->getType() : '',
                 'member-status' => !$this->getParentOrganisation()->isEmpty() ? $this->translator->translate(
                     $this->getParentOrganisation()->getParent()->getMemberType(true)
@@ -57,9 +57,6 @@ class ParentOrganisationLink extends AbstractLink
         return $this->createLink();
     }
 
-    /**
-     * Parse the action.
-     */
     public function parseAction(): void
     {
         switch ($this->getAction()) {
@@ -73,15 +70,25 @@ class ParentOrganisationLink extends AbstractLink
                 break;
             case 'edit':
                 $this->setRouter('zfcadmin/parent/organisation/edit');
-                $this->setText(sprintf($this->translator->translate('txt-edit-organisation-%s'), $this->getOrganisation()));
+                $this->setText(
+                    sprintf(
+                        $this->translator->translate('txt-edit-parent-organisation-%s'),
+                        $this->getParentOrganisation()
+                    )
+                );
                 break;
             case 'list':
                 $this->setRouter('zfcadmin/parent/organisation/list');
-                $this->setText($this->translator->translate('txt-list-organisations'));
+                $this->setText($this->translator->translate('txt-list-parent-organisations'));
                 break;
             case 'view':
                 $this->setRouter('zfcadmin/parent/organisation/view');
-                $this->setText(sprintf($this->translator->translate('txt-view-organisation-%s'), $this->getOrganisation()));
+                $this->setText(
+                    sprintf(
+                        $this->translator->translate('txt-view-parent-organisation-%s'),
+                        $this->getParentOrganisation()
+                    )
+                );
                 break;
             default:
                 throw new \InvalidArgumentException(

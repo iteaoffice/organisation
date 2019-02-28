@@ -9,8 +9,6 @@
 {% set filter = form.get('filter') %}
 
 
-
-
 <div class="row">
 
     <div class="col-md-10">
@@ -40,20 +38,29 @@
                     <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
                     <th>{{ translate('txt-member') }}</th>
                     <th>{{ translate("txt-organisation") }}</th>
-                    <th>{{ translate("txt-actions") }}</th>
                 </tr>
                 </thead>
                 <tfoot>
                 </tfoot>
                 <tbody>
                 {% for parent in paginator.getCurrentItems() %}
-                    <tr>
-                        <td>{{ parentLink(parent, 'view', 'parent') }}</td>
+
+                    {% set hasWrongParentChild = parentService.hasWrongParentChildRelationship(parent) %}
+                    {% set canBeDeleted = parentService.parentCanBeDeleted(parent) %}
+
+                    <tr class="{% if hasWrongParentChild %}table-danger{% endif %} {% if canBeDeleted %}table-warning{% endif %}">
+                        <td>
+                            {% if hasWrongParentChild %}<i class="fa text-danger fa-exclamation-triangle"
+                                                           aria-hidden="true"
+                                                           title="{{ translate("txt-parent-has-recursive-structure-it-is-parent-itself-but-child-of-other-parent") }}"></i>{% endif %}
+                            {% if canBeDeleted %}<i class="fa text-warning fa-trash-o" aria-hidden="true"
+                                                    title="{{ translate("txt-parent-is-empty-and-can-be-deleted") }}"></i>{% endif %}
+                            {{ parentLink(parent, 'view', 'parent') }} {{ parentLink(parent, 'edit', 'icon') }}
+                        </td>
                         <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
                         <td>{{ parentTypeLink(parent.type,'view', 'type') }}</td>
                         <td>{{ translate(parent.getMemberType(true)) }}</td>
                         <td>{{ parent.parentOrganisation.count() }}</td>
-                        <td>{{ parentLink(parent, 'edit', 'icon') }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -74,8 +81,8 @@
                 {{ ztbformelement(filter.get('epossMemberType'), true) }}
                 {{ ztbformelement(filter.get('program'), true) }}
 
-                                   {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
+                {{ ztbformelement(form.get('submit')) }}
+                {{ ztbformelement(form.get('clear')) }}
             </fieldset>
         </div>
     </div>

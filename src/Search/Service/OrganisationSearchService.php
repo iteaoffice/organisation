@@ -73,16 +73,22 @@ class OrganisationSearchService extends AbstractSearchService
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
-        $facetSet->createFacetField('organisation_type')->setField('organisation_type')->setSort('index')
+        $facetSet->createFacetField('type')->setField('organisation_type')->setSort('index')
             ->setMinCount(1)->setExcludes(['organisation_type']);
         $facetSet->createFacetField('country')->setField('country')->setSort('index')->setMinCount(1)->setExcludes(
             ['country']
         );
-        $facetSet->createFacetField('has_projects')->setField('has_projects_text')->setSort('index')->setExcludes(
+        $facetSet->createFacetField('projects')->setField('has_projects_text')->setSort('index')->setExcludes(
             ['has_projects']
         );
-        $facetSet->createFacetField('has_contacts')->setField('has_contacts_text')->setSort('index')->setExcludes(['has_contacts']);
-        $facetSet->createFacetField('has_financial')->setField('has_financial_text')->setSort('index')->setExcludes(['has_financial']);
+        $facetSet->createFacetField('parent')->setField('is_parent_text')->setSort('index')->setExcludes(
+            ['is_parent_text']
+        );
+        $facetSet->createFacetField('has_parent')->setField('has_parent_text')->setSort('index')->setExcludes(
+            ['has_parent_text']
+        );
+        $facetSet->createFacetField('contacts')->setField('has_contacts_text')->setSort('index')->setExcludes(['has_contacts']);
+        $facetSet->createFacetField('financial')->setField('has_financial_text')->setSort('index')->setExcludes(['has_financial']);
 
         return $this;
     }

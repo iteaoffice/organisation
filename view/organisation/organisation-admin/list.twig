@@ -28,6 +28,7 @@
         {% for result in paginator.getCurrentItems() %}
             <tr>
                 <td>
+                    {% if result.fields.is_parent %}<span class="badge badge-info">{{ translate("txt-parent") }}</span> {% endif %}
                     <a href="{{ url("zfcadmin/organisation/view",{'id':result.fields.organisation_id }) }}">{{ result.fields.organisation }}</a>
                     <a href="{{ url("zfcadmin/organisation/edit",{'id':result.fields.organisation_id }) }}"><i
                                 class="fa fa-edit"></i></a>

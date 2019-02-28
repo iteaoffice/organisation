@@ -119,6 +119,7 @@ final class ParentController extends OrganisationAbstractController
                 'encodedFilter' => urlencode($filterPlugin->getHash()),
                 'order'         => $filterPlugin->getOrder(),
                 'direction'     => $filterPlugin->getDirection(),
+                'parentService' => $this->parentService
             ]
         );
     }

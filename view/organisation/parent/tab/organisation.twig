@@ -12,13 +12,16 @@
         </tr>
         </thead>
         <tbody>
-        {% for organisation in parent.parentOrganisation %}
+        {% for parentOrganisation in parent.parentOrganisation %}
             <tr>
-                <td>{{ parentOrganisationLink(organisation,'view','organisation') }} {{ parentOrganisationLink(organisation,'edit','icon') }}</td>
-                <td>{{ countryLink(organisation.organisation.country,'view-admin', 'name') }}</td>
-                <td>{{ organisationTypeLink(organisation.organisation.type,'view', 'type') }}</td>
-                <td>{{ contactLink(organisation.contact,'view-admin','name') }}</td>
-                <td>{{ organisation.affiliation.count() }}</td>
+                <td>
+                    {% if parentOrganisation.organisation.isParent() %}<span class="badge badge-info">{{ translate("txt-parent") }}</span>{% endif %}
+                    {{ parentOrganisationLink(parentOrganisation,'view','organisation') }} {{ parentOrganisationLink(parentOrganisation,'edit','icon') }}
+                </td>
+                <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin', 'name') }}</td>
+                <td>{{ organisationTypeLink(parentOrganisation.organisation.type,'view', 'type') }}</td>
+                <td>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</td>
+                <td>{{ parentOrganisation.affiliation.count() }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -27,4 +30,4 @@
     {{ ztbalert().info(translate("txt-this-parent-%s-has-no-organisations")|format(parent))|raw }}
 {% endif %}
 
- {{ parentLink(parent, 'add-organisation','button') }}
+ {{ parentLink(parent, 'add-organisation','button') }} {% if parent.parentOrganisation.count() > 0 %}{{ parentOrganisationLink(parentOrganisation, 'merge','button') }}{% endif %}

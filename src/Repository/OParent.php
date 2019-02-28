@@ -106,7 +106,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->addOrderBy('parent_entity_type.type', $direction);
                 break;
             default:
-                $queryBuilder->addOrderBy('organisation_entity_parent.id', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', Criteria::ASC);
         }
 
         return $queryBuilder;

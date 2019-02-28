@@ -3,6 +3,10 @@
 
 <h1>{{ translate("txt-view-parent-%s")|format(parent) }}</h1>
 
+{% if parentService.hasWrongParentChildRelationship(parent) %}
+    {{ ztbalert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
+{% endif %}
+
 <div role="tabpanel">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">

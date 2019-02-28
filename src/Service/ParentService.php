@@ -92,7 +92,12 @@ class ParentService extends AbstractService
 
     public function parentCanBeDeleted(Entity\OParent $parent): bool
     {
-        return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty();
+        return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty() && $parent->getInvoiceExtra()->isEmpty();
+    }
+
+    public function hasWrongParentChildRelationship(Entity\OParent $parent): bool
+    {
+        return null !== $parent->getOrganisation()->getParentOrganisation() && $parent->getOrganisation()->getParentOrganisation()->getParent()->getId() !== $parent->getId();
     }
 
     public function findActiveParentWhichAreNoMember(array $filter): QueryBuilder
@@ -420,8 +425,8 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation' => $affiliation,
-                'funding' => $funding,
+                'affiliation'  => $affiliation,
+                'funding'      => $funding,
                 'contribution' => $contribution
             ];
 
