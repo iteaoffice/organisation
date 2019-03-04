@@ -17,6 +17,7 @@
         <tr>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'organisation', 'text': translate('txt-organisation')} %}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate('txt-type')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'parent', 'text': translate('txt-parent')} %}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'contacts', 'text': translate('txt-contacts')} %}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'projects', 'text': translate('txt-projects')} %}</th>
@@ -28,12 +29,24 @@
         {% for result in paginator.getCurrentItems() %}
             <tr>
                 <td>
-                    {% if result.fields.is_parent %}<span class="badge badge-info">{{ translate("txt-parent") }}</span> {% endif %}
+                    {% if result.fields.is_parent %}<span
+                            class="badge badge-info"><a class="text-reset" href="{{ url("zfcadmin/parent/view",{'id':result.fields.own_parent_id }) }}">{{ translate("txt-parent") }}</a></span> {% endif %}
                     <a href="{{ url("zfcadmin/organisation/view",{'id':result.fields.organisation_id }) }}">{{ result.fields.organisation }}</a>
                     <a href="{{ url("zfcadmin/organisation/edit",{'id':result.fields.organisation_id }) }}"><i
                                 class="fa fa-edit"></i></a>
                 </td>
                 <td>{{ result.fields.organisation_type }}</td>
+                <td>
+                    {% if result.fields.has_parent %}
+                        {% if  result.fields.has_wrong_parent_child_relationship %}
+                            <span class="badge badge-danger">{{ translate("txt-is-parent-but-has-other-parent") }}</span>
+                        {% endif %}
+
+                        {% if not result.fields.is_own_parent %}
+                            <a href="{{ url("zfcadmin/parent/view",{'id':result.fields.parent_id }) }}">{{ result.fields.parent }}</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
                 <td>{{ result.fields.country }}</td>
                 <td>{{ result.fields.contacts }}</td>
                 <td>{{ result.fields.projects }}</td>

@@ -87,6 +87,9 @@ class OrganisationSearchService extends AbstractSearchService
         $facetSet->createFacetField('has_parent')->setField('has_parent_text')->setSort('index')->setExcludes(
             ['has_parent_text']
         );
+        $facetSet->createFacetField('wrong_parent')->setField('has_wrong_parent_child_relationship_text')->setSort('index')->setExcludes(
+            ['has_wrong_parent_child_relationship_text']
+        );
         $facetSet->createFacetField('contacts')->setField('has_contacts_text')->setSort('index')->setExcludes(['has_contacts']);
         $facetSet->createFacetField('financial')->setField('has_financial_text')->setSort('index')->setExcludes(['has_financial']);
 

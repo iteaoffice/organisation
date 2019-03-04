@@ -29,6 +29,8 @@
     <field name="parent_sort" type="string_ci" indexed="true" stored="true" omitNorms="true"/>
     <field name="parent_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
 
+    <field name="own_parent_id" type="int" indexed="true" stored="true" omitNorms="true"/>
+
     <field name="description" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="description_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
 
@@ -37,6 +39,7 @@
 
     <field name="organisation_type" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="organisation_type_sort" type="string_ci" indexed="true" stored="true" omitNorms="true"/>
+    <field name="organisation_type_description" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="organisation_type_search" type="text_general_edge_ngram" indexed="true" stored="true"
            omitNorms="true"/>
 
@@ -55,9 +58,7 @@
 
     <field name="inactive_contacts" type="int" indexed="true" stored="true"/>
     <field name="active_contacts" type="int" indexed="true" stored="true"/>
-
     <field name="parent_organisations" type="int" indexed="true" stored="true"/>
-
 
     <field name="has_projects" type="boolean" indexed="true" stored="true"/>
     <field name="has_projects_text" type="string" indexed="true" stored="true"/>
@@ -69,6 +70,8 @@
     <field name="has_parent_text" type="string" indexed="true" stored="true"/>
     <field name="is_own_parent" type="boolean" indexed="true" stored="true"/>
     <field name="is_own_parent_text" type="string" indexed="true" stored="true"/>
+    <field name="has_wrong_parent_child_relationship" type="boolean" indexed="true" stored="true"/>
+    <field name="has_wrong_parent_child_relationship_text" type="string" indexed="true" stored="true"/>
     <field name="has_financial" type="boolean" indexed="true" stored="true"/>
     <field name="has_financial_text" type="string" indexed="true" stored="true"/>
     <field name="has_affiliations" type="boolean" indexed="true" stored="true"/>

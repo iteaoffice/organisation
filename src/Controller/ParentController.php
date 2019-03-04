@@ -154,7 +154,7 @@ final class ParentController extends OrganisationAbstractController
         );
     }
 
-    public function listNoMemberExportAction()
+    public function listNoMemberExportAction(): Response
     {
         $filterPlugin = $this->getOrganisationFilter();
         $parentQuery = $this->parentService
@@ -238,7 +238,7 @@ final class ParentController extends OrganisationAbstractController
         $headers->addHeaderLine('Content-Type', 'text/csv');
         $headers->addHeaderLine(
             'Content-Disposition',
-            'attachment; filename=\'export-members-with-are-no-member-and-have-no-doa.csv\''
+            'attachment; filename="export-members-with-are-no-member-and-have-no-doa.csv"'
         );
         $headers->addHeaderLine('Accept-Ranges', 'bytes');
         $headers->addHeaderLine('Content-Length', \strlen($string));
@@ -289,6 +289,8 @@ final class ParentController extends OrganisationAbstractController
                 $parent->setDateParentTypeUpdate(new \DateTime());
 
                 $this->parentService->save($parent);
+                $this->organisationService->save($parent->getOrganisation());
+
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
                     [
@@ -358,6 +360,9 @@ final class ParentController extends OrganisationAbstractController
 
 
                 $parentOrganisation = $this->parentService->save($parentOrganisation);
+
+                $this->organisationService->save($organisation);
+
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/organisation/view',
                     [
@@ -405,8 +410,13 @@ final class ParentController extends OrganisationAbstractController
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-deleted'), $parent)
                 );
+                /** @var Entity\Organisation $organisation */
+                $organisation = $parent->getOrganisation();
+                $organisation->setParent(null);
 
                 $this->parentService->delete($parent);
+
+                $this->organisationService->save($organisation);
 
                 return $this->redirect()->toRoute('zfcadmin/parent/list');
             }
@@ -424,6 +434,8 @@ final class ParentController extends OrganisationAbstractController
                 );
 
                 $parent = $this->parentService->save($parent);
+
+                $this->organisationService->save($parent->getOrganisation());
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',

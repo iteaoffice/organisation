@@ -68,6 +68,12 @@ class ParentService extends AbstractService
         $this->container = $container;
     }
 
+    public static function hasWrongParentChildRelationship(Entity\OParent $parent): bool
+    {
+        return null !== $parent->getOrganisation()->getParentOrganisation()
+            && $parent->getOrganisation()->getParentOrganisation()->getParent()->getId() !== $parent->getId();
+    }
+
     public function findParentById(int $id): ?Entity\OParent
     {
         return $this->entityManager->find(Entity\OParent::class, $id);
@@ -92,12 +98,8 @@ class ParentService extends AbstractService
 
     public function parentCanBeDeleted(Entity\OParent $parent): bool
     {
-        return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty() && $parent->getInvoiceExtra()->isEmpty();
-    }
-
-    public function hasWrongParentChildRelationship(Entity\OParent $parent): bool
-    {
-        return null !== $parent->getOrganisation()->getParentOrganisation() && $parent->getOrganisation()->getParentOrganisation()->getParent()->getId() !== $parent->getId();
+        return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty()
+            && $parent->getInvoiceExtra()->isEmpty();
     }
 
     public function findActiveParentWhichAreNoMember(array $filter): QueryBuilder
@@ -425,8 +427,8 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation'  => $affiliation,
-                'funding'      => $funding,
+                'affiliation' => $affiliation,
+                'funding' => $funding,
                 'contribution' => $contribution
             ];
 

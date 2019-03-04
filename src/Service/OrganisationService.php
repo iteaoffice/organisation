@@ -343,20 +343,30 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $organisationDocument->setField('description_search', $organisation->getDescription()->getDescription());
         }
 
-        $organisationDocument->setField('organisation_type', $organisation->getType()->getDescription());
-        $organisationDocument->setField('organisation_type_sort', $organisation->getType()->getDescription());
-        $organisationDocument->setField('organisation_type_search', $organisation->getType()->getDescription());
+        $organisationDocument->setField('organisation_type', $organisation->getType()->getType());
+        $organisationDocument->setField('organisation_type_sort', $organisation->getType()->getType());
+        $organisationDocument->setField('organisation_type_description', $organisation->getType()->getDescription());
+        $organisationDocument->setField('organisation_type_search', $organisation->getType()->getType());
 
         $organisationDocument->setField('country', $organisation->getCountry()->getCountry());
         $organisationDocument->setField('country_sort', $organisation->getCountry()->getCountry());
         $organisationDocument->setField('country_search', $organisation->getCountry()->getCountry());
 
-        if (null !== $organisation->getParent()) {
-            $parent = $organisation->getParent();
-            $organisationDocument->setField('parent_id', $parent->getId());
-            $organisationDocument->setField('parent', $parent->getOrganisation()->getOrganisation());
-            $organisationDocument->setField('parent_sort', $parent->getOrganisation()->getOrganisation());
-            $organisationDocument->setField('parent_search', $parent->getOrganisation()->getOrganisation());
+        if (null !== $organisation->getParentOrganisation()) {
+            $parentOrganisation = $organisation->getParentOrganisation();
+            $organisationDocument->setField('parent_id', $parentOrganisation->getParent()->getId());
+            $organisationDocument->setField(
+                'parent',
+                $parentOrganisation->getParent()->getOrganisation()->getOrganisation()
+            );
+            $organisationDocument->setField(
+                'parent_sort',
+                $parentOrganisation->getParent()->getOrganisation()->getOrganisation()
+            );
+            $organisationDocument->setField(
+                'parent_search',
+                $parentOrganisation->getParent()->getOrganisation()->getOrganisation()
+            );
         }
 
         if (null !== $organisation->getFinancial() && !empty($organisation->getFinancial()->getVat())) {
@@ -438,24 +448,41 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $organisationDocument->setField(
             'has_projects_on_website_text',
             \count($projectsOnWebsite) > 0
-            ? $this->translator->translate('txt-yes') : $this->translator->translate(
-                'txt-no'
-            )
+                ? $this->translator->translate('txt-yes')
+                : $this->translator->translate(
+                    'txt-no'
+                )
         );
 
-        $organisationDocument->setField('is_parent', null !== $organisation->getParent());
+        $organisationDocument->setField('is_parent', $organisation->isParent());
         $organisationDocument->setField(
             'is_parent_text',
-            null !== $organisation->getParent() ? $this->translator->translate('txt-yes')
-            : $this->translator->translate('txt-no')
+            $organisation->isParent() ? $this->translator->translate('txt-yes')
+                : $this->translator->translate('txt-no')
         );
+        if ($organisation->isParent()) {
+            $organisationDocument->setField('own_parent_id', $organisation->getParent()->getId());
+        }
 
-        $organisationDocument->setField('has_parent', null !== $organisation->getParentOrganisation());
+        $organisationDocument->setField('has_parent', $organisation->hasParent());
         $organisationDocument->setField(
             'has_parent_text',
-            null !== $organisation->getParentOrganisation() ? $this->translator->translate('txt-yes')
-            : $this->translator->translate('txt-no')
+            $organisation->hasParent() ? $this->translator->translate('txt-yes')
+                : $this->translator->translate('txt-no')
         );
+
+        if ($organisation->isParent()) {
+            $organisationDocument->setField(
+                'has_wrong_parent_child_relationship',
+                ParentService::hasWrongParentChildRelationship($organisation->getParent())
+            );
+            $organisationDocument->setField(
+                'has_wrong_parent_child_relationship_text',
+                ParentService::hasWrongParentChildRelationship($organisation->getParent())
+                    ? $this->translator->translate('txt-yes')
+                    : $this->translator->translate('txt-no')
+            );
+        }
 
         $isOwnParent = null !== $organisation->getParent()
             && $organisation->getParent()->getOrganisation() === $organisation;
@@ -470,7 +497,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $organisationDocument->setField(
             'has_financial_text',
             null !== $organisation->getFinancial() ? $this->translator->translate('txt-yes')
-            : $this->translator->translate('txt-no')
+                : $this->translator->translate('txt-no')
         );
 
         $organisationDocument->setField('has_affiliations', \count($affiliations) > 0);
@@ -494,7 +521,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $organisationDocument->setField(
             'has_invoices_text',
             !$organisation->getInvoice()->isEmpty() ? $this->translator->translate('txt-yes')
-            : $this->translator->translate('txt-no')
+                : $this->translator->translate('txt-no')
         );
 
 
