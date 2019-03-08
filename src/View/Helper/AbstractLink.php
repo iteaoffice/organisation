@@ -525,7 +525,9 @@ abstract class AbstractLink extends AbstractViewHelper
     public function getParentOrganisation(): Entity\Parent\Organisation
     {
         if (\is_null($this->parentOrganisation)) {
-            $this->parentOrganisation = new Entity\Parent\Organisation();
+            $parentOrganisation = new Entity\Parent\Organisation();
+            $parentOrganisation->setOrganisation(new Entity\Organisation());
+            $this->parentOrganisation = $parentOrganisation;
         }
 
         return $this->parentOrganisation;
