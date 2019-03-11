@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
 class Note extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="note_id", type="integer", nullable=false)
+     * @ORM\Column(name="note_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
@@ -45,7 +45,7 @@ class Note extends AbstractEntity
      */
     private $note;
     /**
-     * @ORM\Column(name="source", type="string", length=45, nullable=false)
+     * @ORM\Column(name="source", type="string", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-note-source","help-block":"txt-note-source-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-note-source-placeholder"})

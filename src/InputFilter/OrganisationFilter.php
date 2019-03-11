@@ -65,26 +65,6 @@ class OrganisationFilter extends InputFilter
             ]
         );
 
-        $inputFilter->add(
-            [
-                'name'     => 'domain',
-                'required' => false,
-            ]
-        );
-        $inputFilter->add(
-            [
-                'name'     => 'technology',
-                'required' => false,
-            ]
-        );
-        $inputFilter->add(
-            [
-                'name'     => 'clusterMember',
-                'required' => false,
-            ]
-        );
-
-
         $this->add($inputFilter, 'organisation_entity_organisation');
     }
 }

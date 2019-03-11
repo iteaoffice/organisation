@@ -32,7 +32,7 @@ class Web extends AbstractEntity
         ];
 
     /**
-     * @ORM\Column(name="web_id", type="integer", nullable=false)
+     * @ORM\Column(name="web_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -40,7 +40,7 @@ class Web extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="web", type="string", length=60, nullable=false)
+     * @ORM\Column(name="web", type="string", nullable=false)
      *
      * @var string
      */

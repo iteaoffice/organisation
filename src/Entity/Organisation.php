@@ -29,7 +29,7 @@ use Zend\Form\Annotation;
 class Organisation extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="organisation_id", type="integer", nullable=false)
+     * @ORM\Column(name="organisation_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
@@ -38,7 +38,7 @@ class Organisation extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="organisation", type="string", length=60, nullable=false)
+     * @ORM\Column(name="organisation", type="string", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation-name","help-block":"txt-organisation-name-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-organisation-placeholder"})
@@ -62,7 +62,7 @@ class Organisation extends AbstractEntity
      */
     private $dateCreated;
     /**
-     * @ORM\Column(name="docref", type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
      * @Gedmo\Slug(fields={"id","organisation"})
      * @Annotation\Exclude()
      *
@@ -167,52 +167,6 @@ class Organisation extends AbstractEntity
      * @var \Organisation\Entity\Web[]|Collections\ArrayCollection
      */
     private $web;
-    /**
-     * @ORM\ManyToMany(targetEntity="Program\Entity\Domain", inversedBy="organisation")
-     * @ORM\JoinTable(name="organisation_domain",
-     *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
-     *            inverseJoinColumns={@ORM\JoinColumn(name="domain_id", referencedColumnName="domain_id")}
-     * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"Program\Entity\Domain"})
-     * @Annotation\Attributes({"label":"txt-domain"})
-     *
-     * @var \Program\Entity\Domain[]|Collections\ArrayCollection
-     */
-    private $domain;
-    /**
-     * @ORM\ManyToMany(targetEntity="Program\Entity\Technology", inversedBy="organisation")
-     * @ORM\JoinTable(name="organisation_technology",
-     *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
-     *            inverseJoinColumns={@ORM\JoinColumn(name="technology_id", referencedColumnName="technology_id")}
-     * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"Program\Entity\Technology"})
-     * @Annotation\Attributes({"label":"txt-technology"})
-     *
-     * @var \Program\Entity\Technology[]|Collections\ArrayCollection
-     */
-    private $technology;
-    /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Cluster", cascade={"persist","remove"}, mappedBy="organisation")
-     * @Annotation\Exclude()
-     *
-     * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
-     */
-    private $cluster;
-    /**
-     * @ORM\ManyToMany(targetEntity="Organisation\Entity\Cluster", inversedBy="member", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="cluster_organisation",
-     *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
-     *            inverseJoinColumns={@ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")}
-     * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"Organisation\Entity\Cluster"})
-     * @Annotation\Attributes({"label":"txt-cluster-membership"})
-     *
-     * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
-     */
-    private $clusterMember;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
@@ -320,13 +274,6 @@ class Organisation extends AbstractEntity
      * @var \Project\Entity\Result\Result[]|Collections\ArrayCollection
      */
     private $result;
-    /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\IctOrganisation", cascade={"persist"}, mappedBy="organisation")
-     * @Annotation\Exclude()
-     *
-     * @var IctOrganisation[]|Collections\ArrayCollection
-     */
-    private $ictOrganisation;
 
     public function __construct()
     {
@@ -334,11 +281,7 @@ class Organisation extends AbstractEntity
         $this->affiliationFinancial = new Collections\ArrayCollection();
         $this->contactOrganisation = new Collections\ArrayCollection();
         $this->parentFinancial = new Collections\ArrayCollection();
-        $this->domain = new Collections\ArrayCollection();
         $this->names = new Collections\ArrayCollection();
-        $this->technology = new Collections\ArrayCollection();
-        $this->cluster = new Collections\ArrayCollection();
-        $this->clusterMember = new Collections\ArrayCollection();
         $this->financialDebtor = new Collections\ArrayCollection();
         $this->log = new Collections\ArrayCollection();
         $this->logo = new Collections\ArrayCollection();
@@ -353,7 +296,6 @@ class Organisation extends AbstractEntity
         $this->reminder = new Collections\ArrayCollection();
         $this->result = new Collections\ArrayCollection();
         $this->web = new Collections\ArrayCollection();
-        $this->ictOrganisation = new Collections\ArrayCollection();
     }
 
     public function hasLogo(): bool
@@ -576,54 +518,6 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getDomain()
-    {
-        return $this->domain;
-    }
-
-    public function setDomain($domain): Organisation
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    public function getTechnology()
-    {
-        return $this->technology;
-    }
-
-    public function setTechnology($technology): Organisation
-    {
-        $this->technology = $technology;
-
-        return $this;
-    }
-
-    public function getCluster()
-    {
-        return $this->cluster;
-    }
-
-    public function setCluster($cluster): Organisation
-    {
-        $this->cluster = $cluster;
-
-        return $this;
-    }
-
-    public function getClusterMember()
-    {
-        return $this->clusterMember;
-    }
-
-    public function setClusterMember($clusterMember): Organisation
-    {
-        $this->clusterMember = $clusterMember;
-
-        return $this;
-    }
-
     public function getLog()
     {
         return $this->log;
@@ -800,18 +694,6 @@ class Organisation extends AbstractEntity
     public function setNames($names): Organisation
     {
         $this->names = $names;
-
-        return $this;
-    }
-
-    public function getIctOrganisation()
-    {
-        return $this->ictOrganisation;
-    }
-
-    public function setIctOrganisation($ictOrganisation): Organisation
-    {
-        $this->ictOrganisation = $ictOrganisation;
 
         return $this;
     }

@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
 class Logo extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="logo_id", type="integer", nullable=false)
+     * @ORM\Column(name="logo_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -39,7 +39,7 @@ class Logo extends AbstractEntity
      */
     private $organisationLogo;
     /**
-     * @ORM\Column(name="logo_extension", type="string", length=20, nullable=false)
+     * @ORM\Column(name="logo_extension", type="string", nullable=false)
      *
      * @var string
      */

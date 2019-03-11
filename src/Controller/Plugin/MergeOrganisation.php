@@ -139,14 +139,6 @@ class MergeOrganisation extends AbstractPlugin
             $source->getLog()->remove($key);
         }
 
-        // Transfer technology (many-to-many)
-        foreach ($source->getTechnology() as $key => $technology) {
-            $technology->getOrganisation()->removeElement($source);
-            $technology->getOrganisation()->add($target);
-            $target->getTechnology()->add($technology);
-            $source->getTechnology()->remove($key);
-        }
-
         // Transfer websites
         foreach ($source->getWeb() as $key => $website) {
             $website->setOrganisation($target);
@@ -204,26 +196,6 @@ class MergeOrganisation extends AbstractPlugin
             $target->setParentOrganisation($parentOrganisation);
         }
 
-        // Transfer ICT organisations
-        foreach ($source->getIctOrganisation() as $key => $ictOrganisation) {
-            $ictOrganisation->setOrganisation($target);
-            $target->getIctOrganisation()->add($ictOrganisation);
-            $source->getIctOrganisation()->remove($key);
-        }
-
-        // Transfer cluster head
-        foreach ($source->getCluster() as $key => $cluster) {
-            $cluster->setOrganisation($target);
-            $target->getCluster()->add($cluster);
-            $source->getCluster()->remove($key);
-        }
-
-        // Transfer cluster memberships
-        foreach ($source->getClusterMember() as $key => $clusterMember) {
-            $clusterMember->setOrganisation($target);
-            $target->getClusterMember()->add($clusterMember);
-            $source->getClusterMember()->remove($key);
-        }
 
         // Transfer contacts
         foreach ($source->getContactOrganisation() as $key => $contactOrganisation) {

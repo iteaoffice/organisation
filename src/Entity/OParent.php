@@ -72,7 +72,7 @@ class OParent extends AbstractEntity
 
 
     /**
-     * @ORM\Column(name="parent_id", type="integer", nullable=false)
+     * @ORM\Column(name="parent_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("Zend\Form\Element\Hidden")

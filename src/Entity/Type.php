@@ -36,7 +36,6 @@ class Type extends AbstractEntity implements ResourceInterface
      */
     public const INVOICE = 1;
 
-    public const TYPE_UNKNOWN = 0;
     public const TYPE_IFC = 1;
     public const TYPE_LARGE_INDUSTRY = 2;
     public const TYPE_SME = 3;
@@ -44,19 +43,15 @@ class Type extends AbstractEntity implements ResourceInterface
     public const TYPE_UNIVERSITY = 5;
     public const TYPE_GOVERNMENT = 6;
     public const TYPE_OTHER = 7;
+    public const TYPE_UNKNOWN = 8;
 
-    /**
-     * Textual versions of the invoice.
-     *
-     * @var array
-     */
     protected static $invoiceTemplates
         = [
             self::NO_INVOICE => 'txt-invoice',
             self::INVOICE    => 'txt-no-invoice',
         ];
     /**
-     * @ORM\Column(name="type_id", type="integer", nullable=false)
+     * @ORM\Column(name="type_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
@@ -65,7 +60,7 @@ class Type extends AbstractEntity implements ResourceInterface
      */
     private $id;
     /**
-     * @ORM\Column(name="type", type="string", length=20, nullable=false, unique=true)
+     * @ORM\Column(name="type", type="string", nullable=false, unique=true)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)

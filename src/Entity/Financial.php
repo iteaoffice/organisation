@@ -62,7 +62,7 @@ class Financial extends AbstractEntity
         ];
 
     /**
-     * @ORM\Column(name="financial_id", type="integer", nullable=false)
+     * @ORM\Column(name="financial_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("Zend\Form\Element\Hidden")
@@ -94,9 +94,7 @@ class Financial extends AbstractEntity
     private $vatStatus;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financialDebtor", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="debtor", referencedColumnName="organisation_id", nullable=true)
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */
@@ -161,9 +159,7 @@ class Financial extends AbstractEntity
     private $email;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financial", cascade="persist")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */

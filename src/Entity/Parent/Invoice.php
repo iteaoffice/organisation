@@ -33,7 +33,7 @@ use Zend\Form\Annotation;
 class Invoice extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="partner_invoice_id", type="integer", nullable=false)
+     * @ORM\Column(name="partner_invoice_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -41,13 +41,13 @@ class Invoice extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="year", type="integer", nullable=false)
+     * @ORM\Column(name="year", type="integer", options={"unsigned":true})
      *
      * @var integer
      */
     private $year;
     /**
-     * @ORM\Column(name="amount_invoiced", type="decimal", nullable=true)
+     * @ORM\Column(name="amount_invoiced", type="decimal", precision=10, scale=2, nullable=true)
      *
      * @var float
      */

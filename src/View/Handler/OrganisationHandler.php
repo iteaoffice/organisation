@@ -151,10 +151,6 @@ final class OrganisationHandler extends AbstractHandler
          * Collect the list of countries from the organisation and cluster
          */
         $countries = [$organisation->getCountry()];
-        foreach ($organisation->getClusterMember() as $cluster) {
-            $countries[] = $cluster->getOrganisation()->getCountry();
-        }
-
         $mapOptions = [
             'clickable' => true,
             'colorMin'  => '#00a651',

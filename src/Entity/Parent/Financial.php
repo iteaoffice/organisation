@@ -36,7 +36,7 @@ use Zend\Form\Annotation;
 class Financial extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="parent_financial_id", type="integer", nullable=false)
+     * @ORM\Column(name="parent_financial_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *

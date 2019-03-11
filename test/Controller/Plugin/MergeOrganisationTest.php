@@ -26,10 +26,8 @@ use Invoice\Entity\Reminder;
 use Organisation\Controller\OrganisationAdminController;
 use Organisation\Controller\Plugin\MergeOrganisation;
 use Organisation\Entity\Booth;
-use Organisation\Entity\Cluster;
 use Organisation\Entity\Description;
 use Organisation\Entity\Financial;
-use Organisation\Entity\IctOrganisation;
 use Organisation\Entity\Log;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Name;
@@ -40,7 +38,6 @@ use Organisation\Entity\Type;
 use Organisation\Entity\Web;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Program\Entity\Doa;
-use Program\Entity\Technology;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
@@ -146,8 +143,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $this->assertEquals(1, $this->target->getLog()->first()->getId());
         $this->assertEquals($this->target, $this->target->getLog()->first()->getOrganisation());
 
-        $this->assertEquals(1, $this->target->getTechnology()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getTechnology()->first()->getOrganisation()->first());
 
         $this->assertEquals(1, $this->target->getWeb()->first()->getId());
         $this->assertEquals($this->target, $this->target->getWeb()->first()->getOrganisation());
@@ -176,15 +171,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
 
         $this->assertEquals(1, $this->target->getParentOrganisation()->getId());
         $this->assertEquals($this->target, $this->target->getParentOrganisation()->getOrganisation());
-
-        $this->assertEquals(1, $this->target->getIctOrganisation()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getIctOrganisation()->first()->getOrganisation());
-
-        $this->assertEquals(1, $this->target->getCluster()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getCluster()->first()->getOrganisation());
-
-        $this->assertEquals(2, $this->target->getClusterMember()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getClusterMember()->first()->getOrganisation());
 
         $this->assertEquals(1, $this->target->getContactOrganisation()->first()->getId());
         $this->assertEquals($this->target, $this->target->getContactOrganisation()->first()->getOrganisation());
@@ -274,10 +260,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $log = new Log();
         $log->setId(1);
 
-        $technology = new Technology();
-        $technology->setId(1);
-        $technology->setOrganisation(new ArrayCollection([$source]));
-
         $web = new Web();
         $web->setId(1);
 
@@ -307,18 +289,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $parentOrganisation = new \Organisation\Entity\Parent\Organisation();
         $parentOrganisation->setId(1);
         $parentOrganisation->setOrganisation($source);
-
-        $ictOrganisation = new IctOrganisation();
-        $ictOrganisation->setId(1);
-        $ictOrganisation->setOrganisation($source);
-
-        $cluster = new Cluster();
-        $cluster->setId(1);
-        $cluster->setOrganisation($source);
-
-        $clusterMember = new Cluster();
-        $clusterMember->setId(2);
-        $clusterMember->setMember(new ArrayCollection([$source]));
 
         $contactOrganisation = new ContactOrganisation();
         $contactOrganisation->setId(1);
@@ -369,7 +339,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $source->setFinancial($financial);
         $source->setLogo(new ArrayCollection([$logo]));
         $source->setLog(new ArrayCollection([$log]));
-        $source->setTechnology(new ArrayCollection([$technology]));
         $source->setWeb(new ArrayCollection([$web]));
         $source->setNote(new ArrayCollection([$note]));
         $source->setNames(new ArrayCollection([$name]));
@@ -378,9 +347,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $source->setParent($parent);
         $source->setParentFinancial(new ArrayCollection([$parentFinancial]));
         $source->setParentOrganisation($parentOrganisation);
-        $source->setIctOrganisation(new ArrayCollection([$ictOrganisation]));
-        $source->setCluster(new ArrayCollection([$cluster]));
-        $source->setClusterMember(new ArrayCollection([$clusterMember]));
         $source->setContactOrganisation(new ArrayCollection([$contactOrganisation]));
         $source->setOrganisationBooth(new ArrayCollection([$booth]));
         $source->setBoothFinancial(new ArrayCollection([$boothFinancial]));

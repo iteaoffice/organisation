@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
 class Name extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="name_id", type="integer", nullable=false)
+     * @ORM\Column(name="name_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -35,7 +35,7 @@ class Name extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", nullable=false)
      * @Annotation\Type("\Zend\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation-name","help-block":"txt-organisation-name-help-block"})
      *

@@ -27,7 +27,7 @@ use Zend\Form\Annotation;
 class Description extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="description_id", type="integer", nullable=false)
+     * @ORM\Column(name="description_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -45,19 +45,12 @@ class Description extends AbstractEntity
     private $description;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="description", cascade="persist")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false, unique=true)
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
     public function __get($property)
     {
         return $this->$property;

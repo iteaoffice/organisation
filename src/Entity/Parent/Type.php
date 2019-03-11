@@ -38,7 +38,7 @@ class Type extends AbstractEntity
     public const TYPE_C_CHAMBER = 3;
     public const TYPE_OTHER = 4;
     /**
-     * @ORM\Column(name="type_id", type="integer", nullable=false)
+     * @ORM\Column(name="type_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
