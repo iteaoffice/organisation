@@ -93,13 +93,6 @@ class Financial extends AbstractEntity
      */
     private $vatStatus;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financialDebtor", cascade={"persist"})
-     * @ORM\JoinColumn(name="debtor", referencedColumnName="organisation_id", nullable=true)
-     *
-     * @var \Organisation\Entity\Organisation
-     */
-    private $debtor;
-    /**
      * @ORM\Column(name="shiftvat", type="smallint", nullable=true)
      * @Annotation\Exclude
      *
@@ -297,27 +290,7 @@ class Financial extends AbstractEntity
         $this->dateVat = $dateVat;
     }
 
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getDebtor()
-    {
-        return $this->debtor;
-    }
 
-    /**
-     * @param \Organisation\Entity\Organisation $debtor
-     */
-    public function setDebtor($debtor)
-    {
-        $this->debtor = $debtor;
-    }
-
-    /**
-     * @param bool $textual
-     *
-     * @return int|string
-     */
     public function getEmail(bool $textual = false)
     {
         if ($textual) {

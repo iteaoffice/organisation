@@ -275,7 +275,6 @@ class Organisation extends AbstractEntity
         $this->contactOrganisation = new Collections\ArrayCollection();
         $this->parentFinancial = new Collections\ArrayCollection();
         $this->names = new Collections\ArrayCollection();
-        $this->financialDebtor = new Collections\ArrayCollection();
         $this->log = new Collections\ArrayCollection();
         $this->logo = new Collections\ArrayCollection();
         $this->note = new Collections\ArrayCollection();
