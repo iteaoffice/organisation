@@ -211,13 +211,6 @@ class Organisation extends AbstractEntity
      */
     private $financial;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="debtor")
-     * @Annotation\Exclude()
-     *
-     * @var \Organisation\Entity\Financial[]|Collections\ArrayCollection
-     */
-    private $financialDebtor;
-    /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
@@ -574,18 +567,6 @@ class Organisation extends AbstractEntity
     public function setFinancial($financial): Organisation
     {
         $this->financial = $financial;
-
-        return $this;
-    }
-
-    public function getFinancialDebtor()
-    {
-        return $this->financialDebtor;
-    }
-
-    public function setFinancialDebtor($financialDebtor): Organisation
-    {
-        $this->financialDebtor = $financialDebtor;
 
         return $this;
     }

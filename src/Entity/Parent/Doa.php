@@ -59,7 +59,7 @@ class Doa extends AbstractEntity
     private $branch;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="parentDoa")
-     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
+     * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=true)
      * @Annotation\Type("\Zend\Form\Element\File")
      * @Annotation\Options({"label":"txt-nda-file"})
      *
