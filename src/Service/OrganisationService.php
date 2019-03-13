@@ -450,8 +450,8 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             \count($projectsOnWebsite) > 0
                 ? $this->translator->translate('txt-yes')
                 : $this->translator->translate(
-                    'txt-no'
-                )
+                'txt-no'
+            )
         );
 
         $organisationDocument->setField('is_parent', $organisation->isParent());
@@ -561,12 +561,25 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $this->entityManager->getRepository(Entity\Financial::class)->findOneBy(['vat' => $vat]);
     }
 
-    public function findOrganisationByNameCountry(string $name, Country $country, bool $onlyMain = true)
-    {
+    public function findOrganisationByNameCountry(string $name, Country $country, bool $onlyMain = true):?Entity\Organisation {
         /** @var Repository\Organisation $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByNameCountry($name, $country, $onlyMain);
+    }
+
+    /**
+     * @param string  $name
+     * @param Country $country
+     * @param bool    $onlyMain
+     *
+     * @return Entity\Organisation[]
+     */
+    public function findOrganisationsByNameCountry(string $name, Country $country, bool $onlyMain = true) {
+        /** @var Repository\Organisation $repository */
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
+
+        return $repository->findOrganisationsByNameCountry($name, $country, $onlyMain);
     }
 
     public function findOrganisationByMeetingAndDescriptionSearch(

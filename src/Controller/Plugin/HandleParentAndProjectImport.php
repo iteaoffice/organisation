@@ -22,7 +22,6 @@ use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Parent\Doa;
 use Organisation\Entity\Parent\Financial;
-use Organisation\Entity\Parent\Organisation as ParentOrganisation;
 use Organisation\Entity\Parent\Type as ParentType;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
@@ -217,6 +216,34 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
     public function prepareContent(array $keys = []): void
     {
+        //First de-activate all the partners
+        if (\count($keys) > 0) {
+            $projects = [];
+            foreach ($this->content as $key => $content) {
+                if (\in_array($key, $keys, false)) {
+                    /** @var Project $project */
+                    $project = $this->projectService->findProjectByName(
+                        $content[$this->headerKeys['Proposal Acronym']]
+                    );
+
+                    if (null !== $project) {
+                        $projects[$project->getId()] = $project;
+                    }
+                }
+            }
+
+            //Disable all affiliations
+            foreach ($projects as $project) {
+                foreach ($project->getAffiliation() as $affiliation) {
+                    $affiliation->setDateEnd(new \DateTime());
+                    $this->entityManager->persist($affiliation);
+
+                }
+            }
+            $this->entityManager->flush();
+
+        }
+
         foreach ($this->content as $key => $content) {
             $contact = $this->contactService->findContactById(1);
 
@@ -272,61 +299,110 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             //Explicit set the call in the project to have it upon persisting to avoid the creation of double calls
             $project->setCall($call);
 
-            //Try to find the parent organisation
-            $organisationForParent = $this->parentService->findParentByOrganisationName(
-                $content[$this->headerKeys['Parent']]
-            );
+
+            /**
+             * We are trying to create or import affiliations here, so that is the approach.
+             *
+             * Per line from the import we are having a
+             *
+             * 1) Partner name in the project
+             * 2) A legal name of the parent
+             * 3) Country
+             *
+             * But, due to changes in the database, it might be possible that the parent is wrong, so if we find the partner in the
+             * project with the name, we only need to check if the found organisation has a parent or not.
+             *
+             * For an affiliation we need to have a
+             *
+             * $organisation (for legacy) and a
+             * $parentOrganisation
+             */
 
 
-            if (null === $organisationForParent) {
-                $organisationForParent = $this->createOrganisation(
-                    $content[$this->headerKeys['Parent']],
-                    $country
-                );
-            } else {
-                $organisationForParent = $organisationForParent->getOrganisation();
-            }
+            //Try first to find the organisation in based on the name
+            $legalName = $content[$this->headerKeys['Legal Name']];
+            $parentName = $content[$this->headerKeys['Parent']];
 
-            //Try to find the organisation
-            $organisation = $this->organisationService->findOrganisationByNameCountry(
-                $content[$this->headerKeys['Legal Name']],
-                $country,
-                false
-            );
+            //First initiate the needed variables.
+            $affiliation = false;
+            $organisation = false;
+            $parentOrganisation = false;
 
+            //First iterate over the organisations in the project to see if we find an organisation with the $legalName in the country
+            foreach ($project->getOrganisationName() as $organisationName) {
+                if (!$organisation
+                    && $legalName === $organisationName->getOrganisation()->getOrganisation()
+                    && $organisationName->getOrganisation()->getCountry()->getId() === $country->getId()
+                ) {
+                    //Bingo, we found the organisation we are now immediately  done if the organisation has a parent has a
+                    $organisation = $organisationName->getOrganisation();
 
-            if (null === $organisation) {
-                $organisation = $this->createOrganisation(
-                    $content[$this->headerKeys['Legal Name']],
-                    $country
-                );
-            }
-
-            $parent = $this->handleParentInformation(
-                $organisationForParent,
-                $contact,
-                $program,
-                $content
-            );
-
-            //Start with the parent organisation which is found from the organisation
-            $parentOrganisation = $organisation->getParentOrganisation();
-
-            if (null !== $parentOrganisation && $parentOrganisation->getParent() !== $parent->getId()) {
-                //Replace the parent
-                $parentOrganisation->setParent($parent);
-            }
-
-            //We have the parent now, we need to create the project information
-            foreach ($parent->getParentOrganisation() as $otherParentOrganisation) {
-                if (null === $parentOrganisation && $otherParentOrganisation->getOrganisation() === $organisation) {
-                    $parentOrganisation = $otherParentOrganisation;
+                    //Hey, this organisation has a parent, so we can store that info now for later use.
+                    if ($organisation->hasParent()) {
+                        $parentOrganisation = $organisation->getParentOrganisation();
+                    }
                 }
             }
 
-            //If we can't find the $parentOrganisation, create it
-            if (null === $parentOrganisation) {
-                $parentOrganisation = new ParentOrganisation();
+
+            //Imagine we found not organisation, this means that the organisation is not yet in the project. We need to dig further
+            if (!$organisation) {
+                //Try to find the organisation somewhere in the database
+                $organisations = $this->organisationService->findOrganisationsByNameCountry(
+                    $legalName,
+                    $country,
+                    false
+                );
+
+                //We now might find more than organisation, try to find one which has a parent
+                /** @var Organisation $anyOrganisation */
+                foreach ($organisations as $anyOrganisation) {
+                    if (!$organisation && $anyOrganisation->hasParent()) {
+                        $organisation = $anyOrganisation;
+                        $parentOrganisation = $anyOrganisation->getParentOrganisation();
+                    }
+                }
+
+                //if we still cannot find one, just take the first one.
+                if (!$organisation) {
+                    $organisation = $this->organisationService->findOrganisationByNameCountry(
+                        $legalName,
+                        $country,
+                        false
+                    );
+                }
+            }
+
+            //if we still have not found one, then create one.
+            if (!$organisation) {
+                $organisation = $this->createOrganisation(
+                    $legalName,
+                    $country
+                );
+            }
+
+            //Now, if the organisation has not parent
+            if (!$organisation->hasParent()) {
+                //Try if we can find a parent for the organisation
+                $parent = $this->parentService->findParentByOrganisationName($parentName);
+
+                if (null === $parent) {
+
+                    $organisationForParent = $organisation;
+                    //Only create a new organisation if the names differ
+                    if ($parentName !== $legalName) {
+                        $organisationForParent = $this->createOrganisation($parentName, $country);
+                    }
+
+                    $parent = $this->handleParentInformation(
+                        $organisationForParent,
+                        $contact,
+                        $program,
+                        $content
+                    );
+                }
+
+                $parentOrganisation = new \Organisation\Entity\Parent\Organisation();
                 $parentOrganisation->setOrganisation($organisation);
                 $parentOrganisation->setParent($parent);
                 $parentOrganisation->setContact($contact);
@@ -338,14 +414,12 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
 
-            $affiliation = false;
-            //Check if the affiliation already exist
+            //We have a parent organisationw (either created not), lets see if we can find the project in the list
             foreach ($parentOrganisation->getAffiliation() as $existingAffiliation) {
                 if (!$affiliation && $existingAffiliation->getProject()->getId() === $project->getId()) {
                     $affiliation = $existingAffiliation;
                 }
             }
-
 
             if (!$affiliation) {
                 $affiliation = new Affiliation();
@@ -364,22 +438,21 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             $funding->setFundingEu(
-                (float)(\trim(\str_replace(['.', ','], '', $content[$this->headerKeys['EU funding']]), '"') / 100)
+                (float)((int)\trim(\str_replace(['.', ','], '', $content[$this->headerKeys['EU funding']]), '"') / 100)
             );
             $funding->setFundingNational(
-                (float)(\trim(
-                    \str_replace(
-                        ['.', ','],
-                        '',
-                        $content[$this->headerKeys['National funding']]
-                    ),
-                    '"'
-                ) / 100)
+                (float)((int)\trim(
+                        \str_replace(
+                            ['.', ','],
+                            '',
+                            $content[$this->headerKeys['National funding']]
+                        ),
+                        '"'
+                    ) / 100)
             );
 
             $affiliation->getFunded()->add($funding);
-
-            //$parentOrganisation->getAffiliation()->add($affiliation);
+            $parentOrganisation->getAffiliation()->add($affiliation);
 
 
             //Store the name of the organisation in the organisation table per project
@@ -401,8 +474,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //Only persist when the key is given
             if (\in_array($key, $keys, false)) {
+                $affiliation->setDateEnd(null);
                 $this->entityManager->persist($affiliation);
-                $this->entityManager->flush();
+                $this->entityManager->flush($affiliation);
+                $this->entityManager->persist($funding);
+                $this->entityManager->flush($funding);
                 $this->importedAffiliation[] = $affiliation;
             }
 

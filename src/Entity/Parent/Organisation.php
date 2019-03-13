@@ -103,7 +103,10 @@ class Organisation extends AbstractEntity
 
     public function __toString(): string
     {
-        return (string)$this->getOrganisation()->getOrganisation();
+        if (null === $this->organisation) {
+            return '';
+        }
+        return (string)$this->organisation->getOrganisation();
     }
 
     public function getOrganisation()
