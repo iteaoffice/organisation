@@ -350,7 +350,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         }
 
         $queryBuilder = $this->_em->createQueryBuilder();
-        $queryBuilder->select('organisation_entity_organisation');
+        $queryBuilder->select('organisation_entity_organisation, general_entity_country');
         $queryBuilder->distinct('organisation_entity_organisation.id');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
         $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
