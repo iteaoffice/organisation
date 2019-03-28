@@ -237,11 +237,9 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 foreach ($project->getAffiliation() as $affiliation) {
                     $affiliation->setDateEnd(new \DateTime());
                     $this->entityManager->persist($affiliation);
-
                 }
             }
             $this->entityManager->flush();
-
         }
 
         foreach ($this->content as $key => $content) {
@@ -387,7 +385,6 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 $parent = $this->parentService->findParentByOrganisationName($parentName);
 
                 if (null === $parent) {
-
                     $organisationForParent = $organisation;
                     //Only create a new organisation if the names differ
                     if ($parentName !== $legalName) {
@@ -442,13 +439,13 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             );
             $funding->setFundingNational(
                 (float)((int)\trim(
-                        \str_replace(
-                            ['.', ','],
-                            '',
-                            $content[$this->headerKeys['National funding']]
-                        ),
-                        '"'
-                    ) / 100)
+                    \str_replace(
+                        ['.', ','],
+                        '',
+                        $content[$this->headerKeys['National funding']]
+                    ),
+                    '"'
+                ) / 100)
             );
 
             $affiliation->getFunded()->add($funding);
