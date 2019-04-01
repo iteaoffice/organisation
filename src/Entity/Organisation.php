@@ -305,6 +305,11 @@ class Organisation extends AbstractEntity
         return null !== $this->parentOrganisation;
     }
 
+    public function hasDescription(): bool
+    {
+        return null !== $this->description;
+    }
+
     public function __get($property)
     {
         return $this->$property;
