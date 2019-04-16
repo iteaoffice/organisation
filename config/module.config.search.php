@@ -20,11 +20,9 @@ return [
             'organisation_organisation' => [
                 'endpoint' => [
                     'server' => [
-                        'host'     => '10.213.157.15',
+                        'host'     => 'search',
                         'port'     => '8983',
-                        'path'     => '/solr/organisation_organisation',
-                        'username' => 'jvdheide',
-                        'password' => 'jvdheide1',
+                        'path'     => '/solr/organisation_organisation'
                     ],
                 ],
             ],
