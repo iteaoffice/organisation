@@ -17,11 +17,15 @@ declare(strict_types=1);
 
 namespace Organisation\Controller;
 
+use function array_merge_recursive;
 use Contact\Service\ContactService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Invoice\Service\InvoiceService;
+use function mb_convert_encoding;
+use function ob_get_clean;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
@@ -29,6 +33,8 @@ use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Program\Service\ProgramService;
+use function set_time_limit;
+use function strlen;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Paginator\Paginator;
@@ -224,10 +230,10 @@ final class ParentController extends OrganisationAbstractController
             }
         }
 
-        $string = \ob_get_clean();
+        $string = ob_get_clean();
 
         // Convert to UTF-16LE
-        $string = \mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
+        $string = mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
 
         // Prepend BOM
         $string = '\xFF\xFE' . $string;
@@ -241,7 +247,7 @@ final class ParentController extends OrganisationAbstractController
             'attachment; filename="export-members-with-are-no-member-and-have-no-doa.csv"'
         );
         $headers->addHeaderLine('Accept-Ranges', 'bytes');
-        $headers->addHeaderLine('Content-Length', \strlen($string));
+        $headers->addHeaderLine('Content-Length', strlen($string));
 
         $response->setContent($string);
 
@@ -286,7 +292,7 @@ final class ParentController extends OrganisationAbstractController
                 /* @var $parent Entity\OParent */
                 $parent = $form->getData();
 
-                $parent->setDateParentTypeUpdate(new \DateTime());
+                $parent->setDateParentTypeUpdate(new DateTime());
 
                 $this->parentService->save($parent);
                 $this->organisationService->save($parent->getOrganisation());
@@ -426,7 +432,7 @@ final class ParentController extends OrganisationAbstractController
                 $parent = $form->getData();
 
                 if ($parent->getType()->getId() !== $currentParentType) {
-                    $parent->setDateParentTypeUpdate(new \DateTime());
+                    $parent->setDateParentTypeUpdate(new DateTime());
                 }
 
                 $this->flashMessenger()->addSuccessMessage(
@@ -568,13 +574,13 @@ final class ParentController extends OrganisationAbstractController
             ->addHeaderLine(
                 'Content-Disposition',
                 'attachment; filename="' . sprintf(
-                    'overview_variable_contribution_%s_%s.pdf',
+                    'Overview variable Contribution %s %s.pdf',
                     $parent->getOrganisation()->getDocRef(),
                     $year
                 ) . '"'
             )
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', \strlen($renderPaymentSheet->getPDFData()));
+            ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
 
         return $response;
@@ -631,13 +637,13 @@ final class ParentController extends OrganisationAbstractController
             ->addHeaderLine(
                 'Content-Disposition',
                 'attachment; filename="' . sprintf(
-                    'overview_extra_variable_contribution_%s_%s.pdf',
+                    'Overview extra variable contribution %s %s.pdf',
                     $parent->getOrganisation()->getDocRef(),
                     $year
                 ) . '"'
             )
             ->addHeaderLine('Content-Type: application/pdf')
-            ->addHeaderLine('Content-Length', \strlen($renderPaymentSheet->getPDFData()));
+            ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
 
         return $response;
@@ -645,9 +651,9 @@ final class ParentController extends OrganisationAbstractController
 
     public function importProjectAction(): ViewModel
     {
-        \set_time_limit(0);
+        set_time_limit(0);
 
-        $data = \array_merge_recursive(
+        $data = array_merge_recursive(
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );

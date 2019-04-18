@@ -95,23 +95,24 @@ final class RenderOverviewExtraVariableContributionSheet extends AbstractPlugin
         $content = $this->renderer->render(
             'organisation/pdf/overview-extra-variable-contribution',
             [
-                'year'               => $year,
-                'parent'             => $parent,
-                'contactService'     => $this->contactService,
-                'versionService'     => $this->versionService,
-                'parentService'      => $this->parentService,
-                'affiliationService' => $this->affiliationService,
-                'projectService'     => $this->projectService,
-                'program'            => $program,
-                'financialContact'   => $this->parentService->getFinancialContact($parent),
-                'projects'           => $this->projectService->findProjectsByParent(
+                'year'                => $year,
+                'parent'              => $parent,
+                'contactService'      => $this->contactService,
+                'versionService'      => $this->versionService,
+                'parentService'       => $this->parentService,
+                'affiliationService'  => $this->affiliationService,
+                'projectService'      => $this->projectService,
+                'program'             => $program,
+                'financialContact'    => $this->parentService->getFinancialContact($parent),
+                'projects'            => $this->projectService->findProjectsByParent(
                     $parent,
                     $program,
                     AffiliationService::WHICH_INVOICING,
                     $year
                 ),
-                'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
-
+                'membershipDate'      => sprintf('01-09-%s', $year),
+                'amountOfMemberships' => $this->parentService->parseMembershipFactor($parent),
+                'invoiceFactor'       => $this->parentService->parseInvoiceFactor($parent, $program),
             ]
         );
 
