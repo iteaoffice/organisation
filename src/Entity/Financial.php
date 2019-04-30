@@ -12,13 +12,14 @@ declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
+use General\Entity\VatType;
+use Invoice\Entity\Reminder;
 use Zend\Form\Annotation;
 
 /**
- * OrganisationFinancial.
- *
  * @ORM\Table(name="organisation_financial")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Financial")
  */
@@ -80,7 +81,7 @@ class Financial extends AbstractEntity
     /**
      * @ORM\Column(name="date_vat", type="datetime", nullable=true)
      * @Annotation\Exclude
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateVat;
     /**
@@ -92,15 +93,6 @@ class Financial extends AbstractEntity
      * @var int
      */
     private $vatStatus;
-    /**
-     * @ORM\Column(name="shiftvat", type="smallint", nullable=true)
-     * @Annotation\Exclude
-     *
-     * @deprecated
-     *
-     * @var int
-     */
-    private $shiftVat;
     /**
      * @ORM\Column(name="omitcontact", type="smallint", nullable=false)
      * @Annotation\Type("Zend\Form\Element\Radio")
@@ -154,7 +146,7 @@ class Financial extends AbstractEntity
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financial", cascade="persist")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      *
-     * @var \Organisation\Entity\Organisation
+     * @var Organisation
      */
     private $organisation;
     /**
@@ -165,14 +157,14 @@ class Financial extends AbstractEntity
      * )
      * @Annotation\Exclude()
      *
-     * @var \General\Entity\VatType[]|Collections\ArrayCollection
+     * @var VatType[]|Collections\ArrayCollection
      */
     private $vatType;
     /**
      * @ORM\OneToMany(targetEntity="\Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="financial")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Reminder[]|Collections\ArrayCollection
+     * @var Reminder[]|Collections\ArrayCollection
      */
     private $reminder;
 
@@ -186,108 +178,73 @@ class Financial extends AbstractEntity
         $this->reminder = new Collections\ArrayCollection();
     }
 
-    /**
-     * @return array
-     */
     public static function getVatStatusTemplates(): array
     {
         return self::$vatStatusTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getOmitContactTemplates(): array
     {
         return self::$omitContactTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getEmailTemplates(): array
     {
         return self::$emailTemplates;
     }
 
-    /**
-     * @return array
-     */
     public static function getRequiredPurchaseOrderTemplates(): array
     {
         return self::$requiredPurchaseOrderTemplates;
     }
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
+    public function hasOmitContact(): bool
+    {
+        return $this->omitContact === self::OMIT_CONTACT;
+    }
+
     public function __get($property)
     {
         return $this->$property;
     }
 
-    /**
-     * @param $property
-     * @param $value
-     */
     public function __set($property, $value)
     {
         $this->$property = $value;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
     public function __isset($property)
     {
         return isset($this->$property);
     }
 
-    /**
-     * ToString
-     * Return the id here for form population.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->organisation;
     }
 
-    /**
-     * @return string
-     */
-    public function getBic()
+    public function getBic(): ?string
     {
         return $this->bic;
     }
 
-    /**
-     * @param string $bic
-     */
-    public function setBic($bic)
+    public function setBic($bic): Financial
     {
         $this->bic = $bic;
+
+        return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateVat()
+    public function getDateVat(): ?DateTime
     {
         return $this->dateVat;
     }
 
-    /**
-     * @param \DateTime $dateVat
-     */
-    public function setDateVat($dateVat)
+    public function setDateVat($dateVat): Financial
     {
         $this->dateVat = $dateVat;
+
+        return $this;
     }
 
 
@@ -300,51 +257,37 @@ class Financial extends AbstractEntity
         return $this->email;
     }
 
-    /**
-     * @param int $email
-     */
-    public function setEmail($email)
+    public function setEmail($email): Financial
     {
         $this->email = $email;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getIban()
+    public function getIban(): ?string
     {
         return $this->iban;
     }
 
-    /**
-     * @param string $iban
-     */
-    public function setIban($iban)
+    public function setIban($iban): Financial
     {
         $this->iban = $iban;
+
+        return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId($id): Financial
     {
         $this->id = $id;
+
+        return $this;
     }
 
-    /**
-     * @param  bool $textual
-     *
-     * @return int|string
-     */
     public function getOmitContact(bool $textual = false)
     {
         if ($textual) {
@@ -354,35 +297,25 @@ class Financial extends AbstractEntity
         return $this->omitContact;
     }
 
-    /**
-     * @param int $omitContact
-     */
-    public function setOmitContact($omitContact)
+    public function setOmitContact($omitContact): Financial
     {
         $this->omitContact = $omitContact;
+
+        return $this;
     }
 
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation($organisation): Financial
     {
         $this->organisation = $organisation;
+
+        return $this;
     }
 
-    /**
-     * @param  bool $textual
-     *
-     * @return int|string
-     */
     public function getRequiredPurchaseOrder(bool $textual = false)
     {
         if ($textual) {
@@ -392,51 +325,25 @@ class Financial extends AbstractEntity
         return $this->requiredPurchaseOrder;
     }
 
-    /**
-     * @param int $requiredPurchaseOrder
-     */
-    public function setRequiredPurchaseOrder($requiredPurchaseOrder)
+    public function setRequiredPurchaseOrder($requiredPurchaseOrder): Financial
     {
         $this->requiredPurchaseOrder = $requiredPurchaseOrder;
+
+        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getShiftVat()
-    {
-        return $this->shiftVat;
-    }
-
-    /**
-     * @param int $shiftVat
-     */
-    public function setShiftVat($shiftVat)
-    {
-        $this->shiftVat = $shiftVat;
-    }
-
-    /**
-     * @return string
-     */
-    public function getVat()
+    public function getVat(): ?string
     {
         return $this->vat;
     }
 
-    /**
-     * @param string $vat
-     */
-    public function setVat($vat)
+    public function setVat($vat): Financial
     {
         $this->vat = $vat;
+
+        return $this;
     }
 
-    /**
-     * @param  bool $textual
-     *
-     * @return int|string
-     */
     public function getVatStatus(bool $textual = false)
     {
         if ($textual) {
@@ -446,60 +353,43 @@ class Financial extends AbstractEntity
         return $this->vatStatus;
     }
 
-    /**
-     * @param int $vatStatus
-     */
-    public function setVatStatus($vatStatus)
+    public function setVatStatus($vatStatus): Financial
     {
         $this->vatStatus = $vatStatus;
+
+        return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\General\Entity\VatType[]
-     */
     public function getVatType()
     {
         return $this->vatType;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\General\Entity\VatType[] $vatType
-     */
-    public function setVatType($vatType)
+    public function setVatType($vatType): Financial
     {
         $this->vatType = $vatType;
+
+        return $this;
     }
 
-    /**
-     * @return \Invoice\Entity\Reminder[]|Collections\ArrayCollection
-     */
     public function getReminder()
     {
         return $this->reminder;
     }
 
-    /**
-     * @param \Invoice\Entity\Reminder[]|Collections\ArrayCollection $reminder
-     */
-    public function setReminder($reminder)
+    public function setReminder($reminder): Financial
     {
         $this->reminder = $reminder;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSupplierNumber()
+    public function getSupplierNumber(): ?string
     {
         return $this->supplierNumber;
     }
 
-    /**
-     * @param string $supplierNumber
-     *
-     * @return Financial
-     */
-    public function setSupplierNumber($supplierNumber)
+    public function setSupplierNumber($supplierNumber): Financial
     {
         $this->supplierNumber = $supplierNumber;
 

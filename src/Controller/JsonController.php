@@ -12,13 +12,17 @@ declare(strict_types=1);
 
 namespace Organisation\Controller;
 
+use DateTime;
 use DragonBe\Vies\Vies;
 use Organisation\Entity\Financial;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
+use Throwable;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
+use function sprintf;
+use function trim;
 
 /**
  * Class JsonController
@@ -40,8 +44,11 @@ final class JsonController extends OrganisationAbstractController
      */
     private $translator;
 
-    public function __construct(OrganisationService $organisationService, ParentService $parentService, TranslatorInterface $translator)
-    {
+    public function __construct(
+        OrganisationService $organisationService,
+        ParentService $parentService,
+        TranslatorInterface $translator
+    ) {
         $this->organisationService = $organisationService;
         $this->parentService = $parentService;
         $this->translator = $translator;
@@ -72,10 +79,10 @@ final class JsonController extends OrganisationAbstractController
 
     public function searchAction(): ViewModel
     {
-        $search = $this->getRequest()->getPost()->get('search');
+        $search = $this->getRequest()->getPost()->get('q');
         $results = [];
         foreach ($this->organisationService->searchOrganisation($search, 1000) as $result) {
-            $text = \trim(\sprintf('%s (%s)', $result['organisation'], $result['iso3']));
+            $text = trim(sprintf('%s (%s)', $result['organisation'], $result['iso3']));
             $results[] = ['value' => $result['id'], 'text' => $text,];
         }
         return new JsonModel($results);
@@ -83,7 +90,7 @@ final class JsonController extends OrganisationAbstractController
 
     public function searchParentAction(): ViewModel
     {
-        $search = $this->getRequest()->getPost()->get('search');
+        $search = $this->getRequest()->getPost()->get('q');
         $results = [];
         foreach ($this->parentService->searchParent($search, 1000) as $result) {
             $text = trim(sprintf('%s (%s)', $result['organisation'], $result['iso3']));
@@ -132,7 +139,7 @@ final class JsonController extends OrganisationAbstractController
             if ($result->isValid()) {
                 //Update the financial
                 $financial->setVatStatus(Financial::VAT_STATUS_VALID);
-                $financial->setDateVat(new \DateTime());
+                $financial->setDateVat(new DateTime());
                 $this->organisationService->save($financial);
 
 
@@ -147,7 +154,7 @@ final class JsonController extends OrganisationAbstractController
 
             //Update the financial
             $financial->setVatStatus(Financial::VAT_STATUS_INVALID);
-            $financial->setDateVat(new \DateTime());
+            $financial->setDateVat(new DateTime());
             $this->organisationService->save($financial);
 
             return new JsonModel(
@@ -157,7 +164,7 @@ final class JsonController extends OrganisationAbstractController
                     'status'  => Financial::VAT_STATUS_INVALID,
                 ]
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return new JsonModel(
                 [
                     'success' => 'error',

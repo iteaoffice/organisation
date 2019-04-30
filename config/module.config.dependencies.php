@@ -23,9 +23,10 @@ use Content\Service\ArticleService;
 use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
-use General\Service\GeneralService;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller;
+use Organisation\Form\View\Helper\OrganisationFormElement;
+use Organisation\Form\View\Helper\ParentFormElement;
 use Organisation\Service;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
@@ -94,6 +95,14 @@ return [
         ],
         Form\FinancialForm::class                                             => [
             EntityManager::class
+        ],
+        OrganisationFormElement::class                                        => [
+            'ViewHelperManager',
+            TranslatorInterface::class
+        ],
+        ParentFormElement::class                                              => [
+            'ViewHelperManager',
+            TranslatorInterface::class
         ]
     ]
 ];

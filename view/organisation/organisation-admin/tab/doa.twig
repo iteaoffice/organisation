@@ -38,7 +38,7 @@
             <td>{% if loi.dateSigned %}{{ loi.dateSigned|string_date }}{% endif %}</td>
             <td>{{ projectLink(loi.affiliation.project,'view-admin','name') }} {{ projectLink(loi.affiliation.project,'view-community','icon') }}
             </td>
-            <td>{{ loiLink(loi,'edit-admin','icon') }} {{ loiLink(loi,'download','icon') }} </td>
+            <td>{{ loiLink(loi,'edit-admin','icon') }} {% if loi.hasObject() %}{{ loiLink(loi,'download','icon') }}{% endif %}</td>
         </tr>
     {% endfor %}
 </table>

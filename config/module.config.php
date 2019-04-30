@@ -59,7 +59,7 @@ $config = [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
     'view_helpers'       => [
-        'aliases'    => [
+        'aliases'   => [
             'organisationLink'                  => View\Helper\OrganisationLink::class,
             'organisationTypeLink'              => View\Helper\TypeLink::class,
             'organisationLogo'                  => View\Helper\OrganisationLogo::class,
@@ -71,12 +71,10 @@ $config = [
             'parentFinancialLink'               => View\Helper\ParentFinancialLink::class,
             'overviewVariableContribution'      => View\Helper\OverviewVariableContribution::class,
             'overviewExtraVariableContribution' => View\Helper\OverviewExtraVariableContribution::class,
+            'organisationformelement'           => Form\View\Helper\OrganisationFormElement::class,
+            'parentformelement'                 => Form\View\Helper\ParentFormElement::class,
         ],
-        'invokables' => [
-            'organisationformelement' => Form\View\Helper\OrganisationFormElement::class,
-            'parentformelement'       => Form\View\Helper\ParentFormElement::class,
-        ],
-        'factories'  => [
+        'factories' => [
             View\Handler\OrganisationHandler::class              => ConfigAbstractFactory::class,
             View\Helper\OrganisationLink::class                  => View\Factory\ViewHelperFactory::class,
             View\Helper\TypeLink::class                          => View\Factory\ViewHelperFactory::class,
@@ -89,6 +87,8 @@ $config = [
             View\Helper\ParentOrganisationLink::class            => View\Factory\ViewHelperFactory::class,
             View\Helper\OverviewVariableContribution::class      => View\Factory\ViewHelperFactory::class,
             View\Helper\OverviewExtraVariableContribution::class => View\Factory\ViewHelperFactory::class,
+            Form\View\Helper\OrganisationFormElement::class      => ConfigAbstractFactory::class,
+            Form\View\Helper\ParentFormElement::class            => ConfigAbstractFactory::class
         ],
     ],
     'form_elements'      => [
