@@ -9,8 +9,6 @@
 <h1>{{ translate("txt-edit-parent") }}</h1>
 
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 
@@ -18,7 +16,7 @@
     <label class="col-sm-3 col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
+        <p class="form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
     </div>
 </div>
 
@@ -31,7 +29,7 @@
     <label class="col-sm-3 col-form-label">{{ translate("txt-program-doa") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{% for doa in parent.doa %}{{ parentDoaLink(doa,'view','name') }}{% if not loop.last %} &middot; {% endif %}{% else %}{{ translate("txt-no-doa-signed") }}{% endfor %}</p>
+        <p class="form-control-plaintext">{% for doa in parent.doa %}{{ parentDoaLink(doa,'view','name') }}{% if not loop.last %} &middot; {% endif %}{% else %}{{ translate("txt-no-doa-signed") }}{% endfor %}</p>
     </div>
 </div>
 

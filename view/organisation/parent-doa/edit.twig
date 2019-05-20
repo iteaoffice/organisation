@@ -9,15 +9,13 @@
     format(doa.parent)|raw }}</h1>
 
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
     <label class="col-sm-3 col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ parentLink(doa.parent, 'view', 'parent') }}</p>
+        <p class="form-control-plaintext">{{ parentLink(doa.parent, 'view', 'parent') }}</p>
     </div>
 </div>
 
@@ -31,7 +29,7 @@
         <label class="col-sm-3 col-form-label">{{ translate("txt-download-current-doa") }}</label>
 
         <div class="col-sm-9">
-            <p class="form-control-static form-control-plaintext">{{ parentDoaLink(doa,'download','text') }}</p>
+            <p class="form-control-plaintext">{{ parentDoaLink(doa,'download','text') }}</p>
         </div>
     </div>
 {% endif %}

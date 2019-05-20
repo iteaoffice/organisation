@@ -5,7 +5,7 @@
 
 
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
+
 {% do form.setAttribute('action','') %}
 
 {{ form().openTag(form)|raw }}
@@ -14,7 +14,7 @@
     <label class="col-sm-3 col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
+        <p class="form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
     </div>
 </div>
 

@@ -17,12 +17,16 @@ declare(strict_types=1);
 
 namespace Organisation\Service;
 
+use function abs;
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
+use function array_merge;
 use Contact\Entity\Contact;
+use function count;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use function in_array;
 use Interop\Container\ContainerInterface;
 use Invoice\Entity\Method;
 use Organisation\Entity;
@@ -32,6 +36,7 @@ use Program\Entity\Program;
 use Project\Entity\Version\Version;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+use function round;
 
 /**
  * Class ParentService
@@ -311,12 +316,12 @@ class ParentService extends AbstractService
             }
         }
 
-        return \round($balanceTotal);
+        return round($balanceTotal);
     }
 
     public function hasExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version): bool
     {
-        return \abs($this->parseExtraVariableBalanceByParentAndVersion($parent, $version)) > 0;
+        return abs($this->parseExtraVariableBalanceByParentAndVersion($parent, $version)) > 0;
     }
 
     public function parseExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version): float
@@ -342,7 +347,7 @@ class ParentService extends AbstractService
 
     public function parseMembershipFactor(Entity\OParent $parent): int
     {
-        return \count($this->parseMemberships($parent));
+        return count($this->parseMemberships($parent));
     }
 
     public function parseMemberships(Entity\OParent $parent): array
@@ -364,7 +369,7 @@ class ParentService extends AbstractService
 
     public function parseDoaFactor(Entity\OParent $parent, Program $program = null): int
     {
-        return \count($this->parseDoas($parent, $program));
+        return count($this->parseDoas($parent, $program));
     }
 
     public function parseDoas(Entity\OParent $parent, ?Program $program = null): array
@@ -505,7 +510,7 @@ class ParentService extends AbstractService
             $year
         ) as $affiliation) {
             //Skip the affiliations which are not in the $include affiliations table
-            if (null !== $includeAffiliations && !\in_array($affiliation, $includeAffiliations, true)) {
+            if (null !== $includeAffiliations && !in_array($affiliation, $includeAffiliations, true)) {
                 continue;
             }
 
@@ -521,7 +526,7 @@ class ParentService extends AbstractService
         }
 
         //Parent invoices are always rounded on 2 digits
-        return \round($contributionTotal, 0);
+        return round($contributionTotal, 0);
     }
 
     public function findActiveParents(): ArrayCollection
@@ -569,7 +574,7 @@ class ParentService extends AbstractService
         int $year,
         Program $program
     ): array {
-        return \array_merge(
+        return array_merge(
             $this->findParentInvoiceByParentYear($parent, $year, $program)->toArray(),
             $this->findParentExtraInvoiceByParentYear($parent, $year)->toArray()
         );

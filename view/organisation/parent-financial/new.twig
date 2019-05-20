@@ -5,14 +5,13 @@
 
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
     <label class="col-sm-3 col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ parentLink(parent,'view', 'parent') }} ({{ parent.organisation.country }})</p>
+        <p class="form-control-plaintext">{{ parentLink(parent,'view', 'parent') }} ({{ parent.organisation.country }})</p>
     </div>
 </div>
 
@@ -20,7 +19,7 @@
     <label class="col-sm-3 col-form-label">{{ translate("txt-parent-type") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ parent.type }}</p>
+        <p class="form-control-plaintext">{{ parent.type }}</p>
     </div>
 </div>
 

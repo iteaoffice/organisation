@@ -24,6 +24,8 @@ use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
 use Program\Entity\Program;
 use Project\Entity\Version\Version;
+use function in_array;
+use function sprintf;
 
 /**
  * Class OParent
@@ -57,7 +59,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                     $queryBuilder->expr()->like('organisation_entity_financial_organisation_financial.vat', ':like')
                 )
             );
-            $queryBuilder->setParameter('like', \sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         if (array_key_exists('type', $filter)) {
@@ -87,8 +89,22 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
             );
         }
 
-        $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        if (array_key_exists('program', $filter)) {
+            $queryBuilder->join('organisation_entity_parent.doa', 'organisation_entity_parent_doa');
+            $queryBuilder->join('organisation_entity_parent_doa.program', 'organisation_entity_parent_doa_program');
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in('organisation_entity_parent_doa_program.id', $filter['program'])
+            );
+        }
+
+        $direction = Criteria::ASC;
+        if (isset($filter['direction'])
+            && in_array(
+                strtoupper($filter['direction']),
+                [Criteria::ASC, Criteria::DESC],
+                true
+            )
+        ) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -187,7 +203,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->expr()
                     ->like('organisation_entity_organisation.organisation', ':like')
             );
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         if (array_key_exists('memberType', $filter)) {
@@ -211,8 +227,14 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
             );
         }
 
-        $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        $direction = Criteria::ASC;
+        if (isset($filter['direction'])
+            && in_array(
+                strtoupper($filter['direction']),
+                [Criteria::ASC, Criteria::DESC],
+                true
+            )
+        ) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -307,18 +329,24 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->expr()
                     ->like('organisation_entity_organisation.organisation', ':like')
             );
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         if (array_key_exists('type', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in('organisation_entity_organisation.type', implode($filter['type'], ', '))
+                    ->in('organisation_entity_organisation.type', implode(', ', $filter['type']))
             );
         }
 
-        $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        $direction = Criteria::ASC;
+        if (isset($filter['direction'])
+            && in_array(
+                strtoupper($filter['direction']),
+                [Criteria::ASC, Criteria::DESC],
+                true
+            )
+        ) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -479,7 +507,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->expr()->like('general_entity_country.iso3', ':like')
             )
         );
-        $queryBuilder->setParameter('like', sprintf("%%%s%%", $searchItem));
+        $queryBuilder->setParameter('like', sprintf('%%%s%%', $searchItem));
 
         $queryBuilder->setMaxResults($maxResults);
         $queryBuilder->orderBy('organisation_entity_organisation.organisation', Criteria::ASC);

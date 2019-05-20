@@ -33,26 +33,20 @@ final class FormService
     /**
      * @var ServiceLocatorInterface
      */
-    private $serviceLocator;
+    private $container;
     /**
      * @var EntityManager
      */
     private $entityManager;
 
-    public function __construct(ServiceLocatorInterface $serviceLocator, EntityManager $entityManager)
+    public function __construct(ServiceLocatorInterface $container, EntityManager $entityManager)
     {
-        $this->serviceLocator = $serviceLocator;
+        $this->container = $container;
         $this->entityManager = $entityManager;
     }
 
     public function prepare($classNameOrEntity, array $data = [], array $options = []): Form
     {
-        /**
-         * The form can be created from an empty element, we then expect the $formClassName to be filled
-         * This should be a string, indicating the class
-         *
-         * But if the class a class is injected, we will change it into the className but hint the user to use a string
-         */
         if (!$classNameOrEntity instanceof AbstractEntity) {
             $classNameOrEntity = new $classNameOrEntity();
         }
@@ -72,15 +66,15 @@ final class FormService
          * The filter and the form can dynamically be created by pulling the form from the serviceManager
          * if the form or filter is not give in the serviceManager we will create it by default
          */
-        if ($this->serviceLocator->has($formName)) {
-            $form = $this->serviceLocator->build($formName, $options);
+        if ($this->container->has($formName)) {
+            $form = $this->container->build($formName, $options);
         } else {
-            $form = new CreateObject($this->entityManager, $entity, $this->serviceLocator);
+            $form = new CreateObject($this->entityManager, $entity, $this->container);
         }
 
-        if ($this->serviceLocator->has($filterName)) {
+        if ($this->container->has($filterName)) {
             /** @var InputFilter $filter */
-            $filter = $this->serviceLocator->get($filterName);
+            $filter = $this->container->get($filterName);
             $form->setInputFilter($filter);
         }
 

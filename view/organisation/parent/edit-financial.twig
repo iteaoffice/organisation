@@ -4,14 +4,13 @@
 <h1>{{ translate("txt-edit-financial-parent-%s")|format(parent.organisation.organisation) }}</h1>
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
 <div class="form-group row">
     <label class="col-sm-3 col-form-label">{{ translate("txt-parent") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
+        <p class="form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
     </div>
 </div>
 

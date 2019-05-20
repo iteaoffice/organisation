@@ -1,13 +1,6 @@
 <?php
-/**
- * ITEA Office copyright message placeholder
- *
- * @category    Organisation
- * @package     Config
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
- */
 
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Organisation\Acl;
 use Organisation\Controller;
 use Organisation\Factory;
@@ -20,6 +13,15 @@ use Organisation\Service;
 use Organisation\View;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Zend\Stdlib;
+
+/**
+ * ITEA Office copyright message placeholder
+ *
+ * @category    Organisation
+ * @package     Config
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ */
 
 $config = [
     'controllers'        => [
@@ -138,7 +140,7 @@ $config = [
     'doctrine'           => [
         'driver' => [
             'organisation_annotation_driver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'class' => AnnotationDriver::class,
                 'paths' => [__DIR__ . '/../src/Entity/'],
             ],
             'orm_default'                    => [

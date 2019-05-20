@@ -4,7 +4,6 @@
 <h1>{{ translate("txt-import-parents-and-parent-information") }}</h1>
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
  {{ ztbformelement(form.get('file')) }}

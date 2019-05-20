@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Organisation\Form;
 
+use Contact\Form\Element\Contact;
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Program\Entity\Program;
@@ -21,9 +22,11 @@ use Zend\Validator\File\Extension;
 use Zend\Validator\File\Size;
 
 /**
+ * Class ParentDoa
  *
+ * @package Organisation\Form
  */
-class ParentDoa extends Form\Form implements InputFilterProviderInterface
+final class ParentDoa extends Form\Form implements InputFilterProviderInterface
 {
     public function __construct(EntityManager $entityManager)
     {
@@ -86,7 +89,7 @@ class ParentDoa extends Form\Form implements InputFilterProviderInterface
         );
         $this->add(
             [
-                'type'    => 'Contact\Form\Element\Contact',
+                'type'    => Contact::class,
                 'name'    => 'contact',
                 'options' => [
                     'label'      => 'txt-contact',
@@ -130,13 +133,13 @@ class ParentDoa extends Form\Form implements InputFilterProviderInterface
     {
         return [
             'dateSigned'   => [
-                'required' => false,
+                'required' => true,
             ],
             'dateApproved' => [
-                'required' => false,
+                'required' => true,
             ],
             'file'         => [
-                'required'   => false,
+                'required'   => true,
                 'validators' => [
                     new Size(
                         [

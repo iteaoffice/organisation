@@ -8,8 +8,6 @@
 <h1>{{ translate("txt-new-parent") }}</h1>
 
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 {% set parent = form.get('organisation_entity_oparent') %}

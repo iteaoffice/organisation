@@ -21,13 +21,11 @@ use Zend\InputFilter\InputFilter;
 
 /**
  * Class OrganisationFilter
+ *
  * @package Organisation\InputFilter
  */
-class OrganisationFilter extends InputFilter
+final class OrganisationFilter extends InputFilter
 {
-    /**
-     * OrganisationFilter constructor.
-     */
     public function __construct()
     {
         $inputFilter = new InputFilter();

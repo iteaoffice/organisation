@@ -13,16 +13,20 @@ declare(strict_types=1);
 namespace Organisation\Controller;
 
 use Contact\Service\ContactService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Organisation\Entity;
 use Organisation\Form\ParentDoa;
 use Organisation\Service\ParentService;
+use Program\Entity\Program;
+use Program\Service\ProgramService;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Validator\File\FilesSize;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
+use function file_get_contents;
 
 /**
  * Class ParentDoaController
@@ -48,6 +52,10 @@ final class ParentDoaController extends OrganisationAbstractController
      */
     private $contactService;
     /**
+     * @var ProgramService
+     */
+    private $programService;
+    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -57,12 +65,14 @@ final class ParentDoaController extends OrganisationAbstractController
         EntityManager $entityManager,
         GeneralService $generalService,
         ContactService $contactService,
+        ProgramService $programService,
         TranslatorInterface $translator
     ) {
         $this->parentService = $parentService;
         $this->entityManager = $entityManager;
         $this->generalService = $generalService;
         $this->contactService = $contactService;
+        $this->programService = $programService;
         $this->translator = $translator;
     }
 
@@ -85,8 +95,7 @@ final class ParentDoaController extends OrganisationAbstractController
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $parent->getId()],
-                    []
+                    ['id' => $parent->getId()]
                 );
             }
 
@@ -105,12 +114,17 @@ final class ParentDoaController extends OrganisationAbstractController
                 $doa->setContentType($this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type));
 
                 $doa->setContact($this->contactService->findContactById((int)$data['contact']));
-                if ($dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
+                if ($dateSigned = DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
                     $doa->setDateSigned($dateSigned);
                 }
-                if ($dateApproved = \DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
+                if ($dateApproved = DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
                     $doa->setDateApproved($dateApproved);
                 }
+
+                //FInd the program
+                /** @var Program $program */
+                $program = $this->programService->findProgramById((int)$data['program']);
+                $doa->setProgram($program);
 
                 $doa->setParent($parent);
                 $doaObject->setDoa($doa);
@@ -124,8 +138,7 @@ final class ParentDoaController extends OrganisationAbstractController
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $parent->getId()],
-                    []
+                    ['id' => $parent->getId()]
                 );
             }
         }
@@ -165,8 +178,7 @@ final class ParentDoaController extends OrganisationAbstractController
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $doa->getParent()->getId()],
-                    []
+                    ['id' => $doa->getParent()->getId()]
                 );
             }
 
@@ -175,8 +187,7 @@ final class ParentDoaController extends OrganisationAbstractController
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $doa->getParent()->getId()],
-                    []
+                    ['id' => $doa->getParent()->getId()]
                 );
             }
 
@@ -189,7 +200,7 @@ final class ParentDoaController extends OrganisationAbstractController
                      */
                     if (!$doa->getObject()->isEmpty()) {
                         $doa->getObject()->first()->setObject(
-                            \file_get_contents($fileData['file']['tmp_name'])
+                            file_get_contents($fileData['file']['tmp_name'])
                         );
                     } else {
                         $doaObject = new Entity\Parent\DoaObject();
@@ -214,10 +225,10 @@ final class ParentDoaController extends OrganisationAbstractController
 
 
                 $doa->setContact($this->contactService->findContactById((int)$data['contact']));
-                if ($dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
+                if ($dateSigned = DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
                     $doa->setDateSigned($dateSigned);
                 }
-                if ($dateApproved = \DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
+                if ($dateApproved = DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
                     $doa->setDateApproved($dateApproved);
                 }
 
@@ -232,8 +243,7 @@ final class ParentDoaController extends OrganisationAbstractController
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $doa->getParent()->getId()],
-                    []
+                    ['id' => $doa->getParent()->getId()]
                 );
             }
         }
@@ -255,6 +265,7 @@ final class ParentDoaController extends OrganisationAbstractController
          * @var Entity\Parent\Doa $doa
          */
         $doa = $this->parentService->find(Entity\Parent\Doa::class, (int)$this->params('id'));
+
         if (null === $doa || count($doa->getObject()) === 0) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }

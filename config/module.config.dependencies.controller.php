@@ -104,6 +104,7 @@ return [
             EntityManager::class,
             GeneralService::class,
             ContactService::class,
+            ProgramService::class,
             TranslatorInterface::class
         ],
         Controller\ParentFinancialController::class       => [

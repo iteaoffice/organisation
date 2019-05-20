@@ -1,6 +1,4 @@
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 {% set financialForm = form.get('organisation_entity_financial') %}
@@ -11,7 +9,7 @@
     <label class="col-sm-3 col-form-label">{{ translate("txt-debtor-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ organisationService.parseDebtorNumber(organisation) }}</p>
+        <p class="form-control-plaintext">{{ organisationService.parseDebtorNumber(organisation) }}</p>
     </div>
 </div>
 
@@ -19,7 +17,7 @@
     <label class="col-sm-3 col-form-label">{{ translate("txt-credit-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ organisationService.parseCreditNumber(organisation) }}</p>
+        <p class="form-control-plaintext">{{ organisationService.parseCreditNumber(organisation) }}</p>
     </div>
 </div>
 
@@ -31,7 +29,7 @@
     <label class="col-sm-3 col-form-label">{{ translate("txt-vat-status") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext"><span
+        <p class="form-control-plaintext"><span
                     id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
                 ({{ financial.dateVat|string_date }})</span>
             {#<i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i></p>#}

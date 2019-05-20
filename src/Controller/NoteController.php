@@ -127,7 +127,7 @@ final class NoteController extends OrganisationAbstractController
 
             if (isset($data['delete'])) {
                 $this->organisationService->delete($note);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     $this->translator->translate("txt-note-has-been-removed-successfully")
                 );
 
@@ -143,7 +143,7 @@ final class NoteController extends OrganisationAbstractController
                 $note = $form->getData();
                 $this->organisationService->save($note);
 
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     $this->translator->translate("txt-note-has-successfully-been-updated")
                 );
 

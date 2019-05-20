@@ -20,13 +20,14 @@ namespace Organisation\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
+use function in_array;
 
 /**
  * Class Type
  *
  * @package Organisation\Repository
  */
-class Type extends EntityRepository implements FilteredObjectRepository
+final class Type extends EntityRepository implements FilteredObjectRepository
 {
     public function findFiltered(array $filter = []): QueryBuilder
     {
@@ -36,11 +37,11 @@ class Type extends EntityRepository implements FilteredObjectRepository
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere($queryBuilder->expr()->like('organisation_entity_type.type', ':like'));
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 

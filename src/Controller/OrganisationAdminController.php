@@ -314,7 +314,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
                 }
 
                 $this->organisationService->save($organisation);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate('txt-organisation-%s-has-successfully-been-added'),
                         $organisation
@@ -354,7 +354,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
             }
 
             if (isset($data['delete']) && $this->organisationService->canDeleteOrganisation($organisation)) {
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate('txt-organisation-%s-has-been-removed-successfully'),
                         $organisation
@@ -400,7 +400,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
 
                 $this->organisationService->save($organisation);
 
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate('txt-organisation-%s-has-successfully-been-updated'),
                         $organisation
@@ -615,7 +615,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
                 $result = $this->mergeOrganisation()->merge($source, $target);
                 $tab = 'general';
                 if ($result['success']) {
-                    $this->flashMessenger()->setNamespace('success')->addMessage(
+                    $this->flashMessenger()->addSuccessMessage(
                         $this->translator->translate('txt-organisations-have-been-successfully-merged')
                     );
                 } else {
