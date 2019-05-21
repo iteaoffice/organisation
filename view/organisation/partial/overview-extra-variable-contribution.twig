@@ -46,7 +46,7 @@
                 {% set totalFunding = versionService.findTotalFundingVersionByAffiliationAndVersion(affiliation, version) %}
 
                 {% if totalFunding > 0 %}
-                    <tr {% if affiliation not in activeFreeRiders %}class="danger"{% endif %}>
+                    <tr {% if affiliation not in activeFreeRiders %}class="table-danger"{% endif %}>
                         <td><span class="d-inline-block text-truncate"
                                   style="max-width: 400px;">{{ parentLink(affiliation.parentOrganisation.parent,'view','parent') }}</span>
                         </td>

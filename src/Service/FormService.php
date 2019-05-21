@@ -28,7 +28,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package Organisation\Service
  */
-final class FormService
+class FormService
 {
     /**
      * @var ServiceLocatorInterface

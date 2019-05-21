@@ -15,7 +15,7 @@
         {% for affiliation in affiliations %}
 
             <tr {% if affiliation.project.contact.id == affiliation.contact.id %}class="table-success"
-                {% endif %}{% if affiliation.dateEnd %}class="danger"{% endif %}>
+                {% endif %}{% if affiliation.dateEnd %}class="table-danger"{% endif %}>
                 <td>{{ projectLink(affiliation.project,'view-admin','name') }}
                     {{ projectLink(affiliation.project,'view-community','icon') }}
                 </td>

@@ -17,11 +17,16 @@ declare(strict_types=1);
 
 namespace OrganisationTest\Service;
 
+use Doctrine\ORM\EntityManager;
 use Organisation\Entity\Organisation;
+use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
 use Project\Entity\Project;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
+use Zend\I18n\Translator\Translator;
+use Zend\I18n\Translator\TranslatorInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class OrganisationServiceTest
@@ -33,50 +38,79 @@ class OrganisationServiceTest extends AbstractServiceTest
     /**
      *
      */
-    public function testCanCreateService()
+    public function testCanCreateService(): void
     {
-        $service = new OrganisationService();
+        $container = new ServiceManager();
+        $container->setService(EntityManager::class, $this->getEntityManagerMock());
+        $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
+        $container->setService(TranslatorInterface::class, new Translator());
+
+        $service = new OrganisationService($container);
         $this->assertInstanceOf(OrganisationService::class, $service);
     }
 
-    public function testCanDeleteEmptyOrganisation()
+    public function testCanDeleteEmptyOrganisation(): void
     {
-        $service = new OrganisationService();
+        $container = new ServiceManager();
+        $container->setService(EntityManager::class, $this->getEntityManagerMock());
+        $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
+        $container->setService(TranslatorInterface::class, new Translator());
 
+        $service = new OrganisationService($container);
         $organisation = new Organisation();
         $this->assertTrue($service->canDeleteOrganisation($organisation));
     }
 
-    public function testCanNotDeleteOrganisation()
+    public function testCanNotDeleteOrganisation(): void
     {
-        $service = new OrganisationService();
+        $container = new ServiceManager();
+        $container->setService(EntityManager::class, $this->getEntityManagerMock());
+        $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
+        $container->setService(TranslatorInterface::class, new Translator());
+
+        $service = new OrganisationService($container);
 
         $organisation = new Organisation();
         $organisation->getResult()->add(new Result());
         $this->assertFalse($service->canDeleteOrganisation($organisation));
     }
 
-    public function testCanParseDebtorNumber()
+    public function testCanParseDebtorNumber(): void
     {
-        $service = new OrganisationService();
+        $container = new ServiceManager();
+        $container->setService(EntityManager::class, $this->getEntityManagerMock());
+        $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
+        $container->setService(TranslatorInterface::class, new Translator());
+
+        $service = new OrganisationService($container);
 
         $organisation = new Organisation();
         $organisation->setId(1);
         $this->assertNotNull($service->parseDebtorNumber($organisation));
     }
 
-    public function testCanParseCreditNumber()
+    public function testCanParseCreditNumber(): void
     {
-        $service = new OrganisationService();
+        $container = new ServiceManager();
+        $container->setService(EntityManager::class, $this->getEntityManagerMock());
+        $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
+        $container->setService(TranslatorInterface::class, new Translator());
+
+        $service = new OrganisationService($container);
 
         $organisation = new Organisation();
         $organisation->setId(1);
         $this->assertNotNull($service->parseCreditNumber($organisation));
     }
 
-    public function testFindOrganisationNameByNameAndProject()
+    public function testFindOrganisationNameByNameAndProject(): void
     {
-        $service = new OrganisationService();
+        $container = new ServiceManager();
+        $container->setService(EntityManager::class, $this->getEntityManagerMock());
+        $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
+        $container->setService(TranslatorInterface::class, new Translator());
+
+        $service = new OrganisationService($container);
 
         $organisation = new Organisation();
         $name = 'TestName';

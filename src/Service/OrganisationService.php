@@ -14,18 +14,26 @@ namespace Organisation\Service;
 
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
+use function array_count_values;
+use function array_keys;
+use function array_unique;
+use function arsort;
 use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Contact\Service\ContactService;
+use function count;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
+use function in_array;
 use Interop\Container\ContainerInterface;
+use function ksort;
 use Organisation\Entity;
 use Organisation\Repository;
 use Organisation\Search\Service\OrganisationSearchService;
+use function preg_replace;
 use Project\Entity\Project;
 use Project\Entity\Result\Result;
 use Project\Service\ProjectService;
@@ -34,6 +42,11 @@ use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document\Document;
+use function sprintf;
+use function str_replace;
+use function strpos;
+use function substr;
+use function trim;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
@@ -75,11 +88,11 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         }
 
         /** When the name is not found in the organisation */
-        if (\strpos($givenName, $organisation) === false) {
-            return \sprintf('!%s', $givenName);
+        if (strpos($givenName, $organisation) === false) {
+            return sprintf('!%s', $givenName);
         }
 
-        return \str_replace($organisation, '~', $givenName);
+        return str_replace($organisation, '~', $givenName);
     }
 
     public function canDeleteOrganisation(Entity\Organisation $organisation): bool
@@ -105,12 +118,12 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function parseDebtorNumber(Entity\Organisation $organisation): string
     {
-        return \trim(\sprintf("%'.06d\n", 100000 + $organisation->getId()));
+        return trim(sprintf("%'.06d\n", 100000 + $organisation->getId()));
     }
 
     public function parseCreditNumber(Entity\Organisation $organisation): string
     {
-        return \trim(\sprintf("%'.06d\n", 200000 + $organisation->getId()));
+        return trim(sprintf("%'.06d\n", 200000 + $organisation->getId()));
     }
 
     public function findActiveOrganisationWithoutFinancial($filter): QueryBuilder
@@ -139,7 +152,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $organisations[$organisation->getOrganisation()] = $organisation;
         }
 
-        \ksort($organisations);
+        ksort($organisations);
 
         return $organisations;
     }
@@ -202,14 +215,14 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $invoiceContactList[] = $invoice->getContact()->getId();
         }
 
-        if (\count($invoiceContactList) === 0) {
+        if (count($invoiceContactList) === 0) {
             return null;
         }
 
-        $values = \array_count_values($invoiceContactList);
-        \arsort($values);
+        $values = array_count_values($invoiceContactList);
+        arsort($values);
 
-        $contactId = \array_keys($values)[0];
+        $contactId = array_keys($values)[0];
 
         return $this->entityManager->find(Contact::class, (int)$contactId);
     }
@@ -235,7 +248,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $branches[$branch] = $this->parseOrganisationWithBranch($branch, $organisation);
         }
 
-        return \array_unique($branches);
+        return array_unique($branches);
     }
 
     public function parseOrganisationWithBranch(?string $branch, Entity\Organisation $organisation): string
@@ -245,11 +258,11 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public static function parseBranch(?string $branch, Entity\Organisation $organisation): string
     {
-        if (null !== $branch && \strpos($branch, '!') === 0) {
-            return \substr($branch, 1);
+        if (null !== $branch && strpos($branch, '!') === 0) {
+            return substr($branch, 1);
         }
 
-        return \trim(\preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
+        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
     }
 
     public function findOrganisationByNameCountryAndEmailAddress(
@@ -289,7 +302,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $organisationWeb->setMain(Entity\Web::MAIN);
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
-        if (!\in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
+        if (!in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
             $this->save($organisationWeb);
         }
 
@@ -421,10 +434,10 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $affiliations[$affiliationId] = $affiliationId;
         }
 
-        $organisationDocument->setField('projects', \count($projects));
-        $organisationDocument->setField('projects_on_website', \count($projectsOnWebsite));
+        $organisationDocument->setField('projects', count($projects));
+        $organisationDocument->setField('projects_on_website', count($projectsOnWebsite));
 
-        $organisationDocument->setField('affiliations', \count($affiliations));
+        $organisationDocument->setField('affiliations', count($affiliations));
         $organisationDocument->setField('invoices', $organisation->getInvoice()->count());
         $organisationDocument->setField(
             'parent_organisations',
@@ -438,16 +451,16 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $this->getContactCount($organisation, ContactService::WHICH_ONLY_EXPIRED)
         );
 
-        $organisationDocument->setField('has_projects', \count($projects) > 0);
+        $organisationDocument->setField('has_projects', count($projects) > 0);
         $organisationDocument->setField(
             'has_projects_text',
-            \count($projects) > 0 ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no')
+            count($projects) > 0 ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no')
         );
 
-        $organisationDocument->setField('has_projects_on_website', \count($projectsOnWebsite) > 0);
+        $organisationDocument->setField('has_projects_on_website', count($projectsOnWebsite) > 0);
         $organisationDocument->setField(
             'has_projects_on_website_text',
-            \count($projectsOnWebsite) > 0
+            count($projectsOnWebsite) > 0
                 ? $this->translator->translate('txt-yes')
                 : $this->translator->translate(
                     'txt-no'
@@ -500,10 +513,10 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
                 : $this->translator->translate('txt-no')
         );
 
-        $organisationDocument->setField('has_affiliations', \count($affiliations) > 0);
+        $organisationDocument->setField('has_affiliations', count($affiliations) > 0);
         $organisationDocument->setField(
             'has_affiliations_text',
-            \count($affiliations) > 0 ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no')
+            count($affiliations) > 0 ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no')
         );
 
         $organisationDocument->setField(
@@ -611,7 +624,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             }
         }
         //Sort on the key (ASC)
-        \ksort($organisations);
+        ksort($organisations);
 
         return $organisations;
     }

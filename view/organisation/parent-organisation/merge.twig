@@ -31,7 +31,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="success">
+        <tr class="table-success">
             <td>
                 {% if merge %}
                     {{ translate("txt-main") }}:
@@ -44,7 +44,7 @@
             <td>{{ organisation.affiliation.count() }}</td>
         </tr>
         {% for otherOrganisation in organisation.parent.parentOrganisation if organisation.id != otherOrganisation.id %}
-            <tr  {% if otherOrganisation == affiliation.id %}class="info"{% endif %}>
+            <tr  {% if otherOrganisation == affiliation.id %}class="table-info"{% endif %}>
                 <td>
                     {% if merge != otherOrganisation.id %}
                         <input type="radio" name="merge" value="{{ otherOrganisation.id }}">

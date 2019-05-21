@@ -52,7 +52,7 @@ use Zend\View\Model\ViewModel;
  *
  * @package Organisation\Controller
  */
-final class OrganisationAdminController extends OrganisationAbstractController
+class OrganisationAdminController extends OrganisationAbstractController
 {
     /**
      * @var OrganisationService

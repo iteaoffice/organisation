@@ -13,7 +13,11 @@ declare(strict_types=1);
 namespace Organisation\Repository;
 
 use Affiliation\Entity\Affiliation;
+use function array_key_exists;
+use function asort;
 use Contact\Entity\Contact;
+use DateInterval;
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
@@ -22,8 +26,10 @@ use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
 use General\Entity\Country;
+use function in_array;
 use Organisation\Entity;
 use Project\Repository\Project;
+use function strtoupper;
 use Zend\Stdlib\Parameters;
 use Zend\Validator\EmailAddress;
 
@@ -32,7 +38,7 @@ use Zend\Validator\EmailAddress;
  *
  * @package Organisation\Repository
  */
-final class Organisation extends EntityRepository implements FilteredObjectRepository
+class Organisation extends EntityRepository implements FilteredObjectRepository
 {
     public function findFiltered(array $filter = []): QueryBuilder
     {
@@ -61,13 +67,13 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
             $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
         }
 
-        if (\array_key_exists('type', $filter)) {
+        if (array_key_exists('type', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in('organisation_entity_organisation.type', implode($filter['type'], ', '))
             );
         }
 
-        if (\array_key_exists('options', $filter) && \in_array('1', $filter['options'], true)) {
+        if (array_key_exists('options', $filter) && in_array('1', $filter['options'], true)) {
             //Make a second sub-select to cancel out organisations which have a financial organisation
             $subSelect2 = $this->_em->createQueryBuilder();
             $subSelect2->select('affiliation_entity_affiliation_organisation');
@@ -83,16 +89,16 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
             );
         }
 
-        if (\array_key_exists('options', $filter) && \in_array('2', $filter['options'], true)) {
+        if (array_key_exists('options', $filter) && in_array('2', $filter['options'], true)) {
             //Make a second sub-select to cancel out organisations which have a financial organisation
             $queryBuilder->join('organisation_entity_organisation.parent', 'parent');
         }
 
         $direction = Criteria::ASC;
         if (isset($filter['direction'])
-            && \in_array(\strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)
+            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)
         ) {
-            $direction = \strtoupper($filter['direction']);
+            $direction = strtoupper($filter['direction']);
         }
 
         switch ($filter['order']) {
@@ -151,7 +157,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
 
         $direction = Criteria::ASC;
         if (isset($filter['direction'])
-            && \in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)
+            && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)
         ) {
             $direction = strtoupper($filter['direction']);
         }
@@ -210,8 +216,8 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         //Limit to projects which are not recently completed
         $queryBuilder->andWhere('project_entity_project.dateEndActual > :lastYear');
 
-        $nextYear = new \DateTime();
-        $nextYear->sub(new \DateInterval('P1Y'));
+        $nextYear = new DateTime();
+        $nextYear->sub(new DateInterval('P1Y'));
 
         $queryBuilder->setParameter('lastYear', $nextYear);
 
@@ -234,7 +240,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -271,7 +277,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         $hostname = $validateEmail->hostname;
 
         //Skip this function when we have yahoo, hotmail or gmail
-        if (\in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
+        if (in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
             return [];
         }
 
@@ -324,7 +330,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
             $organisations[$organisation->getId()] = $organisation;
         }
 
-        \asort($organisations);
+        asort($organisations);
 
         //Add an empty value
         $emptyOrganisation = new Entity\Organisation();
@@ -345,7 +351,7 @@ final class Organisation extends EntityRepository implements FilteredObjectRepos
         $hostname = $validateEmail->hostname;
 
         //Skip this function when we have yahoo, hotmail or gmail
-        if (\in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
+        if (in_array($hostname, ['gmail.com', 'hotmail.com', 'yahoo.com', 'outlook.com'], true)) {
             return [];
         }
 
