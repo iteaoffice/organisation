@@ -20,9 +20,9 @@ use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Exception;
 use General\Service\GeneralService;
-use Invoice\Entity\Invoice;
-use Invoice\Form\InvoiceFilter;
+use Invoice\Search\Service\InvoiceSearchService;
 use Invoice\Service\InvoiceService;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
@@ -40,12 +40,16 @@ use Search\Paginator\Adapter\SolariumPaginator;
 use Solarium\QueryType\Select\Query\Query as SolariumQuery;
 use Zend\Form\Fieldset;
 use Zend\Http\Request;
+use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Paginator\Paginator;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Validator\File\ImageSize;
 use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
+use function http_build_query;
+use function implode;
+use function sprintf;
 
 /**
  * Class OrganisationAdminController
@@ -66,6 +70,10 @@ class OrganisationAdminController extends OrganisationAbstractController
      * @var InvoiceService
      */
     private $invoiceService;
+    /**
+     * @var InvoiceSearchService
+     */
+    private $invoiceSearchService;
     /**
      * @var ProjectService
      */
@@ -107,6 +115,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         OrganisationService $organisationService,
         OrganisationSearchService $organisationSearchService,
         InvoiceService $invoiceService,
+        InvoiceSearchService $invoiceSearchService,
         ProjectService $projectService,
         ContactService $contactService,
         AffiliationService $affiliationService,
@@ -120,6 +129,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $this->organisationService = $organisationService;
         $this->searchService = $organisationSearchService;
         $this->invoiceService = $invoiceService;
+        $this->invoiceSearchService = $invoiceSearchService;
         $this->projectService = $projectService;
         $this->contactService = $contactService;
         $this->affiliationService = $affiliationService;
@@ -160,7 +170,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                 foreach ($data['facet'] as $facetField => $values) {
                     $quotedValues = [];
                     foreach ($values as $value) {
-                        $quotedValues[] = \sprintf('"%s"', $value);
+                        $quotedValues[] = sprintf('"%s"', $value);
                     }
 
                     $this->searchService->addFilterQuery(
@@ -191,7 +201,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                 'direction' => $data['direction'],
                 'query'     => $data['query'],
                 'badges'    => $form->getBadges(),
-                'arguments' => \http_build_query($form->getFilteredData()),
+                'arguments' => http_build_query($form->getFilteredData()),
                 'paginator' => $paginator,
             ]
         );
@@ -233,32 +243,81 @@ class OrganisationAdminController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getInvoiceFilter();
-
-        $invoiceQuery = $this->invoiceService->findFiltered(
-            Invoice::class,
-            array_merge($filterPlugin->getFilter(), ['organisation' => [$organisation->getId()]])
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $page = $this->params('page', 1);
+        $form = new SearchResult();
+        $data = array_merge(
+            [
+                'order'     => '',
+                'direction' => '',
+                'query'     => '',
+                'facet'     => [],
+            ],
+            $request->getQuery()->toArray()
         );
 
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $searchFields = [
+            'invoice_number_search',
+            'organisation_search',
+            'contact_search',
+            'reference_search',
+            'type_search',
+            'vat_type_search',
+            'status_name_search',
+            'status_explanation_search',
+            'day_book_number_search',
+        ];
+
+        if ($request->isGet()) {
+            $this->invoiceSearchService->setSearchByOrganisation(
+                $organisation,
+                $data['query'],
+                $searchFields,
+                $data['order'],
+                $data['direction']
+            );
+            if (isset($data['facet'])) {
+                foreach ($data['facet'] as $facetField => $values) {
+                    $quotedValues = [];
+                    foreach ($values as $value) {
+                        $quotedValues[] = \sprintf('"%s"', $value);
+                    }
+
+                    $this->invoiceSearchService->addFilterQuery(
+                        $facetField,
+                        implode(' ' . SolariumQuery::QUERY_OPERATOR_OR . ' ', $quotedValues)
+                    );
+                }
+            }
+
+            $form->addSearchResults(
+                $this->invoiceSearchService->getQuery()->getFacetSet(),
+                $this->invoiceSearchService->getResultSet()->getFacetSet()
+            );
+            $form->setData($data);
+        }
+
+        $paginator = new Paginator(
+            new SolariumPaginator($this->invoiceSearchService->getSolrClient(), $this->invoiceSearchService->getQuery())
+        );
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? 1000 : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
-
-        $invoiceFilter = new InvoiceFilter($this->invoiceService);
-        $invoiceFilter->setData(['filter' => $filterPlugin->getFilter()]);
 
         $mergeForm = new OrganisationMerge($this->entityManager, $organisation);
 
         return new ViewModel(
             [
+                'form'                => $form,
+                'order'               => $data['order'],
+                'direction'           => $data['direction'],
+                'query'               => $data['query'],
+                'badges'              => $form->getBadges(),
+                'arguments'           => http_build_query($form->getFilteredData()),
                 'paginator'           => $paginator,
-                'invoiceFilter'       => $invoiceFilter,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
                 'organisation'        => $organisation,
+                'invoiceService'      => $this->invoiceService,
                 'organisationService' => $this->organisationService,
                 'organisationDoa'     => $this->doaService->findDoaByOrganisation($organisation),
                 'organisationLoi'     => $this->loiService->findLoiByOrganisation($organisation),
@@ -270,7 +329,7 @@ class OrganisationAdminController extends OrganisationAbstractController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @return Response|ViewModel
      */
     public function newAction()
     {
@@ -420,8 +479,8 @@ class OrganisationAdminController extends OrganisationAbstractController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Exception
+     * @return Response|ViewModel
+     * @throws Exception
      */
     public function manageWebAction()
     {

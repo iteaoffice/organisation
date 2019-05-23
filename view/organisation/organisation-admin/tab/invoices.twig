@@ -6,76 +6,61 @@
 
 {% set filter = invoiceFilter.get('filter') %}
 
+<h2>{{ translate("txt-invoices") }}</h2>
 
+{{ filterbarelement(form) }}
+{% include('application/partial/form-badges') %}
+<p class="text-muted">{{ translate("txt-%s-items-on-%s-pages")|format(paginator.adapter.count,paginator.pageRange) }}</p>
 
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'invoice_nr', 'text': translate('txt-invoice')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'country', 'text': translate('txt-country')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'reference', 'text': translate('txt-reference')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'type', 'text': translate('txt-type')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'date-send', 'text': translate('txt-date-invoice')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'period', 'text': translate('txt-period')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'status', 'text': translate('txt-status')} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'booking-total', 'text': translate('txt-amount-open')} %}</th>
+        </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="7"></td>
+            </tr>
+        </tfoot>
+        <tbody>
+        {% for result in paginator.getCurrentItems() %}
+            <tr class="{% if result.fields.status_name == 'Paid' %}table-success{% endif %} {% if result.fields.status_name == 'Not Sent' %}table-warning{% endif %} {% if result.fields.status_name == 'Overdue' %}table-danger{% endif %}">
+                <td>
+                    <a title="{{ translate("txt-view-invoice-%s")|format(result.fields.invoice_nr) }}"
+                       href="{{ url("zfcadmin/invoice/view",{'id':result.fields.invoice_id } ) }}">{{ result.fields.invoice_number }}</a>
+                </td>
+                <td>
+                    <a href="{{ url('zfcadmin/invoice/list') }}?facet[organisation][]={{ result.fields.country }}"
+                       title="{{ result.fields.country }}">{{ result.fields.country }}</a>
+                </td>
+                <td>
+                    <a href="{{ url('zfcadmin/invoice/list') }}?facet[reference][]={{ result.fields.reference }}">{{ result.fields.reference }}</a>
+                </td>
+                <td>{{ result.fields.type }}</td>
+                <td>{{ result.fields.date_sent|solr_date }}</td>
+                <td>{{ result.fields.period_ordinal }}</td>
+                <td>{{ result.fields.status_name }}</td>
+                <td title="{{ translate("txt-invoice-total") }}: &euro; {{ result.fields.total }}">{% if result.fields.total < 0.1 %}
+                        <i
+                                class="fa fa-plus-circle" title="{{ translate("txt-credit-invoice") }}"></i>
+                    {% endif %} {{ result.fields.booking_total|currency_decimal }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-<div class="row">
-
-    <div class="col-md-9">
-
-        <h2>{{ translate("txt-invoices") }}</h2>
-
-        <div class="row">
-            <div class="col-md-6">
-                <p class="lead">{{ translate("txt-invoice-list-explanation") }}</p>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(invoiceFilter.get('submit')) }}</span></div>
-            </div>
-        </div>
-
-        {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-sm">
-                <thead>
-                <tr>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'number', 'text': translate('txt-number')} %}</a></th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'date', 'text': translate('txt-date')} %}</a></th>
-                    <th>{% include 'application/partial/sortable-table-header'  with {'route': 'zfcadmin/organisation/view', 'fragment':'invoice', 'id': organisation.id, 'criteria': 'organisation', 'text': translate('txt-organisation')} %}</a></th>
-                    <th>{{ translate("txt-contact") }}</th>
-                    <th>{{ translate("txt-period") }}</th>
-                    <th>{{ translate("txt-type") }}</th>
-                    <th>{{ translate("txt-reference") }}</th>
-                </tr>
-                </thead>
-                <tfoot>
-                </tfoot>
-                <tbody>
-                {% for invoice in paginator.getCurrentItems() %}
-                    <tr>
-                        <td>
-                            {{ invoiceLink(invoice, 'view', 'invoice') }}
-                        </td>
-                        <td>{{ invoice.dateInvoice|string_date }}</td>
-                        <td>{{ organisationLink(invoice.organisation, 'view-admin', 'name') }}</td>
-                        <td>{{ invoice.contact.displayName }}</td>
-                        <td>{{ invoice.affiliationInvoice.year }}-{{ invoice.affiliationInvoice.period }}</td>
-                        <td>{{ translate(invoice.getType(true)) }}</td>
-                        <td></td>
-                        <td>{{ invoiceLink(invoice, 'edit', 'icon') }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-            {% include 'application/partial/pagination-control' %}
-        {% else %}
-            {{ ztbalert().info(translate("txt-no-invoice-found"))|raw }}
-        {% endif %}
-    </div>
-    <div class="col-md-3">
-        <div class="well well-sm">
-            <fieldset>
-                {{ ztbformelement(filter.get('type'), true) }}
-
-                <div class="form-group row">
-                    {{ ztbformelement(invoiceFilter.get('submit')) }}
-                    {{ ztbformelement(invoiceFilter.get('clear')) }}
-                </div>
-            </fieldset>
-        </div>
-    </div>
-</div>
+    {% include 'application/partial/pagination-control' %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-invoice-found"))|raw }}
+{% endif %}
 
 {{ form().closeTag()|raw }}

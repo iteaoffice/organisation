@@ -25,6 +25,7 @@ use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
 use General\Service\GeneralService;
+use Invoice\Search\Service\InvoiceSearchService;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller;
 use Organisation\Service;
@@ -57,6 +58,7 @@ return [
             Service\OrganisationService::class,
             Search\Service\OrganisationSearchService::class,
             InvoiceService::class,
+            InvoiceSearchService::class,
             ProjectService::class,
             ContactService::class,
             AffiliationService::class,
