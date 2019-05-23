@@ -32,7 +32,7 @@
     "iteaoffice/program": "^4.1",
     "iteaoffice/affiliation": "^4.1",
     "iteaoffice/project": "^4.1",
-    "iteaoffice/event": "^3.1",
+    "iteaoffice/event": "^4.1",
     "iteaoffice/invoice": "^4.1"
   },
   "autoload": {
