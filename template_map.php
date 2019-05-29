@@ -11,6 +11,7 @@ return array(
     'organisation/organisation-type/edit'                       => __DIR__ . '//view/organisation/organisation-type/edit.twig',
     'organisation/organisation-admin/view'                      => __DIR__ . '//view/organisation/organisation-admin/view.twig',
     'organisation/organisation-admin/new'                       => __DIR__ . '//view/organisation/organisation-admin/new.twig',
+    'organisation/organisation-admin/list-inactive'             => __DIR__ . '//view/organisation/organisation-admin/list-inactive.twig',
     'organisation/organisation-admin/list'                      => __DIR__ . '//view/organisation/organisation-admin/list.twig',
     'organisation/organisation-admin/add-affiliation'           => __DIR__ . '//view/organisation/organisation-admin/add-affiliation.twig',
     'organisation/organisation-admin/tab/financial'             => __DIR__ . '//view/organisation/organisation-admin/tab/financial.twig',

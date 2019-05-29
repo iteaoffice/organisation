@@ -143,6 +143,15 @@ return [
                                     ],
                                 ],
                             ],
+                            'list-inactive'  => [
+                                'type'    => 'Literal',
+                                'options' => [
+                                    'route'    => '/list/inactive.html',
+                                    'defaults' => [
+                                        'action' => 'list-inactive',
+                                    ],
+                                ],
+                            ],
                             'new'             => [
                                 'type'    => 'Segment',
                                 'options' => [

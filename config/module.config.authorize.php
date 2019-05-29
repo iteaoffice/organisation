@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Organisation;
 
-use Admin\Entity\Access;
 use BjyAuthorize\Guard\Route;
 
 return [
@@ -30,6 +29,7 @@ return [
                 ['route' => 'organisation/json/search-parent', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list-duplicate', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/list-inactive', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/manage-web', 'roles' => ['office']],
@@ -88,6 +88,7 @@ return [
                 ['route' => 'zfcadmin/parent/doa/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/doa/download', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/doa/upload', 'roles' => ['office']],
+                ['route' => 'cli-organisation-cleanup', 'roles' => [],],
             ],
         ],
     ],

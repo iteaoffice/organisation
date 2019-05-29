@@ -235,6 +235,17 @@ class OrganisationAdminController extends OrganisationAbstractController
         );
     }
 
+    public function listInactiveAction(): ViewModel
+    {
+        $inactiveOrganisations = $this->organisationService->findInactiveOrganisations();
+
+        return new ViewModel(
+            [
+                'inactiveOrganisations' => $inactiveOrganisations
+            ]
+        );
+    }
+
     public function viewAction(): ViewModel
     {
         $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));

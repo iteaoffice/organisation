@@ -13,18 +13,18 @@ return [
         'admin'     => [
             // And finally, here is where we define our page hierarchy
             'organisation' => [
-                'label'    => _("txt-organisation-admin"),
+                'label'    => _('txt-organisation-admin'),
                 'order'    => 20,
                 'route'    => 'zfcadmin/organisation/list',
                 'resource' => 'zfcadmin',
                 'pages'    => [
                     'organisation-list'           => [
-                        'label' => _("txt-nav-organisation-list"),
+                        'label' => _('txt-nav-organisation-list'),
                         'order' => 10,
                         'route' => 'zfcadmin/organisation/list',
                         'pages' => [
                             'organisation'     => [
-                                'label'   => _("txt-nav-project-partner"),
+                                'label'   => _('txt-nav-project-partner'),
                                 'route'   => 'zfcadmin/organisation/view',
                                 'visible' => false,
                                 'params'  => [
@@ -46,7 +46,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'manage-web'            => [
+                                    'manage-web'      => [
                                         'label'   => _('txt-nav-manage-web'),
                                         'route'   => 'zfcadmin/organisation/manage-web',
                                         'visible' => false,
@@ -122,7 +122,7 @@ return [
                         ],
                     ],
                     'parent-list'                 => [
-                        'label' => _("txt-nav-parent-list"),
+                        'label' => _('txt-nav-parent-list'),
                         'order' => 20,
                         'route' => 'zfcadmin/parent/list',
                         'pages' => [
@@ -139,7 +139,7 @@ return [
                                 ],
                                 'pages'   => [
                                     'parent-edit'                          => [
-                                        'label'   => _("txt-edit-parent"),
+                                        'label'   => _('txt-edit-parent'),
                                         'route'   => 'zfcadmin/parent/edit',
                                         'visible' => false,
                                         'params'  => [
@@ -149,7 +149,7 @@ return [
                                         ],
                                     ],
                                     'edit-parent-financial'                => [
-                                        'label'   => _("txt-edit-parent-financial"),
+                                        'label'   => _('txt-edit-parent-financial'),
                                         'route'   => 'zfcadmin/parent/financial/edit',
                                         'visible' => false,
                                         'params'  => [
@@ -162,7 +162,7 @@ return [
                                         ],
                                     ],
                                     'new-parent-financial'                 => [
-                                        'label'   => _("txt-new-parent-financial"),
+                                        'label'   => _('txt-new-parent-financial'),
                                         'route'   => 'zfcadmin/parent/financial/new',
                                         'visible' => false,
                                         'params'  => [
@@ -175,7 +175,7 @@ return [
                                         ],
                                     ],
                                     'parent-add-organisation'              => [
-                                        'label'   => _("txt-parent-add-organisation"),
+                                        'label'   => _('txt-parent-add-organisation'),
                                         'route'   => 'zfcadmin/parent/add-organisation',
                                         'visible' => false,
                                         'params'  => [
@@ -185,7 +185,7 @@ return [
                                         ],
                                     ],
                                     'overview-variable-contribution'       => [
-                                        'label'   => _("txt-overview-variable-contribution"),
+                                        'label'   => _('txt-overview-variable-contribution'),
                                         'route'   => 'zfcadmin/parent/overview-variable-contribution',
                                         'visible' => false,
                                         'params'  => [
@@ -195,7 +195,7 @@ return [
                                         ],
                                     ],
                                     'overview-extra-variable-contribution' => [
-                                        'label'   => _("txt-overview-extra-variable-contribution"),
+                                        'label'   => _('txt-overview-extra-variable-contribution'),
                                         'route'   => 'zfcadmin/parent/overview-extra-variable-contribution',
                                         'visible' => false,
                                         'params'  => [
@@ -217,7 +217,7 @@ return [
                                         ],
                                         'pages'   => [
                                             'edit-organisation' => [
-                                                'label'   => _("txt-edit-organisation"),
+                                                'label'   => _('txt-edit-organisation'),
                                                 'route'   => 'zfcadmin/parent/organisation/edit',
                                                 'visible' => false,
                                                 'params'  => [
@@ -227,7 +227,7 @@ return [
                                                 ],
                                             ],
                                             'add-affiliation'   => [
-                                                'label'   => _("txt-add-affiliation"),
+                                                'label'   => _('txt-add-affiliation'),
                                                 'route'   => 'zfcadmin/parent/organisation/add-affiliation',
                                                 'visible' => false,
                                                 'params'  => [
@@ -236,8 +236,8 @@ return [
                                                     ],
                                                 ],
                                             ],
-                                            'merge'   => [
-                                                'label'   => _("txt-merge"),
+                                            'merge'             => [
+                                                'label'   => _('txt-merge'),
                                                 'route'   => 'zfcadmin/parent/organisation/merge',
                                                 'visible' => false,
                                                 'params'  => [
@@ -250,7 +250,7 @@ return [
                                         ],
                                     ],
                                     'upload-doa'                           => [
-                                        'label'   => _("txt-upload-doa"),
+                                        'label'   => _('txt-upload-doa'),
                                         'route'   => 'zfcadmin/parent/doa/upload',
                                         'visible' => false,
                                         'params'  => [
@@ -263,7 +263,7 @@ return [
                                         ],
                                     ],
                                     'edit-doa'                             => [
-                                        'label'   => _("txt-edit-doa"),
+                                        'label'   => _('txt-edit-doa'),
                                         'route'   => 'zfcadmin/parent/doa/edit',
                                         'visible' => false,
                                         'params'  => [
@@ -278,17 +278,17 @@ return [
                                 ],
                             ],
                             'parent-new'     => [
-                                'label' => _("txt-create-new-parent"),
+                                'label' => _('txt-create-new-parent'),
                                 'route' => 'zfcadmin/parent/new',
                             ],
                             'import-project' => [
-                                'label' => _("txt-import-project"),
+                                'label' => _('txt-import-project'),
                                 'route' => 'zfcadmin/parent/import/project',
                             ],
                         ],
                     ],
                     'financial-organisation-list' => [
-                        'label' => _("txt-nav-financial-organisation-list"),
+                        'label' => _('txt-nav-financial-organisation-list'),
                         'order' => 30,
                         'route' => 'zfcadmin/organisation/financial/list',
                     ],
@@ -298,7 +298,7 @@ return [
             'config'       => [
                 'pages' => [
                     'organisation-type-list' => [
-                        'label' => _("txt-organisation-type-list"),
+                        'label' => _('txt-organisation-type-list'),
                         'route' => 'zfcadmin/organisation-type/list',
                         'pages' => [
                             'organisation-type-view' => [
@@ -314,7 +314,7 @@ return [
                                 ],
                                 'pages'   => [
                                     'organisation-type-edit' => [
-                                        'label'   => _("txt-edit-organisation-type"),
+                                        'label'   => _('txt-edit-organisation-type'),
                                         'route'   => 'zfcadmin/organisation-type/edit',
                                         'visible' => false,
                                         'params'  => [
@@ -326,13 +326,13 @@ return [
                                 ],
                             ],
                             'organisation-type-new'  => [
-                                'label' => _("txt-create-new-organisation-type"),
+                                'label' => _('txt-create-new-organisation-type'),
                                 'route' => 'zfcadmin/organisation-type/new',
                             ],
                         ],
                     ],
                     'parent-type-list'       => [
-                        'label' => _("txt-parent-type-list"),
+                        'label' => _('txt-parent-type-list'),
                         'route' => 'zfcadmin/parent-type/list',
                         'pages' => [
                             'parent-type-view' => [
@@ -348,7 +348,7 @@ return [
                                 ],
                                 'pages'   => [
                                     'parent-type-edit' => [
-                                        'label'   => _("txt-edit-parent-type"),
+                                        'label'   => _('txt-edit-parent-type'),
                                         'route'   => 'zfcadmin/parent-type/edit',
                                         'visible' => false,
                                         'params'  => [
@@ -360,42 +360,8 @@ return [
                                 ],
                             ],
                             'parent-new'       => [
-                                'label' => _("txt-create-new-parent-type"),
+                                'label' => _('txt-create-new-parent-type'),
                                 'route' => 'zfcadmin/parent-type/new',
-                            ],
-                        ],
-                    ],
-                    'parent-status-list'     => [
-                        'label' => _("txt-parent-status-list"),
-                        'route' => 'zfcadmin/parent-status/list',
-                        'pages' => [
-                            'parent-status-view' => [
-                                'route'   => 'zfcadmin/parent-status/view',
-                                'visible' => false,
-                                'params'  => [
-                                    'entities'   => [
-                                        'id' => Organisation\Entity\Parent\Status::class,
-                                    ],
-                                    'invokables' => [
-                                        Organisation\Navigation\Invokable\Parent\StatusLabel::class,
-                                    ],
-                                ],
-                                'pages'   => [
-                                    'parent-status-edit' => [
-                                        'label'   => _("txt-edit-parent-status"),
-                                        'route'   => 'zfcadmin/parent-status/edit',
-                                        'visible' => false,
-                                        'params'  => [
-                                            'entities' => [
-                                                'id' => Organisation\Entity\Parent\Status::class,
-                                            ],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'parent-new'         => [
-                                'label' => _("txt-create-new-parent-status"),
-                                'route' => 'zfcadmin/parent-status/new',
                             ],
                         ],
                     ],
@@ -404,22 +370,27 @@ return [
             'tools'        => [
                 'pages' => [
                     'list-duplicate-organisations' => [
-                        'label' => _("txt-nav-list-duplicate-organisations"),
+                        'label' => _('txt-nav-list-duplicate-organisations'),
                         'order' => 30,
                         'route' => 'zfcadmin/organisation/list-duplicate',
                     ],
+                    'list-inactive-organisations' => [
+                        'label' => _('txt-nav-list-inactive-organisations'),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/list-inactive',
+                    ],
                     'financial-check'              => [
-                        'label' => _("txt-nav-financial-check"),
+                        'label' => _('txt-nav-financial-check'),
                         'order' => 30,
                         'route' => 'zfcadmin/organisation/financial/no-financial',
                     ],
                     'parent-financial-check'       => [
-                        'label' => _("txt-nav-parent-financial-check"),
+                        'label' => _('txt-nav-parent-financial-check'),
                         'order' => 30,
                         'route' => 'zfcadmin/parent/financial/no-financial',
                     ],
                     'parent-list-no-member'        => [
-                        'label' => _("txt-nav-parent-list-no-member-no-doa"),
+                        'label' => _('txt-nav-parent-list-no-member-no-doa'),
                         'order' => 30,
                         'route' => 'zfcadmin/parent/list-no-member',
                     ],

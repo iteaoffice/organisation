@@ -14,26 +14,18 @@ namespace Organisation\Service;
 
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
-use function array_count_values;
-use function array_keys;
-use function array_unique;
-use function arsort;
 use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
 use Contact\Service\ContactService;
-use function count;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
-use function in_array;
 use Interop\Container\ContainerInterface;
-use function ksort;
 use Organisation\Entity;
 use Organisation\Repository;
 use Organisation\Search\Service\OrganisationSearchService;
-use function preg_replace;
 use Project\Entity\Project;
 use Project\Entity\Result\Result;
 use Project\Service\ProjectService;
@@ -41,15 +33,23 @@ use Search\Service\AbstractSearchService;
 use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
 use Solarium\Core\Query\AbstractQuery;
-use Solarium\QueryType\Update\Query\Document\Document;
+use Solarium\QueryType\Update\Query\Document;
+use Zend\I18n\Translator\TranslatorInterface;
+use Zend\Stdlib\Parameters;
+use Zend\Validator\EmailAddress;
+use function array_count_values;
+use function array_keys;
+use function array_unique;
+use function arsort;
+use function count;
+use function in_array;
+use function ksort;
+use function preg_replace;
 use function sprintf;
 use function str_replace;
 use function strpos;
 use function substr;
 use function trim;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Stdlib\Parameters;
-use Zend\Validator\EmailAddress;
 
 /**
  * Class OrganisationService
@@ -263,6 +263,31 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         }
 
         return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
+    }
+
+    public function removeInactiveOrganisations(): void
+    {
+        $inactiveOrganisations = $this->findInactiveOrganisations();
+        foreach ($inactiveOrganisations as $inactiveOrganisation) {
+            $this->delete($inactiveOrganisation);
+        }
+    }
+
+    public function findInactiveOrganisations(): array
+    {
+        /** @var Repository\Organisation $repository */
+        $repository = $this->entityManager->getRepository(Entity\Organisation::class);
+
+        return $repository->findInactiveOrganisations();
+    }
+
+    public function delete(Entity\AbstractEntity $abstractEntity): void
+    {
+        if ($abstractEntity instanceof Entity\Organisation) {
+            $this->organisationSearchService->deleteDocument($abstractEntity);
+        }
+
+        parent::delete($abstractEntity);
     }
 
     public function findOrganisationByNameCountryAndEmailAddress(
@@ -574,8 +599,11 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $this->entityManager->getRepository(Entity\Financial::class)->findOneBy(['vat' => $vat]);
     }
 
-    public function findOrganisationByNameCountry(string $name, Country $country, bool $onlyMain = true):?Entity\Organisation
-    {
+    public function findOrganisationByNameCountry(
+        string $name,
+        Country $country,
+        bool $onlyMain = true
+    ): ?Entity\Organisation {
         /** @var Repository\Organisation $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
@@ -656,15 +684,6 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         }
 
         return $organisation->getFinancial()->getVatStatus() === Entity\Financial::VAT_STATUS_VALID;
-    }
-
-    public function delete(Entity\AbstractEntity $abstractEntity): void
-    {
-        if ($abstractEntity instanceof Entity\Organisation) {
-            $this->organisationSearchService->deleteDocument($abstractEntity);
-        }
-
-        parent::delete($abstractEntity);
     }
 
     public function updateCollectionInSearchEngine(bool $clearIndex = false): void

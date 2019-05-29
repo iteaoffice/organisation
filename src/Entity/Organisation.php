@@ -12,9 +12,19 @@ declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use Affiliation\Entity\Affiliation;
+use Contact\Entity\ContactOrganisation;
+use DateTime;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use General\Entity\Country;
+use Invoice\Entity\Invoice;
+use Invoice\Entity\Journal;
+use Invoice\Entity\Reminder;
+use Program\Entity\Call\Doa;
+use Project\Entity\Idea\Partner;
+use Project\Entity\Result\Result;
 use Zend\Form\Annotation;
 
 /**
@@ -50,7 +60,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Contact\Entity\ContactOrganisation[]|Collections\ArrayCollection
+     * @var ContactOrganisation[]|Collections\ArrayCollection
      */
     private $contactOrganisation;
     /**
@@ -58,7 +68,7 @@ class Organisation extends AbstractEntity
      * @Gedmo\Timestampable(on="create")
      * @Annotation\Exclude()
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateCreated;
     /**
@@ -74,14 +84,14 @@ class Organisation extends AbstractEntity
      * @Gedmo\Timestampable(on="update")
      * @Annotation\Exclude()
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateUpdated;
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
+     * @var Affiliation[]|Collections\ArrayCollection
      */
     private $affiliation;
     /**
@@ -95,7 +105,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToOne(targetEntity="Organisation\Entity\OParent", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\OParent
+     * @var OParent
      */
     private $parent;
     /**
@@ -109,7 +119,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Parent\Organisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\Organisation
+     * @var Parent\Organisation
      */
     private $parentOrganisation;
     /**
@@ -130,14 +140,14 @@ class Organisation extends AbstractEntity
      * )
      * @Annotation\Attributes({"label":"txt-country","help-block":"txt-organisation-country-help-block"})
      *
-     * @var \General\Entity\Country
+     * @var Country
      */
     private $country;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Partner", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\Partner[]|Collections\ArrayCollection
+     * @var Partner[]|Collections\ArrayCollection
      */
     private $ideaPartner;
     /**
@@ -157,35 +167,35 @@ class Organisation extends AbstractEntity
      *      }
      * )
      * @Annotation\Attributes({"label":"txt-organisation-type"})
-     * @var \Organisation\Entity\Type
+     * @var Type
      */
     private $type;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist","remove"}, mappedBy="organisation")
      * @ORM\OrderBy({"main"="DESC"})
      *
-     * @var \Organisation\Entity\Web[]|Collections\ArrayCollection
+     * @var Web[]|Collections\ArrayCollection
      */
     private $web;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Log[]|Collections\ArrayCollection
+     * @var Log[]|Collections\ArrayCollection
      */
     private $log;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\ComposedObject("Organisation\Entity\Description")
      *
-     * @var \Organisation\Entity\Description
+     * @var Description
      */
     private $description;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Logo", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Logo[]|Collections\ArrayCollection
+     * @var Logo[]|Collections\ArrayCollection
      */
     private $logo;
     /**
@@ -193,21 +203,21 @@ class Organisation extends AbstractEntity
      * @ORM\OrderBy({"dateCreated" = "DESC"})
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Note[]|Collections\ArrayCollection
+     * @var Note[]|Collections\ArrayCollection
      */
     private $note;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Name", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Name[]|Collections\ArrayCollection
+     * @var Name[]|Collections\ArrayCollection
      */
     private $names;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist","remove"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Financial
+     * @var Financial
      */
     private $financial;
     /**
@@ -221,7 +231,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Invoice", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Invoice[]|Collections\ArrayCollection
+     * @var Invoice[]|Collections\ArrayCollection
      */
     private $invoice;
     /**
@@ -235,28 +245,28 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
+     * @var Doa[]|Collections\ArrayCollection
      */
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Booth[]|Collections\ArrayCollection()
+     * @var Booth[]|Collections\ArrayCollection()
      */
     private $organisationBooth;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Journal", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Journal[]|Collections\ArrayCollection()
+     * @var Journal[]|Collections\ArrayCollection()
      */
     private $journal;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Reminder[]|Collections\ArrayCollection()
+     * @var Reminder[]|Collections\ArrayCollection()
      */
     private $reminder;
     /**
@@ -264,7 +274,7 @@ class Organisation extends AbstractEntity
      * @Annotation\Exclude()
      * Second param to be able to selecte more than 1 project per result
      *
-     * @var \Project\Entity\Result\Result[]|Collections\ArrayCollection
+     * @var Result[]|Collections\ArrayCollection
      */
     private $result;
 
@@ -371,7 +381,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getDateCreated(): ?\DateTime
+    public function getDateCreated(): ?DateTime
     {
         return $this->dateCreated;
     }
@@ -395,7 +405,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getDateUpdated(): ?\DateTime
+    public function getDateUpdated(): ?DateTime
     {
         return $this->dateUpdated;
     }
@@ -436,7 +446,7 @@ class Organisation extends AbstractEntity
         return $this->parent;
     }
 
-    public function setParent(?\Organisation\Entity\OParent $parent): Organisation
+    public function setParent(?OParent $parent): Organisation
     {
         $this->parent = $parent;
 
@@ -460,7 +470,7 @@ class Organisation extends AbstractEntity
         return $this->parentOrganisation;
     }
 
-    public function setParentOrganisation(?\Organisation\Entity\Parent\Organisation $parentOrganisation): Organisation
+    public function setParentOrganisation(?parent\Organisation $parentOrganisation): Organisation
     {
         $this->parentOrganisation = $parentOrganisation;
 
