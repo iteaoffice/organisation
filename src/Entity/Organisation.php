@@ -22,14 +22,13 @@ use General\Entity\Country;
 use Invoice\Entity\Invoice;
 use Invoice\Entity\Journal;
 use Invoice\Entity\Reminder;
+use News\Entity\Magazine\Article;
 use Program\Entity\Call\Doa;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
 use Zend\Form\Annotation;
 
 /**
- * Organisation.
- *
  * @ORM\Table(name="organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
@@ -272,11 +271,18 @@ class Organisation extends AbstractEntity
     /**
      * @ORM\ManyToMany(targetEntity="Project\Entity\Result\Result", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * Second param to be able to selecte more than 1 project per result
+     * Second param to be able to select more than 1 project per result
      *
      * @var Result[]|Collections\ArrayCollection
      */
     private $result;
+    /**
+     * @ORM\ManyToMany(targetEntity="News\Entity\Magazine\Article", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var Article[]|Collections\ArrayCollection
+     */
+    private $magazineArticle;
 
     public function __construct()
     {
@@ -298,6 +304,7 @@ class Organisation extends AbstractEntity
         $this->reminder = new Collections\ArrayCollection();
         $this->result = new Collections\ArrayCollection();
         $this->web = new Collections\ArrayCollection();
+        $this->magazineArticle = new Collections\ArrayCollection();
     }
 
     public function hasLogo(): bool
@@ -690,6 +697,17 @@ class Organisation extends AbstractEntity
     {
         $this->names = $names;
 
+        return $this;
+    }
+
+    public function getMagazineArticle()
+    {
+        return $this->magazineArticle;
+    }
+
+    public function setMagazineArticle($magazineArticle): Organisation
+    {
+        $this->magazineArticle = $magazineArticle;
         return $this;
     }
 }

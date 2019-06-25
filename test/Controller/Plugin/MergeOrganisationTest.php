@@ -64,7 +64,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
     /**
      * Set up basic properties
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->source     = $this->createSource();
         $this->target     = $this->createTarget();
