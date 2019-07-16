@@ -21,7 +21,7 @@
 
 {% for project in projects %}
     {# Take the latest version to calculate the contribution of the affiliation#}
-    {% set version = projectService.getLatestProjectVersion(project) %}
+    {% set version = projectService.getLatestApprovedProjectVersion(project) %}
 
     {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
 
@@ -84,7 +84,7 @@
     {% for project in projects %}
 
         {# Take the latest version to calculate the contribution of the affiliation#}
-        {% set version = projectService.getLatestProjectVersion(project) %}
+        {% set version = projectService.getLatestApprovedProjectVersion(project) %}
 
         {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
 

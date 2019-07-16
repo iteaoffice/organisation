@@ -211,7 +211,7 @@ class ParentService extends AbstractService
             AffiliationService::WHICH_INVOICING,
             $year
         ) as $affiliation) {
-            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
+            $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
                 $totalFunded += $this->versionService->findTotalFundingVersionByAffiliationAndVersion(
@@ -251,7 +251,7 @@ class ParentService extends AbstractService
             AffiliationService::WHICH_INVOICING,
             $year
         ) as $affiliation) {
-            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
+            $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
                 $contribution += $this->getAffiliationService()->parseContribution(
@@ -281,7 +281,7 @@ class ParentService extends AbstractService
             AffiliationService::WHICH_INVOICING,
             $year
         ) as $affiliation) {
-            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
+            $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
                 $contributionBalance += $this->getAffiliationService()->parseBalance(
@@ -306,7 +306,7 @@ class ParentService extends AbstractService
             AffiliationService::WHICH_INVOICING,
             $year
         ) as $project) {
-            $version = $this->projectService->getLatestProjectVersion($project);
+            $version = $this->projectService->getLatestApprovedProjectVersion($project);
 
             //Only add the balance when there is a version
             if (null !== $version && $this->hasExtraVariableBalanceByParentAndVersion($parent, $version)) {
@@ -413,7 +413,7 @@ class ParentService extends AbstractService
                 $projects[$call->getId()]['totalContribution'] = 0;
             }
 
-            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
+            $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             //Skip the rest of the calculation if a project has no version
             if (null === $latestVersion) {
@@ -514,7 +514,7 @@ class ParentService extends AbstractService
                 continue;
             }
 
-            $latestVersion = $this->projectService->getLatestProjectVersion($affiliation->getProject());
+            $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
                 $contributionTotal += $this->getAffiliationService()->parseTotal(

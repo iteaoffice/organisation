@@ -12,7 +12,7 @@
     <tbody>
     {% for affiliation in affiliations %}
 
-        {% set latestVersion = projectService.getLatestProjectVersion(affiliation.getProject()) %}
+        {% set latestVersion = projectService.getLatestApprovedProjectVersion(affiliation.getProject()) %}
 
         {% if latestVersion %}
             <tr>
