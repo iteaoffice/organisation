@@ -464,7 +464,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                     $logo->setContentType(
                         $this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type)
                     );
-                    $logo->setLogoExtension($logo->getContentType()->getExtension());
+                    $logo->setLogoExtension((string) $logo->getContentType()->getExtension());
                     $organisation->getLogo()->add($logo);
                 }
 
