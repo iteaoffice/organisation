@@ -120,7 +120,7 @@ class MergeOrganisation extends AbstractPlugin
             ($target->getFinancial() === null)
                 || empty($target->getFinancial()->getVat())
                 || ($source->getFinancial()->getVat() === $target->getFinancial()->getVat())
-            )
+        )
         ) {
             $source->getFinancial()->setOrganisation($target);
             $target->setFinancial($source->getFinancial());

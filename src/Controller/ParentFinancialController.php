@@ -116,7 +116,7 @@ final class ParentFinancialController extends OrganisationAbstractController
             $financialAddress = $this->contactService->getFinancialAddress(
                 $parent->getContact()
             )
-            )
+        )
         ) {
             $formData['address'] = $financialAddress->getAddress();
             $formData['zipCode'] = $financialAddress->getZipCode();
@@ -161,7 +161,7 @@ final class ParentFinancialController extends OrganisationAbstractController
 
                 if (null === (
                     $financialAddress = $this->contactService->getFinancialAddress($financial->getContact())
-                    )
+                )
                 ) {
                     $financialAddress = new Address();
                     $financialAddress->setContact($financial->getContact());
