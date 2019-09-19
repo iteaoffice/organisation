@@ -36,7 +36,7 @@ class Web extends AbstractEntity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
@@ -48,7 +48,7 @@ class Web extends AbstractEntity
     /**
      * @ORM\Column(name="main", type="smallint", nullable=false)
      *
-     * @var integer
+     * @var int
      */
     private $main;
     /**

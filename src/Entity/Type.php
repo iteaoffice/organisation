@@ -56,7 +56,7 @@ class Type extends AbstractEntity implements ResourceInterface
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Zend\Form\Element\Hidden")
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**

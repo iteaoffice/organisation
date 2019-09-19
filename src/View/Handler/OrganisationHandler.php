@@ -139,8 +139,7 @@ final class OrganisationHandler extends AbstractHandler
                 'projects'       => $this->projectService->findProjectByOrganisation(
                     $organisation
                 ),
-                'map'            => $this->parseOrganisationMap($organisation),
-                'articles'       => $this->articleService->findArticlesByOrganisation($organisation, 25),
+                'map'            => $this->parseOrganisationMap($organisation)
             ]
         );
     }
