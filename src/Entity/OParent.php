@@ -310,7 +310,7 @@ class OParent extends AbstractEntity
         return $this;
     }
 
-    public function getType(): ?parent\Type
+    public function getType(): ?Parent\Type
     {
         return $this->type;
     }
