@@ -1,10 +1,5 @@
 {% do headTitle().append(translate("txt-upload-parent-doa-title")) %}
 
-{% do headLink().appendStylesheet(
-'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/ui-lightness/jquery-ui.min.css'
-) %}
-
-
 <h1>{{ translate("txt-upload-doa-for-parent-%s")|
     format(parent)|raw }}</h1>
 
@@ -35,10 +30,3 @@
 </div>
 
 {{ form().closeTag()|raw }}
-
-<script type="text/javascript">
-    $('input[type=date]').datepicker({
-        sliderAccessArgs: {touchonly: false},
-        dateFormat: 'yy-mm-dd'
-    });
-</script>

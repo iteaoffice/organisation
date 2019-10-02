@@ -20,7 +20,7 @@ use Zend\Stdlib;
  * @category    Organisation
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 $config = [
@@ -62,7 +62,7 @@ $config = [
         'template_map' => include __DIR__ . '/../template_map.php',
     ],
     'view_helpers'       => [
-        'aliases'   => [
+        'aliases'    => [
             'organisationLink'                  => View\Helper\OrganisationLink::class,
             'organisationTypeLink'              => View\Helper\TypeLink::class,
             'organisationLogo'                  => View\Helper\OrganisationLogo::class,
@@ -76,8 +76,13 @@ $config = [
             'overviewExtraVariableContribution' => View\Helper\OverviewExtraVariableContribution::class,
             'organisationformelement'           => Form\View\Helper\OrganisationFormElement::class,
             'parentformelement'                 => Form\View\Helper\ParentFormElement::class,
+
+            'organisationselect' => Form\View\Helper\OrganisationSelect::class,
         ],
-        'factories' => [
+        'invokables' => [
+            Form\View\Helper\OrganisationSelect::class
+        ],
+        'factories'  => [
             View\Handler\OrganisationHandler::class              => ConfigAbstractFactory::class,
             View\Helper\OrganisationLink::class                  => View\Factory\ViewHelperFactory::class,
             View\Helper\TypeLink::class                          => View\Factory\ViewHelperFactory::class,
