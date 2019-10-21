@@ -57,6 +57,7 @@ return array(
     'organisation/partial/form/financial'                       => __DIR__ . '//view/organisation/partial/form/financial.twig',
     'organisation/partial/form/note'                            => __DIR__ . '//view/organisation/partial/form/note.twig',
     'organisation/partial/form/organisation'                    => __DIR__ . '//view/organisation/partial/form/organisation.twig',
+    'organisation/partial/form/update'                          => __DIR__ . '//view/organisation/partial/form/update.twig',
     'organisation/partial/overview-variable-contribution'       => __DIR__ . '//view/organisation/partial/overview-variable-contribution.twig',
     'organisation/partial/overview-extra-variable-contribution' => __DIR__ . '//view/organisation/partial/overview-extra-variable-contribution.twig',
     'organisation/parent-type/view'                             => __DIR__ . '//view/organisation/parent-type/view.twig',
@@ -66,4 +67,5 @@ return array(
     'organisation/parent-doa/view'                              => __DIR__ . '//view/organisation/parent-doa/view.twig',
     'organisation/parent-doa/edit'                              => __DIR__ . '//view/organisation/parent-doa/edit.twig',
     'organisation/parent-doa/upload'                            => __DIR__ . '//view/organisation/parent-doa/upload.twig',
+    'organisation/update/new'                                   => __DIR__ . '//view/organisation/update/new.twig',
 );

@@ -36,7 +36,7 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'json' => [
+                    'json'   => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route'    => '/json',
@@ -95,7 +95,7 @@ return [
                         ],
 
                     ],
-                    'logo' => [
+                    'logo'   => [
                         'type'    => 'Segment',
                         'options' => [
                             'route'       => '/logo/[:id].[:ext]',
@@ -104,6 +104,33 @@ return [
                             ],
                             'defaults'    => [
                                 'action' => 'logo',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'community'    => [
+                'child_routes' => [
+                    'organisation'      => [
+                        'type'          => 'Segment',
+                        'priority'      => 1001,
+                        'options'       => [
+                            'route'    => '/organisation',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes'  => [
+                            'update' => [
+                                'type'       => 'Segment',
+                                'options'    => [
+                                    'route'       => '/update/[:organisationId].html',
+                                    'constraints' => [
+                                        'organisationId' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => Controller\UpdateController::class,
+                                        'action'     => 'new',
+                                    ],
+                                ],
                             ],
                         ],
                     ],

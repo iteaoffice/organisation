@@ -14,6 +14,7 @@ namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
+use Event\Entity\Meeting\Cost;
 use Zend\Form\Annotation;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
@@ -90,16 +91,23 @@ class Type extends AbstractEntity implements ResourceInterface
      * @ORM\OneToMany(targetEntity="Event\Entity\Meeting\Cost", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Meeting\Cost[]|Collections\ArrayCollection()
+     * @var Cost[]|Collections\ArrayCollection()
      */
     private $meetingCost;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Organisation[]|Collections\ArrayCollection
+     * @var Organisation[]|Collections\ArrayCollection
      */
     private $organisation;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Update", cascade={"persist"}, mappedBy="type")
+     * @Annotation\Exclude()
+     *
+     * @var Update[]|Collections\Collection
+     */
+    private $organisationUpdates;
 
     /**
      * Class constructor.
@@ -108,6 +116,7 @@ class Type extends AbstractEntity implements ResourceInterface
     {
         $this->organisation = new Collections\ArrayCollection();
         $this->meetingCost = new Collections\ArrayCollection();
+        $this->organisationUpdates = new Collections\ArrayCollection();
     }
 
     /**
@@ -116,35 +125,6 @@ class Type extends AbstractEntity implements ResourceInterface
     public static function getInvoiceTemplates(): array
     {
         return self::$invoiceTemplates;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
     }
 
     /**
@@ -245,7 +225,7 @@ class Type extends AbstractEntity implements ResourceInterface
     }
 
     /**
-     * @return Collections\ArrayCollection|\Event\Entity\Meeting\Cost[]
+     * @return Collections\ArrayCollection|Cost[]
      */
     public function getMeetingCost()
     {
@@ -253,7 +233,7 @@ class Type extends AbstractEntity implements ResourceInterface
     }
 
     /**
-     * @param Collections\ArrayCollection|\Event\Entity\Meeting\Cost[] $meetingCost
+     * @param Collections\ArrayCollection|Cost[] $meetingCost
      *
      * @return Type
      */
@@ -281,6 +261,17 @@ class Type extends AbstractEntity implements ResourceInterface
     {
         $this->organisation = $organisation;
 
+        return $this;
+    }
+
+    public function getOrganisationUpdates(): Collections\Collection
+    {
+        return $this->organisationUpdates;
+    }
+
+    public function setOrganisationUpdates(Collections\Collection $organisationUpdates)
+    {
+        $this->organisationUpdates = $organisationUpdates;
         return $this;
     }
 }

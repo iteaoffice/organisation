@@ -59,7 +59,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var ContactOrganisation[]|Collections\ArrayCollection
+     * @var ContactOrganisation[]|Collections\Collection
      */
     private $contactOrganisation;
     /**
@@ -90,7 +90,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Affiliation[]|Collections\ArrayCollection
+     * @var Affiliation[]|Collections\Collection
      */
     private $affiliation;
     /**
@@ -111,7 +111,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\Financial[]|Collections\ArrayCollection
+     * @var \Organisation\Entity\Parent\Financial[]|Collections\Collection
      */
     private $parentFinancial;
     /**
@@ -146,7 +146,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Partner", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Partner[]|Collections\ArrayCollection
+     * @var Partner[]|Collections\Collection
      */
     private $ideaPartner;
     /**
@@ -173,14 +173,14 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist","remove"}, mappedBy="organisation")
      * @ORM\OrderBy({"main"="DESC"})
      *
-     * @var Web[]|Collections\ArrayCollection
+     * @var Web[]|Collections\Collection
      */
     private $web;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Log[]|Collections\ArrayCollection
+     * @var Log[]|Collections\Collection
      */
     private $log;
     /**
@@ -194,7 +194,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Logo", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Logo[]|Collections\ArrayCollection
+     * @var Logo[]|Collections\Collection
      */
     private $logo;
     /**
@@ -202,14 +202,14 @@ class Organisation extends AbstractEntity
      * @ORM\OrderBy({"dateCreated" = "DESC"})
      * @Annotation\Exclude()
      *
-     * @var Note[]|Collections\ArrayCollection
+     * @var Note[]|Collections\Collection
      */
     private $note;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Name", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Name[]|Collections\ArrayCollection
+     * @var Name[]|Collections\Collection
      */
     private $names;
     /**
@@ -223,49 +223,49 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Doa[]|Collections\ArrayCollection
+     * @var \Program\Entity\Doa[]|Collections\Collection
      */
     private $programDoa;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Invoice", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Invoice[]|Collections\ArrayCollection
+     * @var Invoice[]|Collections\Collection
      */
     private $invoice;
     /**
      * @ORM\OneToMany(targetEntity="Event\Entity\Booth\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Booth\Financial[]|Collections\ArrayCollection
+     * @var \Event\Entity\Booth\Financial[]|Collections\Collection
      */
     private $boothFinancial;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Doa[]|Collections\ArrayCollection
+     * @var Doa[]|Collections\Collection
      */
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Booth[]|Collections\ArrayCollection()
+     * @var Booth[]|Collections\Collection
      */
     private $organisationBooth;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Journal", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Journal[]|Collections\ArrayCollection()
+     * @var Journal[]|Collections\Collection
      */
     private $journal;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Reminder[]|Collections\ArrayCollection()
+     * @var Reminder[]|Collections\Collection
      */
     private $reminder;
     /**
@@ -273,16 +273,23 @@ class Organisation extends AbstractEntity
      * @Annotation\Exclude()
      * Second param to be able to select more than 1 project per result
      *
-     * @var Result[]|Collections\ArrayCollection
+     * @var Result[]|Collections\Collection
      */
     private $result;
     /**
      * @ORM\ManyToMany(targetEntity="News\Entity\Magazine\Article", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var Article[]|Collections\ArrayCollection
+     * @var Article[]|Collections\Collection
      */
     private $magazineArticle;
+    /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Update", cascade={"persist", "remove"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var Update[]|Collections\Collection
+     */
+    private $updates;
 
     public function __construct()
     {
@@ -305,6 +312,7 @@ class Organisation extends AbstractEntity
         $this->result = new Collections\ArrayCollection();
         $this->web = new Collections\ArrayCollection();
         $this->magazineArticle = new Collections\ArrayCollection();
+        $this->updates = new Collections\ArrayCollection();
     }
 
     public function hasLogo(): bool
@@ -325,21 +333,6 @@ class Organisation extends AbstractEntity
     public function hasDescription(): bool
     {
         return null !== $this->description;
-    }
-
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    public function __isset($property)
-    {
-        return isset($this->$property);
     }
 
     public function __toString(): string
@@ -708,6 +701,18 @@ class Organisation extends AbstractEntity
     public function setMagazineArticle($magazineArticle): Organisation
     {
         $this->magazineArticle = $magazineArticle;
+        return $this;
+    }
+
+    public function getUpdates(): Collections\Collection
+    {
+        return $this->updates;
+    }
+
+    public function setUpdates(Collections\Collection $updates): Organisation
+    {
+        $this->updates = $updates;
+
         return $this;
     }
 }

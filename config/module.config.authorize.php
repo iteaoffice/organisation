@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Organisation;
 
 use BjyAuthorize\Guard\Route;
+use Organisation\Acl\Assertion\UpdateAssertion;
 
 return [
     'bjyauthorize' => [
@@ -27,6 +28,11 @@ return [
                 ['route' => 'organisation/json/check-vat', 'roles' => ['office']],
                 ['route' => 'organisation/json/search', 'roles' => ['office']],
                 ['route' => 'organisation/json/search-parent', 'roles' => ['office']],
+                [
+                    'route'     => 'community/organisation/update',
+                    'roles'     => [],
+                    'assertion' => UpdateAssertion::class,
+                ],
                 ['route' => 'zfcadmin/organisation/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list-duplicate', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list-inactive', 'roles' => ['office']],

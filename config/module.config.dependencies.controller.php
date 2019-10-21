@@ -121,5 +121,10 @@ return [
             EntityManager::class,
             TranslatorInterface::class
         ],
+        Controller\UpdateController::class                => [
+            Service\OrganisationService::class,
+            Service\FormService::class,
+            TranslatorInterface::class
+        ]
     ]
 ];

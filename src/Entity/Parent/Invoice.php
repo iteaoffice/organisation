@@ -68,44 +68,6 @@ class Invoice extends AbstractEntity
     private $program;
 
     /**
-     * Class constructor.
-     */
-    public function __construct()
-    {
-    }
-
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * @param $property
-     * @param $value
-     *
-     * @return void;
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
-    /**
      * @return string
      */
     public function __toString(): string

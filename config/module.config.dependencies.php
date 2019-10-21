@@ -39,9 +39,6 @@ use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
-        Form\OrganisationForm::class                                          => [
-            EntityManager::class
-        ],
         Search\Service\OrganisationSearchService::class                       => [
             'Config'
         ],
@@ -91,6 +88,12 @@ return [
             Logging::class
         ],
         Controller\Plugin\MergeParentOrganisation::class                      => [
+            EntityManager::class
+        ],
+        Form\OrganisationForm::class                                          => [
+            EntityManager::class
+        ],
+        Form\UpdateForm::class                                                => [
             EntityManager::class
         ],
         Form\FinancialForm::class                                             => [
