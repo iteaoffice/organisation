@@ -26,6 +26,17 @@ return [
                             ],
                         ],
                     ],
+                    'organisation-update-logo' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/o/[:id]-[:last-update].[:ext]',
+                            'defaults' => [
+                                // Explicitly add the controller here as the assets are collected
+                                'controller' => Controller\ImageController::class,
+                                'action'     => 'organisation-update-logo',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'organisation' => [
@@ -314,6 +325,55 @@ return [
                                     'route'    => '/merge/[:sourceId]/into/[:targetId].html',
                                     'defaults' => [
                                         'action' => 'merge',
+                                    ],
+                                ],
+                            ],
+                            'update'          => [
+                                'type'          => 'Segment',
+                                'options'       => [
+                                    'route'    => '/update',
+                                    'defaults' => [
+                                        'controller' => Controller\UpdateManagerController::class,
+                                        'action'     => 'list',
+                                    ],
+                                ],
+                                'may_terminate' => false,
+                                'child_routes'  => [
+                                    'pending'  => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/pending.html',
+                                            'defaults' => [
+                                                'action' => 'pending',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'view' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/view/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'view',
+                                            ],
+                                        ],
+                                    ],
+                                    'approve' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/approve/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'approve',
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],

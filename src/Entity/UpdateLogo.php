@@ -34,7 +34,7 @@ class UpdateLogo extends AbstractEntity
     /**
      * @ORM\Column(name="organisation_logo", type="blob", nullable=false)
      *
-     * @var string
+     * @var resource
      */
     private $organisationLogo;
     /**
@@ -52,7 +52,7 @@ class UpdateLogo extends AbstractEntity
     private $contentType;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Update", inversedBy="logo", cascade={"persist"})
-     * @ORM\JoinColumn(name="update_id", referencedColumnName="update_id")
+     * @ORM\JoinColumn(name="update_id", referencedColumnName="update_id", nullable=false)
      *
      * @var Update
      */

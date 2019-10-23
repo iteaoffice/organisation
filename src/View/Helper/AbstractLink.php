@@ -161,11 +161,15 @@ abstract class AbstractLink extends AbstractViewHelper
                         break;
                     case 'edit':
                     case 'edit-financial':
+                    case 'edit-admin':
                         $this->addLinkContent('<i class="fa fa-pencil-square-o"></i>');
                         break;
                     case 'overview-variable-contribution-pdf':
                     case 'overview-extra-variable-contribution-pdf':
                         $this->addLinkContent('<i class="fa fa-file-pdf-o" aria-hidden="true"></i>');
+                        break;
+                    case 'approve':
+                        $this->addLinkContent('<i class="fa fa-check-square-o" aria-hidden="true"></i>');
                         break;
                     default:
                         $this->addLinkContent('<i class="fa fa-link"></i>');

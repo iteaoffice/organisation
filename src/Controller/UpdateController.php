@@ -12,14 +12,19 @@ declare(strict_types=1);
 
 namespace Organisation\Controller;
 
+use General\Service\GeneralService;
+use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Update;
+use Organisation\Entity\UpdateLogo;
 use Organisation\Form\UpdateForm;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Zend\Http\Request;
 use Zend\Http\Response;
 use Zend\I18n\Translator\TranslatorInterface;
+use Zend\Validator\File\ImageSize;
+use Zend\Validator\File\MimeType;
 use Zend\View\Model\ViewModel;
 use function sprintf;
 
@@ -35,6 +40,11 @@ class UpdateController extends OrganisationAbstractController
     private $organisationService;
 
     /**
+     * @var GeneralService
+     */
+    private $generalService;
+
+    /**
      * @var FormService
      */
     private $formService;
@@ -46,11 +56,13 @@ class UpdateController extends OrganisationAbstractController
 
     public function __construct(
         OrganisationService $organisationService,
+        GeneralService      $generalservice,
         FormService         $formService,
         TranslatorInterface $translator
     )
     {
         $this->organisationService = $organisationService;
+        $this->generalService      = $generalservice;
         $this->formService         = $formService;
         $this->translator          = $translator;
     }
@@ -75,7 +87,10 @@ class UpdateController extends OrganisationAbstractController
         $update = new Update();
         $update->setDescription($organisation->getDescription()->getDescription());
         $update->setType($organisation->getType());
-        $form = $this->formService->prepare($update);
+        $update->setOrganisation($organisation);
+
+        $data = $request->getPost()->toArray();
+        $form = $this->formService->prepare($update, $data);
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
@@ -85,8 +100,26 @@ class UpdateController extends OrganisationAbstractController
             if ($form->isValid()) {
                 /** @var Update $update */
                 $update = $form->getData();
-                $update->setOrganisation($organisation);
                 $update->setContact($this->identity());
+
+                $fileData = $this->params()->fromFiles();
+
+                if (!empty($fileData['file']['name'])) {
+                    $logo = new UpdateLogo();
+                    $logo->setUpdate($update);
+                    $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));
+                    $imageSizeValidator = new ImageSize();
+                    $imageSizeValidator->isValid($fileData['file']);
+
+                    $fileTypeValidator = new MimeType();
+                    $fileTypeValidator->isValid($fileData['file']);
+                    $logo->setContentType(
+                        $this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type)
+                    );
+                    $logo->setLogoExtension((string) $logo->getContentType()->getExtension());
+                    $update->setLogo($logo);
+                }
+
                 $this->organisationService->save($update);
                 $this->flashMessenger()->addSuccessMessage(
                     $this->translator->translate('txt-organisation-update-successfully-received')
@@ -97,7 +130,8 @@ class UpdateController extends OrganisationAbstractController
         }
 
         return new ViewModel([
-            'form' => $form
+            'update' => $update,
+            'form'   => $form
         ]);
     }
 }

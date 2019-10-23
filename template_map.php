@@ -68,4 +68,7 @@ return array(
     'organisation/parent-doa/edit'                              => __DIR__ . '//view/organisation/parent-doa/edit.twig',
     'organisation/parent-doa/upload'                            => __DIR__ . '//view/organisation/parent-doa/upload.twig',
     'organisation/update/new'                                   => __DIR__ . '//view/organisation/update/new.twig',
+    'organisation/update-manager/pending'                       => __DIR__ . '//view/organisation/update-manager/pending.twig',
+    'organisation/update-manager/view'                          => __DIR__ . '//view/organisation/update-manager/view.twig',
+    'organisation/update-manager/edit'                          => __DIR__ . '//view/organisation/update-manager/edit.twig',
 );

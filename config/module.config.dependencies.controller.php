@@ -123,6 +123,13 @@ return [
         ],
         Controller\UpdateController::class                => [
             Service\OrganisationService::class,
+            GeneralService::class,
+            Service\FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\UpdateManagerController::class         => [
+            Service\UpdateService::class,
+            GeneralService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ]

@@ -42,7 +42,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => \Organisation\Entity\Organisation::class,
+                                                'id' => Organisation\Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -52,7 +52,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => \Organisation\Entity\Organisation::class,
+                                                'id' => Organisation\Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -62,7 +62,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => \Organisation\Entity\Organisation::class,
+                                                'id' => Organisation\Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -72,7 +72,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => \Organisation\Entity\Organisation::class,
+                                                'id' => Organisation\Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -82,7 +82,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => \Organisation\Entity\Organisation::class,
+                                                'id' => Organisation\Entity\Organisation::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'organisationId',
@@ -95,7 +95,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => \Organisation\Entity\Note::class,
+                                                'id' => Organisation\Entity\Note::class,
                                             ],
                                         ],
                                     ],
@@ -105,7 +105,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => \Organisation\Entity\Organisation::class,
+                                                'id' => Organisation\Entity\Organisation::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'targetId',
@@ -393,6 +393,29 @@ return [
                         'label' => _('txt-nav-parent-list-no-member-no-doa'),
                         'order' => 30,
                         'route' => 'zfcadmin/parent/list-no-member',
+                    ],
+                    'pending-organisation-updates' => [
+                        'label' => _('txt-nav-pending-organisation-updates'),
+                        'order' => 30,
+                        'route' => 'zfcadmin/organisation/update/pending',
+                        'pages' => [
+                            'update' => [
+                                'label'   => _('txt-nav-view'),
+                                'route'   => 'zfcadmin/organisation/update/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Organisation\Entity\Update::class,
+                                    ],
+                                    'invokables' => [
+                                        Organisation\Navigation\Invokable\UpdateLabel::class,
+                                    ],
+                                ],
+                                'pages' => [
+
+                                ],
+                            ],
+                        ]
                     ],
                 ]
             ]

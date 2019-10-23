@@ -23,6 +23,7 @@ use Content\Service\ArticleService;
 use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
+use General\Service\EmailService;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller;
 use Organisation\Form\View\Helper\OrganisationFormElement;
@@ -106,6 +107,10 @@ return [
         ParentFormElement::class                                              => [
             'ViewHelperManager',
             TranslatorInterface::class
+        ],
+        Service\UpdateService::class                                          => [
+            EntityManager::class,
+            EmailService::class
         ]
     ]
 ];

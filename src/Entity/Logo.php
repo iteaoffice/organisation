@@ -62,9 +62,7 @@ class Logo extends AbstractEntity
     private $dateUpdated;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="logo", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */
