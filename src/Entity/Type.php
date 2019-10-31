@@ -16,17 +16,14 @@ use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Event\Entity\Meeting\Cost;
 use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
 
 /**
- * Type.
- *
  * @ORM\Table(name="organisation_type")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Type")
  * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_type")
  */
-class Type extends AbstractEntity implements ResourceInterface
+class Type extends AbstractEntity
 {
     /**
      * Constant for a type without invoice.
@@ -109,9 +106,6 @@ class Type extends AbstractEntity implements ResourceInterface
      */
     private $organisationUpdates;
 
-    /**
-     * Class constructor.
-     */
     public function __construct()
     {
         $this->organisation = new Collections\ArrayCollection();
@@ -119,79 +113,46 @@ class Type extends AbstractEntity implements ResourceInterface
         $this->organisationUpdates = new Collections\ArrayCollection();
     }
 
-    /**
-     * @return array
-     */
     public static function getInvoiceTemplates(): array
     {
         return self::$invoiceTemplates;
     }
 
-    /**
-     * ToString
-     * Return the id here for form population.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->description;
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Type
-     */
-    public function setId($id)
+    public function setId($id): Type
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return Type
-     */
-    public function setType($type)
+    public function setType($type): Type
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return Type
-     */
-    public function setDescription($description)
+    public function setDescription($description): Type
     {
         $this->description = $description;
 
@@ -212,12 +173,7 @@ class Type extends AbstractEntity implements ResourceInterface
         return $this->invoice;
     }
 
-    /**
-     * @param int $invoice
-     *
-     * @return Type
-     */
-    public function setInvoice($invoice)
+    public function setInvoice($invoice): Type
     {
         $this->invoice = $invoice;
 
@@ -232,12 +188,7 @@ class Type extends AbstractEntity implements ResourceInterface
         return $this->meetingCost;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Cost[] $meetingCost
-     *
-     * @return Type
-     */
-    public function setMeetingCost($meetingCost)
+    public function setMeetingCost($meetingCost): Type
     {
         $this->meetingCost = $meetingCost;
 
@@ -252,12 +203,7 @@ class Type extends AbstractEntity implements ResourceInterface
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation[] $organisation
-     *
-     * @return Type
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation($organisation): Type
     {
         $this->organisation = $organisation;
 
@@ -269,7 +215,7 @@ class Type extends AbstractEntity implements ResourceInterface
         return $this->organisationUpdates;
     }
 
-    public function setOrganisationUpdates(Collections\Collection $organisationUpdates)
+    public function setOrganisationUpdates(Collections\Collection $organisationUpdates): Type
     {
         $this->organisationUpdates = $organisationUpdates;
         return $this;

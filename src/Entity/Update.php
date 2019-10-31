@@ -26,7 +26,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * @ORM\Entity()
  * @Annotation\Name("organisation_update")
  */
-class Update extends AbstractEntity implements ResourceInterface
+class Update extends AbstractEntity
 {
     /**
      * @ORM\Column(name="update_id", type="integer", options={"unsigned":true}, nullable=false)

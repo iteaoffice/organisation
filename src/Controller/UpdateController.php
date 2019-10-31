@@ -59,8 +59,7 @@ class UpdateController extends OrganisationAbstractController
         GeneralService      $generalservice,
         FormService         $formService,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->organisationService = $organisationService;
         $this->generalService      = $generalservice;
         $this->formService         = $formService;

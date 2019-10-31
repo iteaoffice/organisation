@@ -35,8 +35,7 @@ class UpdateService extends AbstractService
     public function __construct(
         EntityManager $entityManager,
         EmailService  $emailService
-    )
-    {
+    ) {
         parent::__construct($entityManager);
         $this->emailService = $emailService;
     }

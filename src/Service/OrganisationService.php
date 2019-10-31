@@ -331,6 +331,9 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             $this->save($organisationWeb);
         }
 
+        //Do an explicit save action to be sure that the organisation is in the database
+        $this->save($organisation);
+
         return $organisation;
     }
 

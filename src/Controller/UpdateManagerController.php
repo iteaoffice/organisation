@@ -55,8 +55,7 @@ class UpdateManagerController extends OrganisationAbstractController
         GeneralService      $generalService,
         FormService         $formService,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->updateService  = $updateService;
         $this->generalService = $generalService;
         $this->formService    = $formService;

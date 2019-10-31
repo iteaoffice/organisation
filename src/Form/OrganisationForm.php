@@ -15,6 +15,9 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use Organisation\Entity;
 use Zend\Form\Form;
+use Zend\Form\Element\Submit;
+use Zend\Form\Element\File;
+use Zend\Form\Element\Csrf;
 
 /**
  * Class OrganisationForm
@@ -37,49 +40,49 @@ final class OrganisationForm extends Form
 
         $this->add(
             [
-                'type' => '\Zend\Form\Element\Csrf',
+                'type' => Csrf::class,
                 'name' => 'csrf',
             ]
         );
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\File',
+                'type'    => File::class,
                 'name'    => 'file',
                 'options' => [
-                    "label"      => "txt-logo",
-                    "help-block" => _("txt-organisation-logo-requirements"),
+                    'label'      => 'txt-logo',
+                    'help-block' => _('txt-organisation-logo-requirements'),
                 ],
             ]
         );
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-submit"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-submit'),
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
-                    'class' => "btn btn-warning",
-                    'value' => _("txt-cancel"),
+                    'class' => 'btn btn-warning',
+                    'value' => _('txt-cancel'),
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'delete',
                 'attributes' => [
-                    'class' => "btn btn-danger",
-                    'value' => _("txt-delete"),
+                    'class' => 'btn btn-danger',
+                    'value' => _('txt-delete'),
                 ],
             ]
         );
