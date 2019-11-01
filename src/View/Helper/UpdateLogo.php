@@ -50,7 +50,8 @@ final class UpdateLogo extends ImageAbstract
         $this->classes = [];
 
         $this->addRouterParam('ext', $logo->getContentType()->getExtension());
-        $this->addRouterParam('last-update', $logo->getDateUpdated()->getTimestamp());
+        $date = $logo->getDateUpdated() ?? $logo->getDateCreated();
+        $this->addRouterParam('last-update', $date->getTimestamp());
         $this->addRouterParam('id', $logo->getId());
 
         $this->setImageId($prefix . $logo->getId());

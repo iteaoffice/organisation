@@ -144,7 +144,12 @@ class UpdateManagerController extends OrganisationAbstractController
                     $this->translator->translate("txt-update-has-successfully-been-modified")
                 );
 
-                return $this->redirect()->toRoute('zfcadmin/organisation/update/list');
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/update/view',
+                    ['id' => $update->getId()]
+                );
+            } else {
+                var_dump($form->getMessages());
             }
         }
 

@@ -29,7 +29,7 @@ return [
                     'organisation-update-logo' => [
                         'type'    => 'Segment',
                         'options' => [
-                            'route'    => '/o/[:id]-[:last-update].[:ext]',
+                            'route'    => '/u/[:id]-[:last-update].[:ext]',
                             'defaults' => [
                                 // Explicitly add the controller here as the assets are collected
                                 'controller' => Controller\ImageController::class,

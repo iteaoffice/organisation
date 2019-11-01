@@ -24,6 +24,7 @@ return [
              */
             Route::class => [
                 ['route' => 'image/organisation-logo', 'roles' => []],
+                ['route' => 'image/organisation-update-logo', 'roles' => []],
                 ['route' => 'organisation/json/get-branches', 'roles' => []],
                 ['route' => 'organisation/json/check-vat', 'roles' => ['office']],
                 ['route' => 'organisation/json/search', 'roles' => ['office']],

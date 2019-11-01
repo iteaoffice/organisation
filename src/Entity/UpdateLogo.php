@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\ContentType;
 use Zend\Form\Annotation;
 
@@ -51,8 +53,22 @@ class UpdateLogo extends AbstractEntity
      */
     private $contentType;
     /**
+     * @ORM\Column(name="date_created", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="create")
+     *
+     * @var DateTime
+     */
+    private $dateCreated;
+    /**
+     * @ORM\Column(name="date_updated", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
+     *
+     * @var DateTime
+     */
+    private $dateUpdated;
+    /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Update", inversedBy="logo", cascade={"persist"})
-     * @ORM\JoinColumn(name="update_id", referencedColumnName="update_id", nullable=false)
+     * @ORM\JoinColumn(name="update_id", referencedColumnName="update_id", nullable=true)
      *
      * @var Update
      */
@@ -100,6 +116,28 @@ class UpdateLogo extends AbstractEntity
     public function setContentType(ContentType $contentType): UpdateLogo
     {
         $this->contentType = $contentType;
+        return $this;
+    }
+
+    public function getDateCreated(): ?DateTime
+    {
+        return $this->dateCreated;
+    }
+
+    public function setDateCreated(DateTime $dateCreated): UpdateLogo
+    {
+        $this->dateCreated = $dateCreated;
+        return $this;
+    }
+
+    public function getDateUpdated(): ?DateTime
+    {
+        return $this->dateUpdated;
+    }
+
+    public function setDateUpdated(DateTime $dateUpdated): UpdateLogo
+    {
+        $this->dateUpdated = $dateUpdated;
         return $this;
     }
 
