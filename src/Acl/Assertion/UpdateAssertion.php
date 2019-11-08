@@ -14,9 +14,9 @@ namespace Organisation\Acl\Assertion;
 
 use Admin\Entity\Access;
 use Interop\Container\ContainerInterface;
-use Organisation\Entity\Organisation as OrganisationEntity;
+use Organisation\Entity\Organisation;
 use Organisation\Entity\Update;
-use Organisation\Service\OrganisationService;
+use Organisation\Service\UpdateService;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -28,14 +28,14 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 final class UpdateAssertion extends AbstractAssertion
 {
     /**
-     * @var OrganisationService
+     * @var UpdateService
      */
-    private $organisationService;
+    private $updateService;
 
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-        $this->organisationService = $container->get(OrganisationService::class);
+        $this->updateService = $container->get(UpdateService::class);
     }
 
     public function assert(
@@ -46,17 +46,32 @@ final class UpdateAssertion extends AbstractAssertion
     ): bool {
         $this->setPrivilege($privilege);
 
-        if (!($update instanceof Update)) {
-            $update = new Update();
+        $organisation = $update->getOrganisation();
+
+        if ($organisation === null) {
             $organisationId = (int) $this->getRouteMatch()->getParam('organisationId', 0);
-            $organisation = $this->organisationService->find(OrganisationEntity::class, $organisationId);
-            if ($organisation instanceof OrganisationEntity) {
+            /** @var Organisation $organisation */
+            $organisation = $this->updateService->find(Organisation::class, $organisationId);
+
+            // Allow editing from profile page
+            if (($organisation === null)
+                && ($this->getRouteMatch()->getMatchedRouteName() === 'community/contact/profile/organisation'))
+            {
+                $organisation = $this->contact->getContactOrganisation()->getOrganisation();
+            }
+
+            $update = new Update();
+            if ($organisation instanceof Organisation) {
                 $update->setOrganisation($organisation);
             }
         }
 
         switch ($this->getPrivilege()) {
             case 'edit':
+                // An organisation can only have 1 pending update at a time
+                if (($organisation === null) || $this->updateService->hasPendingUpdates($organisation)) {
+                    return false;
+                }
                 if ($this->contactService->contactHasPermit($this->contact, 'edit', $update->getOrganisation())) {
                     return true;
                 }

@@ -29,6 +29,7 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Note;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
+use Organisation\Service\UpdateService;
 use Zend\Http\PhpEnvironment\Request;
 use Zend\I18n\Translator\TranslatorInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
@@ -45,6 +46,10 @@ class MergeOrganisation extends AbstractPlugin
      */
     private $entityManager;
     /**
+     * @var UpdateService
+     */
+    private $updateService;
+    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -55,10 +60,12 @@ class MergeOrganisation extends AbstractPlugin
 
     public function __construct(
         EntityManagerInterface $entityManager,
+        UpdateService          $updateService,
         TranslatorInterface    $translator,
         Logging                $errorLogger = null
     ) {
         $this->entityManager = $entityManager;
+        $this->updateService = $updateService;
         $this->translator    = $translator;
         $this->errorLogger   = $errorLogger;
     }
@@ -93,6 +100,11 @@ class MergeOrganisation extends AbstractPlugin
             && ($target->getCountry()->getId() !== $source->getCountry()->getId())
         ) {
             $errors[] = $this->translator->translate('txt-organisations-cant-have-different-countries');
+        }
+
+        // Check for pending updates
+        if ($this->updateService->hasPendingUpdates($source)) {
+            $errors[] = $this->translator->translate('txt-source-organisation-has-pending-updates');
         }
 
         return $errors;
@@ -266,6 +278,13 @@ class MergeOrganisation extends AbstractPlugin
             $result->getOrganisation()->add($target);
             $target->getResult()->add($result);
             $source->getResult()->remove($key);
+        }
+
+        // Transfer past updates
+        foreach ($source->getUpdates() as $key => $update) {
+            $update->setOrganisation($target);
+            $target->getUpdates()->add($update);
+            $source->getUpdates()->remove($key);
         }
 
         try {

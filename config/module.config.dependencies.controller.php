@@ -36,11 +36,6 @@ use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 
 return [
     ConfigAbstractFactory::class => [
-        Controller\Plugin\MergeOrganisation::class        => [
-            EntityManager::class,
-            TranslatorInterface::class,
-            Logging::class
-        ],
         Controller\ConsoleController::class               => [
             Service\OrganisationService::class
         ],

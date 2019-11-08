@@ -4,7 +4,7 @@
     <div class="col-md-8">
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-name") }}</dt>
-            <dd>{{ organisation.organisation }}</dd>
+            <dd>{{ organisation.organisation }} {{ organisationUpdateNotification(organisation) }}</dd>
             <dt>{{ translate("txt-organisation-on-public-website") }}</dt>
             <dd>{{ organisationLink(organisation,'view','name') }}</dd>
             <dt>{{ translate("txt-description") }}</dt>

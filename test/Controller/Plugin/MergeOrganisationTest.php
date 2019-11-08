@@ -15,6 +15,7 @@ namespace OrganisationTest\Controller\Plugin;
 use Affiliation\Entity\Affiliation;
 use Contact\Entity\Contact;
 use Contact\Entity\ContactOrganisation;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
@@ -35,15 +36,17 @@ use Organisation\Entity\Note;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
+use Organisation\Entity\Update;
 use Organisation\Entity\Web;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use Organisation\Service\UpdateService;
+use PHPUnit\Framework\MockObject\MockObject;
 use Program\Entity\Doa;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
 use Zend\I18n\Translator\Translator;
 use Zend\Stdlib\DispatchableInterface;
-use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
+use function in_array;
 
 /**
  * Class MergeOrganisationTest
@@ -79,7 +82,11 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     public function testInvoke()
     {
-        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->translator);
+        $mergeOrganisation = new MergeOrganisation(
+            $this->getEntityManagerMock(),
+            $this->getUpUpdateServiceMock(),
+            $this->translator
+        );
         $instance = $mergeOrganisation();
         $this->assertSame($mergeOrganisation, $instance);
     }
@@ -91,7 +98,11 @@ final class MergeOrganisationTest extends AbstractServiceTest
      */
     public function testCheckMerge()
     {
-        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->translator);
+        $mergeOrganisation = new MergeOrganisation(
+            $this->getEntityManagerMock(),
+            $this->getUpUpdateServiceMock(),
+            $this->translator
+        );
 
         // Set up some merge-preventing circumstances
         $this->source->getFinancial()->setVat('NL123');
@@ -101,13 +112,16 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $otherCountry = new Country();
         $otherCountry->setId(2);
         $this->source->setCountry($otherCountry);
+        $update = new Update();
+        $this->source->getUpdates()->add($update);
 
         // Run the merge check
         $errors = $mergeOrganisation()->checkMerge($this->source, $this->target);
 
-        $this->assertEquals(true, \in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
-        $this->assertEquals(true, \in_array('txt-organisations-cant-both-be-parents', $errors));
-        $this->assertEquals(true, \in_array('txt-organisations-cant-have-different-countries', $errors));
+        $this->assertEquals(true, in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
+        $this->assertEquals(true, in_array('txt-organisations-cant-both-be-parents', $errors));
+        $this->assertEquals(true, in_array('txt-organisations-cant-have-different-countries', $errors));
+        $this->assertEquals(true, in_array('txt-source-organisation-has-pending-updates', $errors));
     }
 
     /**
@@ -119,7 +133,11 @@ final class MergeOrganisationTest extends AbstractServiceTest
     {
         /** @var DispatchableInterface $controllerMock */
         $controllerMock = $this->setUpControllerMock();
-        $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(), $this->translator);
+        $mergeOrganisation = new MergeOrganisation(
+            $this->setUpEntityManagerMock(),
+            $this->getUpUpdateServiceMock(),
+            $this->translator
+        );
         $mergeOrganisation->setController($controllerMock);
 
         $result = $mergeOrganisation()->merge($this->source, $this->target);
@@ -201,6 +219,9 @@ final class MergeOrganisationTest extends AbstractServiceTest
 
         $this->assertEquals(1, $this->target->getResult()->first()->getId());
         $this->assertEquals($this->target, $this->target->getResult()->first()->getOrganisation()->first());
+
+        $this->assertEquals(1, $this->target->getUpdates()->first()->getId());
+        $this->assertEquals($this->target, $this->target->getUpdates()->first()->getOrganisation());
     }
 
     /**
@@ -212,11 +233,16 @@ final class MergeOrganisationTest extends AbstractServiceTest
     {
         $entityManagerMock = $this->setUpEntityManagerMock(true);
 
-        $mergeOrganisationNoLog = new MergeOrganisation($entityManagerMock, $this->translator);
+        $mergeOrganisationNoLog = new MergeOrganisation(
+            $entityManagerMock,
+            $this->getUpUpdateServiceMock(),
+            $this->translator
+        );
         $responseNoLog          = $mergeOrganisationNoLog->merge($this->source, $this->target);
         $this->assertEquals(false, $responseNoLog['success']);
         $this->assertEquals('Oops!', $responseNoLog['errorMessage']);
 
+        /** @var Logging|MockObject $errorLoggerMock */
         $errorLoggerMock = $this->getMockBuilder(Logging::class)
             ->disableOriginalConstructor()
             ->setMethods(['handleErrorException'])
@@ -226,8 +252,13 @@ final class MergeOrganisationTest extends AbstractServiceTest
             ->method('handleErrorException')
             ->with($this->isInstanceOf('Exception'));
 
-        $mergeOrganisationLog = new MergeOrganisation($entityManagerMock, $this->translator, $errorLoggerMock);
-        $responseLog          = $mergeOrganisationLog()->merge($this->source, $this->target);
+        $mergeOrganisationLog = new MergeOrganisation(
+            $entityManagerMock,
+            $this->getUpUpdateServiceMock(),
+            $this->translator,
+            $errorLoggerMock
+        );
+        $responseLog = $mergeOrganisationLog()->merge($this->source, $this->target);
 
         $this->assertEquals(false, $responseLog['success']);
     }
@@ -330,9 +361,14 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $result->setId(1);
         $result->setOrganisation(new ArrayCollection([$source]));
 
+        $update = new Update();
+        $update->setId(1);
+        $update->setOrganisation($source);
+        $update->setDateApproved(new DateTime());
+
         $source->setOrganisation('Organisation 1');
-        $source->setDateCreated(new \DateTime('2017-01-01'));
-        $source->setDateUpdated(new \DateTime('2017-01-03'));
+        $source->setDateCreated(new DateTime('2017-01-01'));
+        $source->setDateUpdated(new DateTime('2017-01-03'));
         $source->setDescription($description);
         $source->setCountry($country);
         $source->setType($type);
@@ -357,6 +393,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $source->setDoa(new ArrayCollection([$doa]));
         $source->setReminder(new ArrayCollection([$reminder]));
         $source->setResult(new ArrayCollection([$result]));
+        $source->setUpdates(new ArrayCollection([$update]));
 
         return $source;
     }
@@ -375,8 +412,8 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $target = new Organisation();
         $target->setId(2);
         $target->setOrganisation('Organisation 2');
-        $target->setDateCreated(new \DateTime('2017-01-02'));
-        $target->setDateUpdated(new \DateTime('2017-01-02'));
+        $target->setDateCreated(new DateTime('2017-01-02'));
+        $target->setDateUpdated(new DateTime('2017-01-02'));
         $target->setCountry($country);
         $target->setFinancial($financial);
 
@@ -422,6 +459,22 @@ final class MergeOrganisationTest extends AbstractServiceTest
             ->will($this->returnValue($contact));
 
         return $controllerMock;
+    }
+
+    /**
+     * @return MockObject|UpdateService
+     */
+    private function getUpUpdateServiceMock()
+    {
+        $updateServiceMock = $this->getMockBuilder(UpdateService::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['hasPendingUpdates'])
+            ->getMock();
+        $updateServiceMock->expects($this->any())
+            ->method('hasPendingUpdates')
+            ->willReturn(true);
+
+        return $updateServiceMock;
     }
 
     /**

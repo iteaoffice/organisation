@@ -19,6 +19,7 @@ use Doctrine\ORM\EntityManager;
 use General\Service\EmailService;
 use Organisation\Entity\Description;
 use Organisation\Entity\Logo;
+use Organisation\Entity\Organisation;
 use Organisation\Entity\Update;
 
 /**
@@ -53,6 +54,14 @@ class UpdateService extends AbstractService
         return $this->entityManager->getRepository(Update::class)->count(['dateApproved' => null]);
     }
 
+    public function hasPendingUpdates(Organisation $organisation): bool
+    {
+        return ($this->entityManager->getRepository(Update::class)->count([
+            'dateApproved' => null,
+            'organisation' => $organisation
+        ]) > 0);
+    }
+
     public function approveUpdate(Update $update): bool
     {
         $organisation = $update->getOrganisation();
@@ -60,6 +69,7 @@ class UpdateService extends AbstractService
         if ($organisation->getDescription() === null) {
             $description = new Description();
             $description->setOrganisation($organisation);
+            $this->entityManager->persist($description);
         }
         $description->setDescription($update->getDescription());
         $organisation->setDescription($description);
@@ -71,6 +81,7 @@ class UpdateService extends AbstractService
             if (!$logo) {
                 $logo = new Logo();
                 $logo->setOrganisation($organisation);
+                $this->entityManager->persist($logo);
             }
             $logo->setContentType($update->getLogo()->getContentType());
             $logo->setLogoExtension($update->getLogo()->getLogoExtension());
@@ -78,14 +89,13 @@ class UpdateService extends AbstractService
             $organisation->setLogo(new ArrayCollection([$logo]));
         }
 
-        $this->save($organisation);
-
         $update->setDateApproved(new DateTime());
-        $this->save($update);
+
+        $this->entityManager->flush();
 
         // Send confirmation mail
         $this->emailService->setWebInfo('/organisation/update/approved');
-        $this->emailService->addToEmailAddress($update->getContact()->getEmail());
+        $this->emailService->addTo($update->getContact());
         $this->emailService->setTemplateVariable('display_name', $update->getContact()->getDisplayName());
 
         return $this->emailService->send();

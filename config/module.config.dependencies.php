@@ -85,6 +85,7 @@ return [
         ],
         Controller\Plugin\MergeOrganisation::class                            => [
             EntityManager::class,
+            Service\UpdateService::class,
             TranslatorInterface::class,
             Logging::class
         ],
@@ -106,6 +107,10 @@ return [
         ],
         ParentFormElement::class                                              => [
             'ViewHelperManager',
+            TranslatorInterface::class
+        ],
+        View\Helper\UpdateNotification::class                                 => [
+            Service\UpdateService::class,
             TranslatorInterface::class
         ],
         Service\UpdateService::class                                          => [

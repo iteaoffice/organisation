@@ -44,12 +44,6 @@ class EntityTest extends TestCase
                 $object = new $className;
 
                 $this->assertInstanceOf($className, $object);
-                $this->assertNull($object->getId());
-                $this->assertNull($object->id);
-
-                $object->id = 'test';
-                $this->assertSame('test', $object->id);
-                $this->assertTrue(isset($object));
 
                 $builder = new AnnotationBuilder();
                 $dataFieldset = $builder->createForm($object);

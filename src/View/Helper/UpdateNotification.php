@@ -20,7 +20,9 @@ namespace Organisation\View\Helper;
 
 use Organisation\Entity\Organisation;
 use Organisation\Service\UpdateService;
+use Zend\I18n\Translator\TranslatorInterface;
 use Zend\View\Helper\AbstractHelper;
+use function sprintf;
 
 /**
  * Class UpdateNotification
@@ -33,19 +35,26 @@ final class UpdateNotification extends AbstractHelper
      * @var UpdateService
      */
     private $updateService;
-
     /**
-     * UpdateNotification constructor.
-     * @param UpdateService $updateService
+     * @var TranslatorInterface
      */
-    public function __construct(UpdateService $updateService)
+    private $translator;
+
+    public function __construct(UpdateService $updateService, TranslatorInterface $translator)
     {
         $this->updateService = $updateService;
+        $this->translator    = $translator;
     }
 
     public function __invoke(Organisation $organisation): string
     {
-        if ($updateS) {
+        if ($this->updateService->hasPendingUpdates($organisation)) {
+            return sprintf(
+                '<span class="badge badge-info"><i class="fa fa-info-circle"></i> %s</span>',
+                $this->translator->translate('txt-has-pending-updates')
+            );
         }
+
+        return '';
     }
 }
