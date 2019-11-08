@@ -148,8 +148,6 @@ class UpdateManagerController extends OrganisationAbstractController
                     'zfcadmin/organisation/update/view',
                     ['id' => $update->getId()]
                 );
-            } else {
-                var_dump($form->getMessages());
             }
         }
 

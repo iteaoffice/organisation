@@ -56,7 +56,7 @@ final class UpdateAssertion extends AbstractAssertion
         }
 
         switch ($this->getPrivilege()) {
-            case 'new':
+            case 'edit':
                 if ($this->contactService->contactHasPermit($this->contact, 'edit', $update->getOrganisation())) {
                     return true;
                 }
