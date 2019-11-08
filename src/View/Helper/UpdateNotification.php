@@ -46,7 +46,6 @@ final class UpdateNotification extends AbstractHelper
     public function __invoke(Organisation $organisation): string
     {
         if ($updateS) {
-
         }
     }
 }
