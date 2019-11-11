@@ -19,8 +19,6 @@ use General\Entity\ContentType;
 use Zend\Form\Annotation;
 
 /**
- * OrganisationLogo.
- *
  * @ORM\Table(name="organisation_update_logo")
  * @ORM\Entity
  * @Annotation\Name("organisation_update_logo")

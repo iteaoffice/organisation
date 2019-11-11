@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Organisation\Form;
 
+use Zend\Form\Element\File;
+use Zend\Form\Element\Submit;
 use Zend\Form\Form;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Validator\File\MimeType;
@@ -27,11 +29,8 @@ use Zend\Validator\File\Size;
  *
  * @package Organiation\Form
  */
-class ParentImport extends Form implements InputFilterProviderInterface
+final class ParentImport extends Form implements InputFilterProviderInterface
 {
-    /**
-     * Import constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -41,41 +40,35 @@ class ParentImport extends Form implements InputFilterProviderInterface
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\File',
+                'type'    => File::class,
                 'name'    => 'file',
                 'options' => [
-                    "label" => "txt-file",
+                    'label' => 'txt-file',
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'upload',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-upload"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-upload'),
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'import',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-import"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-import'),
                 ],
             ]
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [

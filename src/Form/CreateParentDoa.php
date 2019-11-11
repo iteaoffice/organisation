@@ -20,14 +20,11 @@ use Zend\InputFilter\InputFilterProviderInterface;
 
 /**
  * Class CreateParentDoa
+ *
  * @package Organisation\Form
  */
-class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
+final class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
 {
-    /**
-     * ParentDoa constructor.
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
@@ -52,7 +49,7 @@ class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
                     ],
                     'object_manager' => $entityManager,
                     'help-block'     => _('txt-add-doa-for-program-help-block'),
-                    'label'          => _("txt-add-doa-for-program-label"),
+                    'label'          => _('txt-add-doa-for-program-label'),
                 ],
             ]
         );
@@ -68,12 +65,6 @@ class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [

@@ -50,8 +50,8 @@ final class UpdateNotification extends AbstractHelper
     {
         if ($this->updateService->hasPendingUpdates($organisation)) {
             return sprintf(
-                '<span class="badge badge-info"><i class="fa fa-info-circle"></i> %s</span>',
-                $this->translator->translate('txt-has-pending-updates')
+                '<div class="alert alert-info"><i class="fa fa-info-circle"></i> %s</div>',
+                $this->translator->translate('txt-your-organisation-has-pending-updates')
             );
         }
 

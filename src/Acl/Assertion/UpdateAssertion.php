@@ -23,6 +23,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Class UpdateAssertion
+ *
  * @package Organisation\Acl\Assertion
  */
 final class UpdateAssertion extends AbstractAssertion
@@ -46,16 +47,20 @@ final class UpdateAssertion extends AbstractAssertion
     ): bool {
         $this->setPrivilege($privilege);
 
-        $organisation = $update->getOrganisation();
+        $organisation = null;
+        if ($update instanceof Update) {
+            $organisation = $update->getOrganisation();
+        }
 
-        if ($organisation === null) {
-            $organisationId = (int) $this->getRouteMatch()->getParam('organisationId', 0);
+        if (!$update instanceof Update) {
+            $organisationId = (int)$this->getRouteMatch()->getParam('organisationId', 0);
             /** @var Organisation $organisation */
             $organisation = $this->updateService->find(Organisation::class, $organisationId);
 
             // Allow editing from profile page
             if (($organisation === null)
-                && ($this->getRouteMatch()->getMatchedRouteName() === 'community/contact/profile/organisation')) {
+                && ($this->getRouteMatch()->getMatchedRouteName() === 'community/contact/profile/organisation')
+            ) {
                 $organisation = $this->contact->getContactOrganisation()->getOrganisation();
             }
 

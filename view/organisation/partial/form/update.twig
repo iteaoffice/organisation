@@ -3,6 +3,13 @@
 
 {% set updateForm = form.get('organisation_entity_update') %}
 
+<div class="form-group row">
+    <label class="col-sm-3 col-form-label">{{ translate("txt-organisation") }}</label>
+    <div class="col-sm-9">
+        <p class="form-control-plaintext">{{ organisationLink(update.organisation, 'view-admin', 'name') }}</p>
+    </div>
+</div>
+
 {{ ztbformelement(updateForm.get('description')) }}
 {{ ztbformelement(updateForm.get('type')) }}
 <div class="form-group row">
@@ -31,17 +38,14 @@
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea',
-        plugins: [
-            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-            "save table contextmenu directionality emoticons template paste textcolor"
-        ],
-        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media fullpage | forecolor backcolor emoticons",
+        plugins: ['link'],
+        toolbar: "undo redo | bold italic | bullist numlist outdent indent | link",
+        menubar: false,
         force_br_newlines: true,
         relative_urls: true,
         remove_script_host: false,
         document_base_url: "{{ serverUrl() }}",
         entity_encoding: "raw",
-        height: 300
+        height: 500
     });
 </script>

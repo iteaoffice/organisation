@@ -24,6 +24,7 @@ use Organisation\Entity\Update;
 
 /**
  * Class UpdateService
+ *
  * @package Organisation\Service
  */
 class UpdateService extends AbstractService
@@ -35,7 +36,7 @@ class UpdateService extends AbstractService
 
     public function __construct(
         EntityManager $entityManager,
-        EmailService  $emailService
+        EmailService $emailService
     ) {
         parent::__construct($entityManager);
         $this->emailService = $emailService;
@@ -56,16 +57,19 @@ class UpdateService extends AbstractService
 
     public function hasPendingUpdates(Organisation $organisation): bool
     {
-        return ($this->entityManager->getRepository(Update::class)->count([
-            'dateApproved' => null,
-            'organisation' => $organisation
-        ]) > 0);
+        return ($this->entityManager->getRepository(Update::class)->count(
+            [
+                    'dateApproved' => null,
+                    'organisation' => $organisation
+                ]
+        ) > 0);
     }
 
     public function approveUpdate(Update $update): bool
     {
+        /** @var Organisation $organisation */
         $organisation = $update->getOrganisation();
-        $description  = $organisation->getDescription();
+        $description = $organisation->getDescription();
         if ($organisation->getDescription() === null) {
             $description = new Description();
             $description->setOrganisation($organisation);

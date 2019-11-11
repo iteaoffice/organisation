@@ -88,7 +88,11 @@ class UpdateController extends OrganisationAbstractController
         $update->setType($organisation->getType());
         $update->setOrganisation($organisation);
 
-        $data = $request->getPost()->toArray();
+        $data = array_merge(
+            $request->getPost()->toArray(),
+            $request->getFiles()->toArray(),
+        );
+
         $form = $this->formService->prepare($update, $data);
 
         if ($request->isPost()) {

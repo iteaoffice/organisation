@@ -1,6 +1,6 @@
 <?php
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -22,13 +22,8 @@ use Zend\InputFilter\InputFilter;
  *
  * @package Organisation\InputFilter\Parent
  */
-class TypeFilter extends InputFilter
+final class TypeFilter extends InputFilter
 {
-    /**
-     * ParentFilter constructor.
-     *
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         $inputFilter = new InputFilter();

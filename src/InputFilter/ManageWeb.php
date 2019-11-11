@@ -22,15 +22,11 @@ use Zend\InputFilter\InputFilter;
 
 /**
  * Class InvolvedSelect
+ *
  * @package SafetyForm\InputFilter
  */
-class ManageWeb extends InputFilter
+final class ManageWeb extends InputFilter
 {
-    /**
-     * SubstrateSelect constructor.
-     *
-     * @param Organisation $organisation
-     */
     public function __construct(Organisation $organisation)
     {
         $webInputFilter = new InputFilter();
@@ -38,20 +34,24 @@ class ManageWeb extends InputFilter
         foreach ($organisation->getWeb() as $web) {
             $inputFilter = new InputFilter();
 
-            $inputFilter->add([
-                'name'     => 'web',
-                'required' => true,
+            $inputFilter->add(
+                [
+                    'name'     => 'web',
+                    'required' => true,
 
-            ]);
+                ]
+            );
 
             $webInputFilter->add($inputFilter, $web->getId());
         }
 
         $this->add($webInputFilter, 'webFieldset');
 
-        $this->add([
-            'name'     => 'web',
-            'required' => false,
-        ]);
+        $this->add(
+            [
+                'name'     => 'web',
+                'required' => false,
+            ]
+        );
     }
 }

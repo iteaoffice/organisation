@@ -374,7 +374,7 @@ return [
                         'order' => 30,
                         'route' => 'zfcadmin/organisation/list-duplicate',
                     ],
-                    'list-inactive-organisations' => [
+                    'list-inactive-organisations'  => [
                         'label' => _('txt-nav-list-inactive-organisations'),
                         'order' => 30,
                         'route' => 'zfcadmin/organisation/list-inactive',
@@ -400,7 +400,6 @@ return [
                         'route' => 'zfcadmin/organisation/update/pending',
                         'pages' => [
                             'update' => [
-                                'label'   => _('txt-nav-view'),
                                 'route'   => 'zfcadmin/organisation/update/view',
                                 'visible' => false,
                                 'params'  => [
@@ -411,8 +410,20 @@ return [
                                         Organisation\Navigation\Invokable\UpdateLabel::class,
                                     ],
                                 ],
-                                'pages' => [
-
+                                'pages'   => [
+                                    'edit' => [
+                                        'label'   => _('txt-edit-update'),
+                                        'route'   => 'zfcadmin/organisation/update/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities'   => [
+                                                'id' => Organisation\Entity\Update::class,
+                                            ],
+                                            'invokables' => [
+                                                Organisation\Navigation\Invokable\UpdateLabel::class,
+                                            ],
+                                        ],
+                                    ],
                                 ],
                             ],
                         ]

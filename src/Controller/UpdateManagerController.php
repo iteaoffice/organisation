@@ -26,6 +26,7 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Class UpdateManagerController
+ *
  * @package Organisation\Controller
  */
 class UpdateManagerController extends OrganisationAbstractController
@@ -51,42 +52,46 @@ class UpdateManagerController extends OrganisationAbstractController
     private $translator;
 
     public function __construct(
-        UpdateService       $updateService,
-        GeneralService      $generalService,
-        FormService         $formService,
+        UpdateService $updateService,
+        GeneralService $generalService,
+        FormService $formService,
         TranslatorInterface $translator
     ) {
-        $this->updateService  = $updateService;
+        $this->updateService = $updateService;
         $this->generalService = $generalService;
-        $this->formService    = $formService;
-        $this->translator     = $translator;
+        $this->formService = $formService;
+        $this->translator = $translator;
     }
 
     public function pendingAction(): ViewModel
     {
-        return new ViewModel([
-            'pendingUpdates' => $this->updateService->findPendingUpdates()
-        ]);
+        return new ViewModel(
+            [
+                'pendingUpdates' => $this->updateService->findPendingUpdates()
+            ]
+        );
     }
 
     public function viewAction(): ViewModel
     {
         /** @var Update $update */
-        $update = $this->updateService->find(Update::class, (int) $this->params('id'));
+        $update = $this->updateService->find(Update::class, (int)$this->params('id'));
 
         if (null === $update) {
             return $this->notFoundAction();
         }
 
-        return new ViewModel([
-            'update' => $update
-        ]);
+        return new ViewModel(
+            [
+                'update' => $update
+            ]
+        );
     }
 
     public function editAction()
     {
         /** @var Update $update */
-        $update = $this->updateService->find(Update::class, (int) $this->params('id'));
+        $update = $this->updateService->find(Update::class, (int)$this->params('id'));
         /** @var Request $request */
         $request = $this->getRequest();
 
@@ -94,7 +99,10 @@ class UpdateManagerController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $data = $request->getPost()->toArray();
+        $data = array_merge(
+            $request->getPost()->toArray(),
+            $request->getFiles()->toArray(),
+        );
         $form = $this->formService->prepare($update, $data);
 
         if ($request->isPost()) {
@@ -108,9 +116,9 @@ class UpdateManagerController extends OrganisationAbstractController
             if (isset($data['delete'])) {
                 $this->updateService->delete($update);
                 $this->flashMessenger()->addSuccessMessage(
-                    $this->translator->translate("txt-update-has-been-removed-successfully")
+                    $this->translator->translate('txt-update-has-been-removed-successfully')
                 );
-                return $this->redirect()->toRoute('zfcadmin/organisation/update/list');
+                return $this->redirect()->toRoute('zfcadmin/organisation/update/pending');
             }
 
             if ($form->isValid()) {
@@ -134,14 +142,14 @@ class UpdateManagerController extends OrganisationAbstractController
                     $logo->setContentType(
                         $this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type)
                     );
-                    $logo->setLogoExtension((string) $logo->getContentType()->getExtension());
+                    $logo->setLogoExtension((string)$logo->getContentType()->getExtension());
                     $update->setLogo($logo);
                 }
 
                 $this->updateService->save($update);
 
                 $this->flashMessenger()->addSuccessMessage(
-                    $this->translator->translate("txt-update-has-successfully-been-modified")
+                    $this->translator->translate('txt-update-has-successfully-been-modified')
                 );
 
                 return $this->redirect()->toRoute(
@@ -151,10 +159,12 @@ class UpdateManagerController extends OrganisationAbstractController
             }
         }
 
-        return new ViewModel([
-            'update' => $update,
-            'form'   => $form,
-        ]);
+        return new ViewModel(
+            [
+                'update' => $update,
+                'form'   => $form,
+            ]
+        );
     }
 
     /**
@@ -163,7 +173,7 @@ class UpdateManagerController extends OrganisationAbstractController
     public function approveAction()
     {
         /** @var Update $update */
-        $update = $this->updateService->find(Update::class, (int) $this->params('id', 0));
+        $update = $this->updateService->find(Update::class, (int)$this->params('id', 0));
 
         if ($update === null) {
             return $this->notFoundAction();

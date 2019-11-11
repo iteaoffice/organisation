@@ -1,6 +1,6 @@
 <?php
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;
+use DoctrineModule\Validator\UniqueObject;
 use Organisation\Entity;
 use Zend\InputFilter\InputFilter;
 
@@ -21,13 +22,8 @@ use Zend\InputFilter\InputFilter;
  *
  * @package Organisation\InputFilter
  */
-class FinancialFilter extends InputFilter
+final class FinancialFilter extends InputFilter
 {
-    /**
-     * FinancialFilter constructor.
-     *
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         $inputFilter = new InputFilter();
@@ -42,7 +38,7 @@ class FinancialFilter extends InputFilter
                 ],
                 'validators' => [
                     [
-                        'name'    => '\DoctrineModule\Validator\UniqueObject',
+                        'name'    => UniqueObject::class,
                         'options' => [
                             'object_repository' => $entityManager->getRepository(Entity\Financial::class),
                             'object_manager'    => $entityManager,

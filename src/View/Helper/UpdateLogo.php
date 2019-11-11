@@ -35,6 +35,7 @@ final class UpdateLogo extends ImageAbstract
         int    $width = null
     ): string {
         $logo = $update->getLogo();
+
         $prefix = 'organisation_update_logo_';
         $this->setRouter('image/organisation-update-logo');
         if ($logo === null) {
