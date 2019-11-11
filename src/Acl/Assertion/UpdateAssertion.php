@@ -55,8 +55,7 @@ final class UpdateAssertion extends AbstractAssertion
 
             // Allow editing from profile page
             if (($organisation === null)
-                && ($this->getRouteMatch()->getMatchedRouteName() === 'community/contact/profile/organisation'))
-            {
+                && ($this->getRouteMatch()->getMatchedRouteName() === 'community/contact/profile/organisation')) {
                 $organisation = $this->contact->getContactOrganisation()->getOrganisation();
             }
 

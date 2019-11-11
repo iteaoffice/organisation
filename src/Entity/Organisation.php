@@ -470,7 +470,7 @@ class Organisation extends AbstractEntity
         return $this->parentOrganisation;
     }
 
-    public function setParentOrganisation(?Parent\Organisation $parentOrganisation): Organisation
+    public function setParentOrganisation(?parent\Organisation $parentOrganisation): Organisation
     {
         $this->parentOrganisation = $parentOrganisation;
 
