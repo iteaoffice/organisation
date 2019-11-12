@@ -84,7 +84,10 @@ class UpdateController extends OrganisationAbstractController
         }
 
         $update = new Update();
-        $update->setDescription($organisation->getDescription()->getDescription());
+
+        if (null !== $organisation->getDescription()) {
+            $update->setDescription($organisation->getDescription()->getDescription());
+        }
         $update->setType($organisation->getType());
         $update->setOrganisation($organisation);
 
