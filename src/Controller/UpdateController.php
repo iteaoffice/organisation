@@ -94,6 +94,7 @@ class UpdateController extends OrganisationAbstractController
         );
 
         $form = $this->formService->prepare($update, $data);
+        $form->remove('delete');
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
