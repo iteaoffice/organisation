@@ -34,7 +34,9 @@
     "iteaoffice/project": "^4.1",
     "iteaoffice/event": "^4.1",
     "iteaoffice/invoice": "^4.1",
-    "iteaoffice/main": "dev-master"
+    "samsonasik/error-hero-module": "2.*",
+    "setasign/fpdi-tcpdf": "~2.0",
+    "jield-webdev/zf3-bootstrap4": "dev-master"
   },
   "autoload": {
     "psr-4": {
