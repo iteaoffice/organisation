@@ -26,22 +26,17 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Partner\Navigation\Invokable
  */
-class TypeLabel extends AbstractNavigationInvokable
+final class TypeLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translator->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Type::class)) {
             /** @var Type $type */
             $type = $this->getEntities()->get(Type::class);
 
             $label = (string)$type;
-        } else {
-            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

@@ -32,27 +32,12 @@ use function sprintf;
  * Class UpdateController
  * @package Organisation\Controller
  */
-class UpdateController extends OrganisationAbstractController
+final class UpdateController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-
-    /**
-     * @var FormService
-     */
-    private $formService;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private GeneralService $generalService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
@@ -66,9 +51,6 @@ class UpdateController extends OrganisationAbstractController
         $this->translator          = $translator;
     }
 
-    /**
-     * @return ViewModel|Response
-     */
     public function newAction()
     {
         /** @var Request $request */

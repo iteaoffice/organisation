@@ -32,7 +32,7 @@ class UpdateService extends AbstractService
     /**
      * @var EmailService
      */
-    private $emailService;
+    private EmailService $emailService;
 
     public function __construct(
         EntityManager $entityManager,

@@ -22,10 +22,7 @@ use Organisation\Service\OrganisationService;
  */
 final class ConsoleController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService;
-     */
-    private $organisationService;
+    private OrganisationService $organisationService;
 
     public function __construct(OrganisationService $organisationService)
     {

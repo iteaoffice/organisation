@@ -34,7 +34,7 @@
                 <td>{{ parentLink(affiliation.parentOrganisation.parent,'view','parent') }}</td>
                 <td>{{ affiliationLink(affiliation,'view-admin','parent-organisation') }}</td>
                 <td>{{ projectLink(affiliation.project,'view-admin', 'project') }}</td>
-                <td>{% for name in affiliation.parentOrganisation.organisation.names if name.project == affiliation.project %}{{ name.name }}{% endfor %}</td>
+                <td>{% for name in affiliation.parentOrganisation.organisation.names|filter(name => name.project == affiliation.project) -%}{{ name.name }}{% endfor %}</td>
                 <td>{{ callLink(affiliation.project.call,'view-admin', 'name') }}</td>
                 <td>{{ contactLink(affiliation.contact,'view-admin', 'name') }}</td>
                 <td>{{ affiliation.version.count() }}</td>

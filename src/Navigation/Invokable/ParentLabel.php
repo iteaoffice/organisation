@@ -26,15 +26,12 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Partner\Navigation\Invokable
  */
-class ParentLabel extends AbstractNavigationInvokable
+final class ParentLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translator->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(OParent::class)) {
             /** @var OParent $parent */
             $parent = $this->getEntities()->get(OParent::class);
@@ -49,8 +46,6 @@ class ParentLabel extends AbstractNavigationInvokable
             );
 
             $label = (string)$parent;
-        } else {
-            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

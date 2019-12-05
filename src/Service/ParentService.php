@@ -40,18 +40,9 @@ use function round;
  */
 class ParentService extends AbstractService
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
+    private ContainerInterface $container;
+    private ProjectService $projectService;
+    private VersionService $versionService;
 
     /**
      * Because of circular dependencies between parentService and AffiliationService we choose here to use an invokable

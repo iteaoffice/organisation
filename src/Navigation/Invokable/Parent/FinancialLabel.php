@@ -27,15 +27,12 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Organisation\Navigation\Invokable
  */
-class FinancialLabel extends AbstractNavigationInvokable
+final class FinancialLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translator->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Financial::class)) {
             /** @var Financial $financial */
             $financial = $this->getEntities()->get(Financial::class);
@@ -43,8 +40,6 @@ class FinancialLabel extends AbstractNavigationInvokable
             $this->getEntities()->set(OParent::class, $financial->getParent());
             $page->setParams(array_merge($page->getParams(), ['id' => $financial->getId()]));
             $label = (string)$financial;
-        } else {
-            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

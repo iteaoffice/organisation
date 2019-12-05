@@ -27,23 +27,18 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Partner\Navigation\Invokable
  */
-class DoaLabel extends AbstractNavigationInvokable
+final class DoaLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translator->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Doa::class)) {
             /** @var Doa $doa */
             $doa = $this->getEntities()->get(Doa::class);
             $this->getEntities()->set(OParent::class, $doa->getParent());
 
             $label = (string)$doa;
-        } else {
-            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

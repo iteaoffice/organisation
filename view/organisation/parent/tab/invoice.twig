@@ -29,7 +29,7 @@
                 <td>{{ translate(invoiceService.parseType(varInvoice.invoice, true)) }}</td>
                 <td>{{ varInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
                 <td>{{ organisationLink(varInvoice.invoice.organisation,'view-admin', 'name') }}</td>
-                <td>{{ varInvoice.amountInvoiced|localizedcurrency('EUR') }}</td>
+                <td>{{ varInvoice.amountInvoiced|currency_decimal }}</td>
                 <td>{{ invoiceService.parseStatus(varInvoice.invoice, true) }}</td>
                 <td>{{ varInvoice.program }}</td>
             </tr>
@@ -40,7 +40,7 @@
                 <td>{{ translate(invoiceService.parseType(extraVarInvoice.invoice, true)) }}</td>
                 <td>{{ extraVarInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
                 <td>{{ organisationLink(extraVarInvoice.invoice.organisation,'view-admin', 'name') }}</td>
-                <td>{{ extraVarInvoice.amountInvoiced|localizedcurrency('EUR') }}</td>
+                <td>{{ extraVarInvoice.amountInvoiced|currency_decimal }}</td>
                 <td>{{ invoiceService.parseStatus(extraVarInvoice.invoice, true) }}</td>
                 <td>{{ extraVarInvoice.program }}</td>
             </tr>

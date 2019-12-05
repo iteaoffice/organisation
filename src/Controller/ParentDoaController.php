@@ -35,30 +35,12 @@ use function file_get_contents;
  */
 final class ParentDoaController extends OrganisationAbstractController
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ParentService $parentService;
+    private EntityManager $entityManager;
+    private GeneralService $generalService;
+    private ContactService $contactService;
+    private ProgramService $programService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ParentService $parentService,

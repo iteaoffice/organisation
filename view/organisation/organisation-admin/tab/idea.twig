@@ -19,7 +19,7 @@
                 <td>{{ ideaLink(idea,'view-admin','name') }}</td>
                 <td>{{ ideaLink(idea,'view-admin','title') }}</td>
                 <td>{{ ideaToolLink(idea.tool,'view-admin','name') }}</td>
-                <td>{{ ideaPartner.dateCreated|time_diff }}</td>
+                <td>{{ ideaPartner.dateCreated|string_date }}</td>
                 <td>{{ translate(ideaPartner.getVisibility(true)) }}</td>
                 <td>{{ ideaPartner.description }}</td>
             </tr>

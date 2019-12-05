@@ -29,8 +29,6 @@ use Zend\Mvc\Plugin\Identity\Identity;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
- * @category    Organisation
- * @package     Controller
  * @method      Identity|Contact identity()
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()

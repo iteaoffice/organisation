@@ -31,18 +31,9 @@ use function trim;
  */
 final class JsonController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private ParentService $parentService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,

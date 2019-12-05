@@ -27,13 +27,8 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Organisation\Navigation\Invokable
  */
-class OrganisationLabel extends AbstractNavigationInvokable
+final class OrganisationLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void
-     */
     public function __invoke(Mvc $page): void
     {
         if ($this->getEntities()->containsKey(Organisation::class)) {

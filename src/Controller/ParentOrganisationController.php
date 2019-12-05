@@ -34,30 +34,12 @@ use Zend\View\Model\ViewModel;
  */
 final class ParentOrganisationController extends OrganisationAbstractController
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ParentService $parentService;
+    private ProjectService $projectService;
+    private AffiliationService $affiliationService;
+    private ContactService $contactService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ParentService $parentService,

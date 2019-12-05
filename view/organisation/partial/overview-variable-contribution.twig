@@ -62,7 +62,7 @@
 
 
 {% set hasSentInvoices = false %}
-{% for parentInvoice in parent.invoice if parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice) %}
+{% for parentInvoice in parent.invoice|filter(parentInvoice => parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice)) -%}
     {% set hasSentInvoices = true %}
 {% endfor %}
 
@@ -81,7 +81,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for parentInvoice in parent.invoice if parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice) %}
+        {% for parentInvoice in parent.invoice|filter(parentInvoice => parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice)) -%}
             <tr>
                 <td>{{ parentInvoice.invoice.invoiceNr }} {{ invoiceLink(parentInvoice.invoice,'download','icon') }}</td>
                 <td>{{ parentInvoice.year }}</td>

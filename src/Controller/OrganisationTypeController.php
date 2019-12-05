@@ -28,14 +28,8 @@ use Zend\View\Model\ViewModel;
  */
 final class OrganisationTypeController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var FormService
-     */
-    private $formService;
+    private OrganisationService $organisationService;
+    private FormService $formService;
 
     public function __construct(OrganisationService $organisationService, FormService $formService)
     {

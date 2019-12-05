@@ -36,34 +36,13 @@ use Zend\View\Model\ViewModel;
  */
 final class ParentFinancialController extends OrganisationAbstractController
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ParentService $parentService;
+    private ContactService $contactService;
+    private ProjectService $projectService;
+    private CountryService $countryService;
+    private OrganisationService $organisationService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ParentService $parentService,

@@ -32,22 +32,10 @@ use Zend\View\Model\ViewModel;
  */
 final class OrganisationFinancialController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private FormService $formService;
+    private GeneralService $generalService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
@@ -60,7 +48,6 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
         $this->generalService = $generalService;
         $this->translator = $translator;
     }
-
 
     public function listAction(): ViewModel
     {

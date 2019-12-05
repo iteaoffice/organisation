@@ -27,10 +27,7 @@ use Zend\Http\Response;
  */
 final class ImageController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
+    private OrganisationService $organisationService;
 
     public function __construct(OrganisationService $organisationService)
     {

@@ -58,58 +58,19 @@ use function sprintf;
  */
 class OrganisationAdminController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var OrganisationSearchService
-     */
-    private $searchService;
-    /**
-     * @var InvoiceService
-     */
-    private $invoiceService;
-    /**
-     * @var InvoiceSearchService
-     */
-    private $invoiceSearchService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var DoaService
-     */
-    private $doaService;
-    /**
-     * @var LoiService
-     */
-    private $loiService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private OrganisationSearchService $searchService;
+    private InvoiceService $invoiceService;
+    private InvoiceSearchService $invoiceSearchService;
+    private ProjectService $projectService;
+    private ContactService $contactService;
+    private AffiliationService $affiliationService;
+    private DoaService $doaService;
+    private LoiService $loiService;
+    private GeneralService $generalService;
+    private EntityManager $entityManager;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
@@ -292,7 +253,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                 foreach ($data['facet'] as $facetField => $values) {
                     $quotedValues = [];
                     foreach ($values as $value) {
-                        $quotedValues[] = \sprintf('"%s"', $value);
+                        $quotedValues[] = (string) $value;
                     }
 
                     $this->invoiceSearchService->addFilterQuery(

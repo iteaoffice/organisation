@@ -7,7 +7,7 @@
  * @category    Admin
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/main for the canonical source repository
@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Organisation\Service;
 
 use Doctrine\ORM\EntityManager;
+use Interop\Container\ContainerInterface;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Form\CreateObject;
 use Zend\Form\Form;
@@ -30,16 +31,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class FormService
 {
-    /**
-     * @var ServiceLocatorInterface
-     */
-    private $container;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private ContainerInterface $container;
+    private EntityManager $entityManager;
 
-    public function __construct(ServiceLocatorInterface $container, EntityManager $entityManager)
+    public function __construct(ContainerInterface $container, EntityManager $entityManager)
     {
         $this->container = $container;
         $this->entityManager = $entityManager;

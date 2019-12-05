@@ -26,18 +26,9 @@ use Zend\View\Model\ViewModel;
  */
 final class NoteController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
@@ -128,7 +119,7 @@ final class NoteController extends OrganisationAbstractController
             if (isset($data['delete'])) {
                 $this->organisationService->delete($note);
                 $this->flashMessenger()->addSuccessMessage(
-                    $this->translator->translate("txt-note-has-been-removed-successfully")
+                    $this->translator->translate('txt-note-has-been-removed-successfully')
                 );
 
                 return $this->redirect()->toRoute(
@@ -144,7 +135,7 @@ final class NoteController extends OrganisationAbstractController
                 $this->organisationService->save($note);
 
                 $this->flashMessenger()->addSuccessMessage(
-                    $this->translator->translate("txt-note-has-successfully-been-updated")
+                    $this->translator->translate('txt-note-has-successfully-been-updated')
                 );
 
                 return $this->redirect()->toRoute(

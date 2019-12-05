@@ -41,38 +41,14 @@ use Zend\View\Model\ViewModel;
  */
 final class ParentController extends OrganisationAbstractController
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var ProgramService
-     */
-    private $programService;
-    /**
-     * @var InvoiceService
-     */
-    private $invoiceService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ParentService $parentService;
+    private OrganisationService $organisationService;
+    private ContactService $contactService;
+    private ProgramService $programService;
+    private InvoiceService $invoiceService;
+    private FormService $formService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ParentService $parentService,
@@ -93,7 +69,6 @@ final class ParentController extends OrganisationAbstractController
         $this->entityManager = $entityManager;
         $this->translator = $translator;
     }
-
 
     public function listAction(): ViewModel
     {

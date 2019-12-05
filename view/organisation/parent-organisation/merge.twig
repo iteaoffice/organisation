@@ -43,7 +43,7 @@
             <td>{{ contactLink(organisation.contact,'view-admin','name') }}</td>
             <td>{{ organisation.affiliation.count() }}</td>
         </tr>
-        {% for otherOrganisation in organisation.parent.parentOrganisation if organisation.id != otherOrganisation.id %}
+        {% for otherOrganisation in organisation.parent.parentOrganisation|filter(otherOrganisation => organisation.id != otherOrganisation.id) -%}
             <tr  {% if otherOrganisation == affiliation.id %}class="table-info"{% endif %}>
                 <td>
                     {% if merge != otherOrganisation.id %}

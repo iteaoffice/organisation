@@ -27,15 +27,12 @@ use Zend\Navigation\Page\Mvc;
  *
  * @package Organisation\Navigation\Invokable
  */
-class OrganisationLabel extends AbstractNavigationInvokable
+final class OrganisationLabel extends AbstractNavigationInvokable
 {
-    /**
-     * @param Mvc $page
-     *
-     * @return void
-     */
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translator->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Organisation::class)) {
             /** @var Organisation $organisation */
             $organisation = $this->getEntities()->get(Organisation::class);
@@ -43,8 +40,6 @@ class OrganisationLabel extends AbstractNavigationInvokable
             $this->getEntities()->set(OParent::class, $organisation->getParent());
             $page->setParams(array_merge($page->getParams(), ['id' => $organisation->getId()]));
             $label = (string)$organisation;
-        } else {
-            $label = $this->translator->translate('txt-nav-view');
         }
         $page->set('label', $label);
     }

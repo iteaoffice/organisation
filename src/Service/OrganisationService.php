@@ -58,17 +58,8 @@ use function trim;
  */
 class OrganisationService extends AbstractService implements SearchUpdateInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-    /**
-     * @var OrganisationSearchService
-     */
+    private ContainerInterface $container;
     private $organisationSearchService;
-    /**
-     * @var TranslatorInterface
-     */
     private $translator;
 
     public function __construct(ContainerInterface $container)
