@@ -33,6 +33,6 @@ final class Type extends AbstractAssertion
     ): bool {
         $this->setPrivilege($privilege);
 
-        return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
+        return $this->rolesHaveAccess('office');
     }
 }

@@ -149,7 +149,7 @@ abstract class AbstractAssertion implements AssertionInterface
         }
 
         foreach ($accessRoles as $role) {
-            if ($role === Access::ACCESS_PUBLIC) {
+            if ($role === 'public') {
                 return true;
             }
             if ($this->hasContact()

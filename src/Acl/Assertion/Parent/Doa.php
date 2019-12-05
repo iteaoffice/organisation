@@ -33,6 +33,6 @@ final class Doa extends AbstractAssertion
     ): bool {
         $this->setPrivilege($privilege);
 
-        return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
+        return $this->rolesHaveAccess('office');
     }
 }

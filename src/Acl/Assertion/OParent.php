@@ -36,7 +36,7 @@ final class OParent extends AbstractAssertion
             case 'view-public':
                 return true;
             default:
-                return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
+                return $this->rolesHaveAccess('office');
         }
     }
 }

@@ -29,6 +29,6 @@ final class Financial extends AbstractAssertion
         ResourceInterface $resource = null,
         $privilege = null
     ): bool {
-        return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
+        return $this->rolesHaveAccess('office');
     }
 }

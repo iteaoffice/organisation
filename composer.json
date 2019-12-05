@@ -33,7 +33,8 @@
     "iteaoffice/affiliation": "^4.1",
     "iteaoffice/project": "^4.1",
     "iteaoffice/event": "^4.1",
-    "iteaoffice/invoice": "^4.1"
+    "iteaoffice/invoice": "^4.1",
+    "iteaoffice/main": "dev-master"
   },
   "autoload": {
     "psr-4": {

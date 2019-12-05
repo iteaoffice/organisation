@@ -65,6 +65,6 @@ final class Organisation extends AbstractAssertion
                 break;
         }
 
-        return $this->rolesHaveAccess(Access::ACCESS_OFFICE);
+        return $this->rolesHaveAccess('office');
     }
 }
