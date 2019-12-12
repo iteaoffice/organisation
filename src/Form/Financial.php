@@ -19,10 +19,14 @@ use Organisation\Entity;
 use Organisation\Entity\OParent;
 use Organisation\Service\OrganisationService;
 use Zend\Form\Form;
+use Zend\Form\Element\Submit;
+use Zend\Form\Element\Radio;
+use Zend\Form\Element\Select;
+use Zend\Form\Element\Text;
+use Zend\Form\Element\Textarea;
 
 /**
  * Class Financial
- *
  * @package Organisation\Form
  */
 final class Financial extends Form
@@ -68,7 +72,7 @@ final class Financial extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Select',
+                'type'       => Select::class,
                 'name'       => 'organisationFinancial',
                 'options'    => [
                     'value_options' => $financialOrganisationValueOptions,
@@ -82,7 +86,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'branch',
                 'options'    => [
                     'label'      => _('txt-branch'),
@@ -121,7 +125,7 @@ final class Financial extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Select',
+                'type'       => Select::class,
                 'name'       => 'contact',
                 'options'    => [
                     'value_options' => $financialContactValueOptions,
@@ -135,7 +139,7 @@ final class Financial extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Radio',
+                'type'       => Radio::class,
                 'name'       => 'omitContact',
                 'options'    => [
                     'value_options' => Entity\Financial::getOmitContactTemplates(),
@@ -148,7 +152,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Textarea',
+                'type'       => Textarea::class,
                 'name'       => 'address',
                 'options'    => [
                     'label' => _('txt-address'),
@@ -162,7 +166,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'zipCode',
                 'options'    => [
                     'label' => _('txt-zip-code'),
@@ -176,7 +180,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'city',
                 'options'    => [
                     'label' => _('txt-city'),
@@ -190,7 +194,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Select',
+                'type'       => Select::class,
                 'name'       => 'country',
                 'options'    => [
                     'value_options' => $countries,
@@ -204,7 +208,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Radio',
+                'type'       => Radio::class,
                 'name'       => 'preferredDelivery',
                 'options'    => [
                     'value_options' => Entity\Financial::getEmailTemplates(),
@@ -217,7 +221,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => 'btn btn-primary',
@@ -227,7 +231,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'delete',
                 'attributes' => [
                     'class' => 'btn btn-danger',
@@ -237,7 +241,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => 'btn btn-warning',

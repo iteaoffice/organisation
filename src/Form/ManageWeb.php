@@ -2,8 +2,6 @@
 /**
  * ITEA Office all rights reserved
  *
- * PHP Version 7
- *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>

@@ -18,16 +18,15 @@ use Organisation\Entity\Type;
 use Organisation\Service\OrganisationService;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
+use Zend\Form\Element\Submit;
+use Zend\Form\Element\MultiCheckbox;
+use Zend\Form\Element\Text;
 
 /**
- * Jield copyright message placeholder.
- *
- * @category    Organisation
- *
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ * Class OrganisationFilter
+ * @package Organisation\Form
  */
-class OrganisationFilter extends Form
+final class OrganisationFilter extends Form
 {
     /**
      * @param OrganisationService $organisationService
@@ -42,10 +41,10 @@ class OrganisationFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
-                'name'       => 'search',
+                'type' => Text::class,
+                'name' => 'search',
                 'attributes' => [
-                    'class'       => 'form-control',
+                    'class' => 'form-control',
                     'placeholder' => _('txt-search'),
                 ],
             ]
@@ -59,87 +58,87 @@ class OrganisationFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\MultiCheckbox',
-                'name'       => 'type',
-                'options'    => [
-                    'inline'        => true,
+                'type' => MultiCheckbox::class,
+                'name' => 'type',
+                'options' => [
+                    'inline' => true,
                     'value_options' => $types,
                 ],
                 'attributes' => [
-                    'label' => _("txt-organisation-type"),
+                    'label' => _('txt-organisation-type'),
                 ],
             ]
         );
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\MultiCheckbox',
-                'name'       => 'options',
-                'options'    => [
-                    'inline'        => true,
+                'type' => MultiCheckbox::class,
+                'name' => 'options',
+                'options' => [
+                    'inline' => true,
                     'value_options' => [
-                        1 => _("txt-active-in-project"),
-                        2 => _("txt-is-parent"),
+                        1 => _('txt-active-in-project'),
+                        2 => _('txt-is-parent'),
                     ],
                 ],
                 'attributes' => [
-                    'label' => _("txt-options-type"),
+                    'label' => _('txt-options-type'),
                 ],
             ]
         );
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\MultiCheckbox',
-                'name'       => 'vatStatus',
-                'options'    => [
-                    'inline'        => true,
+                'type' => MultiCheckbox::class,
+                'name' => 'vatStatus',
+                'options' => [
+                    'inline' => true,
                     'value_options' => Financial::getVatStatusTemplates(),
                 ],
                 'attributes' => [
-                    'label' => _("txt-vat-status"),
+                    'label' => _('txt-vat-status'),
                 ],
             ]
         );
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\MultiCheckbox',
-                'name'       => 'omitContact',
-                'options'    => [
-                    'inline'        => true,
+                'type' => MultiCheckbox::class,
+                'name' => 'omitContact',
+                'options' => [
+                    'inline' => true,
                     'value_options' => Financial::getOmitContactTemplates(),
                 ],
                 'attributes' => [
-                    'label' => _("txt-omit-contact"),
+                    'label' => _('txt-omit-contact'),
                 ],
             ]
         );
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\MultiCheckbox',
-                'name'       => 'requiredPurchaseOrder',
-                'options'    => [
-                    'inline'        => true,
+                'type' => MultiCheckbox::class,
+                'name' => 'requiredPurchaseOrder',
+                'options' => [
+                    'inline' => true,
                     'value_options' => Financial::getRequiredPurchaseOrderTemplates(),
                 ],
                 'attributes' => [
-                    'label' => _("txt-required-purchase-order"),
+                    'label' => _('txt-required-purchase-order'),
                 ],
             ]
         );
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\MultiCheckbox',
-                'name'       => 'email',
-                'options'    => [
-                    'inline'        => true,
+                'type' => MultiCheckbox::class,
+                'name' => 'email',
+                'options' => [
+                    'inline' => true,
                     'value_options' => Financial::getEmailTemplates(),
                 ],
                 'attributes' => [
-                    'label' => _("txt-email"),
+                    'label' => _('txt-email'),
                 ],
             ]
         );
@@ -148,10 +147,10 @@ class OrganisationFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
-                'name'       => 'submit',
+                'type' => Submit::class,
+                'name' => 'submit',
                 'attributes' => [
-                    'id'    => 'submit',
+                    'id' => 'submit',
                     'class' => 'btn btn-primary',
                     'value' => _('txt-filter'),
                 ],
@@ -160,10 +159,10 @@ class OrganisationFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
-                'name'       => 'clear',
+                'type' => Submit::class,
+                'name' => 'clear',
                 'attributes' => [
-                    'id'    => 'cancel',
+                    'id' => 'cancel',
                     'class' => 'btn btn-warning',
                     'value' => _('txt-cancel'),
                 ],

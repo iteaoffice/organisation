@@ -1,4 +1,4 @@
-name: Organisation PHP 7.4 suite
+name: main
 
 on: [push]
 

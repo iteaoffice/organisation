@@ -31,19 +31,13 @@ use function sprintf;
  */
 final class UpdateNotification extends AbstractHelper
 {
-    /**
-     * @var UpdateService
-     */
-    private $updateService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private UpdateService $updateService;
+    private TranslatorInterface $translator;
 
     public function __construct(UpdateService $updateService, TranslatorInterface $translator)
     {
         $this->updateService = $updateService;
-        $this->translator    = $translator;
+        $this->translator = $translator;
     }
 
     public function __invoke(Organisation $organisation): string

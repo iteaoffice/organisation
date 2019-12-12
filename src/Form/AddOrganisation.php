@@ -13,6 +13,9 @@ declare(strict_types=1);
 namespace Organisation\Form;
 
 use Zend\Form\Form;
+use Zend\Form\Element\Submit;
+use Contact\Form\Element\Contact;
+use Organisation\Form\Element\Organisation;
 
 /**
  * Class AddOrganisation
@@ -21,16 +24,13 @@ use Zend\Form\Form;
  */
 final class AddOrganisation extends Form
 {
-    /**
-     * AddOrganisation constructor.
-     */
     public function __construct()
     {
         parent::__construct();
 
         $this->add(
             [
-                'type'       => 'Organisation\Form\Element\Organisation',
+                'type'       => Organisation::class,
                 'name'       => 'organisation',
                 'options'    => [
                     'help-block' => _('txt-parent-add-organisation-organisation-help-block'),
@@ -43,7 +43,7 @@ final class AddOrganisation extends Form
 
         $this->add(
             [
-                'type'       => 'Contact\Form\Element\Contact',
+                'type'       => Contact::class,
                 'name'       => 'contact',
                 'options'    => [
                     'help-block' => _('txt-parent-add-organisation-contact-help-block'),
@@ -57,7 +57,7 @@ final class AddOrganisation extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => 'btn btn-primary',
@@ -67,7 +67,7 @@ final class AddOrganisation extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => 'btn btn-warning',

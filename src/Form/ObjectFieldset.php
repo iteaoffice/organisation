@@ -27,12 +27,9 @@ use Zend\Form\Element;
 use Zend\Form\Element\Radio;
 use Zend\Form\Fieldset;
 
-final class ObjectFieldset extends Fieldset
+class ObjectFieldset extends Fieldset
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager, Entity\AbstractEntity $object)
     {
