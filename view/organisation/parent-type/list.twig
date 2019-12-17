@@ -44,7 +44,7 @@
                 <tbody>
                 {% for type in paginator.getCurrentItems() %}
                     <tr>
-                        <td>{{ parentTypeLink(type, 'view', 'type') }}</td>
+                        <td>{{ parentTypeLink(type, 'view', 'name') }}</td>
                         <td>{{ type.parent.count() }}</td>
                         <td>{{ parentTypeLink(type, 'edit', 'icon') }}</td>
                     </tr>

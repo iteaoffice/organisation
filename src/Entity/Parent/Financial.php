@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace Organisation\Entity\Parent;
 
+use Contact\Entity\Contact;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Organisation\Entity\AbstractEntity;
+use Organisation\Entity\OParent;
 use Zend\Form\Annotation;
 
 /**
@@ -40,27 +43,21 @@ class Financial extends AbstractEntity
     private $id;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="financial", cascade="persist")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
-     * })
      *
-     * @var \Organisation\Entity\OParent
+     * @var OParent
      */
     private $parent;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade="persist", inversedBy="parentFinancial")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
-     * })
+     * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      *
-     * @var \Contact\Entity\Contact
+     * @var Contact
      */
     private $contact;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, inversedBy="parentFinancial")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */
@@ -86,7 +83,7 @@ class Financial extends AbstractEntity
      * @Gedmo\Timestampable(on="create")
      * @Annotation\Exclude()
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateCreated;
     /**
@@ -94,175 +91,100 @@ class Financial extends AbstractEntity
      * @Gedmo\Timestampable(on="create")
      * @Annotation\Exclude()
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateUpdated;
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->getOrganisation()->getOrganisation();
     }
 
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?\Organisation\Entity\Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     *
-     * @return Financial
-     */
-    public function setOrganisation(\Organisation\Entity\Organisation $organisation): Financial
+    public function setOrganisation(?\Organisation\Entity\Organisation $organisation): Financial
     {
         $this->organisation = $organisation;
-
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Financial
-     */
-    public function setId($id): Financial
+    public function setId(?int $id): Financial
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return \Organisation\Entity\OParent
-     */
-    public function getParent()
+    public function getParent(): ?OParent
     {
         return $this->parent;
     }
 
-    /**
-     * @param \Organisation\Entity\OParent $parent
-     *
-     * @return Financial
-     */
-    public function setParent($parent): Financial
+    public function setParent(?OParent $parent): Financial
     {
         $this->parent = $parent;
-
         return $this;
     }
 
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $contact
-     *
-     * @return Financial
-     */
-    public function setContact(\Contact\Entity\Contact $contact): Financial
+    public function setContact(?Contact $contact): Financial
     {
         $this->contact = $contact;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBranch()
+    public function getBranch(): ?string
     {
         return $this->branch;
     }
 
-    /**
-     * @param string $branch
-     *
-     * @return Financial
-     */
-    public function setBranch(string $branch): Financial
+    public function setBranch(?string $branch): Financial
     {
         $this->branch = $branch;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNote(): string
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    /**
-     * @param string $note
-     *
-     * @return Financial
-     */
-    public function setNote(string $note): Financial
+    public function setNote(?string $note): Financial
     {
         $this->note = $note;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated(): \DateTime
+    public function getDateCreated(): ?DateTime
     {
         return $this->dateCreated;
     }
 
-    /**
-     * @param \DateTime $dateCreated
-     *
-     * @return Financial
-     */
-    public function setDateCreated(\DateTime $dateCreated): Financial
+    public function setDateCreated(?DateTime $dateCreated): Financial
     {
         $this->dateCreated = $dateCreated;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateUpdated()
+    public function getDateUpdated(): ?DateTime
     {
         return $this->dateUpdated;
     }
 
-    /**
-     * @param \DateTime $dateUpdated
-     *
-     * @return Financial
-     */
-    public function setDateUpdated(\DateTime $dateUpdated): Financial
+    public function setDateUpdated(?DateTime $dateUpdated): Financial
     {
         $this->dateUpdated = $dateUpdated;
-
         return $this;
     }
 }

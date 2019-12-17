@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Project\Entity\Project;
 use Zend\Form\Annotation;
 
 /**
@@ -46,125 +48,76 @@ class Name extends AbstractEntity
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateCreated;
     /**
      * @ORM\ManyToOne(targetEntity="Project\Entity\Project", inversedBy="organisationName", cascade={"persist"})
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false)
-     * })
+     * @@ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false)
      *
-     * @var \Project\Entity\Project
+     * @var Project
      */
     private $project;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="names", cascade="persist")
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     * })
      *
-     * @var \Organisation\Entity\Organisation
+     * @var Organisation
      */
     private $organisation;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Name
-     */
-    public function setId($id): Name
+    public function setId(?int $id): Name
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Name
-     */
-    public function setName(string $name): Name
+    public function setName(?string $name): Name
     {
         $this->name = $name;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated()
+    public function getDateCreated(): ?DateTime
     {
         return $this->dateCreated;
     }
 
-    /**
-     * @param \DateTime $dateCreated
-     *
-     * @return Name
-     */
-    public function setDateCreated(\DateTime $dateCreated): Name
+    public function setDateCreated(?DateTime $dateCreated): Name
     {
         $this->dateCreated = $dateCreated;
-
         return $this;
     }
 
-    /**
-     * @return \Project\Entity\Project
-     */
-    public function getProject()
+    public function getProject(): ?Project
     {
         return $this->project;
     }
 
-    /**
-     * @param \Project\Entity\Project $project
-     *
-     * @return Name
-     */
-    public function setProject(\Project\Entity\Project $project): Name
+    public function setProject(?Project $project): Name
     {
         $this->project = $project;
-
         return $this;
     }
 
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return Name
-     */
-    public function setOrganisation(Organisation $organisation): Name
+    public function setOrganisation(?Organisation $organisation): Name
     {
         $this->organisation = $organisation;
-
         return $this;
     }
 }

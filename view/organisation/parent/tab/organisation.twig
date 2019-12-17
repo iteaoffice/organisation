@@ -19,7 +19,7 @@
                     {{ parentOrganisationLink(parentOrganisation,'view','organisation') }} {{ parentOrganisationLink(parentOrganisation,'edit','icon') }}
                 </td>
                 <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin', 'name') }}</td>
-                <td>{{ organisationTypeLink(parentOrganisation.organisation.type,'view', 'type') }}</td>
+                <td>{{ organisationTypeLink(parentOrganisation.organisation.type, 'name', 'type') }}</td>
                 <td>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</td>
                 <td>{{ parentOrganisation.affiliation.count() }}</td>
             </tr>

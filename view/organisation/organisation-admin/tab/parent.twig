@@ -14,7 +14,7 @@
         <dt>{{ translate("txt-parent") }}</dt>
         <dd>{{ parentLink(organisation.parent, 'view','parent') }} {{ parentLink(organisation.parent, 'edit','icon') }}</dd>
         <dt>{{ translate("txt-parent-type") }}</dt>
-        <dd>{{ parentTypeLink(organisation.parent.type, 'view','type') }}</dd>
+        <dd>{{ parentTypeLink(organisation.parent.type, 'view','name') }}</dd>
         <dt>{{ translate("txt-aeneas-member-type") }}</dt>
         <dd>{{ translate(organisation.parent.getMemberType(true)) }}</dd>
         <dt>{{ translate("txt-parent-representative") }}</dt>
@@ -37,7 +37,7 @@
         <dt>{{ translate("txt-parent") }}</dt>
         <dd>{{ parentLink(organisation.parentOrganisation.parent, 'view','parent') }} {{ parentLink(organisation.parentOrganisation.parent, 'edit','icon') }}</dd>
         <dt>{{ translate("txt-parent-type") }}</dt>
-        <dd>{{ parentTypeLink(organisation.parentOrganisation.parent.type, 'view','type') }}</dd>
+        <dd>{{ parentTypeLink(organisation.parentOrganisation.parent.type, 'view','name') }}</dd>
         <dt>{{ translate("txt-aeneas-member-type") }}</dt>
         <dd>{{ translate(organisation.parentOrganisation.parent.getMemberType(true)) }}</dd>
         <dt>{{ translate("txt-parent-representative") }}</dt>

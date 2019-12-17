@@ -19,30 +19,5 @@ namespace Organisation\Entity;
  */
 interface EntityInterface
 {
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property);
-
-    /**
-     * @param $property
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function __set($property, $value);
-
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __isset($property);
-
-    /**
-     * @return int
-     */
     public function getId();
 }

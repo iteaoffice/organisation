@@ -13,7 +13,8 @@ namespace Organisation\View\Handler;
 
 use Content\Entity\Content;
 use Content\Service\ArticleService;
-use General\View\Helper\CountryMap;
+use General\View\Handler\AbstractHandler;
+use General\View\Helper\Country\CountryMap;
 use Organisation\Entity\Organisation;
 use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\OrganisationService;
@@ -29,30 +30,20 @@ use Zend\Mvc\Application;
 use Zend\Paginator\Paginator;
 use Zend\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
+use function http_build_query;
+use function in_array;
+use function sprintf;
 
 /**
- * Class ProjectHandler
- *
- * @package Project\View\Handler
+ * Class OrganisationHandler
+ * @package Organisation\View\Handler
  */
 final class OrganisationHandler extends AbstractHandler
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var OrganisationSearchService
-     */
-    private $organisationSearchService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var ArticleService
-     */
-    private $articleService;
+    private OrganisationService $organisationService;
+    private OrganisationSearchService $organisationSearchService;
+    private ProjectService $projectService;
+    private ArticleService $articleService;
 
     public function __construct(
         Application $application,
@@ -134,12 +125,12 @@ final class OrganisationHandler extends AbstractHandler
         return $this->renderer->render(
             'cms/organisation/organisation',
             [
-                'organisation'   => $organisation,
+                'organisation' => $organisation,
                 'projectService' => $this->projectService,
-                'projects'       => $this->projectService->findProjectByOrganisation(
+                'projects' => $this->projectService->findProjectByOrganisation(
                     $organisation
                 ),
-                'map'            => $this->parseOrganisationMap($organisation)
+                'map' => $this->parseOrganisationMap($organisation)
             ]
         );
     }
@@ -152,10 +143,10 @@ final class OrganisationHandler extends AbstractHandler
         $countries = [$organisation->getCountry()];
         $mapOptions = [
             'clickable' => true,
-            'colorMin'  => '#00a651',
-            'colorMax'  => '#005C00',
-            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height'    => '340px',
+            'colorMin' => '#00a651',
+            'colorMax' => '#005C00',
+            'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height' => '340px',
         ];
 
         $countryMap = $this->helperPluginManager->get(CountryMap::class);
@@ -170,15 +161,15 @@ final class OrganisationHandler extends AbstractHandler
         $form = new SearchResult();
         $data = array_merge(
             [
-                'order'     => '',
+                'order' => '',
                 'direction' => '',
-                'query'     => '',
-                'facet'     => [],
+                'query' => '',
+                'facet' => [],
             ],
             $this->request->getQuery()->toArray()
         );
         $searchFields = ['organisation_search', 'country_search', 'organisation_type_search'];
-        $hasTerm = !\in_array($data['query'], ['*', ''], true);
+        $hasTerm = !in_array($data['query'], ['*', ''], true);
 
         if ($this->request->isGet()) {
             $this->organisationSearchService->setSearchForWebsite(
@@ -192,7 +183,7 @@ final class OrganisationHandler extends AbstractHandler
                     $quotedValues = [];
 
                     foreach ($values as $value) {
-                        $quotedValues[] = \sprintf('"%s"', $value);
+                        $quotedValues[] = sprintf('"%s"', $value);
                     }
 
                     $this->organisationSearchService->addFilterQuery(
@@ -223,19 +214,19 @@ final class OrganisationHandler extends AbstractHandler
         return $this->renderer->render(
             'cms/organisation/list',
             [
-                'form'                => $form,
-                'order'               => $data['order'],
-                'direction'           => $data['direction'],
-                'query'               => $data['query'],
-                'badges'              => $form->getBadges(),
-                'arguments'           => \http_build_query($form->getFilteredData()),
-                'paginator'           => $paginator,
-                'page'                => $page,
-                'hasTerm'             => $hasTerm,
+                'form' => $form,
+                'order' => $data['order'],
+                'direction' => $data['direction'],
+                'query' => $data['query'],
+                'badges' => $form->getBadges(),
+                'arguments' => http_build_query($form->getFilteredData()),
+                'paginator' => $paginator,
+                'page' => $page,
+                'hasTerm' => $hasTerm,
                 'organisationService' => $this->organisationService,
-                'route'               => $this->routeMatch->getMatchedRouteName(),
-                'params'              => $this->routeMatch->getParams(),
-                'docRef'              => $this->routeMatch->getParam('docRef')
+                'route' => $this->routeMatch->getMatchedRouteName(),
+                'params' => $this->routeMatch->getParams(),
+                'docRef' => $this->routeMatch->getParam('docRef')
             ]
         );
     }

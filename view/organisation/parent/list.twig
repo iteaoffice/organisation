@@ -57,7 +57,7 @@
                             {{ parentLink(parent, 'view', 'parent') }} {{ parentLink(parent, 'edit', 'icon') }}
                         </td>
                         <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
-                        <td>{{ parentTypeLink(parent.type,'view', 'type') }}</td>
+                        <td>{{ parentTypeLink(parent.type,'view', 'name') }}</td>
                         <td>{{ translate(parent.getMemberType(true)) }}</td>
                         <td>{{ parent.parentOrganisation.count() }}</td>
                     </tr>

@@ -18,47 +18,48 @@ declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
-use Organisation\Entity\Organisation;
+use General\ValueObject\Image\Image;
+use General\ValueObject\Image\ImageDecoration;
+use General\View\Helper\AbstractImage;
 use Organisation\Entity\Update;
-use Zend\View\Helper\ServerUrl;
-use Zend\View\Helper\Url;
 
 /**
  * Class UpdateLogo
  *
  * @package Organisation\View\Helper
  */
-final class UpdateLogo extends ImageAbstract
+final class UpdateLogo extends AbstractImage
 {
     public function __invoke(
         Update $update,
-        int    $width = null
+        int $width = null
     ): string {
         $logo = $update->getLogo();
+        $route = 'image/organisation-update-logo';
 
-        $prefix = 'organisation_update_logo_';
-        $this->setRouter('image/organisation-update-logo');
         if ($logo === null) {
             $logo = $update->getOrganisation()->getLogo()->first();
-            $prefix = 'organisation_logo_';
-            $this->setRouter('image/organisation-logo');
+            $route = 'image/organisation-logo';
         }
 
         if (!$logo) {
             return '';
         }
 
-        $this->classes = [];
+        $linkParams = [];
+        $linkParams['route'] = $route;
+        $linkParams['show'] = ImageDecoration::SHOW_IMAGE;
 
-        $this->addRouterParam('ext', $logo->getContentType()->getExtension());
         $date = $logo->getDateUpdated() ?? $logo->getDateCreated();
-        $this->addRouterParam('last-update', $date->getTimestamp());
-        $this->addRouterParam('id', $logo->getId());
 
-        $this->setImageId($prefix . $logo->getId());
+        $routeParams = [
+            'id' => $logo->getId(),
+            'ext' => $logo->getContentType()->getExtension(),
+            'last-update' => null === $date ? 0 : $date->getTimestamp(),
+        ];
 
-        $this->setWidth($width);
+        $linkParams['routeParams'] = $routeParams;
 
-        return $this->createImageUrl();
+        return $this->parse(Image::fromArray($linkParams));
     }
 }

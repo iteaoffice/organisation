@@ -1,95 +1,92 @@
 <?php
 
 /**
- * ITEA Office all rights reserved
- *
- * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ * @license     https://itea3.org/license.txt proprietary
+ *
+ * @link        http://github.com/iteaoffice/general for the canonical source repository
  */
 
 declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
+use General\ValueObject\Link\Link;
+use General\View\Helper\AbstractLink;
 use Organisation\Acl\Assertion\UpdateAssertion;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Update;
-use RuntimeException;
 
 /**
  * Class UpdateLink
- *
- * @package Organisation\View\Helper
+ * @package General\View\Helper
  */
-class UpdateLink extends AbstractLink
+final class UpdateLink extends AbstractLink
 {
-    /**
-     * @var Update
-     */
-    private $update;
-
     public function __invoke(
         Update $update = null,
         string $action = 'view',
         string $show = 'name',
         Organisation $organisation = null
     ): string {
-        $this->update = $update ?? new Update();
-        $this->setAction($action);
-        $this->setShow($show);
-        $this->organisation = $organisation ?? new Organisation();
-        if ($this->update->isEmpty()) {
-            $this->update->setOrganisation($this->organisation);
-            $this->addRouterParam('organisationId', $this->organisation->getId());
+        $update ??= new Update();
+
+        $routeParams = [];
+        $showOptions = [];
+        if (!$update->isEmpty()) {
+            $routeParams['id'] = $update->getId();
+            $showOptions['name'] = $update->getOrganisation()->parseFullName();
         }
 
-        if (!$this->hasAccess($this->update, UpdateAssertion::class, $this->getAction())) {
+        if ($update->isEmpty() && null !== $organisation) {
+            $update->setOrganisation($organisation);
+            $showOptions['organisationId'] = $organisation->getId();
+        }
+
+        if (!$this->hasAccess($update, UpdateAssertion::class, $action)) {
             return '';
         }
 
-        $this->setShowOptions(
-            [
-                'name' => $this->update->getOrganisation()->parseFullName()
-            ]
-        );
-        $this->addRouterParam('id', $this->update->getId());
-
-        return $this->createLink();
-    }
-
-    public function parseAction(): void
-    {
-        switch ($this->getAction()) {
-            case 'view-admin':
-                $this->setRouter('zfcadmin/organisation/update/view');
-                $this->setText(
-                    sprintf(
-                        $this->translator->translate('txt-view-update-for-%s'),
-                        $this->update->getOrganisation()->parseFullName()
-                    )
-                );
-                break;
+        switch ($action) {
             case 'edit-admin':
-                $this->setRouter('zfcadmin/organisation/update/edit');
-                $this->setText(
-                    sprintf(
-                        $this->translator->translate('txt-edit-update'),
-                        $this->update->getOrganisation()->parseFullName()
-                    )
-                );
+                $linkParams = [
+                    'icon' => 'fa-pencil-square-o',
+                    'route' => 'zfcadmin/organisation/update/edit',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-edit-update')
+                ];
+                break;
+            case 'view-admin':
+                $linkParams = [
+                    'icon' => 'fa-link',
+                    'route' => 'zfcadmin/organisation/update/view',
+                    'text' => $showOptions[$show] ?? $update->getOrganisation()
+                ];
                 break;
             case 'approve':
-                $this->setRouter('zfcadmin/organisation/update/approve');
-                $this->setText($this->translator->translate('txt-approve-update'));
+                $linkParams = [
+                    'icon' => 'fa-thumbs-o-up',
+                    'route' => 'zfcadmin/organisation/update/approve',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-approve-update')
+                ];
                 break;
             case 'edit':
-                $this->setRouter('community/organisation/update');
-                $this->setText($this->translator->translate('txt-update-your-organisation'));
+                $linkParams = [
+                    'icon' => 'fa-pencil-square-o',
+                    'route' => 'community/organisation/update',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-edit-update')
+                ];
                 break;
-            default:
-                throw new RuntimeException(sprintf('%s is an incorrect action for %s', $this->getAction(), __CLASS__));
         }
+
+        $linkParams['action'] = $action;
+        $linkParams['show'] = $show;
+        $linkParams['routeParams'] = $routeParams;
+
+        return $this->parse(Link::fromArray($linkParams));
     }
 }

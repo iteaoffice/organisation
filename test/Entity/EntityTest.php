@@ -41,7 +41,7 @@ class EntityTest extends TestCase
 
             if ($testClass->isInstantiable()) {
                 /** @var AbstractEntity $object */
-                $object = new $className;
+                $object = new $className();
 
                 $this->assertInstanceOf($className, $object);
 
@@ -90,10 +90,9 @@ class EntityTest extends TestCase
             }
         }
 
-
         file_put_contents(
             __DIR__ . '/../../config/language.php',
-            "<?php\n_(\"" . implode("\");\n_(\"", array_unique($labels)) . '");'
+            "<?php\n_('" . implode("');\n_('", array_unique($labels)) . "');\n"
         );
     }
 }

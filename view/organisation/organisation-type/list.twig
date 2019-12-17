@@ -45,7 +45,7 @@
                 <tbody>
                 {% for type in paginator.getCurrentItems() %}
                     <tr>
-                        <td>{{ organisationTypeLink(type, 'view', 'type') }}</td>
+                        <td>{{ organisationTypeLink(type, 'view', 'name') }}</td>
                         <td>{{ type.type }}</td>
                         <td>{{ translate(type.getInvoice(true)) }}</td>
                         <td>{{ organisationTypeLink(type, 'edit', 'icon') }}</td>

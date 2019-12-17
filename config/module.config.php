@@ -1,6 +1,8 @@
 <?php
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use General\View\Factory\ImageHelperFactory;
+use General\View\Factory\LinkHelperFactory;
 use Organisation\Acl;
 use Organisation\Controller;
 use Organisation\Factory;
@@ -11,6 +13,7 @@ use Organisation\Options;
 use Organisation\Search;
 use Organisation\Service;
 use Organisation\View;
+use Zend\Form\ElementFactory;
 use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Zend\Stdlib;
 
@@ -69,9 +72,9 @@ $config = [
             'organisationTypeLink'              => View\Helper\TypeLink::class,
             'organisationLogo'                  => View\Helper\OrganisationLogo::class,
             'organisationNoteLink'              => View\Helper\NoteLink::class,
-            'parentLink'                        => View\Helper\ParentLink::class,
-            'parentOrganisationLink'            => View\Helper\ParentOrganisationLink::class,
-            'parentDoaLink'                     => View\Helper\ParentDoaLink::class,
+            'parentLink'                        => View\Helper\Parent\ParentLink::class,
+            'parentOrganisationLink'            => View\Helper\Parent\OrganisationLink::class,
+            'parentDoaLink'                     => View\Helper\Parent\DoaLink::class,
             'parentTypeLink'                    => View\Helper\ParentTypeLink::class,
             'parentFinancialLink'               => View\Helper\ParentFinancialLink::class,
             'organisationUpdateLink'            => View\Helper\UpdateLink::class,
@@ -89,20 +92,21 @@ $config = [
         ],
         'factories'  => [
             View\Handler\OrganisationHandler::class              => ConfigAbstractFactory::class,
-            View\Helper\OrganisationLink::class                  => View\Factory\ViewHelperFactory::class,
-            View\Helper\TypeLink::class                          => View\Factory\ViewHelperFactory::class,
-            View\Helper\NoteLink::class                          => View\Factory\ViewHelperFactory::class,
-            View\Helper\OrganisationLogo::class                  => View\Factory\ViewHelperFactory::class,
-            View\Helper\ParentLink::class                        => View\Factory\ViewHelperFactory::class,
-            View\Helper\ParentTypeLink::class                    => View\Factory\ViewHelperFactory::class,
-            View\Helper\ParentDoaLink::class                     => View\Factory\ViewHelperFactory::class,
-            View\Helper\ParentFinancialLink::class               => View\Factory\ViewHelperFactory::class,
-            View\Helper\UpdateLink::class                        => View\Factory\ViewHelperFactory::class,
-            View\Helper\UpdateLogo::class                        => View\Factory\ViewHelperFactory::class,
+            View\Helper\OrganisationLink::class                  => LinkHelperFactory::class,
+            View\Helper\TypeLink::class                          => LinkHelperFactory::class,
+            View\Helper\NoteLink::class                          => LinkHelperFactory::class,
+            View\Helper\OrganisationLogo::class                  => ImageHelperFactory::class,
+            View\Helper\Parent\ParentLink::class                        => LinkHelperFactory::class,
+            View\Helper\Parent\TypeLink::class                    => LinkHelperFactory::class,
+            View\Helper\Parent\DoaLink::class                     => LinkHelperFactory::class,
+            View\Helper\Parent\FinancialLink::class               => LinkHelperFactory::class,
+            View\Helper\Parent\OrganisationLink::class            => LinkHelperFactory::class,
+            View\Helper\UpdateLink::class                        => LinkHelperFactory::class,
+            View\Helper\UpdateLogo::class                        => ImageHelperFactory::class,
             View\Helper\UpdateNotification::class                => ConfigAbstractFactory::class,
-            View\Helper\ParentOrganisationLink::class            => View\Factory\ViewHelperFactory::class,
-            View\Helper\OverviewVariableContribution::class      => View\Factory\ViewHelperFactory::class,
-            View\Helper\OverviewExtraVariableContribution::class => View\Factory\ViewHelperFactory::class,
+
+            View\Helper\OverviewVariableContribution::class      => ConfigAbstractFactory::class,
+            View\Helper\OverviewExtraVariableContribution::class => ConfigAbstractFactory::class,
             Form\View\Helper\OrganisationFormElement::class      => ConfigAbstractFactory::class,
             Form\View\Helper\ParentFormElement::class            => ConfigAbstractFactory::class
         ],
@@ -113,8 +117,8 @@ $config = [
             'OParent'      => Form\Element\OParent::class,
         ],
         'factories' => [
-            Form\Element\Organisation::class => \Zend\Form\ElementFactory::class,
-            Form\Element\OParent::class      => \Zend\Form\ElementFactory::class,
+            Form\Element\Organisation::class => ElementFactory::class,
+            Form\Element\OParent::class      => ElementFactory::class,
         ],
     ],
     'service_manager'    => [

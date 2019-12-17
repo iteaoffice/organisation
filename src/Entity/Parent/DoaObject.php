@@ -34,11 +34,9 @@ class DoaObject extends AbstractEntity
     private $id;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Parent\Doa", inversedBy="object", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="doa_id", referencedColumnName="doa_id", nullable=false)
-     * })
      *
-     * @var \Organisation\Entity\Parent\Doa
+     * @var Doa
      */
     private $doa;
     /**
@@ -48,63 +46,36 @@ class DoaObject extends AbstractEntity
      */
     private $object;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return DoaObject
-     */
-    public function setId($id): DoaObject
+    public function setId(?int $id): DoaObject
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return Doa
-     */
-    public function getDoa(): Doa
+    public function getDoa(): ?Doa
     {
         return $this->doa;
     }
 
-    /**
-     * @param Doa $doa
-     *
-     * @return DoaObject
-     */
-    public function setDoa($doa): DoaObject
+    public function setDoa(?Doa $doa): DoaObject
     {
         $this->doa = $doa;
-
         return $this;
     }
 
-    /**
-     * @return resource
-     */
     public function getObject()
     {
         return $this->object;
     }
 
-    /**
-     * @param string $object
-     *
-     * @return DoaObject
-     */
     public function setObject($object): DoaObject
     {
         $this->object = $object;
-
         return $this;
     }
 }

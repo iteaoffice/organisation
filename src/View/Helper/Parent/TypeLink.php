@@ -1,57 +1,63 @@
 <?php
-
 /**
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/general for the canonical source repository
+ * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
 
 declare(strict_types=1);
 
-namespace Organisation\View\Helper;
+namespace Organisation\View\Helper\Parent;
 
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
-use Organisation\Entity\Note;
+use Organisation\Entity\Type;
 
 /**
- * Class NoteLink
- * @package General\View\Helper
+ * Class TypeLink
+ * @package Organisation\View\Helper\Parent
  */
-final class NoteLink extends AbstractLink
+final class TypeLink extends AbstractLink
 {
     public function __invoke(
-        Note $note = null,
+        Type $type = null,
         string $action = 'view',
         string $show = 'name'
     ): string {
-        $note ??= new Note();
+        $type ??= new Type();
 
         $routeParams = [];
         $showOptions = [];
-        if (!$note->isEmpty()) {
-            $routeParams['id'] = $note->getId();
-            $showOptions['name'] = $note->getNote();
+        if (!$type->isEmpty()) {
+            $routeParams['id'] = $type->getId();
+            $showOptions['name'] = $type->getType();
         }
 
         switch ($action) {
             case 'new':
                 $linkParams = [
                     'icon' => 'fa-plus',
-                    'route' => 'zfcadmin/organisation/note/new',
+                    'route' => 'zfcadmin/parent-type/new',
                     'text' => $showOptions[$show]
-                        ?? $this->translator->translate('txt-new-note')
+                        ?? $this->translator->translate('txt-new-organisation-type')
                 ];
                 break;
             case 'edit':
                 $linkParams = [
                     'icon' => 'fa-pencil-square-o',
-                    'route' => 'zfcadmin/organisation/note/edit',
+                    'route' => 'zfcadmin/parent-type/edit',
                     'text' => $showOptions[$show]
-                        ?? $this->translator->translate('txt-edit-note')
+                        ?? $this->translator->translate('txt-edit-organisation-type')
+                ];
+                break;
+            case 'view':
+                $linkParams = [
+                    'icon' => 'fa-link',
+                    'route' => 'zfcadmin/parent-type/view',
+                    'text' => $showOptions[$show] ?? $type->getType()
                 ];
                 break;
         }
