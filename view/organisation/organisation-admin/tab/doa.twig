@@ -59,7 +59,7 @@
             <td>{{ programDoaLink(doa,'view','name') }}</td>
             <td>{{ contactLink(doa.contact,'view-admin','name') }}</td>
             <td>{% if doa.dateSigned %}{{ doa.dateSigned|string_date }}{% endif %}</td>
-            <td>{{ programLink(doa.program,'view-admin') }}</td>
+            <td>{{ programLink(doa.program,'view') }}</td>
             <td>{{ programDoaLink(doa,'download','icon') }} {{ programDoaLink(doa,'replace','icon') }}</td>
         </tr>
     {% endfor %}

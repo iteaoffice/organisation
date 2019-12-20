@@ -107,7 +107,7 @@
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
                     <td>{% if affiliation.project.call.id %}{{ callLink(affiliation.project.call,'view-admin','name') }}{% else %}{{ affiliation.project.call }}
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
-                    <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view-admin','name') }}{% else %}{{ affiliation.project.call.program }}
+                    <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view','name') }}{% else %}{{ affiliation.project.call.program }}
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
                     <td>{% if affiliation.id %}{{ affiliationLink(affiliation,'view-admin','name') }}{% else %}{{ affiliation }}
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
