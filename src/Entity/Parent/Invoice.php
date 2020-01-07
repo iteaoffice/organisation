@@ -14,14 +14,14 @@ namespace Organisation\Entity\Parent;
 
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * Entity for the Partner.
  *
  * @ORM\Table(name="organisation_parent_invoice")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_parent_invoice")
  *
  */

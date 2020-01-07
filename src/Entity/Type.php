@@ -15,23 +15,17 @@ namespace Organisation\Entity;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Event\Entity\Meeting\Cost;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_type")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Type")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_type")
  */
 class Type extends AbstractEntity
 {
-    /**
-     * Constant for a type without invoice.
-     */
     public const NO_INVOICE = 0;
-    /**
-     * Constant for a type with a invoice.
-     */
     public const INVOICE = 1;
 
     public const TYPE_IFC = 1;
@@ -43,23 +37,23 @@ class Type extends AbstractEntity
     public const TYPE_OTHER = 7;
     public const TYPE_UNKNOWN = 8;
 
-    protected static $invoiceTemplates
+    protected static array $invoiceTemplates
         = [
             self::NO_INVOICE => 'txt-invoice',
-            self::INVOICE    => 'txt-no-invoice',
+            self::INVOICE => 'txt-no-invoice',
         ];
     /**
      * @ORM\Column(name="type_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Type("\Zend\Form\Element\Hidden")
+     * @Annotation\Type("\Laminas\Form\Element\Hidden")
      *
      * @var int
      */
     private $id;
     /**
      * @ORM\Column(name="type", type="string", nullable=false, unique=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)
      *
@@ -68,7 +62,7 @@ class Type extends AbstractEntity
     private $type;
     /**
      * @ORM\Column(name="description", type="string", nullable=false, unique=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)
      *
@@ -77,7 +71,7 @@ class Type extends AbstractEntity
     private $description;
     /**
      * @ORM\Column(type="smallint",nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"invoiceTemplates"})
      * @Annotation\Attributes({"label":"txt-invoice"})
      *
@@ -159,11 +153,6 @@ class Type extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @param bool $textual
-     *
-     * @return int|string
-     */
     public function getInvoice(bool $textual = false)
     {
         if ($textual) {
@@ -180,9 +169,6 @@ class Type extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Cost[]
-     */
     public function getMeetingCost()
     {
         return $this->meetingCost;
@@ -195,9 +181,6 @@ class Type extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return Organisation[]
-     */
     public function getOrganisation()
     {
         return $this->organisation;

@@ -16,14 +16,14 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Project\Entity\Project;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * Organisation Name
  *
  * @ORM\Table(name="organisation_name")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_name")
  */
 class Name extends AbstractEntity
@@ -38,7 +38,7 @@ class Name extends AbstractEntity
     private $id;
     /**
      * @ORM\Column(name="name", type="string", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation-name","help-block":"txt-organisation-name-help-block"})
      *
      * @var string

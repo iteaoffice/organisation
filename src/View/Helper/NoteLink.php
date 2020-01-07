@@ -32,7 +32,7 @@ final class NoteLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$note->isEmpty()) {
+        if (! $note->isEmpty()) {
             $routeParams['id'] = $note->getId();
             $showOptions['name'] = $note->getNote();
         }

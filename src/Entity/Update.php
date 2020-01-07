@@ -15,13 +15,10 @@ namespace Organisation\Entity;
 use Contact\Entity\Contact;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Form\Annotation;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Form\Annotation;
 
 /**
- * Organisation update history
- *
  * @ORM\Table(name="organisation_update")
  * @ORM\Entity()
  * @Annotation\Name("organisation_update")
@@ -80,7 +77,7 @@ class Update extends AbstractEntity
     private $logo;
     /**
      * @ORM\Column(name="description", type="text", length=65535, nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Textarea")
+     * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({
      *     "label":"txt-organisation-description-label",
      *     "help-block":"txt-organisation-description-help-block"
@@ -106,9 +103,11 @@ class Update extends AbstractEntity
      */
     private $dateApproved;
 
-    /**
-     * @return int
-     */
+    public function isApproved(): bool
+    {
+        return null !== $this->dateApproved;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

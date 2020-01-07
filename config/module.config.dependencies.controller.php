@@ -31,8 +31,8 @@ use Organisation\Controller;
 use Organisation\Service;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 
 return [
     ConfigAbstractFactory::class => [

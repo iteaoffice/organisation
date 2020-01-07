@@ -15,7 +15,7 @@ namespace Organisation\InputFilter\Parent;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator;
 use Organisation\Entity\Parent\Type;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Class TypeFilter

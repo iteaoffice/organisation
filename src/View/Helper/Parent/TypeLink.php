@@ -14,7 +14,7 @@ namespace Organisation\View\Helper\Parent;
 
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
-use Organisation\Entity\Type;
+use Organisation\Entity\Parent\Type;
 
 /**
  * Class TypeLink
@@ -31,7 +31,7 @@ final class TypeLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$type->isEmpty()) {
+        if (! $type->isEmpty()) {
             $routeParams['id'] = $type->getId();
             $showOptions['name'] = $type->getType();
         }
@@ -42,7 +42,7 @@ final class TypeLink extends AbstractLink
                     'icon' => 'fa-plus',
                     'route' => 'zfcadmin/parent-type/new',
                     'text' => $showOptions[$show]
-                        ?? $this->translator->translate('txt-new-organisation-type')
+                        ?? $this->translator->translate('txt-new-parent-type')
                 ];
                 break;
             case 'edit':
@@ -50,7 +50,7 @@ final class TypeLink extends AbstractLink
                     'icon' => 'fa-pencil-square-o',
                     'route' => 'zfcadmin/parent-type/edit',
                     'text' => $showOptions[$show]
-                        ?? $this->translator->translate('txt-edit-organisation-type')
+                        ?? $this->translator->translate('txt-edit-parent-type')
                 ];
                 break;
             case 'view':

@@ -25,8 +25,8 @@ use Event\Entity\Registration;
 use General\Entity\Country;
 use Organisation\Entity;
 use Project\Repository\Project;
-use Zend\Stdlib\Parameters;
-use Zend\Validator\EmailAddress;
+use Laminas\Stdlib\Parameters;
+use Laminas\Validator\EmailAddress;
 use function array_key_exists;
 use function asort;
 use function in_array;
@@ -311,7 +311,7 @@ class Organisation extends EntityRepository
         $queryBuilder->distinct('organisation_entity_organisation.id');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
 
-        if (!$onlyMain) {
+        if (! $onlyMain) {
             $queryBuilder->leftJoin('organisation_entity_organisation.names', 'organisation_entity_name');
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->orX(
@@ -376,7 +376,7 @@ class Organisation extends EntityRepository
         $queryBuilder->distinct('organisation_entity_organisation.id');
         $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
 
-        if (!$onlyMain) {
+        if (! $onlyMain) {
             $queryBuilder->leftJoin('organisation_entity_organisation.names', 'organisation_entity_name');
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->orX(

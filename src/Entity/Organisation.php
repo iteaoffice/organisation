@@ -26,12 +26,12 @@ use News\Entity\Magazine\Article;
 use Program\Entity\Call\Doa;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  * @Annotation\Instance("Organisation\Entity\Organisation")
  */
@@ -48,7 +48,7 @@ class Organisation extends AbstractEntity
     private $id;
     /**
      * @ORM\Column(name="organisation", type="string", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation-name","help-block":"txt-organisation-name-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-organisation-placeholder"})
      *
@@ -317,7 +317,7 @@ class Organisation extends AbstractEntity
 
     public function hasLogo(): bool
     {
-        return null !== $this->logo && !$this->logo->isEmpty();
+        return null !== $this->logo && ! $this->logo->isEmpty();
     }
 
     public function isParent(): bool
@@ -332,7 +332,14 @@ class Organisation extends AbstractEntity
 
     public function hasDescription(): bool
     {
-        return null !== $this->description;
+        return null !== $this->description && ! empty($this->description->getDescription());
+    }
+
+    public function hasPendingUpdate(): bool
+    {
+        return ! $this->updates->filter(
+            fn (Update $update) => ! $update->isApproved()
+        )->$this->isEmpty();
     }
 
     public function __toString(): string

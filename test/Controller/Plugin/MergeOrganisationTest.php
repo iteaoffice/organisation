@@ -44,8 +44,8 @@ use Program\Entity\Doa;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
-use Zend\I18n\Translator\Translator;
-use Zend\Stdlib\DispatchableInterface;
+use Laminas\I18n\Translator\Translator;
+use Laminas\Stdlib\DispatchableInterface;
 use function in_array;
 
 /**

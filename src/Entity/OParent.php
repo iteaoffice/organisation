@@ -16,14 +16,14 @@ use Contact\Entity\Contact;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * Entity for the Organisation.
  *
  * @ORM\Table(name="organisation_parent")
  * @ORM\Entity(repositoryClass="Organisation\Repository\OParent")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_parent")
  */
 class OParent extends AbstractEntity
@@ -44,21 +44,21 @@ class OParent extends AbstractEntity
     public const CRITERION_C_CHAMBER = 1;
     public const CRITERION_FREE_RIDER = 2;
 
-    protected static $memberTypeTemplates
+    protected static array $memberTypeTemplates
         = [
             self::MEMBER_TYPE_NO_MEMBER => 'txt-no-member',
             self::MEMBER_TYPE_MEMBER    => 'txt-member',
             self::MEMBER_TYPE_APPLICANT => 'txt-applicant-member',
         ];
 
-    protected static $epossMemberTypeTemplates
+    protected static array $epossMemberTypeTemplates
         = [
             self::EPOSS_MEMBER_TYPE_NO_MEMBER  => 'txt-not-eposs-member',
             self::EPOSS_MEMBER_TYPE_MEMBER     => 'txt-eposs-member',
             self::EPOSS_MEMBER_TYPE_DOA_SIGNER => 'txt-eposs-doa-signer',
         ];
 
-    protected static $artemisiaMemberTypeTemplates
+    protected static array $artemisiaMemberTypeTemplates
         = [
             self::ARTEMISIA_MEMBER_TYPE_NO_MEMBER  => 'txt-not-artemisia-member',
             self::ARTEMISIA_MEMBER_TYPE_MEMBER     => 'txt-artemisia-member',
@@ -70,7 +70,7 @@ class OParent extends AbstractEntity
      * @ORM\Column(name="parent_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Type("Zend\Form\Element\Hidden")
+     * @Annotation\Type("Laminas\Form\Element\Hidden")
      *
      * @var int
      */
@@ -109,7 +109,7 @@ class OParent extends AbstractEntity
     private $type;
     /**
      * @ORM\Column(name="member_type", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"memberTypeTemplates"})
      * @Annotation\Attributes({"label":"txt-member-type"})
      * @Annotation\Options({"help-block":"txt-member-type-help-block"})
@@ -119,7 +119,7 @@ class OParent extends AbstractEntity
     private $memberType;
     /**
      * @ORM\Column(name="eposs_member_type", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"epossMemberTypeTemplates"})
      * @Annotation\Attributes({"label":"txt-eposs-member-type"})
      * @Annotation\Options({"help-block":"txt-is-eposs-member-type-help-block"})
@@ -129,7 +129,7 @@ class OParent extends AbstractEntity
     private $epossMemberType;
     /**
      * @ORM\Column(name="artemisia_member_type", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"artemisiaMemberTypeTemplates"})
      * @Annotation\Attributes({"label":"txt-artemisia-member-type"})
      * @Annotation\Options({"help-block":"txt-is-artemisia-member-type-help-block"})
@@ -171,7 +171,7 @@ class OParent extends AbstractEntity
     private $dateCreated;
     /**
      * @ORM\Column(name="date_parent_type_update", type="datetime", nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Date")
+     * @Annotation\Type("Laminas\Form\Element\Date")
      * @Annotation\Attributes({"label":"txt-date-parent-type-update-label"})
      * @Annotation\Options({"help-block":"txt-date-parent-type-update-help-block"})
      *
@@ -188,7 +188,7 @@ class OParent extends AbstractEntity
     private $dateUpdated;
     /**
      * @ORM\Column(name="date_end", type="datetime", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Date")
+     * @Annotation\Type("\Laminas\Form\Element\Date")
      * @Annotation\Options({"label":"txt-parent-date-end-label"})
      * @Annotation\Options({"help-block":"txt-parent-date-end-help-block"})
      *

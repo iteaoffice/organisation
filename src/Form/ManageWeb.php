@@ -16,11 +16,11 @@ namespace Organisation\Form;
 
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Web;
-use Zend\Form\Element;
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
-use Zend\Form\Element\Submit;
-use Zend\Form\Element\Checkbox;
+use Laminas\Form\Element;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\Checkbox;
 
 final class ManageWeb extends Form
 {

@@ -18,7 +18,7 @@ namespace Organisation\Factory;
 
 use Interop\Container\ContainerInterface;
 use Organisation\Options\ModuleOptions;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**
  * Class ModuleOptionsFactory

@@ -14,12 +14,12 @@ namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
 use Organisation\Entity;
-use Zend\Form\Element;
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\File\ImageSize;
-use Zend\Validator\File\MimeType;
-use Zend\Validator\File\Size;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\File\ImageSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\Validator\File\Size;
 
 /**
  * Class UpdateForm

@@ -16,12 +16,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Entity\OParent;
 use Program\Entity\Program;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_parent_invoice_extra")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_parent_invoice_extra")
  */
 class InvoiceExtra extends AbstractEntity

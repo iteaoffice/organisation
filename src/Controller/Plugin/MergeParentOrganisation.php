@@ -20,7 +20,7 @@ namespace Organisation\Controller\Plugin;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Organisation\Entity\Parent\Organisation;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Class MergeOrganisation

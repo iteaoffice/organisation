@@ -15,8 +15,8 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use Organisation\Entity\Organisation;
 use Organisation\Repository\Organisation as OrganisationRepository;
-use Zend\Form\Element;
-use Zend\Form\Form;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
 
 /**
  * Class OrganisationMerge

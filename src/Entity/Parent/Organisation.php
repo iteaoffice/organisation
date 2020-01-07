@@ -17,14 +17,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Entity\OParent;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * Entity for the Parent Organisation.
  *
  * @ORM\Table(name="organisation_parent_organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Parent\Organisation")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_parent_organisation")
  */
 class Organisation extends AbstractEntity
@@ -33,7 +33,7 @@ class Organisation extends AbstractEntity
      * @ORM\Column(name="parent_organisation_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Type("Zend\Form\Element\Hidden")
+     * @Annotation\Type("Laminas\Form\Element\Hidden")
      * @var int
      */
     private $id;

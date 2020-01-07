@@ -16,9 +16,9 @@ use Admin\Entity\Access;
 use Interop\Container\ContainerInterface;
 use Organisation\Entity\Organisation as OrganisationEntity;
 use Organisation\Service\OrganisationService;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
-use Zend\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Class Organisation.
@@ -46,7 +46,7 @@ final class Organisation extends AbstractAssertion
         $this->setPrivilege($privilege);
         $id = $this->getId();
 
-        if (!$organisation instanceof OrganisationEntity && null !== $id) {
+        if (! $organisation instanceof OrganisationEntity && null !== $id) {
             $organisation = $this->organisationService->findOrganisationById((int)$id);
         }
 

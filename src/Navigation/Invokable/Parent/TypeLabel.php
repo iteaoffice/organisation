@@ -19,7 +19,7 @@ namespace Organisation\Navigation\Invokable\Parent;
 
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
 use Organisation\Entity\Parent\Type;
-use Zend\Navigation\Page\Mvc;
+use Laminas\Navigation\Page\Mvc;
 
 /**
  * Class PartnerTypeLabel

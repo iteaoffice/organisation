@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Organisation;
 
-use Zend\Console\Adapter\AdapterInterface;
-use Zend\ModuleManager\Feature;
+use Laminas\Console\Adapter\AdapterInterface;
+use Laminas\ModuleManager\Feature;
 
 /**
  * Class Module

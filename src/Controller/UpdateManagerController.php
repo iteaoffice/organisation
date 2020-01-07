@@ -13,43 +13,28 @@ declare(strict_types=1);
 namespace Organisation\Controller;
 
 use General\Service\GeneralService;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Validator\File\ImageSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\ViewModel;
 use Organisation\Entity\Update;
 use Organisation\Entity\UpdateLogo;
 use Organisation\Service\FormService;
 use Organisation\Service\UpdateService;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Validator\File\ImageSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\ViewModel;
 
 /**
  * Class UpdateManagerController
  *
  * @package Organisation\Controller
  */
-class UpdateManagerController extends OrganisationAbstractController
+final class UpdateManagerController extends OrganisationAbstractController
 {
-    /**
-     * @var UpdateService
-     */
-    private $updateService;
-
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-
-    /**
-     * @var FormService
-     */
-    private $formService;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private UpdateService $updateService;
+    private GeneralService $generalService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         UpdateService $updateService,
@@ -127,7 +112,7 @@ class UpdateManagerController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $logo = $update->getLogo();
                     if ($logo === null) {
                         $logo = new UpdateLogo();
@@ -162,7 +147,7 @@ class UpdateManagerController extends OrganisationAbstractController
         return new ViewModel(
             [
                 'update' => $update,
-                'form'   => $form,
+                'form' => $form,
             ]
         );
     }

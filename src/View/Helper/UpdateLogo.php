@@ -42,13 +42,14 @@ final class UpdateLogo extends AbstractImage
             $route = 'image/organisation-logo';
         }
 
-        if (!$logo) {
+        if (! $logo) {
             return '';
         }
 
         $linkParams = [];
         $linkParams['route'] = $route;
         $linkParams['show'] = ImageDecoration::SHOW_IMAGE;
+        $linkParams['width'] = $width;
 
         $date = $logo->getDateUpdated() ?? $logo->getDateCreated();
 

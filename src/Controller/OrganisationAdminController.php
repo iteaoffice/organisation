@@ -38,15 +38,15 @@ use Project\Service\ProjectService;
 use Search\Form\SearchResult;
 use Search\Paginator\Adapter\SolariumPaginator;
 use Solarium\QueryType\Select\Query\Query as SolariumQuery;
-use Zend\Form\Fieldset;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Paginator\Paginator;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Validator\File\ImageSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\ViewModel;
+use Laminas\Form\Fieldset;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Validator\File\ImageSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\ViewModel;
 use function http_build_query;
 use function implode;
 use function sprintf;
@@ -328,7 +328,7 @@ class OrganisationAdminController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $logo = new Logo();
                     $logo->setOrganisation($organisation);
                     $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));
@@ -375,7 +375,7 @@ class OrganisationAdminController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
         $form = $this->formService->prepare($organisation, $data);
 
-        if (!$this->organisationService->canDeleteOrganisation($organisation)) {
+        if (! $this->organisationService->canDeleteOrganisation($organisation)) {
             $form->remove('delete');
         }
 
@@ -409,9 +409,9 @@ class OrganisationAdminController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $logo = $organisation->getLogo()->first();
-                    if (!$logo) {
+                    if (! $logo) {
                         // Create a new logo element
                         $logo = new Logo();
                         $logo->setOrganisation($organisation);
@@ -516,7 +516,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                 }
 
                 //Handle the new web (if provided)
-                if (!empty($data['web'])) {
+                if (! empty($data['web'])) {
                     $web = new Web();
                     $web->setOrganisation($organisation);
                     $web->setWeb($data['web']);
@@ -574,7 +574,7 @@ class OrganisationAdminController extends OrganisationAbstractController
                 $affiliation = new Affiliation();
                 $affiliation->setProject($project);
                 $affiliation->setOrganisation($organisation);
-                if (!empty($branch)) {
+                if (! empty($branch)) {
                     $affiliation->setBranch($branch);
                 }
                 $affiliation->setContact($contact);

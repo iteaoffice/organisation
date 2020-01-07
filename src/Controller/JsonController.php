@@ -18,9 +18,9 @@ use Organisation\Entity\Financial;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Throwable;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\View\Model\JsonModel;
-use Zend\View\Model\ViewModel;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\ViewModel;
 use function sprintf;
 use function trim;
 

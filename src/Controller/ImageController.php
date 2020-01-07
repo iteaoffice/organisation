@@ -18,7 +18,7 @@ namespace Organisation\Controller;
 use Organisation\Entity\Logo;
 use Organisation\Entity\UpdateLogo;
 use Organisation\Service\OrganisationService;
-use Zend\Http\Response;
+use Laminas\Http\Response;
 
 /**
  * Class ImageController

@@ -31,7 +31,7 @@ final class TypeLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$type->isEmpty()) {
+        if (! $type->isEmpty()) {
             $routeParams['id'] = $type->getId();
             $showOptions['name'] = $type->getType();
             $showOptions['description'] = $type->getDescription();

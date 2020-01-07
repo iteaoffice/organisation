@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Organisation\InputFilter;
 
 use Organisation\Entity\Organisation;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Class InvolvedSelect

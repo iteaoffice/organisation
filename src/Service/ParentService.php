@@ -392,7 +392,7 @@ class ParentService extends AbstractService
             $call = $affiliation->getProject()->getCall();
 
             //Initialize the array
-            if (!array_key_exists($call->getId(), $projects)) {
+            if (! array_key_exists($call->getId(), $projects)) {
                 $projects[$call->getId()]['affiliation'] = [];
                 $projects[$call->getId()]['call'] = $call;
                 $projects[$call->getId()]['totalFunding'] = 0;
@@ -434,7 +434,7 @@ class ParentService extends AbstractService
     public function parseInvoiceFactor(Entity\OParent $parent, Program $program): float
     {
         //If the invoice method is based on the METHOD::METHOD_FUNDING
-        if (!$program->getInvoiceMethod()->isEmpty()
+        if (! $program->getInvoiceMethod()->isEmpty()
             && $program->getInvoiceMethod()->first()->getId() === Method::METHOD_FUNDING
         ) {
             if ($parent->isMember() || $this->hasDoaForProgram($parent, $program)) {
@@ -449,7 +449,7 @@ class ParentService extends AbstractService
         }
 
         //If the organisation is member of any other organisation we will not invoice
-        if (!$this->hasDoaForProgram($parent, $program) || $this->hasOtherMemberships($parent)) {
+        if (! $this->hasDoaForProgram($parent, $program) || $this->hasOtherMemberships($parent)) {
             return 0;
         }
 
@@ -496,7 +496,7 @@ class ParentService extends AbstractService
             $year
         ) as $affiliation) {
             //Skip the affiliations which are not in the $include affiliations table
-            if (null !== $includeAffiliations && !in_array($affiliation, $includeAffiliations, true)) {
+            if (null !== $includeAffiliations && ! in_array($affiliation, $includeAffiliations, true)) {
                 continue;
             }
 
@@ -601,7 +601,7 @@ class ParentService extends AbstractService
             case null !== $parent->getDateEnd():
                 $errors[] = 'Parent is de-activated';
                 break;
-            case !$autoGenerate && !empty($parent->getFinancial()) && $parent->getFinancial()->count() !== 1:
+            case ! $autoGenerate && ! empty($parent->getFinancial()) && $parent->getFinancial()->count() !== 1:
                 $errors[] = 'More than 1 financial organisation known';
                 break;
             default:
@@ -619,7 +619,7 @@ class ParentService extends AbstractService
                     }
 
                     if (null !== $financial->getOrganisation()->getFinancial()
-                        && !empty(
+                        && ! empty(
                             $financial->getOrganisation()->getFinancial()->getVat()
                         )
                         && $financial->getOrganisation()->getFinancial()->getVatStatus()

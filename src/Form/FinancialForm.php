@@ -15,10 +15,10 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use General\Entity\VatType;
 use Organisation\Entity;
-use Zend\Form\Form;
-use Zend\Form\Element\Submit;
-use Zend\Form\Element\Csrf;
-use Zend\Form\Element\Select;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\Csrf;
+use Laminas\Form\Element\Select;
 
 /**
  * Class FinancialForm

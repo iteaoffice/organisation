@@ -16,9 +16,9 @@ use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Organisation\Entity;
 use Program\Entity\Program;
-use Zend\Form\Element\MultiCheckbox;
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
+use Laminas\Form\Element\MultiCheckbox;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
 
 /**
  * Class ParentFilter
@@ -37,7 +37,7 @@ final class ParentFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => 'Laminas\Form\Element\Text',
                 'name'       => 'search',
                 'attributes' => [
                     'class'       => 'form-control',
@@ -129,7 +129,7 @@ final class ParentFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => 'Laminas\Form\Element\Submit',
                 'name'       => 'submit',
                 'attributes' => [
                     'id'    => 'submit',
@@ -141,7 +141,7 @@ final class ParentFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => 'Laminas\Form\Element\Submit',
                 'name'       => 'clear',
                 'attributes' => [
                     'id'    => 'cancel',

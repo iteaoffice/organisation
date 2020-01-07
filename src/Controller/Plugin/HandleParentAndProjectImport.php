@@ -159,7 +159,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
          * Go over all elements and check if the required elements are present
          */
         foreach ($minimalRequiredElements as $element) {
-            if (!\in_array($element, $this->header, true)) {
+            if (! \in_array($element, $this->header, true)) {
                 $this->errors[] = sprintf('Element %s is missing in the file', $element);
             }
         }
@@ -194,7 +194,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 }
             }
 
-            if (!empty($content[$this->headerKeys['Member Type']])) {
+            if (! empty($content[$this->headerKeys['Member Type']])) {
                 //Try to find the status
                 $type = $this->parentService->findParentTypeByName($content[$this->headerKeys['Member Type']]);
 
@@ -328,7 +328,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //First iterate over the organisations in the project to see if we find an organisation with the $legalName in the country
             foreach ($project->getOrganisationName() as $organisationName) {
-                if (!$organisation
+                if (! $organisation
                     && $legalName === $organisationName->getOrganisation()->getOrganisation()
                     && $organisationName->getOrganisation()->getCountry()->getId() === $country->getId()
                 ) {
@@ -344,7 +344,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
 
             //Imagine we found not organisation, this means that the organisation is not yet in the project. We need to dig further
-            if (!$organisation) {
+            if (! $organisation) {
                 //Try to find the organisation somewhere in the database
                 $organisations = $this->organisationService->findOrganisationsByNameCountry(
                     $legalName,
@@ -355,14 +355,14 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 //We now might find more than organisation, try to find one which has a parent
                 /** @var Organisation $anyOrganisation */
                 foreach ($organisations as $anyOrganisation) {
-                    if (!$organisation && $anyOrganisation->hasParent()) {
+                    if (! $organisation && $anyOrganisation->hasParent()) {
                         $organisation = $anyOrganisation;
                         $parentOrganisation = $anyOrganisation->getParentOrganisation();
                     }
                 }
 
                 //if we still cannot find one, just take the first one.
-                if (!$organisation) {
+                if (! $organisation) {
                     $organisation = $this->organisationService->findOrganisationByNameCountry(
                         $legalName,
                         $country,
@@ -372,7 +372,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             //if we still have not found one, then create one.
-            if (!$organisation) {
+            if (! $organisation) {
                 $organisation = $this->createOrganisation(
                     $legalName,
                     $country
@@ -380,7 +380,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             //Now, if the organisation has not parent
-            if (!$organisation->hasParent()) {
+            if (! $organisation->hasParent()) {
                 //Try if we can find a parent for the organisation
                 $parent = $this->parentService->findParentByOrganisationName($parentName);
 
@@ -413,12 +413,12 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //We have a parent organisationw (either created not), lets see if we can find the project in the list
             foreach ($parentOrganisation->getAffiliation() as $existingAffiliation) {
-                if (!$affiliation && $existingAffiliation->getProject()->getId() === $project->getId()) {
+                if (! $affiliation && $existingAffiliation->getProject()->getId() === $project->getId()) {
                     $affiliation = $existingAffiliation;
                 }
             }
 
-            if (!$affiliation) {
+            if (! $affiliation) {
                 $affiliation = new Affiliation();
                 $affiliation->setOrganisation($parentOrganisation->getOrganisation()); //Keep this for BC
                 $affiliation->setParentOrganisation($parentOrganisation);
@@ -429,7 +429,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             //Try to find the funding, or create if cannot be found
             $funding = $affiliation->getFunded()->first();
 
-            if (!$funding) {
+            if (! $funding) {
                 $funding = new Funded();
                 $funding->setAffiliation($affiliation);
             }
@@ -455,12 +455,12 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             //Store the name of the organisation in the organisation table per project
             $organisationNameStored = false;
             foreach ($organisation->getNames() as $name) {
-                if (!$organisationNameStored && $name->getProject()->getId() === $project->getId()) {
+                if (! $organisationNameStored && $name->getProject()->getId() === $project->getId()) {
                     $organisationNameStored = true;
                 }
             }
 
-            if (!$organisationNameStored) {
+            if (! $organisationNameStored) {
                 $organisationName = new Name();
                 $organisationName->setName($content[$this->headerKeys['Legal Name']]);
                 $organisationName->setProject($project);
@@ -515,7 +515,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
         $hasDoa = $this->parentService->hasDoaForProgram($parent, $program);
 
-        if ($ecselDoa && !$hasDoa) {
+        if ($ecselDoa && ! $hasDoa) {
             $doa = new Doa();
             $doa->setProgram($program);
             $doa->setParent($parent);

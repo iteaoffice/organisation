@@ -15,8 +15,8 @@ namespace Organisation\Form;
 use Organisation\Entity\AbstractEntity;
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
-use Zend\Form\Form;
-use Zend\Form\Element;
+use Laminas\Form\Form;
+use Laminas\Form\Element;
 
 /**
  * Class CreateObject

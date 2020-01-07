@@ -25,7 +25,7 @@ class Web extends AbstractEntity
     public const NOT_MAIN = 0;
     public const MAIN = 1;
 
-    protected static $mainTemplates
+    protected static array $mainTemplates
         = [
             self::NOT_MAIN => 'txt-not-main-web-address',
             self::MAIN     => 'txt-main-web-address',

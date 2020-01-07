@@ -20,12 +20,12 @@ use Organisation\Entity\UpdateLogo;
 use Organisation\Form\UpdateForm;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
-use Zend\Http\Request;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Validator\File\ImageSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Validator\File\ImageSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\ViewModel;
 use function sprintf;
 
 /**
@@ -93,7 +93,7 @@ final class UpdateController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $logo = new UpdateLogo();
                     $logo->setUpdate($update);
                     $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));

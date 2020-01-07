@@ -25,9 +25,9 @@ use Organisation\Form;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class ParentFinancialController

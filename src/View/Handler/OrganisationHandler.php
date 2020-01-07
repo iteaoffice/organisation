@@ -13,6 +13,7 @@ namespace Organisation\View\Handler;
 
 use Content\Entity\Content;
 use Content\Service\ArticleService;
+use General\ValueObject\Link\LinkDecoration;
 use General\View\Handler\AbstractHandler;
 use General\View\Helper\Country\CountryMap;
 use Organisation\Entity\Organisation;
@@ -23,12 +24,12 @@ use Project\Service\ProjectService;
 use Search\Form\SearchResult;
 use Search\Paginator\Adapter\SolariumPaginator;
 use Solarium\QueryType\Select\Query\Query as SolariumQuery;
-use Zend\Authentication\AuthenticationService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Application;
-use Zend\Paginator\Paginator;
-use Zend\View\HelperPluginManager;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Application;
+use Laminas\Paginator\Paginator;
+use Laminas\View\HelperPluginManager;
 use ZfcTwig\View\TwigRenderer;
 use function http_build_query;
 use function in_array;
@@ -87,13 +88,13 @@ final class OrganisationHandler extends AbstractHandler
                 $this->getHeadTitle()->append($organisation->getOrganisation());
 
                 $organisationLink = $this->helperPluginManager->get(OrganisationLink::class);
-                $this->getHeadMeta()->setProperty('og:type', $this->translator->translate("txt-organisation"));
+                $this->getHeadMeta()->setProperty('og:type', $this->translator->translate('txt-organisation'));
                 $this->getHeadMeta()->setProperty('og:title', $organisation->getOrganisation());
-                $this->getHeadMeta()->setProperty('og:url', $organisationLink($organisation, 'view', 'social'));
+                $this->getHeadMeta()->setProperty('og:url', $organisationLink($organisation, 'view', LinkDecoration::SHOW_RAW));
 
                 return $this->parseOrganisation($organisation);
             case 'organisation_list':
-                $this->getHeadTitle()->append($this->translator->translate("txt-organisation-list"));
+                $this->getHeadTitle()->append($this->translator->translate('txt-organisation-list'));
 
                 return $this->parseOrganisationList();
             default:
@@ -169,7 +170,7 @@ final class OrganisationHandler extends AbstractHandler
             $this->request->getQuery()->toArray()
         );
         $searchFields = ['organisation_search', 'country_search', 'organisation_type_search'];
-        $hasTerm = !in_array($data['query'], ['*', ''], true);
+        $hasTerm = ! in_array($data['query'], ['*', ''], true);
 
         if ($this->request->isGet()) {
             $this->organisationSearchService->setSearchForWebsite(

@@ -15,7 +15,7 @@ namespace Organisation\InputFilter;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator\UniqueObject;
 use Organisation\Entity\Type;
-use Zend\InputFilter\InputFilter;
+use Laminas\InputFilter\InputFilter;
 
 /**
  * Class TypeFilter

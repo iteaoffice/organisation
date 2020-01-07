@@ -15,11 +15,11 @@ namespace Organisation\Form;
 use Organisation\Entity;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
-use Zend\Form\Form;
-use Zend\Form\Element\Submit;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
 use Contact\Form\Element\Contact;
-use Zend\Form\Element\Text;
-use Zend\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Select;
 use function in_array;
 
 /**
@@ -51,7 +51,7 @@ final class AddAffiliation extends Form
          * @var $newProject Project
          */
         foreach ($projectService->findAllProjects(ProjectService::WHICH_ALL)->getResult() as $newProject) {
-            if (!in_array($newProject->getId(), $currentProjects, true)) {
+            if (! in_array($newProject->getId(), $currentProjects, true)) {
                 $projects[$newProject->getId()] = sprintf('%s', $newProject);
             }
         }

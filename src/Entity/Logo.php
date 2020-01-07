@@ -14,14 +14,14 @@ namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * OrganisationLogo.
  *
  * @ORM\Table(name="organisation_logo")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_logo")
  */
 class Logo extends AbstractEntity
@@ -47,7 +47,7 @@ class Logo extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="organisationLogo")
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\File")
+     * @Annotation\Type("\Laminas\Form\Element\File")
      * @Annotation\Options({"label":"txt-logo"})
      *
      * @var \General\Entity\ContentType

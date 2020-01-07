@@ -22,12 +22,12 @@ use General\Entity\ContentType;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Entity\OParent;
 use Program\Entity\Program;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_parent_doa")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_parent_doa")
  *
  * @category    Program
@@ -63,7 +63,7 @@ class Doa extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="parentDoa")
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\File")
+     * @Annotation\Type("\Laminas\Form\Element\File")
      * @Annotation\Options({"label":"txt-nda-file"})
      *
      * @var ContentType

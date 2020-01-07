@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Organisation\Form;
 
-use Zend\Form\Form;
-use Zend\Form\Element\Submit;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
 use Contact\Form\Element\Contact;
 use Organisation\Form\Element\Organisation;
 

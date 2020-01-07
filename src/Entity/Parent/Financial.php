@@ -19,14 +19,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Entity\OParent;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * Entity for the Parent.
  *
  * @ORM\Table(name="organisation_parent_financial")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_parent_financial")
  *
  * @category Parent
@@ -64,7 +64,7 @@ class Financial extends AbstractEntity
     private $organisation;
     /**
      * @ORM\Column(name="branch", type="string", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-branch"})
      *
      * @var string
@@ -72,7 +72,7 @@ class Financial extends AbstractEntity
     private $branch;
     /**
      * @ORM\Column(name="note", type="text", nullable=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-note"})
      *
      * @var string

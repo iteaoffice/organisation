@@ -14,14 +14,14 @@ namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * OrganisationLog.
  *
  * @ORM\Table(name="organisation_note")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_note")
  */
 class Note extends AbstractEntity
@@ -37,7 +37,7 @@ class Note extends AbstractEntity
     private $id;
     /**
      * @ORM\Column(name="note", length=65535, type="text", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Textarea")
+     * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-note","help-block":"txt-note-help-block"})
      *  @Annotation\Attributes({"placeholder":"txt-note-note-placeholder","rows":10})
      *
@@ -46,7 +46,7 @@ class Note extends AbstractEntity
     private $note;
     /**
      * @ORM\Column(name="source", type="string", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-note-source","help-block":"txt-note-source-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-note-source-placeholder"})
      *

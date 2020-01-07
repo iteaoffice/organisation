@@ -34,9 +34,9 @@ use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Stdlib\Parameters;
-use Zend\Validator\EmailAddress;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Stdlib\Parameters;
+use Laminas\Validator\EmailAddress;
 use function array_count_values;
 use function array_keys;
 use function array_unique;
@@ -180,7 +180,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
                     case AffiliationService::WHICH_ONLY_ACTIVE:
                         return $affiliation->isActive();
                     case AffiliationService::WHICH_ONLY_INACTIVE:
-                        return !$affiliation->isActive();
+                        return ! $affiliation->isActive();
                     default:
                         return true;
                 }
@@ -318,7 +318,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         $organisationWeb->setMain(Entity\Web::MAIN);
 
         //Skip hostnames like yahoo, gmail and hotmail, outlook
-        if (!in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
+        if (! in_array($validateEmail->hostname, ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'], true)) {
             $this->save($organisationWeb);
         }
 
@@ -401,7 +401,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             );
         }
 
-        if (null !== $organisation->getFinancial() && !empty($organisation->getFinancial()->getVat())) {
+        if (null !== $organisation->getFinancial() && ! empty($organisation->getFinancial()->getVat())) {
             $organisationDocument->setField('vat', $organisation->getFinancial()->getVat());
             $organisationDocument->setField('vat_search', $organisation->getFinancial()->getVat());
         }
@@ -427,12 +427,12 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
         $projectsOnWebsite = [];
         foreach ($organisation->getAffiliation() as $affiliation) {
-            if (!$affiliation->isActive()) {
+            if (! $affiliation->isActive()) {
                 continue;
             }
 
             $project = $affiliation->getProject();
-            if (!$this->getProjectService()->onWebsite($project)) {
+            if (! $this->getProjectService()->onWebsite($project)) {
                 continue;
             }
 
@@ -549,10 +549,10 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             ) : $this->translator->translate('txt-no')
         );
 
-        $organisationDocument->setField('has_invoices', !$organisation->getInvoice()->isEmpty());
+        $organisationDocument->setField('has_invoices', ! $organisation->getInvoice()->isEmpty());
         $organisationDocument->setField(
             'has_invoices_text',
-            !$organisation->getInvoice()->isEmpty() ? $this->translator->translate('txt-yes')
+            ! $organisation->getInvoice()->isEmpty() ? $this->translator->translate('txt-yes')
                 : $this->translator->translate('txt-no')
         );
 
@@ -580,7 +580,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
                     case ContactService::WHICH_ONLY_ACTIVE:
                         return $contactOrganisation->getContact()->isActive();
                     case ContactService::WHICH_ONLY_EXPIRED:
-                        return !$contactOrganisation->getContact()->isActive();
+                        return ! $contactOrganisation->getContact()->isActive();
                     default:
                         return true;
                 }

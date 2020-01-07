@@ -24,7 +24,7 @@ use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
 use Testing\Util\AbstractServiceTest;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class OrganisationServiceTest

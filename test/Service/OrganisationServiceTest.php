@@ -24,9 +24,9 @@ use Organisation\Service\OrganisationService;
 use Project\Entity\Project;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
-use Zend\I18n\Translator\Translator;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\I18n\Translator\Translator;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class OrganisationServiceTest

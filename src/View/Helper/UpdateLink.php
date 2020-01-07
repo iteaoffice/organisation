@@ -35,17 +35,17 @@ final class UpdateLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (!$update->isEmpty()) {
+        if (! $update->isEmpty()) {
             $routeParams['id'] = $update->getId();
             $showOptions['name'] = $update->getOrganisation()->parseFullName();
         }
 
         if ($update->isEmpty() && null !== $organisation) {
             $update->setOrganisation($organisation);
-            $showOptions['organisationId'] = $organisation->getId();
+            $routeParams['organisationId'] = $organisation->getId();
         }
 
-        if (!$this->hasAccess($update, UpdateAssertion::class, $action)) {
+        if (! $this->hasAccess($update, UpdateAssertion::class, $action)) {
             return '';
         }
 
@@ -78,7 +78,7 @@ final class UpdateLink extends AbstractLink
                     'icon' => 'fa-pencil-square-o',
                     'route' => 'community/organisation/update',
                     'text' => $showOptions[$show]
-                        ?? $this->translator->translate('txt-edit-update')
+                        ?? $this->translator->translate('txt-update-organisation')
                 ];
                 break;
         }

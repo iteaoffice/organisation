@@ -15,11 +15,12 @@
         {% for parentOrganisation in parent.parentOrganisation %}
             <tr>
                 <td>
-                    {% if parentOrganisation.organisation.isParent() %}<span class="badge badge-info">{{ translate("txt-parent") }}</span>{% endif %}
+                    {% if parentOrganisation.organisation.isParent() %}<span
+                            class="badge badge-info">{{ translate("txt-parent") }}</span>{% endif %}
                     {{ parentOrganisationLink(parentOrganisation,'view','organisation') }} {{ parentOrganisationLink(parentOrganisation,'edit','icon') }}
                 </td>
                 <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin', 'name') }}</td>
-                <td>{{ organisationTypeLink(parentOrganisation.organisation.type, 'name', 'type') }}</td>
+                <td>{{ organisationTypeLink(parentOrganisation.organisation.type, 'view', 'name') }}</td>
                 <td>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</td>
                 <td>{{ parentOrganisation.affiliation.count() }}</td>
             </tr>
@@ -30,4 +31,6 @@
     {{ ztbalert().info(translate("txt-this-parent-%s-has-no-organisations")|format(parent))|raw }}
 {% endif %}
 
- {{ parentLink(parent, 'add-organisation','button') }} {% if parent.parentOrganisation.count() > 0 %}{{ parentOrganisationLink(parentOrganisation, 'merge','button') }}{% endif %}
+ {{ parentLink(parent, 'add-organisation','button') }}
+
+{% if parent.parentOrganisation.count() > 1 %}{{ parentOrganisationLink(parent.parentOrganisation.first, 'merge','button') }}{% endif %}

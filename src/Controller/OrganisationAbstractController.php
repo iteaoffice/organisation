@@ -23,9 +23,9 @@ use Organisation\Controller\Plugin\RenderOverviewExtraVariableContributionSheet;
 use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
 use Organisation\Entity;
 use Program\Entity\Program;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Mvc\Plugin\Identity\Identity;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Mvc\Plugin\Identity\Identity;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**

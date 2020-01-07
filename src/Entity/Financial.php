@@ -17,7 +17,7 @@ use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use General\Entity\VatType;
 use Invoice\Entity\Reminder;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_financial")
@@ -36,7 +36,7 @@ class Financial extends AbstractEntity
     public const NO_EMAIL_DELIVERY = 0;
     public const EMAIL_DELIVERY = 1;
 
-    protected static $vatStatusTemplates
+    protected static array $vatStatusTemplates
         = [
             self::VAT_STATUS_UNDEFINED => 'txt-vat-status-undefined',
             self::VAT_STATUS_VALID     => 'txt-vat-status-valid',
@@ -44,19 +44,19 @@ class Financial extends AbstractEntity
             self::VAT_STATUS_UNCHECKED => 'txt-vat-status-unchecked',
         ];
 
-    protected static $omitContactTemplates
+    protected static array $omitContactTemplates
         = [
             self::NO_OMIT_CONTACT => 'txt-no-omit-contact',
             self::OMIT_CONTACT    => 'txt-omit-contact',
         ];
 
-    protected static $emailTemplates
+    protected static array $emailTemplates
         = [
             self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
             self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
         ];
 
-    protected static $requiredPurchaseOrderTemplates
+    protected static array $requiredPurchaseOrderTemplates
         = [
             self::NO_REQUIRED_PURCHASE_ORDER => 'txt-no-purchase-order-required',
             self::REQUIRED_PURCHASE_ORDER    => 'txt-purchase-order-required',
@@ -66,14 +66,14 @@ class Financial extends AbstractEntity
      * @ORM\Column(name="financial_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Type("Zend\Form\Element\Hidden")
+     * @Annotation\Type("Laminas\Form\Element\Hidden")
      *
      * @var int
      */
     private $id;
     /**
      * @ORM\Column(name="vat", type="string", nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-vat-number", "help-block":"txt-vat-number-help-block"})
      * @var string
      */
@@ -86,7 +86,7 @@ class Financial extends AbstractEntity
     private $dateVat;
     /**
      * @ORM\Column(name="vat_status", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"vatStatusTemplates"})
      * @Annotation\Attributes({"label":"txt-vat-status"})
      *
@@ -95,7 +95,7 @@ class Financial extends AbstractEntity
     private $vatStatus;
     /**
      * @ORM\Column(name="omitcontact", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"omitContactTemplates"})
      * @Annotation\Attributes({"label":"txt-omit-contact"})
      *
@@ -104,21 +104,21 @@ class Financial extends AbstractEntity
     private $omitContact;
     /**
      * @ORM\Column(name="iban", type="string", nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-iban"})
      * @var string
      */
     private $iban;
     /**
      * @ORM\Column(name="supplier_number", type="string", nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-supplier-number"})
      * @var string
      */
     private $supplierNumber;
     /**
      * @ORM\Column(name="bic", type="string", nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Text")
+     * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-bic"})
      *
      * @var string
@@ -126,7 +126,7 @@ class Financial extends AbstractEntity
     private $bic;
     /**
      * @ORM\Column(name="required_purchase_order", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"requiredPurchaseOrderTemplates"})
      * @Annotation\Attributes({"label":"txt-required-purchase-order"})
      *
@@ -135,7 +135,7 @@ class Financial extends AbstractEntity
     private $requiredPurchaseOrder;
     /**
      * @ORM\Column(name="email", type="smallint", nullable=false)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"emailTemplates"})
      * @Annotation\Attributes({"label":"txt-delivery-by-email-order"})
      *

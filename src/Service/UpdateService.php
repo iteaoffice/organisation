@@ -82,7 +82,7 @@ class UpdateService extends AbstractService
         // Set logo when present
         if ($update->getLogo() !== null) {
             $logo = $organisation->getLogo()->first();
-            if (!$logo) {
+            if (! $logo) {
                 $logo = new Logo();
                 $logo->setOrganisation($organisation);
                 $this->entityManager->persist($logo);

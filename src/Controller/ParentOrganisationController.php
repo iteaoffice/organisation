@@ -22,10 +22,10 @@ use Organisation\Service\FormService;
 use Organisation\Service\ParentService;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
-use Zend\Http\Request;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class ParentOrganisationController
@@ -78,7 +78,7 @@ final class ParentOrganisationController extends OrganisationAbstractController
         $form->get($organisation->get('underscore_entity_name'))->get('organisation')
             ->injectOrganisation($organisation->getOrganisation());
 
-        if (!$this->parentService->canDeleteParentOrganisation($organisation)) {
+        if (! $this->parentService->canDeleteParentOrganisation($organisation)) {
             $form->remove('delete');
         }
 
@@ -245,7 +245,7 @@ final class ParentOrganisationController extends OrganisationAbstractController
                 $affiliation->setProject($project);
                 $affiliation->setOrganisation($parentOrganisation->getOrganisation());
                 $affiliation->setParentOrganisation($parentOrganisation);
-                if (!empty($branch)) {
+                if (! empty($branch)) {
                     $affiliation->setBranch($branch);
                 }
                 $affiliation->setContact($contact);

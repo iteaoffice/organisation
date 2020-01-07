@@ -18,8 +18,8 @@ use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\ParentService;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class ParentTypeController

@@ -20,7 +20,7 @@ namespace Organisation\Navigation\Invokable\Parent;
 use Admin\Navigation\Invokable\AbstractNavigationInvokable;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Parent\Organisation;
-use Zend\Navigation\Page\Mvc;
+use Laminas\Navigation\Page\Mvc;
 
 /**
  * Class OrganisationLabel

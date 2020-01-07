@@ -15,9 +15,9 @@ namespace Organisation\Controller;
 use Organisation\Entity\Note;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
-use Zend\Http\Request;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class NoteController

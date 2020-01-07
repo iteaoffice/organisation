@@ -30,11 +30,11 @@ use Program\Entity\Program;
 use Program\Service\ProgramService;
 use function set_time_limit;
 use function strlen;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Paginator\Paginator;
-use Zend\Session\Container;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\Session\Container;
+use Laminas\View\Model\ViewModel;
 
 /**
  * @category    Parent
@@ -166,7 +166,7 @@ final class ParentController extends OrganisationAbstractController
             ]
         );
 
-        if (!empty($parents)) {
+        if (! empty($parents)) {
             foreach ($parents as $parent) {
                 $projects = [];
                 foreach ($parent->getParentOrganisation() as $parentOrganisation) {
@@ -373,7 +373,7 @@ final class ParentController extends OrganisationAbstractController
         $form->get($parent->get('underscore_entity_name'))->get('organisation')
             ->injectOrganisation($parent->getOrganisation());
 
-        if (!$this->parentService->parentCanBeDeleted($parent)) {
+        if (! $this->parentService->parentCanBeDeleted($parent)) {
             $form->remove('delete');
         }
 

@@ -29,7 +29,7 @@ final class OrganisationLink extends AbstractLink
         string $action = 'view',
         string $show = 'text'
     ): string {
-        if (!$this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
+        if (! $this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
             return '';
         }
 

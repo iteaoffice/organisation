@@ -32,13 +32,14 @@ final class OrganisationLogo extends AbstractImage
         /** @var Logo $logo */
         $logo = $organisation->getLogo()->first();
 
-        if (!$logo) {
+        if (! $logo) {
             return '';
         }
 
         $linkParams = [];
         $linkParams['route'] = 'image/organisation-logo';
         $linkParams['show'] = $show;
+        $linkParams['width'] = $width;
 
         $routeParams = [
             'id' => $logo->getId(),

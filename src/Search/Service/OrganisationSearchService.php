@@ -39,7 +39,7 @@ class OrganisationSearchService extends AbstractSearchService
         $this->setQuery($this->getSolrClient()->createSelect());
         $this->getQuery()->setQuery(static::parseQuery($searchTerm, $searchFields));
 
-        $hasTerm = !\in_array($searchTerm, ['*', ''], true);
+        $hasTerm = ! \in_array($searchTerm, ['*', ''], true);
         $hasSort = ($order !== '');
 
         if ($hasSort) {
@@ -68,7 +68,7 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
-        } elseif (!$hasSort) {
+        } elseif (! $hasSort) {
             $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 
@@ -108,7 +108,7 @@ class OrganisationSearchService extends AbstractSearchService
 
         $this->getQuery()->setQuery($query);
 
-        $hasTerm = !\in_array($searchTerm, ['*', ''], true);
+        $hasTerm = ! \in_array($searchTerm, ['*', ''], true);
         $hasSort = ($order !== '');
 
         if ($hasSort) {
@@ -137,7 +137,7 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
-        } elseif (!$hasSort) {
+        } elseif (! $hasSort) {
             $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 

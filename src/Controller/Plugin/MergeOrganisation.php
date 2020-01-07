@@ -30,9 +30,9 @@ use Organisation\Entity\Note;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Service\UpdateService;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Class MergeOrganisation
@@ -137,7 +137,7 @@ class MergeOrganisation extends AbstractPlugin
             $source->getFinancial()->setOrganisation($target);
             $target->setFinancial($source->getFinancial());
         }
-        if ($target->getLogo()->isEmpty() && !$source->getLogo()->isEmpty()) {
+        if ($target->getLogo()->isEmpty() && ! $source->getLogo()->isEmpty()) {
             /** @var Logo $logo */
             $logo = $source->getLogo()->first();
             $logo->setOrganisation($target);

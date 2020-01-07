@@ -19,7 +19,7 @@ use Organisation\Entity;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Class HandleImport.
@@ -79,7 +79,7 @@ abstract class AbstractImportPlugin extends AbstractPlugin
         $this->validateData();
 
 
-        if (!$this->hasErrors()) {
+        if (! $this->hasErrors()) {
             $this->prepareContent($keys);
         }
 

@@ -24,11 +24,11 @@ use Doctrine\Common\Collections\Criteria;
 use function http_build_query;
 use function json_encode;
 use function urldecode;
-use Zend\Http\Request;
-use Zend\Mvc\Application;
-use Zend\Json\Json;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\Http\Request;
+use Laminas\Mvc\Application;
+use Laminas\Json\Json;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class GetFilter
@@ -61,7 +61,7 @@ final class GetFilter extends AbstractPlugin
         $request = $application->getMvcEvent()->getRequest();
 
         $filter = [];
-        if (!empty($base64decodedFilter = base64_decode($encodedFilter))) {
+        if (! empty($base64decodedFilter = base64_decode($encodedFilter))) {
             $filter = (array)Json::decode($base64decodedFilter);
         }
 
@@ -79,7 +79,7 @@ final class GetFilter extends AbstractPlugin
         }
 
         // Add a default order and direction if not known in the filter
-        if (!isset($filter['order'])) {
+        if (! isset($filter['order'])) {
             $filter['order'] = '';
             $filter['direction'] = Criteria::ASC;
         }
