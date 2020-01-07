@@ -22,7 +22,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.4",
-        "laminas/laminas-mvc": "^3.0.1",
+        "laminas/laminas-mvc": "^3.1",
         "laminas/laminas-dependency-plugin": "^0.2"
     },
     "require-dev": {
