@@ -1,22 +1,26 @@
-<h2>{{ translate("txt-notes") }} {{ organisationNoteLink(null, organisation, "new", "button") }}</h2>
+<h2>{{ translate("txt-notes") }} {{ organisationNoteLink(null, "new", "button", organisation) }}</h2>
 
 {% if organisation.note|length > 0 %}
     <table class="table table-striped table-hover table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-id") }}</th>
             <th>{{ translate("txt-source") }}</th>
             <th>{{ translate("txt-note") }}</th>
             <th>{{ translate("txt-date-created") }}</th>
             <th>{{ translate("txt-placed-by") }}</th>
-
         </tr>
         </thead>
         <tfoot>
+        <tr>
+            <td colspan="5"></td>
+        </tr>
         </tfoot>
         <tbody>
         {% for note in organisation.note %}
             <tr>
-                <td>{{ note.source }} {{ organisationNoteLink(note, null, "edit", "icon") }}</td>
+                <td><small class="text-muted">{{ loop.index }}</small></td>
+                <td>{{ note.source }} {{ organisationNoteLink(note, "edit", "icon") }}</td>
                 <td>{{ note.note }}</td>
                 <td>{{ note.dateCreated|string_date }} </td>
                 <td>{{ contactLink(note.contact, "view-admin", "name") }}</td>

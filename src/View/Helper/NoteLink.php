@@ -16,6 +16,7 @@ namespace Organisation\View\Helper;
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
 use Organisation\Entity\Note;
+use Organisation\Entity\Organisation;
 
 /**
  * Class NoteLink
@@ -26,15 +27,21 @@ final class NoteLink extends AbstractLink
     public function __invoke(
         Note $note = null,
         string $action = 'view',
-        string $show = 'name'
-    ): string {
+        string $show = 'name',
+        Organisation $organisation = null
+    ): string
+    {
         $note ??= new Note();
 
         $routeParams = [];
         $showOptions = [];
-        if (! $note->isEmpty()) {
+        if (!$note->isEmpty()) {
             $routeParams['id'] = $note->getId();
             $showOptions['name'] = $note->getNote();
+        }
+
+        if (null !== $organisation) {
+            $routeParams['organisationId'] = $organisation->getId();
         }
 
         switch ($action) {
