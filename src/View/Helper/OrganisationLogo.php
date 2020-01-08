@@ -3,58 +3,52 @@
 /**
  * ITEA Office all rights reserved
  *
- * PHP Version 7
- *
- * @category    Organisation
- *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        http://github.com/iteaoffice/Organisation for the canonical source repository
  */
-
-declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
+use General\ValueObject\Image\Image;
+use General\ValueObject\Image\ImageDecoration;
+use General\View\Helper\AbstractImage;
+use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 
 /**
- * Class OrganisationLogo
+ * Class ChallengeIcon
  *
- * @package Organisation\View\Helper
+ * @package Challenge\View\Helper
  */
-final class OrganisationLogo extends ImageAbstract
+final class OrganisationLogo extends AbstractImage
 {
     public function __invoke(
         Organisation $organisation,
-        $width = null,
-        $onlyUrl = false,
-        $responsive = true,
-        $classes = []
+        int $width = null,
+        string $show = ImageDecoration::SHOW_IMAGE
     ): string {
+        /** @var Logo $logo */
         $logo = $organisation->getLogo()->first();
 
-        if (!$logo) {
+        if (! $logo) {
             return '';
         }
 
-        $this->classes = [];
+        $linkParams = [];
+        $linkParams['route'] = 'image/organisation-logo';
+        $linkParams['show'] = $show;
+        $linkParams['width'] = $width;
 
-        $this->setRouter('image/organisation-logo');
+        $routeParams = [
+            'id' => $logo->getId(),
+            'ext' => $logo->getContentType()->getExtension(),
+            'last-update' => $logo->getDateUpdated()->getTimestamp(),
+        ];
 
-        $this->addRouterParam('ext', $logo->getContentType()->getExtension());
-        $this->addRouterParam('last-update', $logo->getDateUpdated()->getTimestamp());
-        $this->addRouterParam('id', $logo->getId());
+        $linkParams['routeParams'] = $routeParams;
 
-        $this->setImageId('organisation_logo_' . $logo->getId());
-
-        $this->setWidth($width);
-        if ($responsive) {
-            $this->addClasses('img-responsive img-fluid');
-        }
-
-        return $this->createImageUrl($onlyUrl);
+        return $this->parse(Image::fromArray($linkParams));
     }
 }

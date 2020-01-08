@@ -5,7 +5,7 @@
  * @category    Project
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 use Organisation\Controller;
@@ -26,6 +26,17 @@ return [
                             ],
                         ],
                     ],
+                    'organisation-update-logo' => [
+                        'type'    => 'Segment',
+                        'options' => [
+                            'route'    => '/u/[:id]-[:last-update].[:ext]',
+                            'defaults' => [
+                                // Explicitly add the controller here as the assets are collected
+                                'controller' => Controller\ImageController::class,
+                                'action'     => 'organisation-update-logo',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'organisation' => [
@@ -36,7 +47,7 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'json' => [
+                    'json'   => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route'    => '/json',
@@ -82,10 +93,20 @@ return [
                                     ],
                                 ],
                             ],
+                            'search-parent'       => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/search-parent.json',
+                                    'defaults' => [
+                                        'controller' => Controller\JsonController::class,
+                                        'action'     => 'search-parent',
+                                    ],
+                                ],
+                            ],
                         ],
 
                     ],
-                    'logo' => [
+                    'logo'   => [
                         'type'    => 'Segment',
                         'options' => [
                             'route'       => '/logo/[:id].[:ext]',
@@ -94,6 +115,33 @@ return [
                             ],
                             'defaults'    => [
                                 'action' => 'logo',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'community'    => [
+                'child_routes' => [
+                    'organisation'      => [
+                        'type'          => 'Segment',
+                        'priority'      => 1001,
+                        'options'       => [
+                            'route'    => '/organisation',
+                        ],
+                        'may_terminate' => false,
+                        'child_routes'  => [
+                            'update' => [
+                                'type'       => 'Segment',
+                                'options'    => [
+                                    'route'       => '/update/[:organisationId].html',
+                                    'constraints' => [
+                                        'organisationId' => '\d+',
+                                    ],
+                                    'defaults'    => [
+                                        'controller' => Controller\UpdateController::class,
+                                        'action'     => 'new',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
@@ -130,6 +178,15 @@ return [
                                     'route'    => '/list/duplicate[/f-:encodedFilter][/page-:page].html',
                                     'defaults' => [
                                         'action' => 'list-duplicate',
+                                    ],
+                                ],
+                            ],
+                            'list-inactive'  => [
+                                'type'    => 'Literal',
+                                'options' => [
+                                    'route'    => '/list/inactive.html',
+                                    'defaults' => [
+                                        'action' => 'list-inactive',
                                     ],
                                 ],
                             ],
@@ -268,6 +325,55 @@ return [
                                     'route'    => '/merge/[:sourceId]/into/[:targetId].html',
                                     'defaults' => [
                                         'action' => 'merge',
+                                    ],
+                                ],
+                            ],
+                            'update'          => [
+                                'type'          => 'Segment',
+                                'options'       => [
+                                    'route'    => '/update',
+                                    'defaults' => [
+                                        'controller' => Controller\UpdateManagerController::class,
+                                        'action'     => 'list',
+                                    ],
+                                ],
+                                'may_terminate' => false,
+                                'child_routes'  => [
+                                    'pending'  => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/pending.html',
+                                            'defaults' => [
+                                                'action' => 'pending',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'view' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/view/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'view',
+                                            ],
+                                        ],
+                                    ],
+                                    'approve' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/approve/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'approve',
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],

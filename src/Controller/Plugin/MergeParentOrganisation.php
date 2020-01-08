@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -7,7 +8,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
@@ -20,7 +21,7 @@ namespace Organisation\Controller\Plugin;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Organisation\Entity\Parent\Organisation;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Class MergeOrganisation

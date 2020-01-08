@@ -1,44 +1,47 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use Contact\Entity\Contact;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * OrganisationLog.
  *
  * @ORM\Table(name="organisation_log")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_log")
  */
 class Log extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="log_id", type="integer", nullable=false)
+     * @ORM\Column(name="log_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateCreated;
     /**
@@ -49,149 +52,71 @@ class Log extends AbstractEntity
     private $log;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", inversedBy="organisationLog", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
-     * })
      *
-     * @var \Contact\Entity\Contact
+     * @var Contact
      */
     private $contact;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="log", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
-     * })
      *
-     * @var \Organisation\Entity\Organisation
+     * @var Organisation
      */
     private $organisation;
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Log
-     */
-    public function setId($id)
+    public function setId(?int $id): Log
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated()
+    public function getDateCreated(): ?DateTime
     {
         return $this->dateCreated;
     }
 
-    /**
-     * @param \DateTime $dateCreated
-     *
-     * @return Log
-     */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated(?DateTime $dateCreated): Log
     {
         $this->dateCreated = $dateCreated;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLog()
+    public function getLog(): ?string
     {
         return $this->log;
     }
 
-    /**
-     * @param string $log
-     *
-     * @return Log
-     */
-    public function setLog($log)
+    public function setLog(?string $log): Log
     {
         $this->log = $log;
-
         return $this;
     }
 
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
+    public function getContact(): ?Contact
     {
         return $this->contact;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $contact
-     *
-     * @return Log
-     */
-    public function setContact($contact)
+    public function setContact(?Contact $contact): Log
     {
         $this->contact = $contact;
-
         return $this;
     }
 
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return Log
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation(?Organisation $organisation): Log
     {
         $this->organisation = $organisation;
-
         return $this;
     }
 }

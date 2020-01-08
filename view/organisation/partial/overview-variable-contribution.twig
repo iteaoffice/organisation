@@ -1,6 +1,6 @@
 <h4>{{ translate("txt-project-participation-overview") }}</h4>
 
-<table class="table table-hover table-striped table-condensed table-sm">
+<table class="table table-hover table-striped table-sm">
     <thead>
     <tr>
         <th>{{ translate("txt-project") }}</th>
@@ -12,8 +12,7 @@
     <tbody>
     {% for affiliation in affiliations %}
 
-        {% set latestVersion = projectService.getLatestProjectVersion(affiliation.getProject(), null,
-            null, false, false) %}
+        {% set latestVersion = projectService.getLatestApprovedProjectVersion(affiliation.getProject()) %}
 
         {% if latestVersion %}
             <tr>
@@ -37,7 +36,7 @@
 
 <h4>{{ translate("txt-upcoming-invoice-of-%s")|format(year) }}</h4>
 
-<table class="table table-hover table-striped table-condensed table-sm">
+<table class="table table-hover table-striped table-sm">
     <thead>
     <tr>
         <th>{{ translate("txt-period") }}</th>
@@ -63,14 +62,14 @@
 
 
 {% set hasSentInvoices = false %}
-{% for parentInvoice in parent.invoice if parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice) %}
+{% for parentInvoice in parent.invoice|filter(parentInvoice => parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice)) -%}
     {% set hasSentInvoices = true %}
 {% endfor %}
 
 {% if hasSentInvoices %}
     <h4>{{ translate("txt-already-sent-invoices-after-invoice-for-year-%s-period-%s")|format(year,period) }}</h4>
 
-    <table class="table table-hover table-striped table-condensed table-sm">
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-invoice-number") }}</th>
@@ -82,7 +81,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for parentInvoice in parent.invoice if parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice) %}
+        {% for parentInvoice in parent.invoice|filter(parentInvoice => parentInvoice.year >= year and invoiceService.isSent(parentInvoice.invoice)) -%}
             <tr>
                 <td>{{ parentInvoice.invoice.invoiceNr }} {{ invoiceLink(parentInvoice.invoice,'download','icon') }}</td>
                 <td>{{ parentInvoice.year }}</td>

@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-view-parent-type-%s")|format(type)) %}
 
-<h1 class="display-4">{{ translate("txt-view-parent-type-%s")|format(type) }} {{ parentTypeLink(type, 'edit','button') }}</h1>
+<h1>{{ translate("txt-view-parent-type-%s")|format(type) }} {{ parentTypeLink(type, 'edit','button') }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-type") }}</dt>
@@ -11,7 +11,7 @@
 </dl>
 
 {% if type.parent.count() > 0 %}
-    <table class="table table-hover table-striped table-condensed table-sm">
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-legal-name") }}</th>

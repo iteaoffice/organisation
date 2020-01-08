@@ -19,19 +19,29 @@
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
 
     <field name="organisation_id" type="int" indexed="true" stored="true" omitNorms="true"/>
-
-
     <field name="organisation" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="organisation_docref" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="organisation_sort" type="string_ci" indexed="true" stored="true" omitNorms="true"/>
     <field name="organisation_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
 
+    <field name="parent_id" type="int" indexed="true" stored="true" omitNorms="true"/>
+    <field name="parent" type="string" indexed="true" stored="true" omitNorms="true"/>
+    <field name="parent_sort" type="string_ci" indexed="true" stored="true" omitNorms="true"/>
+    <field name="parent_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
+
+    <field name="own_parent_id" type="int" indexed="true" stored="true" omitNorms="true"/>
+
     <field name="description" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="description_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
 
+    <field name="vat" type="string" indexed="true" stored="true" omitNorms="true"/>
+    <field name="vat_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
+
     <field name="organisation_type" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="organisation_type_sort" type="string_ci" indexed="true" stored="true" omitNorms="true"/>
-    <field name="organisation_type_search" type="text_general_edge_ngram" indexed="true" stored="true" omitNorms="true"/>
+    <field name="organisation_type_description" type="string" indexed="true" stored="true" omitNorms="true"/>
+    <field name="organisation_type_search" type="text_general_edge_ngram" indexed="true" stored="true"
+           omitNorms="true"/>
 
     <field name="country" type="string" indexed="true" stored="true" omitNorms="true"/>
     <field name="country_sort" type="string_ci" indexed="true" stored="true" omitNorms="true"/>
@@ -40,11 +50,36 @@
     <field name="date_created" type="date" indexed="true" stored="true" omitNorms="true"/>
     <field name="date_updated" type="date" indexed="true" stored="true" omitNorms="true"/>
 
-    <field name="projects" type="int" indexed="true" stored="true"/>
     <field name="affiliations" type="int" indexed="true" stored="true"/>
+    <field name="projects" type="int" indexed="true" stored="true"/>
+    <field name="projects_on_website" type="int" indexed="true" stored="true"/>
     <field name="contacts" type="int" indexed="true" stored="true"/>
+    <field name="invoices" type="int" indexed="true" stored="true"/>
+
+    <field name="inactive_contacts" type="int" indexed="true" stored="true"/>
+    <field name="active_contacts" type="int" indexed="true" stored="true"/>
+    <field name="parent_organisations" type="int" indexed="true" stored="true"/>
+
     <field name="has_projects" type="boolean" indexed="true" stored="true"/>
+    <field name="has_projects_text" type="string" indexed="true" stored="true"/>
+    <field name="has_projects_on_website" type="boolean" indexed="true" stored="true"/>
+    <field name="has_projects_on_website_text" type="string" indexed="true" stored="true"/>
+    <field name="is_parent" type="boolean" indexed="true" stored="true"/>
+    <field name="is_parent_text" type="string" indexed="true" stored="true"/>
+    <field name="has_parent" type="boolean" indexed="true" stored="true"/>
+    <field name="has_parent_text" type="string" indexed="true" stored="true"/>
+    <field name="is_own_parent" type="boolean" indexed="true" stored="true"/>
+    <field name="is_own_parent_text" type="string" indexed="true" stored="true"/>
+    <field name="has_wrong_parent_child_relationship" type="boolean" indexed="true" stored="true"/>
+    <field name="has_wrong_parent_child_relationship_text" type="string" indexed="true" stored="true"/>
+    <field name="has_financial" type="boolean" indexed="true" stored="true"/>
+    <field name="has_financial_text" type="string" indexed="true" stored="true"/>
     <field name="has_affiliations" type="boolean" indexed="true" stored="true"/>
+    <field name="has_affiliations_text" type="string" indexed="true" stored="true"/>
+    <field name="has_contacts" type="boolean" indexed="true" stored="true"/>
+    <field name="has_contacts_text" type="string" indexed="true" stored="true"/>
+    <field name="has_invoices" type="boolean" indexed="true" stored="true"/>
+    <field name="has_invoices_text" type="string" indexed="true" stored="true"/>
 
     <uniqueKey>id</uniqueKey>
 

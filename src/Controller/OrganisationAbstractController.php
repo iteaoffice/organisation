@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office copyright message placeholder
  *
  * @category    Organisation
  * @package     Controller
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -23,14 +24,12 @@ use Organisation\Controller\Plugin\RenderOverviewExtraVariableContributionSheet;
 use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
 use Organisation\Entity;
 use Program\Entity\Program;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\Mvc\Plugin\Identity\Identity;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\Mvc\Plugin\Identity\Identity;
 use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
- * @category    Organisation
- * @package     Controller
  * @method      Identity|Contact identity()
  * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()

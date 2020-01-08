@@ -1,109 +1,72 @@
 <?php
 
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
- * @link        https://github.com/iteaoffice/organisation for the canonical source repository
+ * @link        http://github.com/iteaoffice/general for the canonical source repository
  */
 
 declare(strict_types=1);
 
 namespace Organisation\View\Helper;
 
-use Organisation\Acl\Assertion\Note as NoteAssertion;
+use General\ValueObject\Link\Link;
+use General\View\Helper\AbstractLink;
 use Organisation\Entity\Note;
 use Organisation\Entity\Organisation;
 
 /**
  * Class NoteLink
- * @package Organisation\View\Helper
+ * @package General\View\Helper
  */
-class NoteLink extends AbstractLink
+final class NoteLink extends AbstractLink
 {
-    /**
-     * @var Note
-     */
-    private $note;
-
-    /**
-     * @param Note|null $note
-     * @param Organisation|null $organisation
-     * @param string $action
-     * @param string $show
-     * @return string
-     */
     public function __invoke(
         Note $note = null,
-        Organisation $organisation = null,
-        $action = 'edit',
-        $show = 'icon'
-    ): string {
-        $this->setNote($note);
-        $this->setOrganisation($organisation);
-        $this->setAction($action);
-        $this->setShow($show);
+        string $action = 'view',
+        string $show = 'name',
+        Organisation $organisation = null
+    ): string
+    {
+        $note ??= new Note();
 
-        if (!$this->hasAccess($this->getNote(), NoteAssertion::class, $this->getAction())) {
-            return '';
+        $routeParams = [];
+        $showOptions = [];
+        if (!$note->isEmpty()) {
+            $routeParams['id'] = $note->getId();
+            $showOptions['name'] = $note->getNote();
         }
 
-        if (!$this->getNote()->isEmpty()) {
-            $this->addRouterParam('id', $this->getNote()->getId());
+        if (null !== $organisation) {
+            $routeParams['organisationId'] = $organisation->getId();
         }
 
-        return $this->createLink();
-    }
-
-    /**
-     * @return Note
-     */
-    public function getNote(): Note
-    {
-        if (\is_null($this->note)) {
-            $this->note = new Note();
-        }
-
-        return $this->note;
-    }
-
-    /**
-     * @param Note|null $note
-     * @return NoteLink
-     */
-    public function setNote(Note $note = null): NoteLink
-    {
-        $this->note = $note;
-
-        return $this;
-    }
-
-    /**
-     * Parse the action.
-     */
-    public function parseAction(): void
-    {
-        switch ($this->getAction()) {
+        switch ($action) {
             case 'new':
-                $this->setRouter('zfcadmin/organisation/note/new');
-                $this->addRouterParam('organisationId', $this->getOrganisation()->getId());
-                $this->setText($this->translator->translate('txt-new-note'));
+                $linkParams = [
+                    'icon' => 'fa-plus',
+                    'route' => 'zfcadmin/organisation/note/new',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-new-note')
+                ];
                 break;
             case 'edit':
-                $this->setRouter('zfcadmin/organisation/note/edit');
-                $this->setText($this->translator->translate('txt-edit-note'));
+                $linkParams = [
+                    'icon' => 'fa-pencil-square-o',
+                    'route' => 'zfcadmin/organisation/note/edit',
+                    'text' => $showOptions[$show]
+                        ?? $this->translator->translate('txt-edit-note')
+                ];
                 break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf('%s is an incorrect action for %s', $this->getAction(), __CLASS__)
-                );
         }
+
+        $linkParams['action'] = $action;
+        $linkParams['show'] = $show;
+        $linkParams['routeParams'] = $routeParams;
+
+        return $this->parse(Link::fromArray($linkParams));
     }
 }

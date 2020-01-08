@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -12,7 +13,11 @@ declare(strict_types=1);
 
 namespace Organisation\Entity;
 
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use InvalidArgumentException;
+use Laminas\Permissions\Acl\Resource\ResourceInterface;
+
+use function array_slice;
+use function sprintf;
 
 /**
  * Class AbstractEntity
@@ -23,7 +28,7 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
 {
     public function getResourceId(): string
     {
-        return \sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
+        return sprintf('%s:%s', $this->get('full_entity_name'), $this->getId());
     }
 
     public function get($switch): string
@@ -33,7 +38,7 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
             case 'full_entity_name':
                 return str_replace('DoctrineORMModule\Proxy\__CG__\\', '', static::class);
             case 'entity_name':
-                return implode('', \array_slice(explode('\\', $this->get('class_name')), -1));
+                return implode('', array_slice(explode('\\', $this->get('class_name')), -1));
             case 'underscore_entity_name':
                 return strtolower(implode('_', explode('\\', $this->get('class_name'))));
             case 'entity_fieldset_name':
@@ -57,7 +62,7 @@ abstract class AbstractEntity implements EntityInterface, ResourceInterface
                     str_replace('Entity', 'Acl\\Assertion', $this->get('class_name'))
                 ); //Run\Acl\Assertion\Run
             default:
-                throw new \InvalidArgumentException(sprintf("Unknown option %s for get entity name", $switch));
+                throw new InvalidArgumentException(sprintf("Unknown option %s for get entity name", $switch));
         }
     }
 

@@ -3,71 +3,58 @@
 {{ form().closeTag()|raw }}
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
 
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
+<h1>{{ translate("txt-organisation-type-list") }} {{ organisationTypeLink(null,'new', 'button') }}</h1>
 
 <div class="row">
-
-    <div class="col-md-9">
-
-        <h1 class="display-4">{{ translate("txt-organisation-type-list") }} {{ organisationTypeLink(null,'new', 'button') }}</h1>
-
-        <div class="row">
-            <div class="col-md-6">
-                <p class="lead">{{ translate("txt-organisation-type-list-explanation") }}</p>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
-            </div>
-        </div>
-
-        {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
-                <thead>
-                <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation-type/view', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{{ translate("txt-description") }}</th>
-                    <th>{{ translate("txt-invoice") }}</th>
-                    <th>{{ translate("txt-actions") }}</th>
-                </tr>
-                </thead>
-                <tfoot>
-                </tfoot>
-                <tbody>
-                {% for type in paginator.getCurrentItems() %}
-                    <tr>
-                        <td>{{ organisationTypeLink(type, 'view', 'type') }}</td>
-                        <td>{{ type.type }}</td>
-                        <td>{{ translate(type.getInvoice(true)) }}</td>
-                        <td>{{ organisationTypeLink(type, 'edit', 'icon') }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-            {% include 'organisation/partial/pagination-control' %}
-        {% else %}
-            {{ ztbalert().info(translate("txt-no-organisation-types-found"))|raw }}
-        {% endif %}
+    <div class="col-md-6">
+        <p class="lead">{{ translate("txt-organisation-type-list-explanation") }}</p>
     </div>
-    <div class="col-md-3">
-        <div class="well well-sm">
-            <fieldset>
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-                </div>
-            </fieldset>
+    <div class="col-md-6">
+        <div class="input-group">
+            {{ formelement(filter.get('search')) }}
+            <div class="input-group-append input-group-btn">
+                {{ formelement(form.get('submit')) }}
+            </div>
         </div>
     </div>
 </div>
+
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-id") }}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation-type/view', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+            <th>{{ translate("txt-description") }}</th>
+            <th>{{ translate("txt-invoice") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for type in paginator.getCurrentItems() %}
+            <tr>
+                <td><small class="text-muted">{{ type.id }}</small></td>
+                <td>{{ organisationTypeLink(type, 'view', 'name') }} {{ organisationTypeLink(type, 'edit', 'icon') }}</td>
+                <td>{{ type.description }}</td>
+                <td>{{ translate(type.getInvoice(true)) }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'application/partial/pagination-control' %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-organisation-types-found"))|raw }}
+{% endif %}
+
 
 {{ form().closeTag()|raw }}

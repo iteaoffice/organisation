@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Jield BV all rights reserved
  *
@@ -15,16 +16,20 @@ declare(strict_types=1);
 
 namespace Organisation\Acl\Assertion;
 
-use Admin\Entity\Access;
 use Admin\Service\AdminService;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
 use Doctrine\ORM\PersistentCollection;
 use Interop\Container\ContainerInterface;
-use Zend\Authentication\AuthenticationService;
-use Zend\Http\Request;
-use Zend\Permissions\Acl\Assertion\AssertionInterface;
-use Zend\Router\Http\RouteMatch;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\Http\Request;
+use Laminas\Permissions\Acl\Assertion\AssertionInterface;
+use Laminas\Router\Http\RouteMatch;
+
+use function count;
+use function in_array;
+use function is_array;
+use function strpos;
 
 /**
  * Class AbstractAssertion
@@ -72,7 +77,7 @@ abstract class AbstractAssertion implements AssertionInterface
 
     public function routeHasString(string $string): bool
     {
-        return $this->hasRouteMatch() && \strpos($this->getRouteMatch()->getMatchedRouteName(), $string) !== false;
+        return $this->hasRouteMatch() && strpos($this->getRouteMatch()->getMatchedRouteName(), $string) !== false;
     }
 
     public function hasRouteMatch(): bool
@@ -117,7 +122,7 @@ abstract class AbstractAssertion implements AssertionInterface
         if (null !== $this->getRequest()->getPost('id')) {
             return (int)$this->getRequest()->getPost('id');
         }
-        if (!$this->hasRouteMatch()) {
+        if (! $this->hasRouteMatch()) {
             return null;
         }
         if (null !== $this->getRouteMatch()->getParam('id')) {
@@ -140,16 +145,17 @@ abstract class AbstractAssertion implements AssertionInterface
     public function rolesHaveAccess($accessRoleOrCollection): bool
     {
         $accessRoles = $this->prepareAccessRoles($accessRoleOrCollection);
-        if (\count($accessRoles) === 0) {
+        if (count($accessRoles) === 0) {
             return true;
         }
 
         foreach ($accessRoles as $role) {
-            if ($role === Access::ACCESS_PUBLIC) {
+            if ($role === 'public') {
                 return true;
             }
-            if ($this->hasContact()
-                && \in_array(
+            if (
+                $this->hasContact()
+                && in_array(
                     $role,
                     $this->adminService->findAccessRolesByContactAsArray($this->contact),
                     true
@@ -164,11 +170,11 @@ abstract class AbstractAssertion implements AssertionInterface
 
     private function prepareAccessRoles($accessRoleOrCollection): array
     {
-        if (!$accessRoleOrCollection instanceof PersistentCollection) {
+        if (! $accessRoleOrCollection instanceof PersistentCollection) {
             /*
              * We only have a string or array, so we need to lookup the role
              */
-            if (\is_array($accessRoleOrCollection)) {
+            if (is_array($accessRoleOrCollection)) {
                 foreach ($accessRoleOrCollection as $key => $accessItem) {
                     $access = $this->adminService->findAccessByName($accessItem);
 
@@ -190,6 +196,6 @@ abstract class AbstractAssertion implements AssertionInterface
 
     public function hasContact(): bool
     {
-        return !$this->contact->isEmpty();
+        return ! $this->contact->isEmpty();
     }
 }

@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -14,29 +15,20 @@ namespace Organisation\Entity;
 
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
-use Zend\Form\Annotation;
-use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Event\Entity\Meeting\Cost;
+use Laminas\Form\Annotation;
 
 /**
- * Type.
- *
  * @ORM\Table(name="organisation_type")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Type")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_type")
  */
-class Type extends AbstractEntity implements ResourceInterface
+class Type extends AbstractEntity
 {
-    /**
-     * Constant for a type without invoice.
-     */
     public const NO_INVOICE = 0;
-    /**
-     * Constant for a type with a invoice.
-     */
     public const INVOICE = 1;
 
-    public const TYPE_UNKNOWN = 0;
     public const TYPE_IFC = 1;
     public const TYPE_LARGE_INDUSTRY = 2;
     public const TYPE_SME = 3;
@@ -44,29 +36,25 @@ class Type extends AbstractEntity implements ResourceInterface
     public const TYPE_UNIVERSITY = 5;
     public const TYPE_GOVERNMENT = 6;
     public const TYPE_OTHER = 7;
+    public const TYPE_UNKNOWN = 8;
 
-    /**
-     * Textual versions of the invoice.
-     *
-     * @var array
-     */
-    protected static $invoiceTemplates
+    protected static array $invoiceTemplates
         = [
             self::NO_INVOICE => 'txt-invoice',
-            self::INVOICE    => 'txt-no-invoice',
+            self::INVOICE => 'txt-no-invoice',
         ];
     /**
-     * @ORM\Column(name="type_id", type="integer", nullable=false)
+     * @ORM\Column(name="type_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Annotation\Type("\Zend\Form\Element\Hidden")
+     * @Annotation\Type("\Laminas\Form\Element\Hidden")
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
-     * @ORM\Column(name="type", type="string", length=20, nullable=false, unique=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @ORM\Column(name="type", type="string", nullable=false, unique=true)
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)
      *
@@ -75,7 +63,7 @@ class Type extends AbstractEntity implements ResourceInterface
     private $type;
     /**
      * @ORM\Column(name="description", type="string", nullable=false, unique=true)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
      * @Annotation\Required(true)
      *
@@ -84,7 +72,7 @@ class Type extends AbstractEntity implements ResourceInterface
     private $description;
     /**
      * @ORM\Column(type="smallint",nullable=true)
-     * @Annotation\Type("Zend\Form\Element\Radio")
+     * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"invoiceTemplates"})
      * @Annotation\Attributes({"label":"txt-invoice"})
      *
@@ -95,139 +83,77 @@ class Type extends AbstractEntity implements ResourceInterface
      * @ORM\OneToMany(targetEntity="Event\Entity\Meeting\Cost", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Meeting\Cost[]|Collections\ArrayCollection()
+     * @var Cost[]|Collections\ArrayCollection()
      */
     private $meetingCost;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Organisation[]|Collections\ArrayCollection
+     * @var Organisation[]|Collections\ArrayCollection
      */
     private $organisation;
-
     /**
-     * Class constructor.
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Update", cascade={"persist"}, mappedBy="type")
+     * @Annotation\Exclude()
+     *
+     * @var Update[]|Collections\Collection
      */
+    private $organisationUpdates;
+
     public function __construct()
     {
         $this->organisation = new Collections\ArrayCollection();
         $this->meetingCost = new Collections\ArrayCollection();
+        $this->organisationUpdates = new Collections\ArrayCollection();
     }
 
-    /**
-     * @return array
-     */
     public static function getInvoiceTemplates(): array
     {
         return self::$invoiceTemplates;
     }
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
-    /**
-     * ToString
-     * Return the id here for form population.
-     *
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->description;
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Type
-     */
-    public function setId($id)
+    public function setId($id): Type
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return Type
-     */
-    public function setType($type)
+    public function setType($type): Type
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return Type
-     */
-    public function setDescription($description)
+    public function setDescription($description): Type
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @param bool $textual
-     *
-     * @return int|string
-     */
     public function getInvoice(bool $textual = false)
     {
         if ($textual) {
@@ -237,55 +163,45 @@ class Type extends AbstractEntity implements ResourceInterface
         return $this->invoice;
     }
 
-    /**
-     * @param int $invoice
-     *
-     * @return Type
-     */
-    public function setInvoice($invoice)
+    public function setInvoice($invoice): Type
     {
         $this->invoice = $invoice;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Event\Entity\Meeting\Cost[]
-     */
     public function getMeetingCost()
     {
         return $this->meetingCost;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Event\Entity\Meeting\Cost[] $meetingCost
-     *
-     * @return Type
-     */
-    public function setMeetingCost($meetingCost)
+    public function setMeetingCost($meetingCost): Type
     {
         $this->meetingCost = $meetingCost;
 
         return $this;
     }
 
-    /**
-     * @return Organisation[]
-     */
     public function getOrganisation()
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation[] $organisation
-     *
-     * @return Type
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation($organisation): Type
     {
         $this->organisation = $organisation;
 
+        return $this;
+    }
+
+    public function getOrganisationUpdates(): Collections\Collection
+    {
+        return $this->organisationUpdates;
+    }
+
+    public function setOrganisationUpdates(Collections\Collection $organisationUpdates): Type
+    {
+        $this->organisationUpdates = $organisationUpdates;
         return $this;
     }
 }

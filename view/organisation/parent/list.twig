@@ -3,20 +3,16 @@
 {{ form().closeTag()|raw }}
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
 
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
-
 <div class="row">
 
     <div class="col-md-10">
 
-        <h1 class="display-4">{{ translate("txt-parent-list") }} {{ parentLink(null,'new', 'button') }} {{ parentLink(null,'import-project', 'button') }}</h1>
+        <h1>{{ translate("txt-parent-list") }} {{ parentLink(null,'new', 'button') }} {{ parentLink(null,'import-project', 'button') }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -25,39 +21,51 @@
             <div class="col-md-6">
                 <div class="input-group">
                     {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+                    <div class="input-group-append input-group-btn">
+                        {{ formelement(form.get('submit')) }}
+                    </div>
+                </div>
             </div>
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
-                    <th>{{ translate('txt-member') }}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
+                    <th>{{ translate("txt-member") }}</th>
                     <th>{{ translate("txt-organisation") }}</th>
-                    <th>{{ translate("txt-actions") }}</th>
                 </tr>
                 </thead>
                 <tfoot>
                 </tfoot>
                 <tbody>
                 {% for parent in paginator.getCurrentItems() %}
-                    <tr>
-                        <td>{{ parentLink(parent, 'view', 'parent') }}</td>
+
+                    {% set hasWrongParentChild = parentService.hasWrongParentChildRelationship(parent) %}
+                    {% set canBeDeleted = parentService.parentCanBeDeleted(parent) %}
+
+                    <tr class="{% if hasWrongParentChild %}table-danger{% endif %} {% if canBeDeleted %}table-warning{% endif %}">
+                        <td>
+                            {% if hasWrongParentChild %}<i class="fa text-danger fa-exclamation-triangle"
+                                                           aria-hidden="true"
+                                                           title="{{ translate("txt-parent-has-recursive-structure-it-is-parent-itself-but-child-of-other-parent") }}"></i>{% endif %}
+                            {% if canBeDeleted %}<i class="fa text-warning fa-trash-o" aria-hidden="true"
+                                                    title="{{ translate("txt-parent-is-empty-and-can-be-deleted") }}"></i>{% endif %}
+                            {{ parentLink(parent, 'view', 'parent') }} {{ parentLink(parent, 'edit', 'icon') }}
+                        </td>
                         <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
-                        <td>{{ parentTypeLink(parent.type,'view', 'type') }}</td>
+                        <td>{{ parentTypeLink(parent.type,'view', 'name') }}</td>
                         <td>{{ translate(parent.getMemberType(true)) }}</td>
                         <td>{{ parent.parentOrganisation.count() }}</td>
-                        <td>{{ parentLink(parent, 'edit', 'icon') }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
 
-            {% include 'organisation/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-parent-found"))|raw }}
         {% endif %}
@@ -65,17 +73,15 @@
     <div class="col-md-2">
         <div class="well well-sm">
             <fieldset>
-                {{ ztbformelement(filter.get('memberType')) }}
-                {{ ztbformelement(filter.get('type')) }}
+                {{ ztbformelement(filter.get('memberType'), true) }}
+                {{ ztbformelement(filter.get('type'), true) }}
 
-                {{ ztbformelement(filter.get('artemisiaMemberType')) }}
-                {{ ztbformelement(filter.get('epossMemberType')) }}
-                {{ ztbformelement(filter.get('program')) }}
+                {{ ztbformelement(filter.get('artemisiaMemberType'), true) }}
+                {{ ztbformelement(filter.get('epossMemberType'), true) }}
+                {{ ztbformelement(filter.get('program'), true) }}
 
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-                </div>
+                {{ ztbformelement(form.get('submit')) }}
+                {{ ztbformelement(form.get('clear')) }}
             </fieldset>
         </div>
     </div>

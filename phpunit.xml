@@ -1,16 +1,16 @@
-<phpunit colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         verbose="true"
-         stopOnFailure="false"
-         processIsolation="false"
-         backupGlobals="false"
+<phpunit
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        verbose="true"
+        stopOnFailure="false"
+        processIsolation="false"
+        backupGlobals="false"
 >
     <testsuite name="iteaoffice/organisation">
         <directory>./test</directory>
     </testsuite>
-
     <filter>
         <whitelist>
             <directory suffix=".php">./src</directory>

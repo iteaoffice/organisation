@@ -3,20 +3,18 @@
 {{ form().closeTag()|raw }}
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
 
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
+
 
 <div class="row">
 
     <div class="col-md-10">
 
-        <h1 class="display-4">{{ translate("txt-financial-organisation-list") }}</h1>
+        <h1>{{ translate("txt-financial-organisation-list") }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -25,17 +23,20 @@
             <div class="col-md-6">
                 <div class="input-group">
                     {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+                    <div class="input-group-append input-group-btn">
+                        {{ formelement(form.get('submit')) }}
+                    </div>
+                </div>
             </div>
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate('txt-organisation')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'name', 'text': translate("txt-organisation")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/view', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
                     <th>{{ translate("txt-vat-number") }}</th>
                     <th colspan="2">{{ translate("txt-vat-status") }}</th>
                     {#<th>{{ translate("txt-vat-type") }}</th>#}
@@ -65,7 +66,7 @@
                 </tbody>
             </table>
 
-            {% include 'organisation/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
         {% endif %}
@@ -73,16 +74,14 @@
     <div class="col-md-2">
         <div class="well well-sm">
             <fieldset>
-                {{ ztbformelement(filter.get('type')) }}
-                {{ ztbformelement(filter.get('vatStatus')) }}
-                {{ ztbformelement(filter.get('omitContact')) }}
-                {{ ztbformelement(filter.get('requiredPurchaseOrder')) }}
-                {{ ztbformelement(filter.get('email')) }}
+                {{ ztbformelement(filter.get('type'), true) }}
+                {{ ztbformelement(filter.get('vatStatus'), true) }}
+                {{ ztbformelement(filter.get('omitContact'), true) }}
+                {{ ztbformelement(filter.get('requiredPurchaseOrder'), true) }}
+                {{ ztbformelement(filter.get('email'), true) }}
 
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
+                                   {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
-                </div>
             </fieldset>
         </div>
     </div>

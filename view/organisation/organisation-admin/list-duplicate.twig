@@ -1,20 +1,18 @@
 {% do headTitle().append(translate("txt-duplicate-organisations")) %}
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
 
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
+
 
 <div class="row">
 
     <div class="col-md-9">
 
-        <h1 class="display-4">{{ translate("txt-duplicate-organisations") }}</h1>
+        <h1>{{ translate("txt-duplicate-organisations") }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -23,20 +21,23 @@
             <div class="col-md-6">
                 <div class="input-group">
                     {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+                    <div class="input-group-append input-group-btn">
+                        {{ formelement(form.get('submit')) }}
+                    </div>
+                </div>
             </div>
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
                     <th>{{ translate("txt-contacts") }}</th>
                     <th>{{ translate("txt-projects") }}</th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'amount', 'text': translate('txt-amount')} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list-duplicate', 'criteria': 'amount', 'text': translate("txt-amount")} %}</a></th>
                 </tr>
                 </thead>
                 <tfoot>
@@ -58,7 +59,7 @@
                 </tbody>
             </table>
 
-            {% include 'organisation/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
         {% else %}
             {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
         {% endif %}
@@ -66,12 +67,10 @@
     <div class="col-md-3">
         <div class="well well-sm">
             <fieldset>
-                {{ ztbformelement(filter.get('type')) }}
+                {{ ztbformelement(filter.get('type'), true) }}
 
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
+                                   {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
-                </div>
             </fieldset>
         </div>
     </div>

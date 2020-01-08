@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -14,20 +15,20 @@ namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * OrganisationLogo.
  *
  * @ORM\Table(name="organisation_logo")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_logo")
  */
 class Logo extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="logo_id", type="integer", nullable=false)
+     * @ORM\Column(name="logo_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -39,7 +40,7 @@ class Logo extends AbstractEntity
      */
     private $organisationLogo;
     /**
-     * @ORM\Column(name="logo_extension", type="string", length=20, nullable=false)
+     * @ORM\Column(name="logo_extension", type="string", nullable=false)
      *
      * @var string
      */
@@ -47,7 +48,7 @@ class Logo extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\ContentType", cascade={"persist"}, inversedBy="organisationLogo")
      * @ORM\JoinColumn(name="contenttype_id", referencedColumnName="contenttype_id", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\File")
+     * @Annotation\Type("\Laminas\Form\Element\File")
      * @Annotation\Options({"label":"txt-logo"})
      *
      * @var \General\Entity\ContentType
@@ -62,45 +63,11 @@ class Logo extends AbstractEntity
     private $dateUpdated;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="logo", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")
-     * })
      *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
-
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * @param $property
-     * @param $value
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
 
     /**
      * @return mixed

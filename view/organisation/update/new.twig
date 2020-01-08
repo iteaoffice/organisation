@@ -1,0 +1,7 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-update-organisation")) %}
+
+<h1>{{ translate("txt-update-organisation") }}</h1>
+<p class="lead">{{ translate("txt-organisation-update-procedure-explanation") }}</p>
+
+{% include 'organisation/partial/form/update' %}

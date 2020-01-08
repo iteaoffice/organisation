@@ -3,20 +3,18 @@
 {{ form().closeTag()|raw }}
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
 
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
+
 
 <div class="row">
 
     <div class="col-md-12">
 
-        <h1 class="display-4">{{ translate("txt-parent-list-no-member-no-doa") }}</h1>
+        <h1>{{ translate("txt-parent-list-no-member-no-doa") }}</h1>
 
         <div class="row">
             <div class="col-md-6">
@@ -25,20 +23,23 @@
             <div class="col-md-6">
                 <div class="input-group">
                     {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
+                    <div class="input-group-append input-group-btn">
+                        {{ formelement(form.get('submit')) }}
+                    </div>
+                </div>
             </div>
         </div>
 
         {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'name', 'text': translate('txt-name')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'country', 'text': translate('txt-country')} %}</a></th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'type', 'text': translate('txt-type')} %}</a></th>
-                    <th>{{ translate('txt-member-type') }}</th>
-                    <th>{{ translate('txt-doa') }}</th>
-                    <th>{{ translate('txt-projects') }}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
+                    <th>{{ translate("txt-member-type") }}</th>
+                    <th>{{ translate("txt-doa") }}</th>
+                    <th>{{ translate("txt-projects") }}</th>
                     <th>{{ translate("txt-contact") }}</th>
                     <th>{{ translate("txt-address") }}</th>
                 </tr>
@@ -54,7 +55,7 @@
                         <td>{{ parentLink(parent, 'view', 'parent') }} {{ parentLink(parent, 'edit', 'icon') }}</td>
 
                         <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
-                        <td>{{ parentTypeLink(parent.type,'view', 'type') }}</td>
+                        <td>{{ parentTypeLink(parent.type,'view', 'name') }}</td>
                         <td>{{ translate(parent.getMemberType(true)) }}</td>
                         <td>{% for doa in parentService.parseDoas(parent) %}{{ doa }}{% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
                         <td>
@@ -73,7 +74,7 @@
                 </tbody>
             </table>
 
-            {% include 'organisation/partial/pagination-control' %}
+            {% include 'application/partial/pagination-control' %}
 
             <a href="{{ url('zfcadmin/parent/list-no-member-export',{'encodedFilter': encodedFilter}) }}" class="btn btn-primary btn-sm"><i
                         class="fa fa-file-excel-o"></i> {{ translate("txt-export-csv") }}</a>
@@ -86,13 +87,11 @@
         <div class="well well-sm">
             <fieldset>
 
-                {{ ztbformelement(filter.get('type')) }}
-                {{ ztbformelement(filter.get('program')) }}
+                {{ ztbformelement(filter.get('type'), true) }}
+                {{ ztbformelement(filter.get('program'), true) }}
 
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
+                                   {{ ztbformelement(form.get('submit')) }}
                     {{ ztbformelement(form.get('clear')) }}
-                </div>
             </fieldset>
         </div>
     </div>

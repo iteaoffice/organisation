@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -25,22 +26,22 @@ class Web extends AbstractEntity
     public const NOT_MAIN = 0;
     public const MAIN = 1;
 
-    protected static $mainTemplates
+    protected static array $mainTemplates
         = [
             self::NOT_MAIN => 'txt-not-main-web-address',
             self::MAIN     => 'txt-main-web-address',
         ];
 
     /**
-     * @ORM\Column(name="web_id", type="integer", nullable=false)
+     * @ORM\Column(name="web_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
-     * @ORM\Column(name="web", type="string", length=60, nullable=false)
+     * @ORM\Column(name="web", type="string", nullable=false)
      *
      * @var string
      */
@@ -48,7 +49,7 @@ class Web extends AbstractEntity
     /**
      * @ORM\Column(name="main", type="smallint", nullable=false)
      *
-     * @var integer
+     * @var int
      */
     private $main;
     /**
@@ -62,21 +63,6 @@ class Web extends AbstractEntity
     public function __toString(): string
     {
         return sprintf($this->web);
-    }
-
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    public function __isset($property)
-    {
-        return isset($this->$property);
     }
 
     public function isMain(): bool

@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -15,9 +16,9 @@ namespace Organisation\Controller;
 use Organisation\Entity\Note;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
-use Zend\Http\Request;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class NoteController
@@ -26,18 +27,9 @@ use Zend\View\Model\ViewModel;
  */
 final class NoteController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
@@ -127,8 +119,8 @@ final class NoteController extends OrganisationAbstractController
 
             if (isset($data['delete'])) {
                 $this->organisationService->delete($note);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    $this->translator->translate("txt-note-has-been-removed-successfully")
+                $this->flashMessenger()->addSuccessMessage(
+                    $this->translator->translate('txt-note-has-been-removed-successfully')
                 );
 
                 return $this->redirect()->toRoute(
@@ -143,8 +135,8 @@ final class NoteController extends OrganisationAbstractController
                 $note = $form->getData();
                 $this->organisationService->save($note);
 
-                $this->flashMessenger()->setNamespace('success')->addMessage(
-                    $this->translator->translate("txt-note-has-successfully-been-updated")
+                $this->flashMessenger()->addSuccessMessage(
+                    $this->translator->translate('txt-note-has-successfully-been-updated')
                 );
 
                 return $this->redirect()->toRoute(

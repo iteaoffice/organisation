@@ -1,7 +1,7 @@
-<h3>{{ translate("txt-parent-organisations") }}</h3>
+<h2 class="pt-3">{{ translate("txt-parent-organisations") }}</h2>
 
 {% if parent.parentOrganisation.count() > 0 %}
-    <table class="table table-hover table-striped table-condensed table-sm">
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
             <th>{{ translate("txt-parent-organisation") }}</th>
@@ -12,13 +12,17 @@
         </tr>
         </thead>
         <tbody>
-        {% for organisation in parent.parentOrganisation %}
+        {% for parentOrganisation in parent.parentOrganisation %}
             <tr>
-                <td>{{ parentOrganisationLink(organisation,'view','organisation') }} {{ parentOrganisationLink(organisation,'edit','icon') }}</td>
-                <td>{{ countryLink(organisation.organisation.country,'view-admin', 'name') }}</td>
-                <td>{{ organisationTypeLink(organisation.organisation.type,'view', 'type') }}</td>
-                <td>{{ contactLink(organisation.contact,'view-admin','name') }}</td>
-                <td>{{ organisation.affiliation.count() }}</td>
+                <td>
+                    {% if parentOrganisation.organisation.isParent() %}<span
+                            class="badge badge-info">{{ translate("txt-parent") }}</span>{% endif %}
+                    {{ parentOrganisationLink(parentOrganisation,'view','organisation') }} {{ parentOrganisationLink(parentOrganisation,'edit','icon') }}
+                </td>
+                <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin', 'name') }}</td>
+                <td>{{ organisationTypeLink(parentOrganisation.organisation.type, 'view', 'name') }}</td>
+                <td>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</td>
+                <td>{{ parentOrganisation.affiliation.count() }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -28,3 +32,5 @@
 {% endif %}
 
  {{ parentLink(parent, 'add-organisation','button') }}
+
+{% if parent.parentOrganisation.count() > 1 %}{{ parentOrganisationLink(parent.parentOrganisation.first, 'merge','button') }}{% endif %}

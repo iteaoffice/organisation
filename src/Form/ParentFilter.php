@@ -1,18 +1,14 @@
 <?php
 
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
 declare(strict_types=1);
 
 namespace Organisation\Form;
@@ -21,9 +17,9 @@ use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Organisation\Entity;
 use Program\Entity\Program;
-use Zend\Form\Element\MultiCheckbox;
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
+use Laminas\Form\Element\MultiCheckbox;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
 
 /**
  * Class ParentFilter
@@ -42,7 +38,7 @@ final class ParentFilter extends Form
 
         $filterFieldset->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => 'Laminas\Form\Element\Text',
                 'name'       => 'search',
                 'attributes' => [
                     'class'       => 'form-control',
@@ -134,7 +130,7 @@ final class ParentFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => 'Laminas\Form\Element\Submit',
                 'name'       => 'submit',
                 'attributes' => [
                     'id'    => 'submit',
@@ -146,7 +142,7 @@ final class ParentFilter extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => 'Laminas\Form\Element\Submit',
                 'name'       => 'clear',
                 'attributes' => [
                     'id'    => 'cancel',

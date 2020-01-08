@@ -5,14 +5,14 @@
  * @category    Organisation
  * @package     Config
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 declare(strict_types=1);
 
 namespace Organisation;
 
-use Admin\Entity\Access;
 use BjyAuthorize\Guard\Route;
+use Organisation\Acl\Assertion\UpdateAssertion;
 
 return [
     'bjyauthorize' => [
@@ -24,11 +24,19 @@ return [
              */
             Route::class => [
                 ['route' => 'image/organisation-logo', 'roles' => []],
+                ['route' => 'image/organisation-update-logo', 'roles' => []],
                 ['route' => 'organisation/json/get-branches', 'roles' => []],
                 ['route' => 'organisation/json/check-vat', 'roles' => ['office']],
                 ['route' => 'organisation/json/search', 'roles' => ['office']],
+                ['route' => 'organisation/json/search-parent', 'roles' => ['office']],
+                [
+                    'route'     => 'community/organisation/update',
+                    'roles'     => [],
+                    'assertion' => UpdateAssertion::class,
+                ],
                 ['route' => 'zfcadmin/organisation/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list-duplicate', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/list-inactive', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/manage-web', 'roles' => ['office']],
@@ -45,6 +53,10 @@ return [
                 ['route' => 'zfcadmin/organisation/financial/no-financial', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/note/new', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/note/edit', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/update/pending', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/update/edit', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/update/view', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/update/approve', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/list-no-member', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/list-no-member-export', 'roles' => ['office']],
@@ -87,6 +99,7 @@ return [
                 ['route' => 'zfcadmin/parent/doa/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/doa/download', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/doa/upload', 'roles' => ['office']],
+                ['route' => 'cli-organisation-cleanup', 'roles' => [],],
             ],
         ],
     ],

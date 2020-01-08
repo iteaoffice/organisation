@@ -11,6 +11,7 @@
     .header > th {
         border-bottom: 1px solid #0066cc;
     }
+
     img {
         width: 450px;
     }
@@ -20,7 +21,7 @@
 
 {% for project in projects %}
     {# Take the latest version to calculate the contribution of the affiliation#}
-    {% set version = projectService.getLatestProjectVersion(project, null, null, false, false) %}
+    {% set version = projectService.getLatestApprovedProjectVersion(project) %}
 
     {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
 
@@ -83,7 +84,7 @@
     {% for project in projects %}
 
         {# Take the latest version to calculate the contribution of the affiliation#}
-        {% set version = projectService.getLatestProjectVersion(project, null, null, false, false) %}
+        {% set version = projectService.getLatestApprovedProjectVersion(project) %}
 
         {% if version and parentService.hasExtraVariableBalanceByParentAndVersion(parent, version) %}
 
@@ -97,7 +98,7 @@
     {% endfor %}
     <tr class="footer">
         <th colspan="2">{{ translate("txt-total-extra-%s-contribution-in-pogram-%s-year-%s")|format(parent, program, year) }}</th>
-        <th align="right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent, program)|round_currency }}</th>
+        <th align="right">{{ parentService.parseTotalExtraVariableBalanceByParent(parent, program, year)|round_currency }}</th>
     </tr>
 </table>
 <br><br>
@@ -108,3 +109,9 @@
         <td width="500"><img src="public/assets/img/aeneas-invoice-formula.png"></td>
         <td></td>
     </tr>
+    <tr>
+        <td width="150"></td>
+        <td width="350">{{ translate("txt-number-of-memberships-of-excel-ju-associations-at-%s-%d")|format(membershipDate, amountOfMemberships) }}</td>
+        <td></td>
+    </tr>
+</table>

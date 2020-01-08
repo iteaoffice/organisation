@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -19,7 +20,7 @@ use Organisation\Entity;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Class HandleImport.
@@ -79,7 +80,7 @@ abstract class AbstractImportPlugin extends AbstractPlugin
         $this->validateData();
 
 
-        if (!$this->hasErrors()) {
+        if (! $this->hasErrors()) {
             $this->prepareContent($keys);
         }
 

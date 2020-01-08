@@ -1,6 +1,4 @@
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 {% set financialForm = form.get('organisation_entity_financial') %}
@@ -8,18 +6,18 @@
 {{ ztbformelement(financialForm.get('id')) }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-debtor-number") }}</label>
+    <label class="col-sm-3 col-form-label">{{ translate("txt-debtor-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ organisationService.parseDebtorNumber(organisation) }}</p>
+        <p class="form-control-plaintext">{{ organisationService.parseDebtorNumber(organisation) }}</p>
     </div>
 </div>
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-credit-number") }}</label>
+    <label class="col-sm-3 col-form-label">{{ translate("txt-credit-number") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext">{{ organisationService.parseCreditNumber(organisation) }}</p>
+        <p class="form-control-plaintext">{{ organisationService.parseCreditNumber(organisation) }}</p>
     </div>
 </div>
 
@@ -28,10 +26,10 @@
 {{ ztbformelement(financialForm.get('vatStatus')) }}
 
 <div class="form-group row">
-    <label class="col-md-3 form-control-label control-label col-form-label">{{ translate("txt-vat-status") }}</label>
+    <label class="col-sm-3 col-form-label">{{ translate("txt-vat-status") }}</label>
 
     <div class="col-sm-9">
-        <p class="form-control-static form-control-plaintext"><span
+        <p class="form-control-plaintext"><span
                     id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
                 ({{ financial.dateVat|string_date }})</span>
             {#<i class="fa fa-refresh checkVat cursor-pointer" rel="{{ financial.id }}"></i></p>#}
@@ -45,10 +43,11 @@
 {{ ztbformelement(financialForm.get('supplierNumber')) }}
 {{ ztbformelement(financialForm.get('requiredPurchaseOrder')) }}
 {{ ztbformelement(financialForm.get('email')) }}
+{{ formelement(form.get('csrf')) }}
 
 
 <div class="form-group row">
-    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+    <div class="offset-sm-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
         {% if form.has('delete') %}

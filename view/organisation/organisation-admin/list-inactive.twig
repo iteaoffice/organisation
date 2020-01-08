@@ -1,0 +1,35 @@
+{% do headTitle().append(translate("txt-inactive-organisations")) %}
+
+<h1>{{ translate("txt-inactive-organisations") }}</h1>
+
+{% if inactiveOrganisations|length > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <td>{{ translate("txt-nr") }}</td>
+            <td>{{ translate("txt-organisation-id") }}</td>
+            <td>{{ translate("txt-organisation-name") }}</td>
+            <td>{{ translate("txt-organisation-type") }}</td>
+            <td>{{ translate("txt-country") }}</td>
+        </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+        {% for organisation in inactiveOrganisations %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><a href="{{ url('zfcadmin/organisation/view',{'id':organisation.id}) }}">{{ organisation.id }}</a>
+                </td>
+                <td>
+                    <a href="{{ url('zfcadmin/organisation/view',{'id':organisation.id}) }}">{{ organisation.organisation }}</a>
+                </td>
+                <td>{{ organisation.type }}</td>
+                <td>{{ organisation.country.iso3 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-inactive-organisations-could-be-found"))|raw }}
+{% endif %}

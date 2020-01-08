@@ -1,16 +1,15 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-import-parents-and-project-information")) %}
 
-<h1 class="display-4">{{ translate("txt-import-parents-and-parent-information") }}</h1>
+<h1>{{ translate("txt-import-parents-and-parent-information") }}</h1>
 
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
  {{ ztbformelement(form.get('file')) }}
 
 <div class="form-group row">
-    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+    <div class="offset-sm-3 col-sm-9">
         {% if handleImport.hasErrors() %}
             <div class="alert alert-danger" role="alert">
                 <ul>
@@ -37,7 +36,7 @@
 
 
 <div class="form-group row">
-    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+    <div class="offset-sm-3 col-sm-9">
         {{ ztbformelement(form.get('upload')) }}
         {{ ztbformelement(form.get('import')) }}
     </div>
@@ -49,7 +48,7 @@
 
 
     {% if  handleImport.getAffiliation()|length > 0 %}
-        <table class="table table-hover table-striped table-condensed table-sm">
+        <table class="table table-hover table-striped table-sm">
             <thead>
             <tr>
                 <th></th>
@@ -75,15 +74,15 @@
             <tfoot>
             <tr>
                 <td colspan="11">
-                    <button class="btn btn-xs btn-info" id="check_all"
+                    <button class="btn btn-sm btn-info" id="check_all"
                             onclick="return false;">{{ translate("txt-check-all") }}</button>
-                    <button class="btn btn-xs btn-info" id="check_none"
+                    <button class="btn btn-sm btn-info" id="check_none"
                             onclick="return false;">{{ translate("txt-check-none") }}</button>
-                    <button class="btn btn-xs btn-info" id="check_inverse"
+                    <button class="btn btn-sm btn-info" id="check_inverse"
                             onclick="return false;">{{ translate("txt-check-inverse") }}</button>
-                    <button class="btn btn-xs btn-info" id="check_known"
+                    <button class="btn btn-sm btn-info" id="check_known"
                             onclick="return false;">{{ translate("txt-check-known") }}</button>
-                    <button class="btn btn-xs btn-info" id="check_unknown"
+                    <button class="btn btn-sm btn-info" id="check_unknown"
                             onclick="return false;">{{ translate("txt-check-unknown") }}</button>
                 </td>
             </tr>
@@ -108,7 +107,7 @@
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
                     <td>{% if affiliation.project.call.id %}{{ callLink(affiliation.project.call,'view-admin','name') }}{% else %}{{ affiliation.project.call }}
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
-                    <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view-admin','name') }}{% else %}{{ affiliation.project.call.program }}
+                    <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view','name') }}{% else %}{{ affiliation.project.call.program }}
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
                     <td>{% if affiliation.id %}{{ affiliationLink(affiliation,'view-admin','name') }}{% else %}{{ affiliation }}
                             <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
@@ -125,7 +124,7 @@
         </table>
 
         <div class="form-group row">
-            <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+            <div class="offset-sm-3 col-sm-9">
                 {{ ztbformelement(form.get('import')) }}
             </div>
         </div>

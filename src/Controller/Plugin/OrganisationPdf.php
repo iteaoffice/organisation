@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -38,7 +34,7 @@ final class OrganisationPdf extends TcpdfFpdi
     public function header(): void
     {
         if (null === $this->_tplIdx) {
-            if (!file_exists($this->template)) {
+            if (! file_exists($this->template)) {
                 throw new \InvalidArgumentException(sprintf('Template %s cannot be found', $this->template));
             }
             $this->setSourceFile($this->template);
@@ -110,7 +106,7 @@ final class OrganisationPdf extends TcpdfFpdi
             }
             $rowCounter++;
             $this->Ln();
-            $fill = !$fill;
+            $fill = ! $fill;
         }
         $this->Cell(array_sum($w), 0, '', 'T');
         $this->Ln();

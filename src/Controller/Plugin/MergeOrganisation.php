@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -7,7 +8,7 @@
  * @category    Affiliation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/affiliation for the canonical source repository
@@ -29,9 +30,10 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Note;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
-use Zend\Http\PhpEnvironment\Request;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Organisation\Service\UpdateService;
+use Laminas\Http\PhpEnvironment\Request;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 
 /**
  * Class MergeOrganisation
@@ -45,6 +47,10 @@ class MergeOrganisation extends AbstractPlugin
      */
     private $entityManager;
     /**
+     * @var UpdateService
+     */
+    private $updateService;
+    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -55,10 +61,12 @@ class MergeOrganisation extends AbstractPlugin
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        TranslatorInterface    $translator,
-        Logging                $errorLogger = null
+        UpdateService $updateService,
+        TranslatorInterface $translator,
+        Logging $errorLogger = null
     ) {
         $this->entityManager = $entityManager;
+        $this->updateService = $updateService;
         $this->translator    = $translator;
         $this->errorLogger   = $errorLogger;
     }
@@ -73,7 +81,8 @@ class MergeOrganisation extends AbstractPlugin
         $errors = [];
 
         // Check VAT
-        if (($target->getFinancial() instanceof Financial) && ($source->getFinancial() instanceof Financial)
+        if (
+            ($target->getFinancial() instanceof Financial) && ($source->getFinancial() instanceof Financial)
             && ($target->getFinancial()->getVat() !== $source->getFinancial()->getVat())
         ) {
             $errors[] = \sprintf(
@@ -89,10 +98,16 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Check countries
-        if (($target->getCountry() instanceof Country) && ($source->getCountry() instanceof Country)
+        if (
+            ($target->getCountry() instanceof Country) && ($source->getCountry() instanceof Country)
             && ($target->getCountry()->getId() !== $source->getCountry()->getId())
         ) {
             $errors[] = $this->translator->translate('txt-organisations-cant-have-different-countries');
+        }
+
+        // Check for pending updates
+        if ($this->updateService->hasPendingUpdates($source)) {
+            $errors[] = $this->translator->translate('txt-source-organisation-has-pending-updates');
         }
 
         return $errors;
@@ -116,7 +131,8 @@ class MergeOrganisation extends AbstractPlugin
             $source->getDescription()->setOrganisation($target);
             $target->setDescription($source->getDescription());
         }
-        if (($source->getFinancial() instanceof Financial) && (
+        if (
+            ($source->getFinancial() instanceof Financial) && (
                 ($target->getFinancial() === null)
                 || empty($target->getFinancial()->getVat())
                 || ($source->getFinancial()->getVat() === $target->getFinancial()->getVat())
@@ -125,7 +141,7 @@ class MergeOrganisation extends AbstractPlugin
             $source->getFinancial()->setOrganisation($target);
             $target->setFinancial($source->getFinancial());
         }
-        if ($target->getLogo()->isEmpty() && !$source->getLogo()->isEmpty()) {
+        if ($target->getLogo()->isEmpty() && ! $source->getLogo()->isEmpty()) {
             /** @var Logo $logo */
             $logo = $source->getLogo()->first();
             $logo->setOrganisation($target);
@@ -137,14 +153,6 @@ class MergeOrganisation extends AbstractPlugin
             $log->setOrganisation($target);
             $target->getLog()->add($log);
             $source->getLog()->remove($key);
-        }
-
-        // Transfer technology (many-to-many)
-        foreach ($source->getTechnology() as $key => $technology) {
-            $technology->getOrganisation()->removeElement($source);
-            $technology->getOrganisation()->add($target);
-            $target->getTechnology()->add($technology);
-            $source->getTechnology()->remove($key);
         }
 
         // Transfer websites
@@ -197,33 +205,15 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Transfer parent organisation (one-to-one)
-        if (($target->getParentOrganisation() === null)
-            && ($source->getParentOrganisation() instanceof \Organisation\Entity\Parent\Organisation)) {
+        if (
+            ($target->getParentOrganisation() === null)
+            && ($source->getParentOrganisation() instanceof \Organisation\Entity\Parent\Organisation)
+        ) {
             $parentOrganisation = $source->getParentOrganisation();
             $parentOrganisation->setOrganisation($target);
             $target->setParentOrganisation($parentOrganisation);
         }
 
-        // Transfer ICT organisations
-        foreach ($source->getIctOrganisation() as $key => $ictOrganisation) {
-            $ictOrganisation->setOrganisation($target);
-            $target->getIctOrganisation()->add($ictOrganisation);
-            $source->getIctOrganisation()->remove($key);
-        }
-
-        // Transfer cluster head
-        foreach ($source->getCluster() as $key => $cluster) {
-            $cluster->setOrganisation($target);
-            $target->getCluster()->add($cluster);
-            $source->getCluster()->remove($key);
-        }
-
-        // Transfer cluster memberships
-        foreach ($source->getClusterMember() as $key => $clusterMember) {
-            $clusterMember->setOrganisation($target);
-            $target->getClusterMember()->add($clusterMember);
-            $source->getClusterMember()->remove($key);
-        }
 
         // Transfer contacts
         foreach ($source->getContactOrganisation() as $key => $contactOrganisation) {
@@ -294,6 +284,13 @@ class MergeOrganisation extends AbstractPlugin
             $result->getOrganisation()->add($target);
             $target->getResult()->add($result);
             $source->getResult()->remove($key);
+        }
+
+        // Transfer past updates
+        foreach ($source->getUpdates() as $key => $update) {
+            $update->setOrganisation($target);
+            $target->getUpdates()->add($update);
+            $source->getUpdates()->remove($key);
         }
 
         try {

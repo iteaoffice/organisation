@@ -1,15 +1,14 @@
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 {% set noteForm = form.get('organisation_entity_note') %}
 
     {{ ztbformelement(noteForm.get('source')) }}
     {{ ztbformelement(noteForm.get('note')) }}
+    {{ ztbformelement(form.get('csrf')) }}
 
 <div class="form-group row">
-    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+    <div class="offset-sm-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {{ ztbformelement(form.get('cancel')) }}
         {% if form.has('delete') %}

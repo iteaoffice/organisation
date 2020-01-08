@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -23,8 +19,8 @@ use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class OrganisationTypeController
@@ -33,14 +29,8 @@ use Zend\View\Model\ViewModel;
  */
 final class OrganisationTypeController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var FormService
-     */
-    private $formService;
+    private OrganisationService $organisationService;
+    private FormService $formService;
 
     public function __construct(OrganisationService $organisationService, FormService $formService)
     {

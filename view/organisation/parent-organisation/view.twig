@@ -1,26 +1,25 @@
 {% do headTitle().append(translate("txt-admin")) %}
-{% do headTitle().append(translate("txt-view-parent-organisation-%s")|format(organisation)) %}
+{% do headTitle().append(translate("txt-view-parent-organisation-%s")|format(parentOrganisation)) %}
 
-<h1 class="display-4">{{ translate("txt-view-parent-organisation-%s")|format(organisation) }}</h1>
+<h1>{{ translate("txt-view-parent-organisation-%s")|format(parentOrganisation) }}</h1>
 
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-parent-name") }}</dt>
-    <dd>{{ parentLink(organisation.parent,'view','parent') }}</dd>
+    <dd>{{ parentLink(parentOrganisation.parent,'view','parent') }}</dd>
     <dt>{{ translate("txt-parent-type") }}</dt>
-    <dd>{{ translate(organisation.parent.getMemberType(true)) }}</dd>
-    <dt>{{ translate("txt-parent-status") }}</dt>
-    <dd>{{ parentStatusLink(organisation.parent.status,'view','status') }}</dd>
+    <dd>{{ translate(parentOrganisation.parent.getMemberType(true)) }}</dd>
     <dt>{{ translate("txt-organisation") }}</dt>
-    <dd>{{ organisationLink(organisation.organisation,'view-admin','name') }}</dd>
+    <dd>{{ organisationLink(parentOrganisation.organisation,'view-admin','name') }}</dd>
     <dt>{{ translate("txt-representative") }}</dt>
-    <dd>{{ contactLink(organisation.contact,'view-admin','name') }}</dd>
+    <dd>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</dd>
 
 </dl>
 
-{% if organisation.affiliation.count() > 0 %}
-    <table class="table table-hover table-striped table-condensed table-sm">
+{% if parentOrganisation.affiliation.count() > 0 %}
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-parent") }}</th>
             <th>{{ translate("txt-parent-organisation") }}</th>
             <th>{{ translate("txt-project") }}</th>
             <th>{{ translate("txt-name-in-project") }}</th>
@@ -30,11 +29,12 @@
         </tr>
         </thead>
         <tbody>
-        {% for affiliation in organisation.affiliation %}
+        {% for affiliation in parentOrganisation.affiliation %}
             <tr>
+                <td>{{ parentLink(affiliation.parentOrganisation.parent,'view','parent') }}</td>
                 <td>{{ affiliationLink(affiliation,'view-admin','parent-organisation') }}</td>
                 <td>{{ projectLink(affiliation.project,'view-admin', 'project') }}</td>
-                <td>{% for name in affiliation.parentOrganisation.organisation.names if name.project == affiliation.project %}{{ name.name }}{% endfor %}</td>
+                <td>{% for name in affiliation.parentOrganisation.organisation.names|filter(name => name.project == affiliation.project) -%}{{ name.name }}{% endfor %}</td>
                 <td>{{ callLink(affiliation.project.call,'view-admin', 'name') }}</td>
                 <td>{{ contactLink(affiliation.contact,'view-admin', 'name') }}</td>
                 <td>{{ affiliation.version.count() }}</td>
@@ -46,4 +46,4 @@
     {{ ztbalert().info(translate("txt-parent-organisation-%s-is-not-active-in-a-project")|format(organisation))|raw }}
 {% endif %}
 
-{{ parentOrganisationLink(organisation, 'edit','button') }} {{ parentOrganisationLink(organisation, 'add-affiliation','button') }} {{ parentOrganisationLink(organisation, 'merge','button') }}
+{{ parentOrganisationLink(parentOrganisation, 'edit','button') }} {{ parentOrganisationLink(parentOrganisation, 'add-affiliation','button') }} {{ parentOrganisationLink(parentOrganisation, 'merge','button') }}

@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/parent for the canonical source repository
@@ -18,12 +14,15 @@ declare(strict_types=1);
 namespace Organisation\Repository;
 
 use Affiliation\Entity\Affiliation;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
 use Program\Entity\Program;
 use Project\Entity\Version\Version;
+
+use function in_array;
+use function sprintf;
 
 /**
  * Class OParent
@@ -57,7 +56,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                     $queryBuilder->expr()->like('organisation_entity_financial_organisation_financial.vat', ':like')
                 )
             );
-            $queryBuilder->setParameter('like', \sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         if (array_key_exists('type', $filter)) {
@@ -87,8 +86,23 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
             );
         }
 
-        $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        if (array_key_exists('program', $filter)) {
+            $queryBuilder->join('organisation_entity_parent.doa', 'organisation_entity_parent_doa');
+            $queryBuilder->join('organisation_entity_parent_doa.program', 'organisation_entity_parent_doa_program');
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in('organisation_entity_parent_doa_program.id', $filter['program'])
+            );
+        }
+
+        $direction = Criteria::ASC;
+        if (
+            isset($filter['direction'])
+            && in_array(
+                strtoupper($filter['direction']),
+                [Criteria::ASC, Criteria::DESC],
+                true
+            )
+        ) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -106,7 +120,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->addOrderBy('parent_entity_type.type', $direction);
                 break;
             default:
-                $queryBuilder->addOrderBy('organisation_entity_parent.id', $direction);
+                $queryBuilder->addOrderBy('organisation_entity_organisation.organisation', Criteria::ASC);
         }
 
         return $queryBuilder;
@@ -121,6 +135,21 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function findParentByOrganisationName(string $name): ?Entity\OParent
+    {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select('organisation_entity_parent');
+        $queryBuilder->from(Entity\OParent::class, 'organisation_entity_parent');
+        $queryBuilder->andWhere($queryBuilder->expr()->isNull('organisation_entity_parent.dateEnd'));
+        $queryBuilder->join('organisation_entity_parent.organisation', 'organisation_entity_organisation');
+        $queryBuilder->andWhere('organisation_entity_organisation.organisation = :organisation');
+        $queryBuilder->setParameter('organisation', $name);
+        $queryBuilder->setMaxResults(1);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
 
     public function findActiveParentWithoutFinancial(array $filter): QueryBuilder
     {
@@ -143,12 +172,36 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 ->notIn('organisation_entity_parent', $subSelect2->getDQL())
         );
 
+        $queryBuilder->join('organisation_entity_organisation.affiliation', 'affiliation_entity_affiliation');
+        $queryBuilder->join('affiliation_entity_affiliation.project', 'project_entity_project');
+
+        //Include the DOA signers
+        $doaSigners = $this->_em->createQueryBuilder();
+        $doaSigners->select('doaParent.id');
+        $doaSigners->from(Entity\Parent\Doa::class, 'organisation_entity_parent_doa');
+        $doaSigners->join('organisation_entity_parent_doa.parent', 'doaParent');
+
+
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->eq(
+                    'organisation_entity_parent.memberType',
+                    Entity\OParent::MEMBER_TYPE_MEMBER
+                ),
+                $queryBuilder->expr()
+                    ->notIn(
+                        'organisation_entity_parent',
+                        $doaSigners->getDQL()
+                    )
+            )
+        );
+
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
                     ->like('organisation_entity_organisation.organisation', ':like')
             );
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         if (array_key_exists('memberType', $filter)) {
@@ -172,8 +225,15 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
             );
         }
 
-        $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        $direction = Criteria::ASC;
+        if (
+            isset($filter['direction'])
+            && in_array(
+                strtoupper($filter['direction']),
+                [Criteria::ASC, Criteria::DESC],
+                true
+            )
+        ) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -197,7 +257,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         return $queryBuilder;
     }
 
-    public function findActiveParentWhichAreNoMember(array $filter): Query
+    public function findActiveParentWhichAreNoMember(array $filter): QueryBuilder
     {
         $queryBuilder = $this->_em->createQueryBuilder();
         $queryBuilder->select('organisation_entity_parent');
@@ -251,7 +311,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
             $queryBuilder->expr()->eq('organisation_entity_parent.memberType', Entity\OParent::MEMBER_TYPE_APPLICANT)
         );
 
-        //Exlude the DOA signers
+        //Exclude the DOA signers
         $doaSigners = $this->_em->createQueryBuilder();
         $doaSigners->select('doaParent.id');
         $doaSigners->from(Entity\Parent\Doa::class, 'organisation_entity_parent_doa');
@@ -268,18 +328,25 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->expr()
                     ->like('organisation_entity_organisation.organisation', ':like')
             );
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         if (array_key_exists('type', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in('organisation_entity_organisation.type', implode($filter['type'], ', '))
+                    ->in('organisation_entity_organisation.type', implode(', ', $filter['type']))
             );
         }
 
-        $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        $direction = Criteria::ASC;
+        if (
+            isset($filter['direction'])
+            && in_array(
+                strtoupper($filter['direction']),
+                [Criteria::ASC, Criteria::DESC],
+                true
+            )
+        ) {
             $direction = strtoupper($filter['direction']);
         }
 
@@ -300,7 +367,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
                 $queryBuilder->addOrderBy('organisation_entity_organisation.id', $direction);
         }
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder;
     }
 
     public function findParentsForInvoicing(Program $program): array
@@ -414,5 +481,36 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         $queryBuilder->andWhere($queryBuilder->expr()->notIn('organisation_entity_parent', $doaSubselect->getDQL()));
 
         return $queryBuilder;
+    }
+
+    public function searchParents(
+        string $searchItem,
+        int $maxResults
+    ): array {
+        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder->select(
+            [
+                'organisation_entity_parent.id',
+                'organisation_entity_organisation.organisation',
+                'general_entity_country.iso3',
+            ]
+        );
+        $queryBuilder->distinct('organisation_entity_organisation.id');
+        $queryBuilder->from(Entity\Organisation::class, 'organisation_entity_organisation');
+        $queryBuilder->join('organisation_entity_organisation.country', 'general_entity_country');
+        //Do a full inner join on parent, so we only have parents
+        $queryBuilder->join('organisation_entity_organisation.parent', 'organisation_entity_parent');
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->like('organisation_entity_organisation.organisation', ':like'),
+                $queryBuilder->expr()->like('general_entity_country.country', ':like'),
+                $queryBuilder->expr()->like('general_entity_country.iso3', ':like')
+            )
+        );
+        $queryBuilder->setParameter('like', sprintf('%%%s%%', $searchItem));
+
+        $queryBuilder->setMaxResults($maxResults);
+        $queryBuilder->orderBy('organisation_entity_organisation.organisation', Criteria::ASC);
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 }

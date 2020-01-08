@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -30,9 +26,9 @@ use Organisation\Form;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class ParentFinancialController
@@ -41,34 +37,13 @@ use Zend\View\Model\ViewModel;
  */
 final class ParentFinancialController extends OrganisationAbstractController
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ParentService $parentService;
+    private ContactService $contactService;
+    private ProjectService $projectService;
+    private CountryService $countryService;
+    private OrganisationService $organisationService;
+    private EntityManager $entityManager;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ParentService $parentService,
@@ -112,10 +87,11 @@ final class ParentFinancialController extends OrganisationAbstractController
         $formData['attention'] = $parent->getContact()->getDisplayName();
         $formData['contact'] = $parent->getContact()->getId();
 
-        if (null !== (
-            $financialAddress = $this->contactService->getFinancialAddress(
-                $parent->getContact()
-            )
+        if (
+            null !== (
+                $financialAddress = $this->contactService->getFinancialAddress(
+                    $parent->getContact()
+                )
             )
         ) {
             $formData['address'] = $financialAddress->getAddress();
@@ -145,7 +121,7 @@ final class ParentFinancialController extends OrganisationAbstractController
                 /** @var Entity\Financial $financialOrganisation */
                 $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
-                    $formData['organisationFinancial']
+                    (int)$formData['organisationFinancial']
                 );
 
                 $financial = new Entity\Parent\Financial();
@@ -159,8 +135,9 @@ final class ParentFinancialController extends OrganisationAbstractController
                  * save the financial address
                  */
 
-                if (null === (
-                    $financialAddress = $this->contactService->getFinancialAddress($financial->getContact())
+                if (
+                    null === (
+                        $financialAddress = $this->contactService->getFinancialAddress($financial->getContact())
                     )
                 ) {
                     $financialAddress = new Address();
@@ -208,9 +185,6 @@ final class ParentFinancialController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function editAction()
     {
         /** @var Entity\Parent\Financial $financial */
@@ -223,6 +197,7 @@ final class ParentFinancialController extends OrganisationAbstractController
         $formData = [
             'preferredDelivery' => Entity\Financial::EMAIL_DELIVERY,
             'omitContact'       => Entity\Financial::OMIT_CONTACT,
+            'branch'            => $financial->getBranch()
         ];
 
         $financialAddress = null;
@@ -289,7 +264,7 @@ final class ParentFinancialController extends OrganisationAbstractController
                 /** @var Entity\Financial $financialOrganisation */
                 $financialOrganisation = $this->organisationService->find(
                     Entity\Financial::class,
-                    $formData['organisationFinancial']
+                    (int)$formData['organisationFinancial']
                 );
 
                 $financial->setContact($this->contactService->findContactById((int)$formData['contact']));

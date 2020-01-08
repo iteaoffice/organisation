@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -13,16 +14,21 @@ declare(strict_types=1);
 namespace Organisation\Controller;
 
 use Contact\Service\ContactService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
 use Organisation\Entity;
 use Organisation\Form\ParentDoa;
 use Organisation\Service\ParentService;
-use Zend\Http\Response;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Validator\File\FilesSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\ViewModel;
+use Program\Entity\Program;
+use Program\Service\ProgramService;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Validator\File\FilesSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\ViewModel;
+
+use function file_get_contents;
 
 /**
  * Class ParentDoaController
@@ -31,38 +37,26 @@ use Zend\View\Model\ViewModel;
  */
 final class ParentDoaController extends OrganisationAbstractController
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ParentService $parentService;
+    private EntityManager $entityManager;
+    private GeneralService $generalService;
+    private ContactService $contactService;
+    private ProgramService $programService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ParentService $parentService,
         EntityManager $entityManager,
         GeneralService $generalService,
         ContactService $contactService,
+        ProgramService $programService,
         TranslatorInterface $translator
     ) {
         $this->parentService = $parentService;
         $this->entityManager = $entityManager;
         $this->generalService = $generalService;
         $this->contactService = $contactService;
+        $this->programService = $programService;
         $this->translator = $translator;
     }
 
@@ -85,8 +79,7 @@ final class ParentDoaController extends OrganisationAbstractController
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $parent->getId()],
-                    []
+                    ['id' => $parent->getId()]
                 );
             }
 
@@ -105,12 +98,17 @@ final class ParentDoaController extends OrganisationAbstractController
                 $doa->setContentType($this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type));
 
                 $doa->setContact($this->contactService->findContactById((int)$data['contact']));
-                if ($dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
+                if ($dateSigned = DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
                     $doa->setDateSigned($dateSigned);
                 }
-                if ($dateApproved = \DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
+                if ($dateApproved = DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
                     $doa->setDateApproved($dateApproved);
                 }
+
+                //FInd the program
+                /** @var Program $program */
+                $program = $this->programService->findProgramById((int)$data['program']);
+                $doa->setProgram($program);
 
                 $doa->setParent($parent);
                 $doaObject->setDoa($doa);
@@ -124,8 +122,7 @@ final class ParentDoaController extends OrganisationAbstractController
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $parent->getId()],
-                    []
+                    ['id' => $parent->getId()]
                 );
             }
         }
@@ -165,8 +162,7 @@ final class ParentDoaController extends OrganisationAbstractController
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $doa->getParent()->getId()],
-                    []
+                    ['id' => $doa->getParent()->getId()]
                 );
             }
 
@@ -175,8 +171,7 @@ final class ParentDoaController extends OrganisationAbstractController
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $doa->getParent()->getId()],
-                    []
+                    ['id' => $doa->getParent()->getId()]
                 );
             }
 
@@ -187,9 +182,9 @@ final class ParentDoaController extends OrganisationAbstractController
                     /*
                      * Replace the content of the object
                      */
-                    if (!$doa->getObject()->isEmpty()) {
+                    if (! $doa->getObject()->isEmpty()) {
                         $doa->getObject()->first()->setObject(
-                            \file_get_contents($fileData['file']['tmp_name'])
+                            file_get_contents($fileData['file']['tmp_name'])
                         );
                     } else {
                         $doaObject = new Entity\Parent\DoaObject();
@@ -214,10 +209,10 @@ final class ParentDoaController extends OrganisationAbstractController
 
 
                 $doa->setContact($this->contactService->findContactById((int)$data['contact']));
-                if ($dateSigned = \DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
+                if ($dateSigned = DateTime::createFromFormat('Y-m-d', $data['dateSigned'])) {
                     $doa->setDateSigned($dateSigned);
                 }
-                if ($dateApproved = \DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
+                if ($dateApproved = DateTime::createFromFormat('Y-m-d', $data['dateApproved'])) {
                     $doa->setDateApproved($dateApproved);
                 }
 
@@ -232,8 +227,7 @@ final class ParentDoaController extends OrganisationAbstractController
 
                 return $this->redirect()->toRoute(
                     'zfcadmin/parent/view',
-                    ['id' => $doa->getParent()->getId()],
-                    []
+                    ['id' => $doa->getParent()->getId()]
                 );
             }
         }
@@ -255,6 +249,7 @@ final class ParentDoaController extends OrganisationAbstractController
          * @var Entity\Parent\Doa $doa
          */
         $doa = $this->parentService->find(Entity\Parent\Doa::class, (int)$this->params('id'));
+
         if (null === $doa || count($doa->getObject()) === 0) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
@@ -264,11 +259,10 @@ final class ParentDoaController extends OrganisationAbstractController
         $object = $doa->getObject()->first()->getObject();
 
         $response->setContent(stream_get_contents($object));
-        $response->getHeaders()->addHeaderLine('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 36000))
-            ->addHeaderLine('Cache-Control: max-age=36000, must-revalidate')->addHeaderLine(
-                'Content-Disposition',
-                'attachment; filename=\'' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '\''
-            )
+        $response->getHeaders()->addHeaderLine(
+            'Content-Disposition',
+            'attachment; filename="' . $doa->parseFileName() . '.' . $doa->getContentType()->getExtension() . '"'
+        )
             ->addHeaderLine('Pragma: public')->addHeaderLine(
                 'Content-Type: ' . $doa->getContentType()->getContentType()
             )->addHeaderLine(

@@ -1,0 +1,38 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-pending-organisation-updates")) %}
+
+<h1>{{ translate("txt-pending-organisation-updates") }}</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <p class="lead">{{ translate("txt-pending-organisation-updates-explanation") }}</p>
+    </div>
+</div>
+
+{% if pendingUpdates|length > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+            <tr>
+                <th>{{ translate("txt-organisation") }}</th>
+                <th>{{ translate("txt-country") }}</th>
+                <th>{{ translate("txt-contact") }}</th>
+                <th>{{ translate("txt-date-created") }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for update in pendingUpdates %}
+            <tr>
+                <td>{{ organisationUpdateLink(update, 'view-admin', 'name') }} ({{ update.organisation.type.type }})</td>
+                <td>{{ update.organisation.country.iso3 }}</td>
+                <td>{{ contactLink(update.contact, 'view-admin') }}</td>
+                <td>{{ update.dateCreated|string_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        </tfoot>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-organisation-updates-found"))|raw }}
+{% endif %}
+

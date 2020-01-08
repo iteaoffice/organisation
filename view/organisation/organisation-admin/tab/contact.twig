@@ -1,12 +1,12 @@
 <h2>{{ translate("txt-contact-list") }}</h2>
 
-{% if organisationService.getContactCount(organisation) > 0 %}
-    <table class="table table-striped table-hover table-condensed table-sm">
+{% if not organisation.contactOrganisation.isEmpty() %}
+    <table class="table table-striped table-hover table-sm">
         <thead>
         <tr>
-            <th>{{ translate('txt-name') }}</th>
-            <th>{{ translate('txt-email') }}</th>
-            <th>{{ translate('txt-country') }}</th>
+            <th colspan="2">{{ translate("txt-name") }}</th>
+            <th>{{ translate("txt-email") }}</th>
+            <th>{{ translate("txt-country") }}</th>
             <th>{{ translate("txt-projects") }}</th>
         </tr>
         </thead>
@@ -16,7 +16,8 @@
         {% for contactOrganisation in organisation.contactOrganisation %}
             {% set contact = contactOrganisation.contact %}
 
-            <tr {% if contact.dateEnd %}class="danger"{% endif %}>
+            <tr {% if contact.dateEnd %}class="table-danger"{% endif %}>
+                <td><span class="text-muted">{{ loop.index }}</span> </td>
                 <td>{{ contactLink(contact, 'view-admin', 'name') }} {% if contact.dateEnd %}({{ translate("txt-expired-on-%s")|format(contact.dateEnd|date("d-m-Y")) }}){% endif %}{{ contactLink(contact, 'edit-admin', 'icon') }}</td>
                 <td>{{ contact.email }} <a href="mailto:{{ contact.email }}"><i class="fa fa-envelope-o"></i> </a></td>
                 <td>{{ contact.contactOrganisation.organisation.country }}</td>

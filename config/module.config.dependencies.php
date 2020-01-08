@@ -7,7 +7,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -23,28 +23,27 @@ use Content\Service\ArticleService;
 use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
-use General\Service\GeneralService;
+use General\Service\EmailService;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller;
+use Organisation\Form\View\Helper\OrganisationFormElement;
+use Organisation\Form\View\Helper\ParentFormElement;
 use Organisation\Service;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Authentication\AuthenticationService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
-        Form\OrganisationForm::class                                          => [
-            EntityManager::class
-        ],
-        Search\Service\OrganisationSearchService::class                       => [
+        Search\Service\OrganisationSearchService::class => [
             'Config'
         ],
-        View\Handler\OrganisationHandler::class                               => [
+        View\Handler\OrganisationHandler::class => [
             'Application',
             'ViewHelperManager',
             TwigRenderer::class,
@@ -55,7 +54,7 @@ return [
             ProjectService::class,
             ArticleService::class
         ],
-        Controller\Plugin\HandleParentAndProjectImport::class                 => [
+        Controller\Plugin\HandleParentAndProjectImport::class => [
             EntityManager::class,
             CountryService::class,
             Service\ParentService::class,
@@ -64,14 +63,6 @@ return [
             Service\OrganisationService::class,
             CallService::class,
             ProgramService::class
-        ],
-        Controller\Plugin\HandleParentImport::class                           => [
-            EntityManager::class,
-            CountryService::class,
-            Service\ParentService::class,
-            ContactService::class,
-            Service\OrganisationService::class,
-            GeneralService::class
         ],
         Controller\Plugin\RenderOverviewExtraVariableContributionSheet::class => [
             Service\ParentService::class,
@@ -82,7 +73,7 @@ return [
             AffiliationService::class,
             TwigRenderer::class
         ],
-        Controller\Plugin\RenderOverviewVariableContributionSheet::class      => [
+        Controller\Plugin\RenderOverviewVariableContributionSheet::class => [
             Service\ParentService::class,
             InvoiceService::class,
             Options\ModuleOptions::class,
@@ -92,13 +83,57 @@ return [
             AffiliationService::class,
             TwigRenderer::class
         ],
-        Controller\Plugin\MergeOrganisation::class                            => [
+        Controller\Plugin\MergeOrganisation::class => [
             EntityManager::class,
+            Service\UpdateService::class,
             TranslatorInterface::class,
             Logging::class
         ],
-        Controller\Plugin\MergeParentOrganisation::class                      => [
+        Controller\Plugin\MergeParentOrganisation::class => [
             EntityManager::class
+        ],
+        Form\OrganisationForm::class => [
+            EntityManager::class
+        ],
+        Form\UpdateForm::class => [
+            EntityManager::class
+        ],
+        Form\FinancialForm::class => [
+            EntityManager::class
+        ],
+        OrganisationFormElement::class => [
+            'ViewHelperManager',
+            TranslatorInterface::class
+        ],
+        ParentFormElement::class => [
+            'ViewHelperManager',
+            TranslatorInterface::class
+        ],
+        View\Helper\UpdateNotification::class => [
+            Service\UpdateService::class,
+            TranslatorInterface::class
+        ],
+        View\Helper\OverviewVariableContribution::class => [
+            TwigRenderer::class,
+            ProjectService::class,
+            VersionService::class,
+            AffiliationService::class,
+            InvoiceService::class,
+            Service\ParentService::class,
+            ContactService::class,
+        ],
+        View\Helper\OverviewExtraVariableContribution::class => [
+            TwigRenderer::class,
+            ProjectService::class,
+            VersionService::class,
+            AffiliationService::class,
+            InvoiceService::class,
+            Service\ParentService::class,
+            ContactService::class,
+        ],
+        Service\UpdateService::class => [
+            EntityManager::class,
+            EmailService::class
         ]
     ]
 ];

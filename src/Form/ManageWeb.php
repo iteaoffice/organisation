@@ -1,38 +1,31 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
- *
- * PHP Version 7
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
  */
+
 declare(strict_types=1);
 
 namespace Organisation\Form;
 
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Web;
-use Zend\Form\Element;
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
+use Laminas\Form\Element;
+use Laminas\Form\Fieldset;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\Checkbox;
 
-/**
- * Class InvolvedSelect
- *
- * @package Organisation\Form
- */
-class ManageWeb extends Form
+final class ManageWeb extends Form
 {
-    /**
-     * ManageWeb constructor.
-     * @param Organisation $organisation
-     */
     public function __construct(Organisation $organisation)
     {
         parent::__construct();
@@ -71,7 +64,7 @@ class ManageWeb extends Form
 
             $webFieldset->add(
                 [
-                    'type'    => 'Zend\Form\Element\Checkbox',
+                    'type'    => Checkbox::class,
                     'name'    => 'delete',
                     'options' => [
                         'label'              => _("txt-delete"),
@@ -112,7 +105,7 @@ class ManageWeb extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => 'btn btn-primary',
@@ -123,7 +116,7 @@ class ManageWeb extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submitAndContinue',
                 'attributes' => [
                     'class' => 'btn btn-primary',
@@ -134,7 +127,7 @@ class ManageWeb extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => 'btn btn-warning',

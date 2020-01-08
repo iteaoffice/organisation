@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -23,11 +19,15 @@ use General\Service\CountryService;
 use Organisation\Entity;
 use Organisation\Entity\OParent;
 use Organisation\Service\OrganisationService;
-use Zend\Form\Form;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\Radio;
+use Laminas\Form\Element\Select;
+use Laminas\Form\Element\Text;
+use Laminas\Form\Element\Textarea;
 
 /**
  * Class Financial
- *
  * @package Organisation\Form
  */
 final class Financial extends Form
@@ -51,11 +51,13 @@ final class Financial extends Form
         $financialOrganisationValueOptions = [];
 
         /** @var Financial $financial */
-        foreach ($organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
-                ->getArrayResult() as $financialOrganisation) {
+        foreach (
+            $organisationService->findOrganisationFinancialList(['order' => 'organisation', 'direction' => 'asc'])
+                ->getArrayResult() as $financialOrganisation
+        ) {
             $country = $financialOrganisation['organisation']['country'];
 
-            if (!array_key_exists($country['id'], $financialOrganisationValueOptions)) {
+            if (! array_key_exists($country['id'], $financialOrganisationValueOptions)) {
                 $financialOrganisationValueOptions[$country['id']] = [
                     'label'   => $country['country'],
                     'options' => []
@@ -73,7 +75,7 @@ final class Financial extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Select',
+                'type'       => Select::class,
                 'name'       => 'organisationFinancial',
                 'options'    => [
                     'value_options' => $financialOrganisationValueOptions,
@@ -87,7 +89,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'branch',
                 'options'    => [
                     'label'      => _('txt-branch'),
@@ -113,11 +115,20 @@ final class Financial extends Form
             }
         }
 
+        foreach ($parent->getFinancial() as $financialOrganisation) {
+            foreach ($financialOrganisation->getOrganisation()->getContactOrganisation() as $contactOrganisation) {
+                /** @var Contact $contact */
+                $contact = $contactOrganisation->getContact();
+
+                $financialContactValueOptions[$contact->getId()] = $contact->getFormName();
+            }
+        }
+
         asort($financialContactValueOptions);
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Select',
+                'type'       => Select::class,
                 'name'       => 'contact',
                 'options'    => [
                     'value_options' => $financialContactValueOptions,
@@ -131,7 +142,7 @@ final class Financial extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Radio',
+                'type'       => Radio::class,
                 'name'       => 'omitContact',
                 'options'    => [
                     'value_options' => Entity\Financial::getOmitContactTemplates(),
@@ -144,7 +155,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Textarea',
+                'type'       => Textarea::class,
                 'name'       => 'address',
                 'options'    => [
                     'label' => _('txt-address'),
@@ -158,7 +169,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'zipCode',
                 'options'    => [
                     'label' => _('txt-zip-code'),
@@ -172,7 +183,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Text',
+                'type'       => Text::class,
                 'name'       => 'city',
                 'options'    => [
                     'label' => _('txt-city'),
@@ -186,7 +197,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Select',
+                'type'       => Select::class,
                 'name'       => 'country',
                 'options'    => [
                     'value_options' => $countries,
@@ -200,7 +211,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Radio',
+                'type'       => Radio::class,
                 'name'       => 'preferredDelivery',
                 'options'    => [
                     'value_options' => Entity\Financial::getEmailTemplates(),
@@ -213,7 +224,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
                     'class' => 'btn btn-primary',
@@ -223,7 +234,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'delete',
                 'attributes' => [
                     'class' => 'btn btn-danger',
@@ -233,7 +244,7 @@ final class Financial extends Form
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
                     'class' => 'btn btn-warning',

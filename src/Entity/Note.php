@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -14,39 +15,41 @@ namespace Organisation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
+use Laminas\Form\Annotation;
 
 /**
  * OrganisationLog.
  *
  * @ORM\Table(name="organisation_note")
  * @ORM\Entity
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation_note")
  */
 class Note extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="note_id", type="integer", nullable=false)
+     * @ORM\Column(name="note_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
      * @ORM\Column(name="note", length=65535, type="text", nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Textarea")
+     * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-note","help-block":"txt-note-help-block"})
+     *  @Annotation\Attributes({"placeholder":"txt-note-note-placeholder","rows":10})
      *
      * @var string
      */
     private $note;
     /**
-     * @ORM\Column(name="source", type="string", length=45, nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @ORM\Column(name="source", type="string", nullable=false)
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-note-source","help-block":"txt-note-source-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-note-source-placeholder"})
      *
      * @var string
      */
@@ -76,50 +79,11 @@ class Note extends AbstractEntity
      */
     private $organisation;
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /**
-     * @param string $property
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Note
-     */
     public function setId($id)
     {
         $this->id = $id;
@@ -127,100 +91,60 @@ class Note extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNote()
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    /**
-     * @param string $note
-     *
-     * @return Note
-     */
-    public function setNote($note)
+    public function setNote($note): Note
     {
         $this->note = $note;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSource()
+    public function getSource(): ?string
     {
         return $this->source;
     }
 
-    /**
-     * @param string $source
-     *
-     * @return Note
-     */
-    public function setSource($source)
+    public function setSource($source): Note
     {
         $this->source = $source;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getDateCreated()
     {
         return $this->dateCreated;
     }
 
-    /**
-     * @param \DateTime $dateCreated
-     *
-     * @return Note
-     */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated($dateCreated): Note
     {
         $this->dateCreated = $dateCreated;
 
         return $this;
     }
 
-    /**
-     * @return \Contact\Entity\Contact
-     */
     public function getContact()
     {
         return $this->contact;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $contact
-     *
-     * @return Note
-     */
-    public function setContact($contact)
+    public function setContact($contact): Note
     {
         $this->contact = $contact;
 
         return $this;
     }
 
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return Note
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation($organisation): Note
     {
         $this->organisation = $organisation;
 

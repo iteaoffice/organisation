@@ -1,4 +1,4 @@
-<h3>{{ translate("txt-financial-information") }} {{ parentFinancialLink(null, 'new','button', parent) }}</h3>
+<h2 class="pt-3">{{ translate("txt-financial-information") }} {{ parentFinancialLink(null, 'new','button', parent) }}</h2>
 
 {% for financial in parent.financial %}
 
@@ -13,6 +13,10 @@
     <dl class="dl-horizontal">
         <dt>{{ translate("txt-billing-organisation") }}</dt>
         <dd>{{ organisationLink(financial.organisation,'view-admin','name') }}</dd>
+        {% if financial.branch %}
+            <dt>{{ translate("txt-branch") }}</dt>
+            <dd>{{ financial.branch }}</dd>
+        {% endif %}
         <dt>{{ translate("txt-country") }}</dt>
         <dd>{{ countryLink(financial.organisation.country,'view-admin', 'name') }}</dd>
         <dt>{{ translate("txt-financial-contact") }}</dt>
@@ -35,7 +39,7 @@
                 <dd>{{ contactService.parseAttention(financial.contact) }} {{ financial.contact.parseFullName() }}</dd>
             {% endif %}
 
-            <dt>{{ translate('txt-vat-number') }}</dt>
+            <dt>{{ translate("txt-vat-number") }}</dt>
             <dd>
                 {% if financial.organisation.financial.vat %}
                     {{ financial.organisation.financial.vat }}

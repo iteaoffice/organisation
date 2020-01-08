@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -15,19 +16,16 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use Program\Entity\Program;
-use Zend\Form;
-use Zend\InputFilter\InputFilterProviderInterface;
+use Laminas\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
 
 /**
  * Class CreateParentDoa
+ *
  * @package Organisation\Form
  */
-class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
+final class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
 {
-    /**
-     * ParentDoa constructor.
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct();
@@ -52,7 +50,7 @@ class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
                     ],
                     'object_manager' => $entityManager,
                     'help-block'     => _('txt-add-doa-for-program-help-block'),
-                    'label'          => _("txt-add-doa-for-program-label"),
+                    'label'          => _('txt-add-doa-for-program-label'),
                 ],
             ]
         );
@@ -68,12 +66,6 @@ class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [

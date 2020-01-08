@@ -7,7 +7,7 @@
  * @category    Program
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2018 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/project for the canonical source repository
@@ -21,31 +21,27 @@ use Affiliation\Service\AffiliationService;
 use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use Contact\Service\ContactService;
-use Content\Service\ArticleService;
 use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
 use General\Service\GeneralService;
+use Invoice\Search\Service\InvoiceSearchService;
 use Invoice\Service\InvoiceService;
 use Organisation\Controller;
 use Organisation\Service;
 use Program\Service\ProgramService;
-use Project\Options\ModuleOptions;
 use Project\Service\ProjectService;
-use Zend\Authentication\AuthenticationService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
-use ZfcTwig\View\TwigRenderer;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 
 return [
     ConfigAbstractFactory::class => [
-        Controller\Plugin\MergeOrganisation::class        => [
-            EntityManager::class,
-            TranslatorInterface::class,
-            Logging::class
+        Controller\ConsoleController::class               => [
+            Service\OrganisationService::class
         ],
         Controller\JsonController::class                  => [
             Service\OrganisationService::class,
+            Service\ParentService::class,
             TranslatorInterface::class
         ],
         Controller\NoteController::class                  => [
@@ -58,7 +54,9 @@ return [
         ],
         Controller\OrganisationAdminController::class     => [
             Service\OrganisationService::class,
+            Search\Service\OrganisationSearchService::class,
             InvoiceService::class,
+            InvoiceSearchService::class,
             ProjectService::class,
             ContactService::class,
             AffiliationService::class,
@@ -106,6 +104,7 @@ return [
             EntityManager::class,
             GeneralService::class,
             ContactService::class,
+            ProgramService::class,
             TranslatorInterface::class
         ],
         Controller\ParentFinancialController::class       => [
@@ -117,5 +116,17 @@ return [
             EntityManager::class,
             TranslatorInterface::class
         ],
+        Controller\UpdateController::class                => [
+            Service\OrganisationService::class,
+            GeneralService::class,
+            Service\FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\UpdateManagerController::class         => [
+            Service\UpdateService::class,
+            GeneralService::class,
+            Service\FormService::class,
+            TranslatorInterface::class
+        ]
     ]
 ];

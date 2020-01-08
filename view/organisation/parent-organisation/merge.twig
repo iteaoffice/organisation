@@ -1,7 +1,7 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-merge-organiation-%s-in-%s")|format(organisation, organisation.parent)) %}
 
-<h1 class="display-4">{{ translate("txt-merge-organiation-%s-in-%s")|format(organisation, organisation.parent) }}</h1>
+<h1>{{ translate("txt-merge-organiation-%s-in-%s")|format(organisation, organisation.parent) }}</h1>
 
 <h2>{{ translate("txt-parent-information") }}</h2>
 
@@ -10,8 +10,6 @@
     <dd>{{ parentLink(organisation.parent,'view','parent') }}</dd>
     <dt>{{ translate("txt-parent-type") }}</dt>
     <dd>{{ translate(organisation.parent.getMemberType(true)) }}</dd>
-    <dt>{{ translate("txt-parent-status") }}</dt>
-    <dd>{{ parentStatusLink(organisation.parent.status,'view','status') }}</dd>
     <dt>{{ translate("txt-organisation") }}</dt>
     <dd>{{ organisationLink(organisation.organisation,'view-admin','name') }}</dd>
     <dt>{{ translate("txt-representative") }}</dt>
@@ -22,7 +20,7 @@
 
 
 <form method="post" action="">
-    <table class="table table-hover table-striped table-condensed table-sm">
+    <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
             <th colspan="2">{{ translate("txt-parent-organisation") }}</th>
@@ -33,7 +31,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="success">
+        <tr class="table-success">
             <td>
                 {% if merge %}
                     {{ translate("txt-main") }}:
@@ -41,12 +39,12 @@
             </td>
             <td>{{ parentOrganisationLink(organisation,'view','organisation') }} {{ parentOrganisationLink(organisation,'edit','icon') }}</td>
             <td>{{ countryLink(organisation.organisation.country,'view-admin', 'name') }}</td>
-            <td>{{ organisationTypeLink(organisation.organisation.type,'view', 'type') }}</td>
+            <td>{{ organisationTypeLink(organisation.organisation.type,'view', 'name') }}</td>
             <td>{{ contactLink(organisation.contact,'view-admin','name') }}</td>
             <td>{{ organisation.affiliation.count() }}</td>
         </tr>
-        {% for otherOrganisation in organisation.parent.parentOrganisation if organisation.id != otherOrganisation.id %}
-            <tr  {% if otherOrganisation == affiliation.id %}class="info"{% endif %}>
+        {% for otherOrganisation in organisation.parent.parentOrganisation|filter(otherOrganisation => organisation.id != otherOrganisation.id) -%}
+            <tr  {% if otherOrganisation == affiliation.id %}class="table-info"{% endif %}>
                 <td>
                     {% if merge != otherOrganisation.id %}
                         <input type="radio" name="merge" value="{{ otherOrganisation.id }}">
@@ -57,7 +55,7 @@
                 </td>
                 <td>{{ parentOrganisationLink(otherOrganisation,'merge','organisation') }} {{ parentOrganisationLink(otherOrganisation, 'view','icon') }} {{ parentOrganisationLink(organisation,'edit','icon') }}</td>
                 <td>{{ countryLink(otherOrganisation.organisation.country,'view-admin', 'name') }}</td>
-                <td>{{ organisationTypeLink(otherOrganisation.organisation.type,'view', 'type') }}</td>
+                <td>{{ organisationTypeLink(otherOrganisation.organisation.type,'view', 'name') }}</td>
                 <td>{{ contactLink(otherOrganisation.contact,'view-admin','name') }}</td>
                 <td>{{ otherOrganisation.affiliation.count() }}</td>
             </tr>

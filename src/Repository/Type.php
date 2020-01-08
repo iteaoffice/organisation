@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -21,12 +17,14 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
 
+use function in_array;
+
 /**
  * Class Type
  *
  * @package Organisation\Repository
  */
-class Type extends EntityRepository implements FilteredObjectRepository
+final class Type extends EntityRepository implements FilteredObjectRepository
 {
     public function findFiltered(array $filter = []): QueryBuilder
     {
@@ -36,11 +34,11 @@ class Type extends EntityRepository implements FilteredObjectRepository
 
         if (array_key_exists('search', $filter)) {
             $queryBuilder->andWhere($queryBuilder->expr()->like('organisation_entity_type.type', ':like'));
-            $queryBuilder->setParameter('like', sprintf("%%%s%%", $filter['search']));
+            $queryBuilder->setParameter('like', sprintf('%%%s%%', $filter['search']));
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction']) && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
+        if (isset($filter['direction']) && in_array(strtoupper($filter['direction']), ['ASC', 'DESC'], true)) {
             $direction = strtoupper($filter['direction']);
         }
 

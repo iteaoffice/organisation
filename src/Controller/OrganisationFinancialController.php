@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -21,9 +22,9 @@ use Organisation\Entity\Financial;
 use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Paginator\Paginator;
-use Zend\View\Model\ViewModel;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class OrganisationFinancialController
@@ -32,22 +33,10 @@ use Zend\View\Model\ViewModel;
  */
 final class OrganisationFinancialController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private FormService $formService;
+    private GeneralService $generalService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
@@ -60,7 +49,6 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
         $this->generalService = $generalService;
         $this->translator = $translator;
     }
-
 
     public function listAction(): ViewModel
     {
@@ -150,7 +138,7 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
                 }
 
                 if ($data['vatType'] === '0') {
-                    $financial->setVatType(null);
+                    $financial->setVatType(new ArrayCollection());
                 } else {
                     $vatType = $this->generalService->find(VatType::class, (int)$data['vatType']);
                     $arrayCollection = new ArrayCollection();

@@ -8,7 +8,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
@@ -19,10 +19,17 @@ declare(strict_types=1);
 namespace Organisation\Controller\Plugin;
 
 use Doctrine\Common\Collections\Criteria;
-use Zend\Http\Request;
-use Zend\Mvc\Application;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\Http\Request;
+use Laminas\Json\Json;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\ServiceManager\ServiceManager;
+
+use function base64_decode;
+use function base64_encode;
+use function http_build_query;
+use function json_encode;
+use function urldecode;
 
 /**
  * Class GetFilter
@@ -50,20 +57,21 @@ final class GetFilter extends AbstractPlugin
         $filter = [];
         /** @var Application $application */
         $application = $this->serviceManager->get('application');
-        $encodedFilter = \urldecode((string)$application->getMvcEvent()->getRouteMatch()->getParam('encodedFilter'));
+        $encodedFilter = urldecode((string)$application->getMvcEvent()->getRouteMatch()->getParam('encodedFilter'));
         /** @var Request $request */
         $request = $application->getMvcEvent()->getRequest();
 
-        if (!empty($encodedFilter)) {
-            // Take the filter from the URL
-            $filter = (array)\json_decode(\base64_decode($encodedFilter));
+        $filter = [];
+        if (! empty($base64decodedFilter = base64_decode($encodedFilter))) {
+            $filter = (array)Json::decode($base64decodedFilter);
         }
 
         $order = $request->getQuery('order');
         $direction = $request->getQuery('direction');
 
         // If the form is submitted, refresh the URL
-        if ($request->isGet()
+        if (
+            $request->isGet()
             && (($request->getQuery('submit') !== null) || ($request->getQuery('presentation') !== null))
         ) {
             $query = $request->getQuery()->toArray();
@@ -73,7 +81,7 @@ final class GetFilter extends AbstractPlugin
         }
 
         // Add a default order and direction if not known in the filter
-        if (!isset($filter['order'])) {
+        if (! isset($filter['order'])) {
             $filter['order'] = '';
             $filter['direction'] = Criteria::ASC;
         }
@@ -106,7 +114,7 @@ final class GetFilter extends AbstractPlugin
             unset($filterCopy[$param]);
         }
 
-        return \http_build_query(['filter' => $filterCopy, 'submit' => 'true']);
+        return http_build_query(['filter' => $filterCopy, 'submit' => 'true']);
     }
 
     public function getOrder(): string
@@ -121,6 +129,6 @@ final class GetFilter extends AbstractPlugin
 
     public function getHash(): string
     {
-        return \base64_encode(\json_encode($this->filter));
+        return base64_encode(json_encode($this->filter));
     }
 }

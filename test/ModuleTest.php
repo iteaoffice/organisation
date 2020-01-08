@@ -1,28 +1,28 @@
 <?php
 /**
- * ITEA copyright message placeholder
+ * Jield BV all rights reserved
  *
- * @category    ProjectTest
- * @package     Entity
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @author      Dr. ir. Johan van der Heide <info@jield.nl>
+ * @copyright   Copyright (c) 2004-2017 Jield BV (https://jield.nl)
+ * @license     https://jield.net/license.txt proprietary
+ * @link        https://jield.net
  */
 
 declare(strict_types=1);
 
-namespace OrganisationTest\InputFilter;
+namespace OrganisationTest;
 
 use Organisation\Module;
 use Testing\Util\AbstractServiceTest;
-use Zend\Mvc\Application;
-use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\AbstractFactory\ConfigAbstractFactory;
-use Zend\View\HelperPluginManager;
+use Laminas\Mvc\Application;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+use Laminas\View\HelperPluginManager;
+use function is_string;
 
 /**
  * Class ModuleTest
  *
- * @package OrganisationTest\InputFilter
+ * @package ContactTest
  */
 class ModuleTest extends AbstractServiceTest
 {
@@ -31,14 +31,10 @@ class ModuleTest extends AbstractServiceTest
         $module = new Module();
         $config = $module->getConfig();
 
-        $this->assertInternalType('array', $config);
         $this->assertArrayHasKey('service_manager', $config);
         $this->assertArrayHasKey(ConfigAbstractFactory::class, $config);
     }
 
-    /**
-     *
-     */
     public function testInstantiationOfConfigAbstractFactories(): void
     {
         $module = new Module();
@@ -47,37 +43,36 @@ class ModuleTest extends AbstractServiceTest
         $abstractFacories = $config[ConfigAbstractFactory::class] ?? [];
 
         foreach ($abstractFacories as $service => $dependencies) {
-
+            //Skip the Filters
+            if (strpos($service, 'Filter') !== false) {
+                continue;
+            }
+            if (strpos($service, 'Handler') !== false) {
+                continue;
+            }
+            if (strpos($service, 'FinancialForm') !== false) {
+                continue;
+            }
+            if (strpos($service, 'FormElement') !== false) {
+                continue;
+            }
 
             $instantiatedDependencies = [];
             foreach ($dependencies as $dependency) {
-
                 if ($dependency === 'Application') {
                     $dependency = Application::class;
-                }
-                if ($dependency === 'ViewHelperManager') {
-                    $dependency = HelperPluginManager::class;
                 }
                 if ($dependency === 'Config') {
                     $dependency = [];
                 }
-                if ($dependency !== Application::class) {
-                    $instantiatedDependencies[]
-                        = $this->getMockBuilder($dependency)->disableOriginalConstructor()->getMock();
-
+                if ($dependency === 'ViewHelperManager') {
+                    $dependency = HelperPluginManager::class;
+                }
+                if (is_string($dependency)) {
+                    $instantiatedDependencies[] = $this->getMockBuilder($dependency)->disableOriginalConstructor()
+                        ->getMock();
                 } else {
-
-                    $applicationMock = $this->getMockBuilder($dependency)->disableOriginalConstructor()->setMethods(
-                        ['getMvcEvent']
-                    )->getMock();
-
-                    $mvcEvent = new MvcEvent();
-
-                    $applicationMock->expects($this->any())
-                        ->method('getMvcEvent')
-                        ->will($this->returnValue($mvcEvent));
-
-                    $instantiatedDependencies[] = $applicationMock;
+                    $instantiatedDependencies[] = [];
                 }
             }
 
@@ -85,6 +80,5 @@ class ModuleTest extends AbstractServiceTest
 
             $this->assertInstanceOf($service, $instance);
         }
-
     }
 }

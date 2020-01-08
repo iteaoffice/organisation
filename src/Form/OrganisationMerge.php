@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Content
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -15,8 +16,8 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use Organisation\Entity\Organisation;
 use Organisation\Repository\Organisation as OrganisationRepository;
-use Zend\Form\Element;
-use Zend\Form\Form;
+use Laminas\Form\Element;
+use Laminas\Form\Form;
 
 /**
  * Class OrganisationMerge
@@ -39,7 +40,7 @@ class OrganisationMerge extends Form
         $this->setAttribute('action', '');
 
         $mainSuggestions = [];
-        if (!\is_null($entityManager) && !\is_null($destination)) {
+        if ($entityManager !== null && $destination !== null) {
             /** @var OrganisationRepository $repository */
             $repository = $entityManager->getRepository(Organisation::class);
             $suggestions = $repository->findMergeCandidatesFor($destination);

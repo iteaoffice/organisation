@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -7,7 +8,7 @@
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        http://github.com/iteaoffice/organisation for the canonical source repository
@@ -34,14 +35,8 @@ use Doctrine\ORM\QueryBuilder;
  */
 abstract class AbstractService
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-    /**
-     * @var SelectionContactService
-     */
-    protected $selectionContactService;
+    protected EntityManager $entityManager;
+    protected ?SelectionContactService $selectionContactService;
 
     public function __construct(EntityManager $entityManager, SelectionContactService $selectionContactService = null)
     {
@@ -52,7 +47,7 @@ abstract class AbstractService
     public function findFilteredByContact(string $entity, $filter, Contact $contact): QueryBuilder
     {
         //The 'filter' should always be there to support the repositories
-        if (!\array_key_exists('filter', $filter)) {
+        if (! \array_key_exists('filter', $filter)) {
             $filter['filter'] = [];
         }
 
@@ -169,7 +164,7 @@ abstract class AbstractService
 
     public function save(Entity\AbstractEntity $entity): Entity\AbstractEntity
     {
-        if (!$this->entityManager->contains($entity)) {
+        if (! $this->entityManager->contains($entity)) {
             $this->entityManager->persist($entity);
         }
 

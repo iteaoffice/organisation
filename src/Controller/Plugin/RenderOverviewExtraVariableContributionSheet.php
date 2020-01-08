@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -25,7 +21,7 @@ use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use ZfcTwig\View\TwigRenderer;
 
 /**
@@ -95,18 +91,24 @@ final class RenderOverviewExtraVariableContributionSheet extends AbstractPlugin
         $content = $this->renderer->render(
             'organisation/pdf/overview-extra-variable-contribution',
             [
-                'year'               => $year,
-                'parent'             => $parent,
-                'contactService'     => $this->contactService,
-                'versionService'     => $this->versionService,
-                'parentService'      => $this->parentService,
-                'affiliationService' => $this->affiliationService,
-                'projectService'     => $this->projectService,
-                'program'            => $program,
-                'financialContact'   => $this->parentService->getFinancialContact($parent),
-                'projects'           => $this->projectService->findProjectsByParent($parent, $program),
-                'invoiceFactor'      => $this->parentService->parseInvoiceFactor($parent, $program),
-
+                'year'                => $year,
+                'parent'              => $parent,
+                'contactService'      => $this->contactService,
+                'versionService'      => $this->versionService,
+                'parentService'       => $this->parentService,
+                'affiliationService'  => $this->affiliationService,
+                'projectService'      => $this->projectService,
+                'program'             => $program,
+                'financialContact'    => $this->parentService->getFinancialContact($parent),
+                'projects'            => $this->projectService->findProjectsByParent(
+                    $parent,
+                    $program,
+                    AffiliationService::WHICH_INVOICING,
+                    $year
+                ),
+                'membershipDate'      => sprintf('01-09-%s', $year),
+                'amountOfMemberships' => $this->parentService->parseMembershipFactor($parent),
+                'invoiceFactor'       => $this->parentService->parseInvoiceFactor($parent, $program),
             ]
         );
 

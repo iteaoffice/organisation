@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Project
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -22,7 +23,6 @@ use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Parent\Doa;
 use Organisation\Entity\Parent\Financial;
-use Organisation\Entity\Parent\Organisation as ParentOrganisation;
 use Organisation\Entity\Parent\Type as ParentType;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
@@ -96,7 +96,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         //Explode first on the \n to have the different rows
         $data = \explode(PHP_EOL, $data);
 
-        //Apply a general trim to remove unwated characters
+        //Apply a general trim to remove unwanted characters
         $data = \array_map('trim', $data);
 
         $this->header = explode($this->delimiter, trim($data[0]));
@@ -142,26 +142,25 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         $minimalRequiredElements = [
             'Call',
             'Proposal Acronym',
-            'Applicant Legal Name',
-            'EPS',
+            'Legal Name',
             'Parent',
-            'Parent EPS',
-            'EU Funding',
-            'National Funding',
+            'EPS',
+            'EU funding',
+            'National funding',
             'Member Type',
             'Member AENEAS',
-            'Member ARTEMIS-IA',
-            'Member EPoSS',
-            'AENEAS DOA',
-            'ARTEMIS-IA DOA',
-            'EPoSS DOA'
+            'Member ARTEMISIA',
+            'Member EPOSS',
+            'AENEAS ECSEL DoA',
+            'ARTEMISIA DoA',
+            'EPoSS DoA'
         ];
 
         /*
          * Go over all elements and check if the required elements are present
          */
         foreach ($minimalRequiredElements as $element) {
-            if (!\in_array($element, $this->header, true)) {
+            if (! \in_array($element, $this->header, true)) {
                 $this->errors[] = sprintf('Element %s is missing in the file', $element);
             }
         }
@@ -186,7 +185,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                     $counter
                 );
             } else {
-                if (null === $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']])
+                if (
+                    null === $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']])
                 ) {
                     $this->errors[] = sprintf(
                         'EPS (%s) in row %s cannot be found',
@@ -196,26 +196,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 }
             }
 
-            /**
-             * Validate the country
-             */
-            if (empty($content[$this->headerKeys['Parent EPS']])) {
-                $this->errors[] = sprintf(
-                    'Parent EPS in row %s is empty',
-                    $counter
-                );
-            } else {
-                if (null === $this->countryService->findCountryByCD($content[$this->headerKeys['Parent EPS']])
-                ) {
-                    $this->errors[] = sprintf(
-                        'Parent EPS (%s) in row %s cannot be found',
-                        $content[$this->headerKeys['Parent EPS']],
-                        $counter
-                    );
-                }
-            }
-
-            if (!empty($content[$this->headerKeys['Member Type']])) {
+            if (! empty($content[$this->headerKeys['Member Type']])) {
                 //Try to find the status
                 $type = $this->parentService->findParentTypeByName($content[$this->headerKeys['Member Type']]);
 
@@ -224,7 +205,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                         'Type (%s) in row %s (%s) cannot be found',
                         $content[$this->headerKeys['Member Type']],
                         $counter,
-                        $content[$this->headerKeys['Applicant Legal Name']]
+                        $content[$this->headerKeys['Legal Name']]
                     );
                 }
             }
@@ -237,14 +218,40 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
     public function prepareContent(array $keys = []): void
     {
+        //First de-activate all the partners
+        if (\count($keys) > 0) {
+            $projects = [];
+            foreach ($this->content as $key => $content) {
+                if (\in_array($key, $keys, false)) {
+                    /** @var Project $project */
+                    $project = $this->projectService->findProjectByName(
+                        $content[$this->headerKeys['Proposal Acronym']]
+                    );
+
+                    if (null !== $project) {
+                        $projects[$project->getId()] = $project;
+                    }
+                }
+            }
+
+            //Disable all affiliations
+            foreach ($projects as $project) {
+                foreach ($project->getAffiliation() as $affiliation) {
+                    $affiliation->setDateEnd(new \DateTime());
+                    $this->entityManager->persist($affiliation);
+                }
+            }
+            $this->entityManager->flush();
+        }
+
         foreach ($this->content as $key => $content) {
             $contact = $this->contactService->findContactById(1);
 
             //Find the country
             $country = $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']]);
-            $parentCountry = $this->countryService->findCountryByCD($content[$this->headerKeys['Parent EPS']]);
 
-            if (null === $contact || null === $country || null === $parentCountry) {
+
+            if (null === $contact || null === $country) {
                 continue;
             }
 
@@ -268,6 +275,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 $call = new Call();
                 $call->setProgram($program);
                 $call->setCall($callName);
+                $call->setActive(Call::INACTIVE);
 
                 $program->getCall()->add($call);
             }
@@ -291,82 +299,129 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             //Explicit set the call in the project to have it upon persisting to avoid the creation of double calls
             $project->setCall($call);
 
-            //Try to find the parent organisation
-            $organisationForParent = $this->organisationService->findOrganisationByNameCountry(
-                $content[$this->headerKeys['Parent']],
-                $parentCountry,
-                false
-            );
+
+            /**
+             * We are trying to create or import affiliations here, so that is the approach.
+             *
+             * Per line from the import we are having a
+             *
+             * 1) Partner name in the project
+             * 2) A legal name of the parent
+             * 3) Country
+             *
+             * But, due to changes in the database, it might be possible that the parent is wrong, so if we find the partner in the
+             * project with the name, we only need to check if the found organisation has a parent or not.
+             *
+             * For an affiliation we need to have a
+             *
+             * $organisation (for legacy) and a
+             * $parentOrganisation
+             */
 
 
-            if (null === $organisationForParent) {
-                $organisationForParent = $this->createOrganisation(
-                    $content[$this->headerKeys['Parent']],
-                    $parentCountry
-                );
+            //Try first to find the organisation in based on the name
+            $legalName = $content[$this->headerKeys['Legal Name']];
+            $parentName = $content[$this->headerKeys['Parent']];
+
+            //First initiate the needed variables.
+            $affiliation = false;
+            $organisation = false;
+            $parentOrganisation = false;
+
+            //First iterate over the organisations in the project to see if we find an organisation with the $legalName in the country
+            foreach ($project->getOrganisationName() as $organisationName) {
+                if (
+                    ! $organisation
+                    && $legalName === $organisationName->getOrganisation()->getOrganisation()
+                    && $organisationName->getOrganisation()->getCountry()->getId() === $country->getId()
+                ) {
+                    //Bingo, we found the organisation we are now immediately  done if the organisation has a parent has a
+                    $organisation = $organisationName->getOrganisation();
+
+                    //Hey, this organisation has a parent, so we can store that info now for later use.
+                    if ($organisation->hasParent()) {
+                        $parentOrganisation = $organisation->getParentOrganisation();
+                    }
+                }
             }
 
-            //Try to find the organisation
-            $organisation = $this->organisationService->findOrganisationByNameCountry(
-                $content[$this->headerKeys['Applicant Legal Name']],
-                $country,
-                false
-            );
 
+            //Imagine we found not organisation, this means that the organisation is not yet in the project. We need to dig further
+            if (! $organisation) {
+                //Try to find the organisation somewhere in the database
+                $organisations = $this->organisationService->findOrganisationsByNameCountry(
+                    $legalName,
+                    $country,
+                    false
+                );
 
-            if (null === $organisation) {
+                //We now might find more than organisation, try to find one which has a parent
+                /** @var Organisation $anyOrganisation */
+                foreach ($organisations as $anyOrganisation) {
+                    if (! $organisation && $anyOrganisation->hasParent()) {
+                        $organisation = $anyOrganisation;
+                        $parentOrganisation = $anyOrganisation->getParentOrganisation();
+                    }
+                }
+
+                //if we still cannot find one, just take the first one.
+                if (! $organisation) {
+                    $organisation = $this->organisationService->findOrganisationByNameCountry(
+                        $legalName,
+                        $country,
+                        false
+                    );
+                }
+            }
+
+            //if we still have not found one, then create one.
+            if (! $organisation) {
                 $organisation = $this->createOrganisation(
-                    $content[$this->headerKeys['Applicant Legal Name']],
+                    $legalName,
                     $country
                 );
             }
 
-            $parent = $this->handleParentInformation(
-                $organisationForParent,
-                $contact,
-                $program,
-                $content
-            );
+            //Now, if the organisation has not parent
+            if (! $organisation->hasParent()) {
+                //Try if we can find a parent for the organisation
+                $parent = $this->parentService->findParentByOrganisationName($parentName);
 
-            //Start with the parent organisation which is found from the organisation
-            $parentOrganisation = $organisation->getParentOrganisation();
+                if (null === $parent) {
+                    $organisationForParent = $organisation;
+                    //Only create a new organisation if the names differ
+                    if ($parentName !== $legalName) {
+                        $organisationForParent = $this->createOrganisation($parentName, $country);
+                    }
 
-            if (null !== $parentOrganisation && $parentOrganisation->getParent() !== $parent->getId()) {
-                //Replace the parent
-                $parentOrganisation->setParent($parent);
-            }
-
-            //We have the parent now, we need to create the project information
-            foreach ($parent->getParentOrganisation() as $otherParentOrganisation) {
-                if (null === $parentOrganisation && $otherParentOrganisation->getOrganisation() === $organisation) {
-                    $parentOrganisation = $otherParentOrganisation;
+                    $parent = $this->handleParentInformation(
+                        $organisationForParent,
+                        $contact,
+                        $program,
+                        $content
+                    );
                 }
-            }
 
-            //If we can't find the $parentOrganisation, create it
-            if (null === $parentOrganisation) {
-                $parentOrganisation = new ParentOrganisation();
+                $parentOrganisation = new \Organisation\Entity\Parent\Organisation();
                 $parentOrganisation->setOrganisation($organisation);
                 $parentOrganisation->setParent($parent);
                 $parentOrganisation->setContact($contact);
 
                 //Add the $parentOrganisation to the parent for further lookups
                 $parent->getParentOrganisation()->add($parentOrganisation);
-                //Inject the parentOrganisation in the organisation for futher lookups
+                //Inject the parentOrganisation in the organisation for further lookups
                 $organisation->setParentOrganisation($parentOrganisation);
             }
 
 
-            $affiliation = false;
-            //Check if the affiliation already exist
+            //We have a parent organisationw (either created not), lets see if we can find the project in the list
             foreach ($parentOrganisation->getAffiliation() as $existingAffiliation) {
-                if (!$affiliation && $existingAffiliation->getProject()->getId() === $project->getId()) {
+                if (! $affiliation && $existingAffiliation->getProject()->getId() === $project->getId()) {
                     $affiliation = $existingAffiliation;
                 }
             }
 
-
-            if (!$affiliation) {
+            if (! $affiliation) {
                 $affiliation = new Affiliation();
                 $affiliation->setOrganisation($parentOrganisation->getOrganisation()); //Keep this for BC
                 $affiliation->setParentOrganisation($parentOrganisation);
@@ -377,39 +432,40 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             //Try to find the funding, or create if cannot be found
             $funding = $affiliation->getFunded()->first();
 
-            if (!$funding) {
+            if (! $funding) {
                 $funding = new Funded();
                 $funding->setAffiliation($affiliation);
             }
 
-            $funding->setFundingEu((float)trim(str_replace(',', '', $content[$this->headerKeys['EU Funding']]), '"'));
+            $funding->setFundingEu(
+                (float)((int)\trim(\str_replace(['.', ','], '', $content[$this->headerKeys['EU funding']]), '"') / 100)
+            );
             $funding->setFundingNational(
-                (float)trim(
-                    str_replace(
-                        ',',
+                (float)((int)\trim(
+                    \str_replace(
+                        ['.', ','],
                         '',
-                        $content[$this->headerKeys['National Funding']]
+                        $content[$this->headerKeys['National funding']]
                     ),
                     '"'
-                )
+                ) / 100)
             );
 
             $affiliation->getFunded()->add($funding);
-
-            //$parentOrganisation->getAffiliation()->add($affiliation);
+            $parentOrganisation->getAffiliation()->add($affiliation);
 
 
             //Store the name of the organisation in the organisation table per project
             $organisationNameStored = false;
             foreach ($organisation->getNames() as $name) {
-                if (!$organisationNameStored && $name->getProject()->getId() === $project->getId()) {
+                if (! $organisationNameStored && $name->getProject()->getId() === $project->getId()) {
                     $organisationNameStored = true;
                 }
             }
 
-            if (!$organisationNameStored) {
+            if (! $organisationNameStored) {
                 $organisationName = new Name();
-                $organisationName->setName($content[$this->headerKeys['Applicant Legal Name']]);
+                $organisationName->setName($content[$this->headerKeys['Legal Name']]);
                 $organisationName->setProject($project);
                 $organisationName->setOrganisation($organisation);
                 $organisation->getNames()->add($organisationName);
@@ -418,8 +474,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //Only persist when the key is given
             if (\in_array($key, $keys, false)) {
+                $affiliation->setDateEnd(null);
                 $this->entityManager->persist($affiliation);
-                $this->entityManager->flush();
+                $this->entityManager->flush($affiliation);
+                $this->entityManager->persist($funding);
+                $this->entityManager->flush($funding);
                 $this->importedAffiliation[] = $affiliation;
             }
 
@@ -455,11 +514,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         $parent->setEpossMemberType($this->parseEpossMemberType($content));
 
         //Fix the DOA's
-        $ecselDoa = (string)$content[$this->headerKeys['AENEAS DOA']] === '1';
+        $ecselDoa = (string)$content[$this->headerKeys['AENEAS ECSEL DoA']] === '1';
 
         $hasDoa = $this->parentService->hasDoaForProgram($parent, $program);
 
-        if ($ecselDoa && !$hasDoa) {
+        if ($ecselDoa && ! $hasDoa) {
             $doa = new Doa();
             $doa->setProgram($program);
             $doa->setParent($parent);
@@ -499,8 +558,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
     public function parseArtimisiaMemberType(array $content): int
     {
-        $artemisiaDOA = (string)$content[$this->headerKeys['ARTEMIS-IA DOA']] === '1';
-        $artemisiaMember = (string)$content[$this->headerKeys['Member ARTEMIS-IA']] === '1';
+        $artemisiaDOA = (string)$content[$this->headerKeys['ARTEMISIA DoA']] === '1';
+        $artemisiaMember = (string)$content[$this->headerKeys['Member ARTEMISIA']] === '1';
 
         //Derive the member type
         switch (true) {
@@ -515,8 +574,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
     public function parseEpossMemberType(array $content): int
     {
-        $epossMember = (string)$content[$this->headerKeys['Member EPoSS']] === '1';
-        $epossDOA = (string)$content[$this->headerKeys['EPoSS DOA']] === '1';
+        $epossMember = (string)$content[$this->headerKeys['Member EPOSS']] === '1';
+        $epossDOA = (string)$content[$this->headerKeys['EPoSS DoA']] === '1';
 
         //Derive the member type
         switch (true) {

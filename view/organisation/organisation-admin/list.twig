@@ -1,92 +1,63 @@
+{% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-organisation-list")) %}
 
-{{ form().closeTag()|raw }}
-
 {% do form.prepare() %}
-
 {{ form().openTag(form)|raw }}
 
-{% set filter = form.get('filter') %}
 
+<h1>{{ translate("txt-organisation-admin-list") }} {{ organisationLink(null,'new','button') }}</h1>
 
-<input type="hidden" name="filter[order]" value="{{ order }}">
-<input type="hidden" name="filter[direction]" value="{{ direction }}">
+{{ filterbarelement(form) }}
+{% include('application/partial/form-badges') %}
+<p class="text-muted">{{ translate("txt-%s-items-on-%s-pages")|format(paginator.adapter.count,paginator.pageRange) }}</p>
 
-<div class="row">
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'organisation', 'text': translate("txt-organisation")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate("txt-type")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'parent', 'text': translate("txt-parent")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate("txt-country")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'contacts', 'text': translate("txt-contacts")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'projects', 'text': translate("txt-projects")} %}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+        {% for result in paginator.getCurrentItems() %}
+            <tr>
+                <td>
+                    {% if result.fields.is_parent %}<span
+                            class="badge badge-info"><a class="text-reset" href="{{ url("zfcadmin/parent/view",{'id':result.fields.own_parent_id }) }}">{{ translate("txt-parent") }}</a></span> {% endif %}
+                    <a href="{{ url("zfcadmin/organisation/view",{'id':result.fields.organisation_id }) }}">{{ result.fields.organisation }}</a>
+                    <a href="{{ url("zfcadmin/organisation/edit",{'id':result.fields.organisation_id }) }}"><i
+                                class="fa fa-edit"></i></a>
+                </td>
+                <td>{{ result.fields.organisation_type }}</td>
+                <td>
+                    {% if result.fields.has_parent %}
+                        {% if  result.fields.has_wrong_parent_child_relationship %}
+                            <span class="badge badge-danger">{{ translate("txt-is-parent-but-has-other-parent") }}</span>
+                        {% endif %}
 
-    <div class="col-md-9">
+                        {% if not result.fields.is_own_parent %}
+                            <a href="{{ url("zfcadmin/parent/view",{'id':result.fields.parent_id }) }}">{{ result.fields.parent }}</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>{{ result.fields.country }}</td>
+                <td>{{ result.fields.contacts }}</td>
+                <td>{{ result.fields.projects }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-        <h1 class="display-4">{{ translate("txt-organisation-list") }} {{ organisationLink(null,'new','button') }}</h1>
-
-        <div class="row">
-            <div class="col-md-6">
-                <p class="lead">{{ translate("txt-organisation-list-explanation") }}</p>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    {{ formelement(filter.get('search')) }}
-                    <span class="input-group-btn">{{ formelement(form.get('submit')) }}</span></div>
-            </div>
-        </div>
-
-        {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-condensed table-sm">
-                <thead>
-                <tr>
-                    <th colspan="2">{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'name', 'text': translate('txt-name')} %}</th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'country', 'text': translate('txt-country')} %}</th>
-                    <th>{{ translate('txt-contacts') }}</th>
-                    <th>{{ translate('txt-projects') }}</th>
-                    <th>{{ translate('txt-parent') }}</th>
-                    <th>{% include 'organisation/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list', 'criteria': 'type', 'text': translate('txt-type')} %}</th>
-                    <th>{{ translate("txt-actions") }}</th>
-                </tr>
-                </thead>
-                <tfoot>
-                </tfoot>
-                <tbody>
-                {% for organisation in paginator.getCurrentItems() %}
-                    <tr {% if organisation.parent %}class="info"{% endif %}>
-                        <td>{% if organisation.parent %}<i class="fa fa-angle-double-up"
-                                                           aria-hidden="true"></i>{% endif %}</td>
-                        <td>{{ organisationLink(organisation, 'view-admin', 'name') }}
-                            {% if organisation.parent %}
-                                {{ parentLink(organisation.parent,'view','icon') }}
-                            {% endif %}
-                        </td>
-                        <td>{{ countryLink(organisation.country,'view-admin','name') }}</td>
-                        <td>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
-                        <td>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
-                        <td>
-                            {% if organisation.parentOrganisation %}
-                                {{ parentLink(organisation.parentOrganisation.parent,'view','parent') }}
-                            {% endif %}
-                        </td>
-                        <td>{{ organisation.getType().type }}</td>
-                        <td>{{ organisationLink(organisation, 'edit', 'icon') }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-            {% include 'organisation/partial/pagination-control' %}
-        {% else %}
-            {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
-        {% endif %}
-    </div>
-    <div class="col-md-3">
-        <div class="well well-sm">
-            <fieldset>
-                {{ ztbformelement(filter.get('type')) }}
-                {{ ztbformelement(filter.get('options')) }}
-
-                <div class="form-group row">
-                    {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-                </div>
-            </fieldset>
-        </div>
-    </div>
-</div>
+    {% include 'application/partial/pagination-control' with {'paginator': paginator} %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
+{% endif %}
 
 {{ form().closeTag()|raw }}

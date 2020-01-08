@@ -4,7 +4,7 @@
     <div class="col-md-8">
         <dl class="dl-horizontal">
             <dt>{{ translate("txt-name") }}</dt>
-            <dd>{{ organisation.organisation }}</dd>
+            <dd>{{ organisation.organisation }} {{ organisationUpdateNotification(organisation) }}</dd>
             <dt>{{ translate("txt-organisation-on-public-website") }}</dt>
             <dd>{{ organisationLink(organisation,'view','name') }}</dd>
             <dt>{{ translate("txt-description") }}</dt>
@@ -15,8 +15,8 @@
             <dd>{{ organisation.country }}</dd>
             <dt>{{ translate("txt-contacts") }}</dt>
             <dd>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}
-                (+{{ translate("txt-%s-expired")|format(organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }}
-                )
+                (+
+                {{ translate("txt-%s-expired")|format(organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_EXPIRED"))) }})
             </dd>
             <dt>{{ translate("txt-projects") }}</dt>
             <dd>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
@@ -43,7 +43,7 @@
     </div>
     {% if not organisation.logo.isEmpty() %}
         <div class="col-md-4">
-            {{ organisationLogo(organisation, 300, false) }}
+            {{ organisationLogo(organisation, 300) }}
         </div>
     {% endif %}
 </div>

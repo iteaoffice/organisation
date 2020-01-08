@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -7,7 +8,7 @@
  * @category    Contact
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://itea3.org
@@ -17,21 +18,20 @@ declare(strict_types=1);
 
 namespace Organisation\Form;
 
-use Zend\Form\Form;
-use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Validator\File\MimeType;
-use Zend\Validator\File\Size;
+use Laminas\Form\Form;
+use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\File\MimeType;
+use Laminas\Validator\File\Size;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\File;
 
 /**
  * Class Import
  *
  * @package Organisation\Form
  */
-class Import extends Form implements InputFilterProviderInterface
+final class Import extends Form implements InputFilterProviderInterface
 {
-    /**
-     * Import constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -41,41 +41,35 @@ class Import extends Form implements InputFilterProviderInterface
 
         $this->add(
             [
-                'type'    => '\Zend\Form\Element\File',
+                'type'    => File::class,
                 'name'    => 'file',
                 'options' => [
-                    "label" => "txt-file",
+                    'label' => 'txt-file',
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'upload',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-upload"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-upload'),
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'import',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-import"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-import'),
                 ],
             ]
         );
     }
 
-    /**
-     * Should return an array specification compatible with
-     * {@link Zend\InputFilter\Factory::createInputFilter()}.
-     *
-     * @return array
-     */
     public function getInputFilterSpecification(): array
     {
         return [

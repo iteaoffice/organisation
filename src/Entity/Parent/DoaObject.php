@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category   Project
  *
  * @author     Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright  Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright  Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license    https://itea3.org/license.txt proprietary
  *
  * @link       https://itea3.org
@@ -25,20 +26,18 @@ use Organisation\Entity\AbstractEntity;
 class DoaObject extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="object_id", type="integer", nullable=false)
+     * @ORM\Column(name="object_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Parent\Doa", inversedBy="object", cascade={"persist"})
-     * @ORM\JoinColumns({
      * @ORM\JoinColumn(name="doa_id", referencedColumnName="doa_id", nullable=false)
-     * })
      *
-     * @var \Organisation\Entity\Parent\Doa
+     * @var Doa
      */
     private $doa;
     /**
@@ -48,96 +47,36 @@ class DoaObject extends AbstractEntity
      */
     private $object;
 
-    /**
-     * Magic Getter.
-     *
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
-    {
-        return $this->$property;
-    }
-
-    /***
-     * @param $property
-     * @param $value
-     *
-     * @return void;
-     */
-    public function __set($property, $value)
-    {
-        $this->$property = $value;
-    }
-
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
-    {
-        return isset($this->$property);
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return DoaObject
-     */
-    public function setId($id): DoaObject
+    public function setId(?int $id): DoaObject
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return Doa
-     */
-    public function getDoa(): Doa
+    public function getDoa(): ?Doa
     {
         return $this->doa;
     }
 
-    /**
-     * @param Doa $doa
-     *
-     * @return DoaObject
-     */
-    public function setDoa($doa): DoaObject
+    public function setDoa(?Doa $doa): DoaObject
     {
         $this->doa = $doa;
-
         return $this;
     }
 
-    /**
-     * @return resource
-     */
     public function getObject()
     {
         return $this->object;
     }
 
-    /**
-     * @param string $object
-     *
-     * @return DoaObject
-     */
     public function setObject($object): DoaObject
     {
         $this->object = $object;
-
         return $this;
     }
 }

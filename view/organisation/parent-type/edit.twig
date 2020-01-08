@@ -1,11 +1,9 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-edit-parent-type")) %}
 
-<h1 class="display-4">{{ translate("txt-edit-parent-type") }}</h1>
+<h1>{{ translate("txt-edit-parent-type") }}</h1>
 
 {% do form.prepare() %}
-{% do form.setAttribute('class','form-horizontal') %}
-
 {{ form().openTag(form)|raw }}
 
 {% set type = form.get('organisation_entity_parent_type') %}
@@ -15,7 +13,7 @@
 {{ ztbformelement(type.get('description')) }}
 
 <div class="form-group row">
-    <div class="offset-md-3 col-sm-offset-3 col-sm-9">
+    <div class="offset-sm-3 col-sm-9">
         {{ ztbformelement(form.get('submit')) }}
         {% if form.has('delete') %}
             {{ ztbformelement(form.get('delete')) }}

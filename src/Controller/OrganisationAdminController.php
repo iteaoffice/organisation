@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -20,9 +21,9 @@ use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Exception;
 use General\Service\GeneralService;
-use Invoice\Entity\Invoice;
-use Invoice\Form\InvoiceFilter;
+use Invoice\Search\Service\InvoiceSearchService;
 use Invoice\Service\InvoiceService;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
@@ -31,74 +32,53 @@ use Organisation\Form\AddAffiliation;
 use Organisation\Form\ManageWeb;
 use Organisation\Form\OrganisationFilter;
 use Organisation\Form\OrganisationMerge;
+use Organisation\Search\Service\OrganisationSearchService;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
-use Zend\Form\Fieldset;
-use Zend\Http\Request;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Paginator\Adapter\ArrayAdapter;
-use Zend\Paginator\Paginator;
-use Zend\Stdlib\ArrayUtils;
-use Zend\Validator\File\ImageSize;
-use Zend\Validator\File\MimeType;
-use Zend\View\Model\ViewModel;
+use Search\Form\SearchResult;
+use Search\Paginator\Adapter\SolariumPaginator;
+use Solarium\QueryType\Select\Query\Query as SolariumQuery;
+use Laminas\Form\Fieldset;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\Stdlib\ArrayUtils;
+use Laminas\Validator\File\ImageSize;
+use Laminas\Validator\File\MimeType;
+use Laminas\View\Model\ViewModel;
+
+use function http_build_query;
+use function implode;
+use function sprintf;
 
 /**
  * Class OrganisationAdminController
  *
  * @package Organisation\Controller
  */
-final class OrganisationAdminController extends OrganisationAbstractController
+class OrganisationAdminController extends OrganisationAbstractController
 {
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var InvoiceService
-     */
-    private $invoiceService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var DoaService
-     */
-    private $doaService;
-    /**
-     * @var LoiService
-     */
-    private $loiService;
-    /**
-     * @var GeneralService
-     */
-    private $generalService;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private OrganisationService $organisationService;
+    private OrganisationSearchService $searchService;
+    private InvoiceService $invoiceService;
+    private InvoiceSearchService $invoiceSearchService;
+    private ProjectService $projectService;
+    private ContactService $contactService;
+    private AffiliationService $affiliationService;
+    private DoaService $doaService;
+    private LoiService $loiService;
+    private GeneralService $generalService;
+    private EntityManager $entityManager;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
+        OrganisationSearchService $organisationSearchService,
         InvoiceService $invoiceService,
+        InvoiceSearchService $invoiceSearchService,
         ProjectService $projectService,
         ContactService $contactService,
         AffiliationService $affiliationService,
@@ -110,7 +90,9 @@ final class OrganisationAdminController extends OrganisationAbstractController
         TranslatorInterface $translator
     ) {
         $this->organisationService = $organisationService;
+        $this->searchService = $organisationSearchService;
         $this->invoiceService = $invoiceService;
+        $this->invoiceSearchService = $invoiceSearchService;
         $this->projectService = $projectService;
         $this->contactService = $contactService;
         $this->affiliationService = $affiliationService;
@@ -125,28 +107,65 @@ final class OrganisationAdminController extends OrganisationAbstractController
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
-        $organisationQuery = $this->organisationService
-            ->findFiltered(Organisation::class, $filterPlugin->getFilter());
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $page = $this->params('page', 1);
+        $form = new SearchResult();
+        $data = array_merge(
+            [
+                'order'     => '',
+                'direction' => '',
+                'query'     => '',
+                'facet'     => [],
+            ],
+            $request->getQuery()->toArray()
+        );
+        $searchFields = [
+            'organisation_search', //To search for numbers
+            'description_search',
+            'organisation_type_search',
+            'country_search',
+        ];
 
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        if ($request->isGet()) {
+            $this->searchService->setSearch($data['query'], $searchFields, $data['order'], $data['direction']);
+            if (isset($data['facet'])) {
+                foreach ($data['facet'] as $facetField => $values) {
+                    $quotedValues = [];
+                    foreach ($values as $value) {
+                        $quotedValues[] = sprintf('"%s"', $value);
+                    }
+
+                    $this->searchService->addFilterQuery(
+                        $facetField,
+                        implode(' ' . SolariumQuery::QUERY_OPERATOR_OR . ' ', $quotedValues)
+                    );
+                }
+            }
+
+            $form->addSearchResults(
+                $this->searchService->getQuery()->getFacetSet(),
+                $this->searchService->getResultSet()->getFacetSet()
+            );
+            $form->setData($data);
+        }
+
+        $paginator = new Paginator(
+            new SolariumPaginator($this->searchService->getSolrClient(), $this->searchService->getQuery())
+        );
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? 1000 : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new OrganisationFilter($this->organisationService);
-
-        $form->setData(['filter' => $filterPlugin->getFilter()]);
-
         return new ViewModel(
             [
-                'paginator'           => $paginator,
-                'form'                => $form,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'organisationService' => $this->organisationService,
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
+                'form'      => $form,
+                'order'     => $data['order'],
+                'direction' => $data['direction'],
+                'query'     => $data['query'],
+                'badges'    => $form->getBadges(),
+                'arguments' => http_build_query($form->getFilteredData()),
+                'paginator' => $paginator,
             ]
         );
     }
@@ -179,6 +198,17 @@ final class OrganisationAdminController extends OrganisationAbstractController
         );
     }
 
+    public function listInactiveAction(): ViewModel
+    {
+        $inactiveOrganisations = $this->organisationService->findInactiveOrganisations();
+
+        return new ViewModel(
+            [
+                'inactiveOrganisations' => $inactiveOrganisations
+            ]
+        );
+    }
+
     public function viewAction(): ViewModel
     {
         $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
@@ -187,32 +217,81 @@ final class OrganisationAdminController extends OrganisationAbstractController
             return $this->notFoundAction();
         }
 
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getInvoiceFilter();
-
-        $invoiceQuery = $this->invoiceService->findFiltered(
-            Invoice::class,
-            array_merge($filterPlugin->getFilter(), ['organisation' => [$organisation->getId()]])
+        /** @var Request $request */
+        $request = $this->getRequest();
+        $page = $this->params('page', 1);
+        $form = new SearchResult();
+        $data = array_merge(
+            [
+                'order'     => '',
+                'direction' => '',
+                'query'     => '',
+                'facet'     => [],
+            ],
+            $request->getQuery()->toArray()
         );
 
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($invoiceQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $searchFields = [
+            'invoice_number_search',
+            'organisation_search',
+            'contact_search',
+            'reference_search',
+            'type_search',
+            'vat_type_search',
+            'status_name_search',
+            'status_explanation_search',
+            'day_book_number_search',
+        ];
+
+        if ($request->isGet()) {
+            $this->invoiceSearchService->setSearchByOrganisation(
+                $organisation,
+                $data['query'],
+                $searchFields,
+                $data['order'],
+                $data['direction']
+            );
+            if (isset($data['facet'])) {
+                foreach ($data['facet'] as $facetField => $values) {
+                    $quotedValues = [];
+                    foreach ($values as $value) {
+                        $quotedValues[] = (string) $value;
+                    }
+
+                    $this->invoiceSearchService->addFilterQuery(
+                        $facetField,
+                        implode(' ' . SolariumQuery::QUERY_OPERATOR_OR . ' ', $quotedValues)
+                    );
+                }
+            }
+
+            $form->addSearchResults(
+                $this->invoiceSearchService->getQuery()->getFacetSet(),
+                $this->invoiceSearchService->getResultSet()->getFacetSet()
+            );
+            $form->setData($data);
+        }
+
+        $paginator = new Paginator(
+            new SolariumPaginator($this->invoiceSearchService->getSolrClient(), $this->invoiceSearchService->getQuery())
+        );
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? 1000 : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
-
-        $invoiceFilter = new InvoiceFilter($this->invoiceService);
-        $invoiceFilter->setData(['filter' => $filterPlugin->getFilter()]);
 
         $mergeForm = new OrganisationMerge($this->entityManager, $organisation);
 
         return new ViewModel(
             [
+                'form'                => $form,
+                'order'               => $data['order'],
+                'direction'           => $data['direction'],
+                'query'               => $data['query'],
+                'badges'              => $form->getBadges(),
+                'arguments'           => http_build_query($form->getFilteredData()),
                 'paginator'           => $paginator,
-                'invoiceFilter'       => $invoiceFilter,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
                 'organisation'        => $organisation,
+                'invoiceService'      => $this->invoiceService,
                 'organisationService' => $this->organisationService,
                 'organisationDoa'     => $this->doaService->findDoaByOrganisation($organisation),
                 'organisationLoi'     => $this->loiService->findLoiByOrganisation($organisation),
@@ -224,7 +303,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
+     * @return Response|ViewModel
      */
     public function newAction()
     {
@@ -251,7 +330,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $logo = new Logo();
                     $logo->setOrganisation($organisation);
                     $logo->setOrganisationLogo(file_get_contents($fileData['file']['tmp_name']));
@@ -268,7 +347,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
                 }
 
                 $this->organisationService->save($organisation);
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate('txt-organisation-%s-has-successfully-been-added'),
                         $organisation
@@ -298,7 +377,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
         $form = $this->formService->prepare($organisation, $data);
 
-        if (!$this->organisationService->canDeleteOrganisation($organisation)) {
+        if (! $this->organisationService->canDeleteOrganisation($organisation)) {
             $form->remove('delete');
         }
 
@@ -308,7 +387,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
             }
 
             if (isset($data['delete']) && $this->organisationService->canDeleteOrganisation($organisation)) {
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate('txt-organisation-%s-has-been-removed-successfully'),
                         $organisation
@@ -332,9 +411,9 @@ final class OrganisationAdminController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $logo = $organisation->getLogo()->first();
-                    if (!$logo) {
+                    if (! $logo) {
                         // Create a new logo element
                         $logo = new Logo();
                         $logo->setOrganisation($organisation);
@@ -348,13 +427,13 @@ final class OrganisationAdminController extends OrganisationAbstractController
                     $logo->setContentType(
                         $this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type)
                     );
-                    $logo->setLogoExtension($logo->getContentType()->getExtension());
+                    $logo->setLogoExtension((string) $logo->getContentType()->getExtension());
                     $organisation->getLogo()->add($logo);
                 }
 
                 $this->organisationService->save($organisation);
 
-                $this->flashMessenger()->setNamespace('success')->addMessage(
+                $this->flashMessenger()->addSuccessMessage(
                     sprintf(
                         $this->translator->translate('txt-organisation-%s-has-successfully-been-updated'),
                         $organisation
@@ -374,8 +453,8 @@ final class OrganisationAdminController extends OrganisationAbstractController
     }
 
     /**
-     * @return \Zend\Http\Response|ViewModel
-     * @throws \Exception
+     * @return Response|ViewModel
+     * @throws Exception
      */
     public function manageWebAction()
     {
@@ -439,7 +518,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
                 }
 
                 //Handle the new web (if provided)
-                if (!empty($data['web'])) {
+                if (! empty($data['web'])) {
                     $web = new Web();
                     $web->setOrganisation($organisation);
                     $web->setWeb($data['web']);
@@ -497,7 +576,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
                 $affiliation = new Affiliation();
                 $affiliation->setProject($project);
                 $affiliation->setOrganisation($organisation);
-                if (!empty($branch)) {
+                if (! empty($branch)) {
                     $affiliation->setBranch($branch);
                 }
                 $affiliation->setContact($contact);
@@ -569,7 +648,7 @@ final class OrganisationAdminController extends OrganisationAbstractController
                 $result = $this->mergeOrganisation()->merge($source, $target);
                 $tab = 'general';
                 if ($result['success']) {
-                    $this->flashMessenger()->setNamespace('success')->addMessage(
+                    $this->flashMessenger()->addSuccessMessage(
                         $this->translator->translate('txt-organisations-have-been-successfully-merged')
                     );
                 } else {

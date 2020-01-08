@@ -1,11 +1,12 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Content
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
@@ -15,7 +16,10 @@ namespace Organisation\Form;
 use Doctrine\ORM\EntityManager;
 use General\Entity\VatType;
 use Organisation\Entity;
-use Zend\Form\Form;
+use Laminas\Form\Form;
+use Laminas\Form\Element\Submit;
+use Laminas\Form\Element\Csrf;
+use Laminas\Form\Element\Select;
 
 /**
  * Class FinancialForm
@@ -46,45 +50,51 @@ final class FinancialForm extends Form
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Select',
+                'type'       => Select::class,
                 'name'       => 'vatType',
                 'options'    => [
                     'value_options' => $vatTypes,
-                    'help-block'    => _("txt-vat-type-help-block"),
+                    'help-block'    => _('txt-vat-type-help-block'),
                 ],
                 'attributes' => [
-                    'label' => _("txt-vat-type"),
+                    'label' => _('txt-vat-type'),
                 ],
             ]
         );
 
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type' => Csrf::class,
+                'name' => 'csrf',
+            ]
+        );
+        $this->add(
+            [
+                'type'       => Submit::class,
                 'name'       => 'submit',
                 'attributes' => [
-                    'class' => "btn btn-primary",
-                    'value' => _("txt-submit"),
+                    'class' => 'btn btn-primary',
+                    'value' => _('txt-submit'),
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'cancel',
                 'attributes' => [
-                    'class' => "btn btn-warning",
-                    'value' => _("txt-cancel"),
+                    'class' => 'btn btn-warning',
+                    'value' => _('txt-cancel'),
                 ],
             ]
         );
         $this->add(
             [
-                'type'       => 'Zend\Form\Element\Submit',
+                'type'       => Submit::class,
                 'name'       => 'delete',
                 'attributes' => [
-                    'class' => "btn btn-danger",
-                    'value' => _("txt-delete"),
+                    'class' => 'btn btn-danger',
+                    'value' => _('txt-delete'),
                 ],
             ]
         );

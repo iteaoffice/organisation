@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -26,7 +22,7 @@ use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use ZfcTwig\View\TwigRenderer;
 
 /**
@@ -98,7 +94,6 @@ final class RenderOverviewVariableContributionSheet extends AbstractPlugin
 
         $projects = $this->parentService->renderProjectsByParentInYear($parent, $program, $year);
         $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
-
 
         $content = $this->renderer->render(
             'organisation/pdf/overview-variable-contribution',

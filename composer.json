@@ -10,7 +10,7 @@
   "repositories": [
     {
       "type": "composer",
-      "url": "https://packages.itea3.eu"
+      "url": "https://packages.itea4.org"
     }
   ],
   "authors": [
@@ -21,18 +21,23 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": "^7.2",
-    "zendframework/zend-mvc": "^3.0.1"
+    "php": "^7.4",
+    "laminas/laminas-mvc": "^3.1",
+    "laminas/laminas-dependency-plugin": "^0.2"
   },
   "require-dev": {
-    "iteaoffice/testing": "^1.2",
-    "iteaoffice/contact": "^4.1",
-    "iteaoffice/general": "^4.1",
-    "iteaoffice/program": "^4.1",
-    "iteaoffice/affiliation": "^4.1",
-    "iteaoffice/project": "^4.1",
-    "iteaoffice/event": "^3.1",
-    "iteaoffice/invoice": "^4.1"
+    "iteaoffice/testing": "^2.1",
+    "iteaoffice/search": "^2.1",
+    "iteaoffice/contact": "^5.1",
+    "iteaoffice/general": "^5.1",
+    "iteaoffice/program": "^5.1",
+    "iteaoffice/affiliation": "^5.1",
+    "iteaoffice/project": "^5.1",
+    "iteaoffice/event": "^5.1",
+    "iteaoffice/invoice": "^5.1",
+    "samsonasik/error-hero-module": "2.*",
+    "setasign/fpdi-tcpdf": "~2.0",
+    "jield-webdev/zf3-bootstrap4": "dev-master"
   },
   "autoload": {
     "psr-4": {
@@ -46,8 +51,25 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "4.0.x-dev",
-      "dev-develop": "4.1.x-dev"
+      "dev-master": "5.0-DEV",
+      "dev-develop": "5.1-DEV"
     }
+  },
+  "scripts": {
+    "check": [
+      "@php-lint",
+      "@phpstan",
+      "@cs"
+    ],
+    "fix": [
+      "@cbf",
+      "@cs-fix"
+    ],
+    "php-lint": "./vendor/bin/parallel-lint src",
+    "phpstan": "./vendor/bin/phpstan analyse src/ --level=1",
+    "cs": "./vendor/bin/phpcs",
+    "cbf": "./vendor/bin/phpcbf",
+    "cs-fix": "./vendor/bin/php-cs-fixer fix -v src",
+    "test": "./vendor/bin/phpunit"
   }
 }

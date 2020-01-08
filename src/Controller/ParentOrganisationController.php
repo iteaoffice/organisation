@@ -1,13 +1,9 @@
 <?php
+
 /**
- * ITEA Office all rights reserved
- *
- * PHP Version 7
- *
- * @category    Project
- *
+*
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
@@ -27,10 +23,10 @@ use Organisation\Service\FormService;
 use Organisation\Service\ParentService;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
-use Zend\Http\Request;
-use Zend\I18n\Translator\TranslatorInterface;
-use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Zend\View\Model\ViewModel;
+use Laminas\Http\Request;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
 
 /**
  * Class ParentOrganisationController
@@ -39,30 +35,12 @@ use Zend\View\Model\ViewModel;
  */
 final class ParentOrganisationController extends OrganisationAbstractController
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var FormService
-     */
-    private $formService;
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private ParentService $parentService;
+    private ProjectService $projectService;
+    private AffiliationService $affiliationService;
+    private ContactService $contactService;
+    private FormService $formService;
+    private TranslatorInterface $translator;
 
     public function __construct(
         ParentService $parentService,
@@ -94,12 +72,14 @@ final class ParentOrganisationController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
 
         $form = $this->formService->prepare($organisation, $data);
+        $form->get($organisation->get('underscore_entity_name'))->get('parent')
+            ->injectParent($organisation->getParent());
         $form->get($organisation->get('underscore_entity_name'))->get('contact')
             ->injectContact($organisation->getContact());
         $form->get($organisation->get('underscore_entity_name'))->get('organisation')
             ->injectOrganisation($organisation->getOrganisation());
 
-        if (!$this->parentService->canDeleteParentOrganisation($organisation)) {
+        if (! $this->parentService->canDeleteParentOrganisation($organisation)) {
             $form->remove('delete');
         }
 
@@ -162,19 +142,16 @@ final class ParentOrganisationController extends OrganisationAbstractController
 
     public function viewAction(): ViewModel
     {
-        /** @var Entity\Parent\Organisation $organisation */
-        $organisation = $this->parentService->find(Entity\Parent\Organisation::class, (int)$this->params('id'));
+        /** @var Entity\Parent\Organisation $parentOrganisation */
+        $parentOrganisation = $this->parentService->find(Entity\Parent\Organisation::class, (int)$this->params('id'));
 
-        if (null === $organisation) {
+        if (null === $parentOrganisation) {
             return $this->notFoundAction();
         }
 
-        return new ViewModel(['organisation' => $organisation]);
+        return new ViewModel(['parentOrganisation' => $parentOrganisation]);
     }
 
-    /**
-     * @return \Zend\Http\Response|ViewModel
-     */
     public function mergeAction()
     {
         /** @var Request $request */
@@ -224,8 +201,8 @@ final class ParentOrganisationController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'organisation' => $organisation,
-                'merge' => $data['merge'] ?? null,
+                'organisation'  => $organisation,
+                'merge'         => $data['merge'] ?? null,
                 'parentService' => $this->parentService
             ]
         );
@@ -269,7 +246,7 @@ final class ParentOrganisationController extends OrganisationAbstractController
                 $affiliation->setProject($project);
                 $affiliation->setOrganisation($parentOrganisation->getOrganisation());
                 $affiliation->setParentOrganisation($parentOrganisation);
-                if (!empty($branch)) {
+                if (! empty($branch)) {
                     $affiliation->setBranch($branch);
                 }
                 $affiliation->setContact($contact);

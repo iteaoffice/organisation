@@ -1,46 +1,55 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
  * @category    Organisation
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2004-2017 ITEA Office (https://itea3.org)
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
 declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use Affiliation\Entity\Affiliation;
 use Contact\Entity\ContactOrganisation;
+use DateTime;
 use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Zend\Form\Annotation;
+use General\Entity\Country;
+use Invoice\Entity\Invoice;
+use Invoice\Entity\Journal;
+use Invoice\Entity\Reminder;
+use News\Entity\Magazine\Article;
+use Program\Entity\Call\Doa;
+use Project\Entity\Idea\Partner;
+use Project\Entity\Result\Result;
+use Laminas\Form\Annotation;
 
 /**
- * Organisation.
- *
  * @ORM\Table(name="organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
- * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
  * @Annotation\Name("organisation")
  * @Annotation\Instance("Organisation\Entity\Organisation")
  */
 class Organisation extends AbstractEntity
 {
     /**
-     * @ORM\Column(name="organisation_id", type="integer", nullable=false)
+     * @ORM\Column(name="organisation_id", type="integer", options={"unsigned":true})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Exclude()
      *
-     * @var integer
+     * @var int
      */
     private $id;
     /**
-     * @ORM\Column(name="organisation", type="string", length=60, nullable=false)
-     * @Annotation\Type("\Zend\Form\Element\Text")
+     * @ORM\Column(name="organisation", type="string", nullable=false)
+     * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-organisation-name","help-block":"txt-organisation-name-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-organisation-placeholder"})
      *
@@ -51,7 +60,7 @@ class Organisation extends AbstractEntity
      * @ORM\OneToMany(targetEntity="Contact\Entity\ContactOrganisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Contact\Entity\ContactOrganisation[]|Collections\ArrayCollection
+     * @var ContactOrganisation[]|Collections\Collection
      */
     private $contactOrganisation;
     /**
@@ -59,11 +68,11 @@ class Organisation extends AbstractEntity
      * @Gedmo\Timestampable(on="create")
      * @Annotation\Exclude()
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateCreated;
     /**
-     * @ORM\Column(name="docref", type="string", length=255, nullable=false, unique=true)
+     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
      * @Gedmo\Slug(fields={"id","organisation"})
      * @Annotation\Exclude()
      *
@@ -75,14 +84,14 @@ class Organisation extends AbstractEntity
      * @Gedmo\Timestampable(on="update")
      * @Annotation\Exclude()
      *
-     * @var \DateTime
+     * @var DateTime
      */
     private $dateUpdated;
     /**
      * @ORM\OneToMany(targetEntity="Affiliation\Entity\Affiliation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
+     * @var Affiliation[]|Collections\Collection
      */
     private $affiliation;
     /**
@@ -96,21 +105,21 @@ class Organisation extends AbstractEntity
      * @ORM\OneToOne(targetEntity="Organisation\Entity\OParent", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\OParent
+     * @var OParent
      */
     private $parent;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\Financial", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\Financial[]|Collections\ArrayCollection
+     * @var \Organisation\Entity\Parent\Financial[]|Collections\Collection
      */
     private $parentFinancial;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Parent\Organisation", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Parent\Organisation
+     * @var Parent\Organisation
      */
     private $parentOrganisation;
     /**
@@ -131,14 +140,14 @@ class Organisation extends AbstractEntity
      * )
      * @Annotation\Attributes({"label":"txt-country","help-block":"txt-organisation-country-help-block"})
      *
-     * @var \General\Entity\Country
+     * @var Country
      */
     private $country;
     /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Partner", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Project\Entity\Idea\Partner[]|Collections\ArrayCollection
+     * @var Partner[]|Collections\Collection
      */
     private $ideaPartner;
     /**
@@ -158,81 +167,35 @@ class Organisation extends AbstractEntity
      *      }
      * )
      * @Annotation\Attributes({"label":"txt-organisation-type"})
-     * @var \Organisation\Entity\Type
+     * @var Type
      */
     private $type;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Web", cascade={"persist","remove"}, mappedBy="organisation")
      * @ORM\OrderBy({"main"="DESC"})
      *
-     * @var \Organisation\Entity\Web[]|Collections\ArrayCollection
+     * @var Web[]|Collections\Collection
      */
     private $web;
-    /**
-     * @ORM\ManyToMany(targetEntity="Program\Entity\Domain", inversedBy="organisation")
-     * @ORM\JoinTable(name="organisation_domain",
-     *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
-     *            inverseJoinColumns={@ORM\JoinColumn(name="domain_id", referencedColumnName="domain_id")}
-     * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"Program\Entity\Domain"})
-     * @Annotation\Attributes({"label":"txt-domain"})
-     *
-     * @var \Program\Entity\Domain[]|Collections\ArrayCollection
-     */
-    private $domain;
-    /**
-     * @ORM\ManyToMany(targetEntity="Program\Entity\Technology", inversedBy="organisation")
-     * @ORM\JoinTable(name="organisation_technology",
-     *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
-     *            inverseJoinColumns={@ORM\JoinColumn(name="technology_id", referencedColumnName="technology_id")}
-     * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"Program\Entity\Technology"})
-     * @Annotation\Attributes({"label":"txt-technology"})
-     *
-     * @var \Program\Entity\Technology[]|Collections\ArrayCollection
-     */
-    private $technology;
-    /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Cluster", cascade={"persist","remove"}, mappedBy="organisation")
-     * @Annotation\Exclude()
-     *
-     * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
-     */
-    private $cluster;
-    /**
-     * @ORM\ManyToMany(targetEntity="Organisation\Entity\Cluster", inversedBy="member", cascade={"persist","remove"})
-     * @ORM\JoinTable(name="cluster_organisation",
-     *            joinColumns={@ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id")},
-     *            inverseJoinColumns={@ORM\JoinColumn(name="cluster_id", referencedColumnName="cluster_id")}
-     * )
-     * @Annotation\Type("DoctrineORMModule\Form\Element\EntityMultiCheckbox")
-     * @Annotation\Options({"target_class":"Organisation\Entity\Cluster"})
-     * @Annotation\Attributes({"label":"txt-cluster-membership"})
-     *
-     * @var \Organisation\Entity\Cluster[]|Collections\ArrayCollection
-     */
-    private $clusterMember;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Log", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Log[]|Collections\ArrayCollection
+     * @var Log[]|Collections\Collection
      */
     private $log;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Description", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\ComposedObject("Organisation\Entity\Description")
      *
-     * @var \Organisation\Entity\Description
+     * @var Description
      */
     private $description;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Logo", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Logo[]|Collections\ArrayCollection
+     * @var Logo[]|Collections\Collection
      */
     private $logo;
     /**
@@ -240,111 +203,102 @@ class Organisation extends AbstractEntity
      * @ORM\OrderBy({"dateCreated" = "DESC"})
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Note[]|Collections\ArrayCollection
+     * @var Note[]|Collections\Collection
      */
     private $note;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Name", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Name[]|Collections\ArrayCollection
+     * @var Name[]|Collections\Collection
      */
     private $names;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Financial", cascade={"persist","remove"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Financial
+     * @var Financial
      */
     private $financial;
-    /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Financial", cascade={"persist"}, mappedBy="debtor")
-     * @Annotation\Exclude()
-     *
-     * @var \Organisation\Entity\Financial[]|Collections\ArrayCollection
-     */
-    private $financialDebtor;
     /**
      * @ORM\OneToMany(targetEntity="\Program\Entity\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Doa[]|Collections\ArrayCollection
+     * @var \Program\Entity\Doa[]|Collections\Collection
      */
     private $programDoa;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Invoice", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Invoice[]|Collections\ArrayCollection
+     * @var Invoice[]|Collections\Collection
      */
     private $invoice;
     /**
      * @ORM\OneToMany(targetEntity="Event\Entity\Booth\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var \Event\Entity\Booth\Financial[]|Collections\ArrayCollection
+     * @var \Event\Entity\Booth\Financial[]|Collections\Collection
      */
     private $boothFinancial;
     /**
      * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist","remove"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Program\Entity\Call\Doa[]|Collections\ArrayCollection
+     * @var Doa[]|Collections\Collection
      */
     private $doa;
     /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\Booth[]|Collections\ArrayCollection()
+     * @var Booth[]|Collections\Collection
      */
     private $organisationBooth;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Journal", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Journal[]|Collections\ArrayCollection()
+     * @var Journal[]|Collections\Collection
      */
     private $journal;
     /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Reminder", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var \Invoice\Entity\Reminder[]|Collections\ArrayCollection()
+     * @var Reminder[]|Collections\Collection
      */
     private $reminder;
     /**
      * @ORM\ManyToMany(targetEntity="Project\Entity\Result\Result", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
-     * Second param to be able to selecte more than 1 project per result
+     * Second param to be able to select more than 1 project per result
      *
-     * @var \Project\Entity\Result\Result[]|Collections\ArrayCollection
+     * @var Result[]|Collections\Collection
      */
     private $result;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\IctOrganisation", cascade={"persist"}, mappedBy="organisation")
+     * @ORM\ManyToMany(targetEntity="News\Entity\Magazine\Article", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
-     * @var IctOrganisation[]|Collections\ArrayCollection
+     * @var Article[]|Collections\Collection
      */
-    private $ictOrganisation;
-
-
+    private $magazineArticle;
     /**
-     * Class constructor.
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Update", cascade={"persist", "remove"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var Update[]|Collections\Collection
      */
+    private $updates;
+
     public function __construct()
     {
         $this->affiliation = new Collections\ArrayCollection();
         $this->affiliationFinancial = new Collections\ArrayCollection();
         $this->contactOrganisation = new Collections\ArrayCollection();
         $this->parentFinancial = new Collections\ArrayCollection();
-        $this->domain = new Collections\ArrayCollection();
         $this->names = new Collections\ArrayCollection();
-        $this->technology = new Collections\ArrayCollection();
-        $this->cluster = new Collections\ArrayCollection();
-        $this->clusterMember = new Collections\ArrayCollection();
-        $this->financialDebtor = new Collections\ArrayCollection();
         $this->log = new Collections\ArrayCollection();
         $this->logo = new Collections\ArrayCollection();
         $this->note = new Collections\ArrayCollection();
@@ -358,754 +312,414 @@ class Organisation extends AbstractEntity
         $this->reminder = new Collections\ArrayCollection();
         $this->result = new Collections\ArrayCollection();
         $this->web = new Collections\ArrayCollection();
-        $this->ictOrganisation = new Collections\ArrayCollection();
+        $this->magazineArticle = new Collections\ArrayCollection();
+        $this->updates = new Collections\ArrayCollection();
     }
 
-    /**
-     * @param $property
-     *
-     * @return mixed
-     */
-    public function __get($property)
+    public function hasLogo(): bool
     {
-        return $this->$property;
+        return null !== $this->logo && ! $this->logo->isEmpty();
     }
 
-    /**
-     * @param string $property
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function __set($property, $value)
+    public function isParent(): bool
     {
-        $this->$property = $value;
+        return null !== $this->parent;
     }
 
-    /**
-     * @param $property
-     *
-     * @return bool
-     */
-    public function __isset($property)
+    public function hasParent(): bool
     {
-        return isset($this->$property);
+        return null !== $this->parentOrganisation;
     }
 
-    /**
-     * ToString
-     * Return the id here for form population.
-     *
-     * @return string
-     */
+    public function hasDescription(): bool
+    {
+        return null !== $this->description && ! empty($this->description->getDescription());
+    }
+
+    public function hasPendingUpdate(): bool
+    {
+        return ! $this->updates->filter(
+            fn (Update $update) => ! $update->isApproved()
+        )->$this->isEmpty();
+    }
+
     public function __toString(): string
     {
         return (string)$this->organisation;
     }
 
-    /**
-     * @return string
-     */
     public function parseFullName(): string
     {
         return (string)$this->organisation;
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Organisation
-     */
-    public function setId($id)
+    public function setId($id): Organisation
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?string
     {
         return $this->organisation;
     }
 
-    /**
-     * @param string $organisation
-     *
-     * @return Organisation
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation($organisation): Organisation
     {
         $this->organisation = $organisation;
 
         return $this;
     }
 
-    /**
-     * @return ContactOrganisation[]|Collections\ArrayCollection
-     */
     public function getContactOrganisation()
     {
         return $this->contactOrganisation;
     }
 
-    /**
-     * @param ContactOrganisation[]|Collections\ArrayCollection $contactOrganisation
-     *
-     * @return Organisation
-     */
-    public function setContactOrganisation($contactOrganisation)
+    public function setContactOrganisation($contactOrganisation): Organisation
     {
         $this->contactOrganisation = $contactOrganisation;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateCreated()
+    public function getDateCreated(): ?DateTime
     {
         return $this->dateCreated;
     }
 
-    /**
-     * @param \DateTime $dateCreated
-     *
-     * @return Organisation
-     */
-    public function setDateCreated($dateCreated)
+    public function setDateCreated($dateCreated): Organisation
     {
         $this->dateCreated = $dateCreated;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDocRef()
+    public function getDocRef(): ?string
     {
         return $this->docRef;
     }
 
-    /**
-     * @param string $docRef
-     *
-     * @return Organisation
-     */
-    public function setDocRef($docRef)
+    public function setDocRef($docRef): Organisation
     {
         $this->docRef = $docRef;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateUpdated()
+    public function getDateUpdated(): ?DateTime
     {
         return $this->dateUpdated;
     }
 
-    /**
-     * @param \DateTime $dateUpdated
-     *
-     * @return Organisation
-     */
-    public function setDateUpdated($dateUpdated)
+    public function setDateUpdated($dateUpdated): Organisation
     {
         $this->dateUpdated = $dateUpdated;
 
         return $this;
     }
 
-    /**
-     * @return \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection
-     */
     public function getAffiliation()
     {
         return $this->affiliation;
     }
 
-    /**
-     * @param \Affiliation\Entity\Affiliation[]|Collections\ArrayCollection $affiliation
-     *
-     * @return Organisation
-     */
-    public function setAffiliation($affiliation)
+    public function setAffiliation($affiliation): Organisation
     {
         $this->affiliation = $affiliation;
 
         return $this;
     }
 
-    /**
-     * @return \Affiliation\Entity\Financial[]|Collections\ArrayCollection
-     */
     public function getAffiliationFinancial()
     {
         return $this->affiliationFinancial;
     }
 
-    /**
-     * @param \Affiliation\Entity\Financial[]|Collections\ArrayCollection $affiliationFinancial
-     *
-     * @return Organisation
-     */
-    public function setAffiliationFinancial($affiliationFinancial)
+    public function setAffiliationFinancial($affiliationFinancial): Organisation
     {
         $this->affiliationFinancial = $affiliationFinancial;
 
         return $this;
     }
 
-    /**
-     * @return \Organisation\Entity\OParent
-     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    /**
-     * @param \Organisation\Entity\OParent|null $parent
-     *
-     * @return Organisation
-     */
-    public function setParent(?\Organisation\Entity\OParent $parent): Organisation
+    public function setParent(?OParent $parent): Organisation
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    /**
-     * @return Financial[]|Collections\ArrayCollection
-     */
     public function getParentFinancial()
     {
         return $this->parentFinancial;
     }
 
-    /**
-     * @param Financial[]|Collections\ArrayCollection $parentFinancial
-     *
-     * @return Organisation
-     */
-    public function setParentFinancial($parentFinancial)
+    public function setParentFinancial($parentFinancial): Organisation
     {
         $this->parentFinancial = $parentFinancial;
 
         return $this;
     }
 
-    /**
-     * @return \Organisation\Entity\Parent\Organisation
-     */
     public function getParentOrganisation()
     {
         return $this->parentOrganisation;
     }
 
-    /**
-     * @param \Organisation\Entity\Parent\Organisation|null
-     *
-     * @return Organisation
-     */
-    public function setParentOrganisation(?\Organisation\Entity\Parent\Organisation $parentOrganisation)
+    public function setParentOrganisation(?parent\Organisation $parentOrganisation): Organisation
     {
         $this->parentOrganisation = $parentOrganisation;
 
         return $this;
     }
 
-    /**
-     * @return \General\Entity\Country
-     */
     public function getCountry()
     {
         return $this->country;
     }
 
-    /**
-     * @param \General\Entity\Country $country
-     *
-     * @return Organisation
-     */
-    public function setCountry($country)
+    public function setCountry($country): Organisation
     {
         $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Project\Entity\Idea\Partner[]
-     */
     public function getIdeaPartner()
     {
         return $this->ideaPartner;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Project\Entity\Idea\Partner[] $ideaPartner
-     *
-     * @return Organisation
-     */
-    public function setIdeaPartner($ideaPartner)
+    public function setIdeaPartner($ideaPartner): Organisation
     {
         $this->ideaPartner = $ideaPartner;
 
         return $this;
     }
 
-    /**
-     * @return Type
-     */
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * @param Type $type
-     *
-     * @return Organisation
-     */
-    public function setType($type)
+    public function setType($type): Organisation
     {
         $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Web[]
-     */
     public function getWeb()
     {
         return $this->web;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Web[] $web
-     *
-     * @return Organisation
-     */
-    public function setWeb($web)
+    public function setWeb($web): Organisation
     {
         $this->web = $web;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Program\Entity\Domain[]
-     */
-    public function getDomain()
-    {
-        return $this->domain;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Program\Entity\Domain[] $domain
-     *
-     * @return Organisation
-     */
-    public function setDomain($domain)
-    {
-        $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Program\Entity\Technology[]
-     */
-    public function getTechnology()
-    {
-        return $this->technology;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|\Program\Entity\Technology[] $technology
-     *
-     * @return Organisation
-     */
-    public function setTechnology($technology)
-    {
-        $this->technology = $technology;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|Cluster[]
-     */
-    public function getCluster()
-    {
-        return $this->cluster;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|Cluster[] $cluster
-     *
-     * @return Organisation
-     */
-    public function setCluster($cluster)
-    {
-        $this->cluster = $cluster;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|Cluster[]
-     */
-    public function getClusterMember()
-    {
-        return $this->clusterMember;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|Cluster[] $clusterMember
-     *
-     * @return Organisation
-     */
-    public function setClusterMember($clusterMember)
-    {
-        $this->clusterMember = $clusterMember;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|Log[]
-     */
     public function getLog()
     {
         return $this->log;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Log[] $log
-     *
-     * @return Organisation
-     */
-    public function setLog($log)
+    public function setLog($log): Organisation
     {
         $this->log = $log;
 
         return $this;
     }
 
-    /**
-     * @return Description
-     */
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * @param Description $description
-     *
-     * @return Organisation
-     */
-    public function setDescription($description)
+    public function setDescription($description): Organisation
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Logo[]
-     */
     public function getLogo()
     {
         return $this->logo;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Logo[] $logo
-     *
-     * @return Organisation
-     */
-    public function setLogo($logo)
+    public function setLogo($logo): Organisation
     {
         $this->logo = $logo;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Note[]
-     */
     public function getNote()
     {
         return $this->note;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Note[] $note
-     *
-     * @return Organisation
-     */
-    public function setNote($note)
+    public function setNote($note): Organisation
     {
         $this->note = $note;
 
         return $this;
     }
 
-    /**
-     * @return Financial
-     */
     public function getFinancial()
     {
         return $this->financial;
     }
 
-    /**
-     * @param Financial $financial
-     *
-     * @return Organisation
-     */
-    public function setFinancial($financial)
+    public function setFinancial($financial): Organisation
     {
         $this->financial = $financial;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Financial[]
-     */
-    public function getFinancialDebtor()
-    {
-        return $this->financialDebtor;
-    }
-
-    /**
-     * @param Collections\ArrayCollection|Financial[] $financialDebtor
-     *
-     * @return Organisation
-     */
-    public function setFinancialDebtor($financialDebtor)
-    {
-        $this->financialDebtor = $financialDebtor;
-
-        return $this;
-    }
-
-    /**
-     * @return Collections\ArrayCollection|\Program\Entity\Doa[]
-     */
     public function getProgramDoa()
     {
         return $this->programDoa;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Program\Entity\Doa[] $programDoa
-     *
-     * @return Organisation
-     */
-    public function setProgramDoa($programDoa)
+    public function setProgramDoa($programDoa): Organisation
     {
         $this->programDoa = $programDoa;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Invoice\Entity\Invoice[]
-     */
     public function getInvoice()
     {
         return $this->invoice;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Invoice\Entity\Invoice[] $invoice
-     *
-     * @return Organisation
-     */
-    public function setInvoice($invoice)
+    public function setInvoice($invoice): Organisation
     {
         $this->invoice = $invoice;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Event\Entity\Booth\Financial[]
-     */
     public function getBoothFinancial()
     {
         return $this->boothFinancial;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Event\Entity\Booth\Financial[] $boothFinancial
-     *
-     * @return Organisation
-     */
-    public function setBoothFinancial($boothFinancial)
+    public function setBoothFinancial($boothFinancial): Organisation
     {
         $this->boothFinancial = $boothFinancial;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Program\Entity\Call\Doa[]
-     */
     public function getDoa()
     {
         return $this->doa;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Program\Entity\Call\Doa[] $doa
-     *
-     * @return Organisation
-     */
-    public function setDoa($doa)
+    public function setDoa($doa): Organisation
     {
         $this->doa = $doa;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Booth[]
-     */
     public function getOrganisationBooth()
     {
         return $this->organisationBooth;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Booth[] $organisationBooth
-     *
-     * @return Organisation
-     */
-    public function setOrganisationBooth($organisationBooth)
+    public function setOrganisationBooth($organisationBooth): Organisation
     {
         $this->organisationBooth = $organisationBooth;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Invoice\Entity\Journal[]
-     */
     public function getJournal()
     {
         return $this->journal;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Invoice\Entity\Journal[] $journal
-     *
-     * @return Organisation
-     */
-    public function setJournal($journal)
+    public function setJournal($journal): Organisation
     {
         $this->journal = $journal;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Invoice\Entity\Reminder[]
-     */
     public function getReminder()
     {
         return $this->reminder;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Invoice\Entity\Reminder[] $reminder
-     *
-     * @return Organisation
-     */
-    public function setReminder($reminder)
+    public function setReminder($reminder): Organisation
     {
         $this->reminder = $reminder;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|\Project\Entity\Result\Result[]
-     */
     public function getResult()
     {
         return $this->result;
     }
 
-    /**
-     * @param Collections\ArrayCollection|\Project\Entity\Result\Result[] $result
-     *
-     * @return Organisation
-     */
-    public function setResult($result)
+    public function setResult($result): Organisation
     {
         $this->result = $result;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|Name[]
-     */
     public function getNames()
     {
         return $this->names;
     }
 
-    /**
-     * @param Collections\ArrayCollection|Name[] $names
-     *
-     * @return Organisation
-     */
-    public function setNames($names)
+    public function setNames($names): Organisation
     {
         $this->names = $names;
 
         return $this;
     }
 
-    /**
-     * @return Collections\ArrayCollection|IctOrganisation[]
-     */
-    public function getIctOrganisation()
+    public function getMagazineArticle()
     {
-        return $this->ictOrganisation;
+        return $this->magazineArticle;
     }
 
-    /**
-     * @param Collections\ArrayCollection|IctOrganisation[] $ictOrganisation
-     * @return Organisation
-     */
-    public function setIctOrganisation($ictOrganisation)
+    public function setMagazineArticle($magazineArticle): Organisation
     {
-        $this->ictOrganisation = $ictOrganisation;
+        $this->magazineArticle = $magazineArticle;
+        return $this;
+    }
+
+    public function getUpdates(): Collections\Collection
+    {
+        return $this->updates;
+    }
+
+    public function setUpdates(Collections\Collection $updates): Organisation
+    {
+        $this->updates = $updates;
 
         return $this;
     }
