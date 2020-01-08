@@ -1,6 +1,7 @@
 <?php
+
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -12,15 +13,17 @@ declare(strict_types=1);
 
 namespace Organisation\Controller;
 
-use function array_merge_recursive;
 use Contact\Service\ContactService;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Invoice\Service\InvoiceService;
-use function mb_convert_encoding;
-use function ob_get_clean;
+use Laminas\Http\Response;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\Session\Container;
+use Laminas\View\Model\ViewModel;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
@@ -28,16 +31,16 @@ use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Program\Service\ProgramService;
+
+use function array_merge_recursive;
+use function mb_convert_encoding;
+use function ob_get_clean;
 use function set_time_limit;
 use function strlen;
-use Laminas\Http\Response;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Paginator\Paginator;
-use Laminas\Session\Container;
-use Laminas\View\Model\ViewModel;
 
 /**
- * @category    Parent
+ * Class ParentController
+ * @package Organisation\Controller
  */
 final class ParentController extends OrganisationAbstractController
 {
@@ -90,11 +93,11 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'paginator'     => $paginator,
-                'form'          => $form,
+                'paginator' => $paginator,
+                'form' => $form,
                 'encodedFilter' => urlencode($filterPlugin->getHash()),
-                'order'         => $filterPlugin->getOrder(),
-                'direction'     => $filterPlugin->getDirection(),
+                'order' => $filterPlugin->getOrder(),
+                'direction' => $filterPlugin->getDirection(),
                 'parentService' => $this->parentService
             ]
         );
@@ -118,14 +121,14 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'paginator'           => $paginator,
-                'form'                => $form,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
+                'paginator' => $paginator,
+                'form' => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order' => $filterPlugin->getOrder(),
+                'direction' => $filterPlugin->getDirection(),
                 'organisationService' => $this->organisationService,
-                'contactService'      => $this->contactService,
-                'parentService'       => $this->parentService,
+                'contactService' => $this->contactService,
+                'parentService' => $this->parentService,
             ]
         );
     }
@@ -350,7 +353,7 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'form'   => $form,
+                'form' => $form,
                 'parent' => $parent,
             ]
         );
@@ -424,7 +427,7 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'form'   => $form,
+                'form' => $form,
                 'parent' => $parent,
             ]
         );
@@ -477,14 +480,14 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'parent'              => $parent,
+                'parent' => $parent,
                 'organisationService' => $this->organisationService,
-                'contactService'      => $this->contactService,
-                'year'                => $year,
-                'form'                => $form,
-                'programs'            => $this->programService->findAll(Program::class),
-                'parentService'       => $this->parentService,
-                'invoiceService'      => $this->invoiceService
+                'contactService' => $this->contactService,
+                'year' => $year,
+                'form' => $form,
+                'programs' => $this->programService->findAll(Program::class),
+                'parentService' => $this->parentService,
+                'invoiceService' => $this->invoiceService
             ]
         );
     }
@@ -509,9 +512,9 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'year'          => $year,
-                'parent'        => $parent,
-                'program'       => $program,
+                'year' => $year,
+                'parent' => $parent,
+                'program' => $program,
                 'invoiceMethod' => $invoiceMethod,
                 'invoiceFactor' => $this->parentService->parseInvoiceFactor($parent, $program)
 
@@ -574,8 +577,8 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'year'    => $year,
-                'parent'  => $parent,
+                'year' => $year,
+                'parent' => $parent,
                 'program' => $program
 
             ]

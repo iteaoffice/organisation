@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -60,9 +61,9 @@ class MergeOrganisation extends AbstractPlugin
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        UpdateService          $updateService,
-        TranslatorInterface    $translator,
-        Logging                $errorLogger = null
+        UpdateService $updateService,
+        TranslatorInterface $translator,
+        Logging $errorLogger = null
     ) {
         $this->entityManager = $entityManager;
         $this->updateService = $updateService;
@@ -80,7 +81,8 @@ class MergeOrganisation extends AbstractPlugin
         $errors = [];
 
         // Check VAT
-        if (($target->getFinancial() instanceof Financial) && ($source->getFinancial() instanceof Financial)
+        if (
+            ($target->getFinancial() instanceof Financial) && ($source->getFinancial() instanceof Financial)
             && ($target->getFinancial()->getVat() !== $source->getFinancial()->getVat())
         ) {
             $errors[] = \sprintf(
@@ -96,7 +98,8 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Check countries
-        if (($target->getCountry() instanceof Country) && ($source->getCountry() instanceof Country)
+        if (
+            ($target->getCountry() instanceof Country) && ($source->getCountry() instanceof Country)
             && ($target->getCountry()->getId() !== $source->getCountry()->getId())
         ) {
             $errors[] = $this->translator->translate('txt-organisations-cant-have-different-countries');
@@ -128,11 +131,12 @@ class MergeOrganisation extends AbstractPlugin
             $source->getDescription()->setOrganisation($target);
             $target->setDescription($source->getDescription());
         }
-        if (($source->getFinancial() instanceof Financial) && (
-            ($target->getFinancial() === null)
+        if (
+            ($source->getFinancial() instanceof Financial) && (
+                ($target->getFinancial() === null)
                 || empty($target->getFinancial()->getVat())
                 || ($source->getFinancial()->getVat() === $target->getFinancial()->getVat())
-        )
+            )
         ) {
             $source->getFinancial()->setOrganisation($target);
             $target->setFinancial($source->getFinancial());
@@ -201,8 +205,10 @@ class MergeOrganisation extends AbstractPlugin
         }
 
         // Transfer parent organisation (one-to-one)
-        if (($target->getParentOrganisation() === null)
-            && ($source->getParentOrganisation() instanceof \Organisation\Entity\Parent\Organisation)) {
+        if (
+            ($target->getParentOrganisation() === null)
+            && ($source->getParentOrganisation() instanceof \Organisation\Entity\Parent\Organisation)
+        ) {
             $parentOrganisation = $source->getParentOrganisation();
             $parentOrganisation->setOrganisation($target);
             $target->setParentOrganisation($parentOrganisation);

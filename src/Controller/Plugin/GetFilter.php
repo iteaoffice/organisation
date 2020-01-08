@@ -18,17 +18,18 @@ declare(strict_types=1);
 
 namespace Organisation\Controller\Plugin;
 
+use Doctrine\Common\Collections\Criteria;
+use Laminas\Http\Request;
+use Laminas\Json\Json;
+use Laminas\Mvc\Application;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\ServiceManager\ServiceManager;
+
 use function base64_decode;
 use function base64_encode;
-use Doctrine\Common\Collections\Criteria;
 use function http_build_query;
 use function json_encode;
 use function urldecode;
-use Laminas\Http\Request;
-use Laminas\Mvc\Application;
-use Laminas\Json\Json;
-use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
-use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class GetFilter
@@ -69,7 +70,8 @@ final class GetFilter extends AbstractPlugin
         $direction = $request->getQuery('direction');
 
         // If the form is submitted, refresh the URL
-        if ($request->isGet()
+        if (
+            $request->isGet()
             && (($request->getQuery('submit') !== null) || ($request->getQuery('presentation') !== null))
         ) {
             $query = $request->getQuery()->toArray();

@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -19,6 +20,7 @@ use Doctrine\ORM\QueryBuilder;
 use Organisation\Entity;
 use Program\Entity\Program;
 use Project\Entity\Version\Version;
+
 use function in_array;
 use function sprintf;
 
@@ -93,7 +95,8 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         }
 
         $direction = Criteria::ASC;
-        if (isset($filter['direction'])
+        if (
+            isset($filter['direction'])
             && in_array(
                 strtoupper($filter['direction']),
                 [Criteria::ASC, Criteria::DESC],
@@ -223,7 +226,8 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         }
 
         $direction = Criteria::ASC;
-        if (isset($filter['direction'])
+        if (
+            isset($filter['direction'])
             && in_array(
                 strtoupper($filter['direction']),
                 [Criteria::ASC, Criteria::DESC],
@@ -335,7 +339,8 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         }
 
         $direction = Criteria::ASC;
-        if (isset($filter['direction'])
+        if (
+            isset($filter['direction'])
             && in_array(
                 strtoupper($filter['direction']),
                 [Criteria::ASC, Criteria::DESC],

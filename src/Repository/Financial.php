@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -82,7 +83,8 @@ final class Financial extends EntityRepository
         }
 
         $direction = 'ASC';
-        if (isset($filter['direction'])
+        if (
+            isset($filter['direction'])
             && \in_array(strtoupper($filter['direction']), ['ASC', 'DESC'])
         ) {
             $direction = strtoupper($filter['direction']);

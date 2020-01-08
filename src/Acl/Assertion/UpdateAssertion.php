@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -57,7 +58,8 @@ final class UpdateAssertion extends AbstractAssertion
             $organisation = $this->updateService->find(Organisation::class, $organisationId);
 
             // Allow editing from profile page
-            if (($organisation === null)
+            if (
+                ($organisation === null)
                 && ($this->getRouteMatch()->getMatchedRouteName() === 'community/contact/profile/organisation')
             ) {
                 $organisation = $this->contact->getContactOrganisation()->getOrganisation();

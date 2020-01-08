@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Jield BV all rights reserved
  *
@@ -15,20 +16,20 @@ declare(strict_types=1);
 
 namespace Organisation\Acl\Assertion;
 
-use Admin\Entity\Access;
 use Admin\Service\AdminService;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
-use function count;
 use Doctrine\ORM\PersistentCollection;
-use function in_array;
 use Interop\Container\ContainerInterface;
-use function is_array;
-use function strpos;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Http\Request;
 use Laminas\Permissions\Acl\Assertion\AssertionInterface;
 use Laminas\Router\Http\RouteMatch;
+
+use function count;
+use function in_array;
+use function is_array;
+use function strpos;
 
 /**
  * Class AbstractAssertion
@@ -152,7 +153,8 @@ abstract class AbstractAssertion implements AssertionInterface
             if ($role === 'public') {
                 return true;
             }
-            if ($this->hasContact()
+            if (
+                $this->hasContact()
                 && in_array(
                     $role,
                     $this->adminService->findAccessRolesByContactAsArray($this->contact),

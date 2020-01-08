@@ -1,6 +1,7 @@
 <?php
+
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -12,16 +13,12 @@ declare(strict_types=1);
 
 namespace Organisation\Service;
 
-use function abs;
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
-use function array_merge;
 use Contact\Entity\Contact;
-use function count;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use function in_array;
 use Interop\Container\ContainerInterface;
 use Invoice\Entity\Method;
 use Organisation\Entity;
@@ -31,6 +28,11 @@ use Program\Entity\Program;
 use Project\Entity\Version\Version;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
+
+use function abs;
+use function array_merge;
+use function count;
+use function in_array;
 use function round;
 
 /**
@@ -191,12 +193,14 @@ class ParentService extends AbstractService
     {
         //Go over each affiliation and sum up what has been paid already
         $totalFunded = 0;
-        foreach ($this->findAffiliationByParentAndProgramAndWhich(
-            $parent,
-            $program,
-            AffiliationService::WHICH_INVOICING,
-            $year
-        ) as $affiliation) {
+        foreach (
+            $this->findAffiliationByParentAndProgramAndWhich(
+                $parent,
+                $program,
+                AffiliationService::WHICH_INVOICING,
+                $year
+            ) as $affiliation
+        ) {
             $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
@@ -231,12 +235,14 @@ class ParentService extends AbstractService
     {
         //Go over each affiliation and sum up what has been paid already
         $contribution = 0;
-        foreach ($this->findAffiliationByParentAndProgramAndWhich(
-            $parent,
-            $program,
-            AffiliationService::WHICH_INVOICING,
-            $year
-        ) as $affiliation) {
+        foreach (
+            $this->findAffiliationByParentAndProgramAndWhich(
+                $parent,
+                $program,
+                AffiliationService::WHICH_INVOICING,
+                $year
+            ) as $affiliation
+        ) {
             $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
@@ -261,12 +267,14 @@ class ParentService extends AbstractService
     {
         //Go over each affiliation and sum up what has been paid already
         $contributionBalance = 0;
-        foreach ($this->findAffiliationByParentAndProgramAndWhich(
-            $parent,
-            $program,
-            AffiliationService::WHICH_INVOICING,
-            $year
-        ) as $affiliation) {
+        foreach (
+            $this->findAffiliationByParentAndProgramAndWhich(
+                $parent,
+                $program,
+                AffiliationService::WHICH_INVOICING,
+                $year
+            ) as $affiliation
+        ) {
             $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
 
             if (null !== $latestVersion) {
@@ -286,12 +294,14 @@ class ParentService extends AbstractService
         //Go over each affiliation and sum up what has been paid already
         $balanceTotal = 0;
 
-        foreach ($this->projectService->findProjectsByParent(
-            $parent,
-            $program,
-            AffiliationService::WHICH_INVOICING,
-            $year
-        ) as $project) {
+        foreach (
+            $this->projectService->findProjectsByParent(
+                $parent,
+                $program,
+                AffiliationService::WHICH_INVOICING,
+                $year
+            ) as $project
+        ) {
             $version = $this->projectService->getLatestApprovedProjectVersion($project);
 
             //Only add the balance when there is a version
@@ -382,12 +392,14 @@ class ParentService extends AbstractService
     {
         //Sort the projects per call
         $projects = [];
-        foreach ($this->findAffiliationByParentAndProgramAndWhich(
-            $parent,
-            $program,
-            AffiliationService::WHICH_INVOICING,
-            $year
-        ) as $affiliation) {
+        foreach (
+            $this->findAffiliationByParentAndProgramAndWhich(
+                $parent,
+                $program,
+                AffiliationService::WHICH_INVOICING,
+                $year
+            ) as $affiliation
+        ) {
             /** @var Call $call */
             $call = $affiliation->getProject()->getCall();
 
@@ -434,7 +446,8 @@ class ParentService extends AbstractService
     public function parseInvoiceFactor(Entity\OParent $parent, Program $program): float
     {
         //If the invoice method is based on the METHOD::METHOD_FUNDING
-        if (! $program->getInvoiceMethod()->isEmpty()
+        if (
+            ! $program->getInvoiceMethod()->isEmpty()
             && $program->getInvoiceMethod()->first()->getId() === Method::METHOD_FUNDING
         ) {
             if ($parent->isMember() || $this->hasDoaForProgram($parent, $program)) {
@@ -489,12 +502,14 @@ class ParentService extends AbstractService
         $contributionTotal = 0;
 
         /** @var Affiliation $affiliation */
-        foreach ($this->findAffiliationByParentAndProgramAndWhich(
-            $parent,
-            $program,
-            AffiliationService::WHICH_INVOICING,
-            $year
-        ) as $affiliation) {
+        foreach (
+            $this->findAffiliationByParentAndProgramAndWhich(
+                $parent,
+                $program,
+                AffiliationService::WHICH_INVOICING,
+                $year
+            ) as $affiliation
+        ) {
             //Skip the affiliations which are not in the $include affiliations table
             if (null !== $includeAffiliations && ! in_array($affiliation, $includeAffiliations, true)) {
                 continue;
@@ -610,7 +625,8 @@ class ParentService extends AbstractService
                         $errors[] = sprintf('%s has no financial information', $financial->getOrganisation());
                     }
 
-                    if (null !== $financial->getOrganisation()->getFinancial()
+                    if (
+                        null !== $financial->getOrganisation()->getFinancial()
                         && empty(
                             $financial->getOrganisation()->getFinancial()->getVat()
                         )
@@ -618,7 +634,8 @@ class ParentService extends AbstractService
                         $errors[] = sprintf('%s has no VAT number', $financial->getOrganisation());
                     }
 
-                    if (null !== $financial->getOrganisation()->getFinancial()
+                    if (
+                        null !== $financial->getOrganisation()->getFinancial()
                         && ! empty(
                             $financial->getOrganisation()->getFinancial()->getVat()
                         )

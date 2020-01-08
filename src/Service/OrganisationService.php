@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -37,6 +38,7 @@ use Solarium\QueryType\Update\Query\Document;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Stdlib\Parameters;
 use Laminas\Validator\EmailAddress;
+
 use function array_count_values;
 use function array_keys;
 use function array_unique;

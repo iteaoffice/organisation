@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -27,6 +28,7 @@ use Organisation\Entity;
 use Project\Repository\Project;
 use Laminas\Stdlib\Parameters;
 use Laminas\Validator\EmailAddress;
+
 use function array_key_exists;
 use function asort;
 use function in_array;
@@ -74,7 +76,8 @@ class Organisation extends EntityRepository
         }
 
         $direction = Criteria::ASC;
-        if (isset($filter['direction'])
+        if (
+            isset($filter['direction'])
             && in_array(strtoupper($filter['direction']), [Criteria::ASC, Criteria::DESC], true)
         ) {
             $direction = strtoupper($filter['direction']);

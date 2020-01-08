@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -184,7 +185,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                     $counter
                 );
             } else {
-                if (null === $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']])
+                if (
+                    null === $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']])
                 ) {
                     $this->errors[] = sprintf(
                         'EPS (%s) in row %s cannot be found',
@@ -328,7 +330,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
             //First iterate over the organisations in the project to see if we find an organisation with the $legalName in the country
             foreach ($project->getOrganisationName() as $organisationName) {
-                if (! $organisation
+                if (
+                    ! $organisation
                     && $legalName === $organisationName->getOrganisation()->getOrganisation()
                     && $organisationName->getOrganisation()->getCountry()->getId() === $country->getId()
                 ) {

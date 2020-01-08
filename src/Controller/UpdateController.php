@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -26,6 +27,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Validator\File\ImageSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\ViewModel;
+
 use function sprintf;
 
 /**
@@ -41,8 +43,8 @@ final class UpdateController extends OrganisationAbstractController
 
     public function __construct(
         OrganisationService $organisationService,
-        GeneralService      $generalservice,
-        FormService         $formService,
+        GeneralService $generalservice,
+        FormService $formService,
         TranslatorInterface $translator
     ) {
         $this->organisationService = $organisationService;

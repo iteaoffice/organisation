@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -20,6 +21,7 @@ use Laminas\Form\Element\Submit;
 use Contact\Form\Element\Contact;
 use Laminas\Form\Element\Text;
 use Laminas\Form\Element\Select;
+
 use function in_array;
 
 /**
@@ -39,10 +41,12 @@ final class AddAffiliation extends Form
         /**
          * @var $projectService ProjectService
          */
-        foreach ($projectService->findProjectByOrganisation(
-            $organisation,
-            ProjectService::WHICH_ALL
-        ) as $project) {
+        foreach (
+            $projectService->findProjectByOrganisation(
+                $organisation,
+                ProjectService::WHICH_ALL
+            ) as $project
+        ) {
             $currentProjects[] = $project->getId();
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -53,7 +54,7 @@ class Name extends AbstractEntity
     private $dateCreated;
     /**
      * @ORM\ManyToOne(targetEntity="Project\Entity\Project", inversedBy="organisationName", cascade={"persist"})
-     * @@ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false)
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false)
      *
      * @var Project
      */

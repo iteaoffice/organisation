@@ -8,6 +8,7 @@
  *
  * @link        https://github.com/iteaoffice/organisation for the canonical source repository
  */
+
 declare(strict_types=1);
 
 namespace Organisation\Form;

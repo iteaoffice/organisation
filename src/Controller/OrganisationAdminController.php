@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -47,6 +48,7 @@ use Laminas\Stdlib\ArrayUtils;
 use Laminas\Validator\File\ImageSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\ViewModel;
+
 use function http_build_query;
 use function implode;
 use function sprintf;

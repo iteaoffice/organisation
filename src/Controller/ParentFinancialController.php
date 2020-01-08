@@ -1,4 +1,5 @@
 <?php
+
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -86,11 +87,12 @@ final class ParentFinancialController extends OrganisationAbstractController
         $formData['attention'] = $parent->getContact()->getDisplayName();
         $formData['contact'] = $parent->getContact()->getId();
 
-        if (null !== (
-            $financialAddress = $this->contactService->getFinancialAddress(
-                $parent->getContact()
+        if (
+            null !== (
+                $financialAddress = $this->contactService->getFinancialAddress(
+                    $parent->getContact()
+                )
             )
-        )
         ) {
             $formData['address'] = $financialAddress->getAddress();
             $formData['zipCode'] = $financialAddress->getZipCode();
@@ -133,9 +135,10 @@ final class ParentFinancialController extends OrganisationAbstractController
                  * save the financial address
                  */
 
-                if (null === (
-                    $financialAddress = $this->contactService->getFinancialAddress($financial->getContact())
-                )
+                if (
+                    null === (
+                        $financialAddress = $this->contactService->getFinancialAddress($financial->getContact())
+                    )
                 ) {
                     $financialAddress = new Address();
                     $financialAddress->setContact($financial->getContact());

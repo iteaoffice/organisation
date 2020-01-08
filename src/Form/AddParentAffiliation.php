@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -36,10 +37,12 @@ final class AddParentAffiliation extends Form
 
         $currentProjects = [];
 
-        foreach ($projectService->findProjectByParentOrganisation(
-            $parentOrganisation,
-            ProjectService::WHICH_ALL
-        ) as $project) {
+        foreach (
+            $projectService->findProjectByParentOrganisation(
+                $parentOrganisation,
+                ProjectService::WHICH_ALL
+            ) as $project
+        ) {
             $currentProjects[] = $project->getId();
         }
 
