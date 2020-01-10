@@ -13,7 +13,9 @@ declare(strict_types=1);
 
 namespace Organisation\Entity;
 
+use Affiliation\Entity\Questionnaire\Questionnaire;
 use Doctrine\Common\Collections;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Event\Entity\Meeting\Cost;
 use Laminas\Form\Annotation;
@@ -100,12 +102,20 @@ class Type extends AbstractEntity
      * @var Update[]|Collections\Collection
      */
     private $organisationUpdates;
+    /**
+     * @ORM\OneToMany(targetEntity="Affiliation\Entity\Questionnaire\Questionnaire", cascade={"persist"}, mappedBy="organisationType")
+     * @Annotation\Exclude()
+     *
+     * @var Questionnaire[]|Collection
+     */
+    private $questionnaires;
 
     public function __construct()
     {
-        $this->organisation = new Collections\ArrayCollection();
-        $this->meetingCost = new Collections\ArrayCollection();
+        $this->organisation        = new Collections\ArrayCollection();
+        $this->meetingCost         = new Collections\ArrayCollection();
         $this->organisationUpdates = new Collections\ArrayCollection();
+        $this->questionnaires      = new Collections\ArrayCollection();
     }
 
     public static function getInvoiceTemplates(): array
@@ -202,6 +212,17 @@ class Type extends AbstractEntity
     public function setOrganisationUpdates(Collections\Collection $organisationUpdates): Type
     {
         $this->organisationUpdates = $organisationUpdates;
+        return $this;
+    }
+
+    public function getQuestionnaires(): Collection
+    {
+        return $this->questionnaires;
+    }
+
+    public function setQuestionnaires(Collection $questionnaires): Type
+    {
+        $this->questionnaires = $questionnaires;
         return $this;
     }
 }
