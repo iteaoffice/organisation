@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -44,7 +45,6 @@ class OrganisationServiceTest extends AbstractServiceTest
         $container->setService(EntityManager::class, $this->getEntityManagerMock());
         $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
         $container->setService(TranslatorInterface::class, new Translator());
-
         $service = new OrganisationService($container);
         $this->assertInstanceOf(OrganisationService::class, $service);
     }
@@ -55,7 +55,6 @@ class OrganisationServiceTest extends AbstractServiceTest
         $container->setService(EntityManager::class, $this->getEntityManagerMock());
         $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
         $container->setService(TranslatorInterface::class, new Translator());
-
         $service = new OrganisationService($container);
         $organisation = new Organisation();
         $this->assertTrue($service->canDeleteOrganisation($organisation));
@@ -67,9 +66,7 @@ class OrganisationServiceTest extends AbstractServiceTest
         $container->setService(EntityManager::class, $this->getEntityManagerMock());
         $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
         $container->setService(TranslatorInterface::class, new Translator());
-
         $service = new OrganisationService($container);
-
         $organisation = new Organisation();
         $organisation->getResult()->add(new Result());
         $this->assertFalse($service->canDeleteOrganisation($organisation));
@@ -81,9 +78,7 @@ class OrganisationServiceTest extends AbstractServiceTest
         $container->setService(EntityManager::class, $this->getEntityManagerMock());
         $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
         $container->setService(TranslatorInterface::class, new Translator());
-
         $service = new OrganisationService($container);
-
         $organisation = new Organisation();
         $organisation->setId(1);
         $this->assertNotNull($service->parseDebtorNumber($organisation));
@@ -95,9 +90,7 @@ class OrganisationServiceTest extends AbstractServiceTest
         $container->setService(EntityManager::class, $this->getEntityManagerMock());
         $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
         $container->setService(TranslatorInterface::class, new Translator());
-
         $service = new OrganisationService($container);
-
         $organisation = new Organisation();
         $organisation->setId(1);
         $this->assertNotNull($service->parseCreditNumber($organisation));
@@ -109,13 +102,10 @@ class OrganisationServiceTest extends AbstractServiceTest
         $container->setService(EntityManager::class, $this->getEntityManagerMock());
         $container->setService(OrganisationSearchService::class, new OrganisationSearchService([]));
         $container->setService(TranslatorInterface::class, new Translator());
-
         $service = new OrganisationService($container);
-
         $organisation = new Organisation();
         $name = 'TestName';
         $project = new Project();
-
         $this->assertNull($service->findOrganisationNameByNameAndProject($organisation, $name, $project));
     }
 }

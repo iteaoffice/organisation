@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA Office all rights reserved
  *
@@ -49,15 +50,11 @@ class UpdateServiceTest extends AbstractServiceTest
             ->method('findBy')
             ->with($this->equalTo(['dateApproved' => null]), $this->equalTo(['dateCreated' => Criteria::ASC]))
             ->willReturn([]);
-
-        /** @var EntityManager $entityManagerMock */
+/** @var EntityManager $entityManagerMock */
         $entityManagerMock = $this->getEntityManagerMock(Update::class, $repositoryMock);
-
-        /** @var EmailService $emailServiceMock */
+/** @var EmailService $emailServiceMock */
         $emailServiceMock = $this->getEmailServiceMock();
-
         $service = new UpdateService($entityManagerMock, $emailServiceMock);
-
         $this->assertEquals([], $service->findPendingUpdates());
     }
 
@@ -71,21 +68,17 @@ class UpdateServiceTest extends AbstractServiceTest
             ->method('count')
             ->with($this->equalTo(['dateApproved' => null]))
             ->willReturn(1);
-
-        /** @var EntityManager $entityManagerMock */
+/** @var EntityManager $entityManagerMock */
         $entityManagerMock = $this->getEntityManagerMock(Update::class, $repositoryMock);
-
-        /** @var EmailService $emailServiceMock */
+/** @var EmailService $emailServiceMock */
         $emailServiceMock = $this->getEmailServiceMock();
         $service = new UpdateService($entityManagerMock, $emailServiceMock);
-
         $this->assertEquals(1, $service->countPendingUpdates());
     }
 
     public function testHasUpdates()
     {
         $organisation = new Organisation();
-
         $repositoryMock = $this->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
             ->setMethods(['count'])
@@ -94,14 +87,11 @@ class UpdateServiceTest extends AbstractServiceTest
             ->method('count')
             ->with($this->equalTo(['dateApproved' => null, 'organisation' => $organisation]))
             ->willReturn(1);
-
-        /** @var EntityManager $entityManagerMock */
+/** @var EntityManager $entityManagerMock */
         $entityManagerMock = $this->getEntityManagerMock(Update::class, $repositoryMock);
-
-        /** @var EmailService $emailServiceMock */
+/** @var EmailService $emailServiceMock */
         $emailServiceMock = $this->getEmailServiceMock();
         $service = new UpdateService($entityManagerMock, $emailServiceMock);
-
         $this->assertTrue($service->hasPendingUpdates($organisation));
     }
 
@@ -118,26 +108,22 @@ class UpdateServiceTest extends AbstractServiceTest
         $logo->setContentType($contentType);
         $logo->setLogoExtension('jpg');
         $logo->setOrganisationLogo('some-binary-string');
-
         $update = new Update();
         $update->setContact($contact);
         $update->setOrganisation($organisation);
         $update->setDescription('Test');
         $update->setType($organisationType);
         $update->setLogo($logo);
-
-        /** @var EntityManager $entityManagerMock */
+/** @var EntityManager $entityManagerMock */
         $entityManagerMock = $this->getEntityManagerMock();
-        /** @var EmailService|MockObject $emailServiceMock */
+/** @var EmailService|MockObject $emailServiceMock */
         $emailServiceMock = $this->getEmailServiceMock();
         $emailServiceMock->expects($this->once())
             ->method('addTo')
             ->with($contact);
-
         $service = new UpdateService($entityManagerMock, $emailServiceMock);
         $result = $service->approveUpdate($update);
-
-        /** @var Logo $logo */
+/** @var Logo $logo */
         $logo = $organisation->getLogo()->first();
         $this->assertTrue($result);
         $this->assertInstanceOf(DateTime::class, $update->getDateApproved());

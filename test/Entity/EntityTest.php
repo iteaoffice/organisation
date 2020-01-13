@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ITEA copyright message placeholder
  *
@@ -9,7 +10,6 @@
  */
 
 namespace OrganisationTest\Entity;
-
 
 use General\Entity\AbstractEntity;
 use PHPUnit\Framework\TestCase;
@@ -32,10 +32,11 @@ class EntityTest extends TestCase
         $finder->files()->name('*.php')->in($scanFolder);
 
         foreach ($finder as $file) {
-
             $className = 'Organisation\Entity\\' . \str_replace(
-                    ['/', '.php'], ['\\', ''], $file->getRelativePathname()
-                );
+                ['/', '.php'],
+                ['\\', ''],
+                $file->getRelativePathname()
+            );
 
             $testClass = new \ReflectionClass($className);
 
@@ -50,9 +51,8 @@ class EntityTest extends TestCase
 
                 /** @var Element $element */
                 foreach ($dataFieldset->getElements() as $element) {
-
                     // Add only when a type is provided
-                    if (!array_key_exists('type', $element->getAttributes())) {
+                    if (! array_key_exists('type', $element->getAttributes())) {
                         continue;
                     }
 
