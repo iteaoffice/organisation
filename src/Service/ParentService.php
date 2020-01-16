@@ -42,6 +42,7 @@ use function round;
  */
 class ParentService extends AbstractService
 {
+    private const PARENT_INVOICE_FACTOR = 1.8;
     private ContainerInterface $container;
     private ProjectService $projectService;
     private VersionService $versionService;
@@ -263,31 +264,6 @@ class ParentService extends AbstractService
         return $this->container->get(AffiliationService::class);
     }
 
-    public function parseBalance(Entity\OParent $parent, Program $program, int $year): float
-    {
-        //Go over each affiliation and sum up what has been paid already
-        $contributionBalance = 0;
-        foreach (
-            $this->findAffiliationByParentAndProgramAndWhich(
-                $parent,
-                $program,
-                AffiliationService::WHICH_INVOICING,
-                $year
-            ) as $affiliation
-        ) {
-            $latestVersion = $this->projectService->getLatestApprovedProjectVersion($affiliation->getProject());
-
-            if (null !== $latestVersion) {
-                $contributionBalance += $this->getAffiliationService()->parseBalance(
-                    $affiliation,
-                    $latestVersion,
-                    $year
-                );
-            }
-        }
-
-        return (float)$contributionBalance;
-    }
 
     public function parseTotalExtraVariableBalanceByParent(Entity\OParent $parent, Program $program, int $year): float
     {
@@ -325,7 +301,7 @@ class ParentService extends AbstractService
         /**
          * The formula is
          *
-         * 1.5% * SUM FREE RIDERS * FUNDING BY C CHAMBER / 3 * MEMBERSHIPS * SUM OF FUNDING OF ALL C CHAMBERS
+         * 1.8% * SUM FREE RIDERS * FUNDING BY C CHAMBER / 3 * MEMBERSHIPS * SUM OF FUNDING OF ALL C CHAMBERS
          *
          */
         $sumOfFreeRiders = $this->versionService->findTotalFundingVersionByFreeRidersInVersion($version);
@@ -337,7 +313,7 @@ class ParentService extends AbstractService
             return (float)0;
         }
 
-        return (0.015 * $sumOfFreeRiders * $sumOfFundingByCChamber) / (3 * $amountOfMemberships
+        return ((self::PARENT_INVOICE_FACTOR / 100) * $sumOfFreeRiders * $sumOfFundingByCChamber) / (3 * $amountOfMemberships
                 * $sumOfFundingByCChambers);
     }
 
@@ -451,14 +427,14 @@ class ParentService extends AbstractService
             && $program->getInvoiceMethod()->first()->getId() === Method::METHOD_FUNDING
         ) {
             if ($parent->isMember() || $this->hasDoaForProgram($parent, $program)) {
-                return 1.5;
+                return self::PARENT_INVOICE_FACTOR;
             }
 
             return 0;
         }
 
         if ($parent->isMember()) {
-            return 1.5;
+            return self::PARENT_INVOICE_FACTOR;
         }
 
         //If the organisation is member of any other organisation we will not invoice
@@ -584,7 +560,7 @@ class ParentService extends AbstractService
     public function findParentInvoiceByParentYear(Entity\OParent $parent, int $year, Program $program): ArrayCollection
     {
         return $parent->getInvoice()->filter(
-            function (Entity\Parent\Invoice $invoice) use ($year, $program) {
+            static function (Entity\Parent\Invoice $invoice) use ($year, $program) {
                 return $invoice->getYear() === $year && $invoice->getProgram() === $program;
             }
         );
@@ -595,7 +571,7 @@ class ParentService extends AbstractService
         int $year
     ): ArrayCollection {
         return $parent->getInvoiceExtra()->filter(
-            function (Entity\Parent\InvoiceExtra $invoiceExtra) use ($year) {
+            static function (Entity\Parent\InvoiceExtra $invoiceExtra) use ($year) {
                 return $invoiceExtra->getYear() === $year;
             }
         );
@@ -654,7 +630,7 @@ class ParentService extends AbstractService
     public function searchParent(
         string $searchItem,
         int $maxResults = 20
-    ) {
+    ): array {
         /** @var Repository\OParent $repository */
         $repository = $this->entityManager->getRepository(Entity\OParent::class);
         return $repository->searchParents(

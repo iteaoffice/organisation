@@ -16,6 +16,7 @@ namespace Organisation\Controller\Plugin;
 use Affiliation\Entity\Affiliation;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use General\Service\CountryService;
 use Organisation\Entity\Name;
@@ -33,6 +34,15 @@ use Program\Service\ProgramService;
 use Project\Entity\Funding\Funded;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
+
+use function array_flip;
+use function array_map;
+use function count;
+use function explode;
+use function in_array;
+use function sprintf;
+use function str_replace;
+use function trim;
 
 /**
  * Class HandleImport.
@@ -80,24 +90,24 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
     ) {
         parent::__construct($entityManager);
 
-        $this->countryService = $countryService;
-        $this->parentService = $parentService;
-        $this->projectService = $projectService;
-        $this->contactService = $contactService;
+        $this->countryService      = $countryService;
+        $this->parentService       = $parentService;
+        $this->projectService      = $projectService;
+        $this->contactService      = $contactService;
         $this->organisationService = $organisationService;
-        $this->callService = $callService;
-        $this->programService = $programService;
+        $this->callService         = $callService;
+        $this->programService      = $programService;
     }
 
     public function setData(string $sourceData): void
     {
-        $data = \trim($sourceData);
+        $data = trim($sourceData);
 
         //Explode first on the \n to have the different rows
-        $data = \explode(PHP_EOL, $data);
+        $data = explode(PHP_EOL, $data);
 
         //Apply a general trim to remove unwanted characters
-        $data = \array_map('trim', $data);
+        $data = array_map('trim', $data);
 
         $this->header = explode($this->delimiter, trim($data[0]));
 
@@ -109,11 +119,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         /*
          * Go over the rest of the data and add the rows to the array
          */
-        $amount = \count($data);
+        $amount = count($data);
         for ($i = 1; $i < $amount; $i++) {
             $row = explode($this->delimiter, $data[$i]);
 
-            if (\count($row) >= \count($this->header)) {
+            if (count($row) >= count($this->header)) {
                 //Trim all the elements
                 $row = array_map('trim', $row);
 
@@ -130,8 +140,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 $this->warnings[] = sprintf(
                     'Row %s has been skipped, does not contain %s elements but %s',
                     $i + 1,
-                    \count($this->header),
-                    \count($row)
+                    count($this->header),
+                    count($row)
                 );
             }
         }
@@ -160,7 +170,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
          * Go over all elements and check if the required elements are present
          */
         foreach ($minimalRequiredElements as $element) {
-            if (! \in_array($element, $this->header, true)) {
+            if (! in_array($element, $this->header, true)) {
                 $this->errors[] = sprintf('Element %s is missing in the file', $element);
             }
         }
@@ -168,7 +178,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         /*
          * Create the lookup-table
          */
-        $this->headerKeys = \array_flip($this->header);
+        $this->headerKeys = array_flip($this->header);
 
         /*
          * Validate the elements.
@@ -219,10 +229,10 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
     public function prepareContent(array $keys = []): void
     {
         //First de-activate all the partners
-        if (\count($keys) > 0) {
+        if (count($keys) > 0) {
             $projects = [];
             foreach ($this->content as $key => $content) {
-                if (\in_array($key, $keys, false)) {
+                if (in_array($key, $keys, false)) {
                     /** @var Project $project */
                     $project = $this->projectService->findProjectByName(
                         $content[$this->headerKeys['Proposal Acronym']]
@@ -237,7 +247,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             //Disable all affiliations
             foreach ($projects as $project) {
                 foreach ($project->getAffiliation() as $affiliation) {
-                    $affiliation->setDateEnd(new \DateTime());
+                    $affiliation->setDateEnd(new DateTime());
                     $this->entityManager->persist($affiliation);
                 }
             }
@@ -256,9 +266,9 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             //Extract some data form the callId
-            [$programName, $year, $id] = \explode('-', $content[$this->headerKeys['Call']]);
+            [$programName, $year, $id] = explode('-', $content[$this->headerKeys['Call']]);
 
-            $callName = \sprintf('%s %s', $year, $id);
+            $callName = sprintf('%s %s', $year, $id);
 
             //Try to find the program
             $program = $this->programService->findProgramByName($programName);
@@ -287,10 +297,10 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 $project->setProject($content[$this->headerKeys['Proposal Acronym']]);
 
                 //Derive te start and end date
-                $dateStart = new \DateTime();
+                $dateStart = new DateTime();
                 $project->setDateStart($dateStart->modify('first day of january ' . ($year + 1)));
                 $project->setDateStartActual($dateStart->modify('first day of january ' . ($year + 1)));
-                $dateEnd = new \DateTime();
+                $dateEnd = new DateTime();
                 $project->setDateEnd($dateEnd->modify('last day of december ' . ($year + 4)));
                 $project->setDateEndActual($dateEnd->modify('last day of december ' . ($year + 4)));
                 $project->setContact($contact);
@@ -320,12 +330,12 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
 
             //Try first to find the organisation in based on the name
-            $legalName = $content[$this->headerKeys['Legal Name']];
+            $legalName  = $content[$this->headerKeys['Legal Name']];
             $parentName = $content[$this->headerKeys['Parent']];
 
             //First initiate the needed variables.
-            $affiliation = false;
-            $organisation = false;
+            $affiliation        = false;
+            $organisation       = false;
             $parentOrganisation = false;
 
             //First iterate over the organisations in the project to see if we find an organisation with the $legalName in the country
@@ -359,7 +369,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 /** @var Organisation $anyOrganisation */
                 foreach ($organisations as $anyOrganisation) {
                     if (! $organisation && $anyOrganisation->hasParent()) {
-                        $organisation = $anyOrganisation;
+                        $organisation       = $anyOrganisation;
                         $parentOrganisation = $anyOrganisation->getParentOrganisation();
                     }
                 }
@@ -414,7 +424,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
 
-            //We have a parent organisationw (either created not), lets see if we can find the project in the list
+            //We have a parent organisation (either created not), lets see if we can find the project in the list
             foreach ($parentOrganisation->getAffiliation() as $existingAffiliation) {
                 if (! $affiliation && $existingAffiliation->getProject()->getId() === $project->getId()) {
                     $affiliation = $existingAffiliation;
@@ -438,11 +448,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
 
             $funding->setFundingEu(
-                (float)((int)\trim(\str_replace(['.', ','], '', $content[$this->headerKeys['EU funding']]), '"') / 100)
+                (float)((int)trim(str_replace(['.', ','], '', $content[$this->headerKeys['EU funding']]), '"') / 100)
             );
             $funding->setFundingNational(
-                (float)((int)\trim(
-                    \str_replace(
+                (float)((int)trim(
+                    str_replace(
                         ['.', ','],
                         '',
                         $content[$this->headerKeys['National funding']]
@@ -473,7 +483,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
 
             //Only persist when the key is given
-            if (\in_array($key, $keys, false)) {
+            if (in_array($key, $keys, false)) {
                 $affiliation->setDateEnd(null);
                 $this->entityManager->persist($affiliation);
                 $this->entityManager->flush($affiliation);
@@ -522,8 +532,8 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             $doa = new Doa();
             $doa->setProgram($program);
             $doa->setParent($parent);
-            $doa->setDateApproved(new \DateTime());
-            $doa->setDateSigned(new \DateTime());
+            $doa->setDateApproved(new DateTime());
+            $doa->setDateSigned(new DateTime());
             $doa->setContact($contact);
             $parent->getDoa()->add($doa);
         }
@@ -558,7 +568,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
 
     public function parseArtimisiaMemberType(array $content): int
     {
-        $artemisiaDOA = (string)$content[$this->headerKeys['ARTEMISIA DoA']] === '1';
+        $artemisiaDOA    = (string)$content[$this->headerKeys['ARTEMISIA DoA']] === '1';
         $artemisiaMember = (string)$content[$this->headerKeys['Member ARTEMISIA']] === '1';
 
         //Derive the member type
@@ -575,7 +585,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
     public function parseEpossMemberType(array $content): int
     {
         $epossMember = (string)$content[$this->headerKeys['Member EPOSS']] === '1';
-        $epossDOA = (string)$content[$this->headerKeys['EPoSS DoA']] === '1';
+        $epossDOA    = (string)$content[$this->headerKeys['EPoSS DoA']] === '1';
 
         //Derive the member type
         switch (true) {
