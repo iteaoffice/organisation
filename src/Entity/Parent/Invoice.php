@@ -1,7 +1,6 @@
 <?php
-
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -14,12 +13,12 @@ declare(strict_types=1);
 namespace Organisation\Entity\Parent;
 
 use Doctrine\ORM\Mapping as ORM;
-use Organisation\Entity\AbstractEntity;
 use Laminas\Form\Annotation;
+use Organisation\Entity\AbstractEntity;
+use Organisation\Entity\OParent;
+use Program\Entity\Program;
 
 /**
- * Entity for the Partner.
- *
  * @ORM\Table(name="organisation_parent_invoice")
  * @ORM\Entity
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
@@ -45,14 +44,14 @@ class Invoice extends AbstractEntity
     /**
      * @ORM\Column(name="amount_invoiced", type="decimal", precision=10, scale=2, nullable=true)
      *
-     * @var float
+     * @var float|string
      */
     private $amountInvoiced;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="invoice", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      *
-     * @var \Organisation\Entity\OParent
+     * @var OParent
      */
     private $parent;
     /**
@@ -64,31 +63,20 @@ class Invoice extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="parentInvoice", cascade={"persist"})
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
-     * @var \Program\Entity\Program
+     * @var Program
      */
     private $program;
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->invoice->getInvoiceNr();
     }
 
-    /**
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Invoice
-     */
     public function setId($id): Invoice
     {
         $this->id = $id;
@@ -96,19 +84,11 @@ class Invoice extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getYear(): ?int
     {
         return $this->year;
     }
 
-    /**
-     * @param int $year
-     *
-     * @return Invoice
-     */
     public function setYear(int $year): Invoice
     {
         $this->year = $year;
@@ -116,59 +96,35 @@ class Invoice extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmountInvoiced(): ?float
+    public function getAmountInvoiced()
     {
-        return (float) $this->amountInvoiced;
+        return (float)$this->amountInvoiced;
     }
 
-    /**
-     * @param float $amountInvoiced
-     *
-     * @return Invoice
-     */
-    public function setAmountInvoiced(float $amountInvoiced): Invoice
+    public function setAmountInvoiced($amountInvoiced): Invoice
     {
         $this->amountInvoiced = $amountInvoiced;
 
         return $this;
     }
 
-    /**
-     * @return \Organisation\Entity\OParent
-     */
-    public function getParent(): \Organisation\Entity\OParent
+    public function getParent(): OParent
     {
         return $this->parent;
     }
 
-    /**
-     * @param \Organisation\Entity\OParent $parent
-     *
-     * @return Invoice
-     */
-    public function setParent(\Organisation\Entity\OParent $parent): Invoice
+    public function setParent(OParent $parent): Invoice
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    /**
-     * @return \Invoice\Entity\Invoice
-     */
     public function getInvoice(): \Invoice\Entity\Invoice
     {
         return $this->invoice;
     }
 
-    /**
-     * @param \Invoice\Entity\Invoice $invoice
-     *
-     * @return Invoice
-     */
     public function setInvoice(\Invoice\Entity\Invoice $invoice): Invoice
     {
         $this->invoice = $invoice;
@@ -176,20 +132,12 @@ class Invoice extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @return \Program\Entity\Program
-     */
-    public function getProgram(): \Program\Entity\Program
+    public function getProgram(): Program
     {
         return $this->program;
     }
 
-    /**
-     * @param \Program\Entity\Program $program
-     *
-     * @return Invoice
-     */
-    public function setProgram(\Program\Entity\Program $program): Invoice
+    public function setProgram(Program $program): Invoice
     {
         $this->program = $program;
 

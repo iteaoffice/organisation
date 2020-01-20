@@ -1,7 +1,6 @@
 <?php
-
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -14,10 +13,10 @@ declare(strict_types=1);
 namespace Organisation\Entity\Parent;
 
 use Doctrine\ORM\Mapping as ORM;
+use Laminas\Form\Annotation;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Entity\OParent;
 use Program\Entity\Program;
-use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_parent_invoice_extra")
@@ -44,7 +43,7 @@ class InvoiceExtra extends AbstractEntity
     /**
      * @ORM\Column(name="amount_invoiced", type="decimal", precision=10, scale=2, nullable=true)
      *
-     * @var float
+     * @var float|string
      */
     private $amountInvoiced;
     /**
@@ -74,6 +73,17 @@ class InvoiceExtra extends AbstractEntity
         return (string)$this->getInvoice()->getInvoiceNr();
     }
 
+    public function getInvoice(): ?\Invoice\Entity\Invoice
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(?\Invoice\Entity\Invoice $invoice): InvoiceExtra
+    {
+        $this->invoice = $invoice;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,12 +106,12 @@ class InvoiceExtra extends AbstractEntity
         return $this;
     }
 
-    public function getAmountInvoiced(): ?float
+    public function getAmountInvoiced()
     {
         return $this->amountInvoiced;
     }
 
-    public function setAmountInvoiced(?float $amountInvoiced): InvoiceExtra
+    public function setAmountInvoiced($amountInvoiced): InvoiceExtra
     {
         $this->amountInvoiced = $amountInvoiced;
         return $this;
@@ -115,17 +125,6 @@ class InvoiceExtra extends AbstractEntity
     public function setParent(?OParent $parent): InvoiceExtra
     {
         $this->parent = $parent;
-        return $this;
-    }
-
-    public function getInvoice(): ?\Invoice\Entity\Invoice
-    {
-        return $this->invoice;
-    }
-
-    public function setInvoice(?\Invoice\Entity\Invoice $invoice): InvoiceExtra
-    {
-        $this->invoice = $invoice;
         return $this;
     }
 
