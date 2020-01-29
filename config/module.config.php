@@ -1,6 +1,6 @@
 <?php
 
-use Admin\Navigation\Factory\NavigationInvokableFactory;
+use General\Navigation\Factory\NavigationInvokableFactory;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use General\View\Factory\ImageHelperFactory;
 use General\View\Factory\LinkHelperFactory;
