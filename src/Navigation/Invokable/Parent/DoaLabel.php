@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace Organisation\Navigation\Invokable\Parent;
 
-use Admin\Navigation\Invokable\AbstractNavigationInvokable;
+use General\Navigation\Invokable\AbstractNavigationInvokable;
 use Organisation\Entity\OParent;
 use Organisation\Entity\Parent\Doa;
 use Laminas\Navigation\Page\Mvc;
