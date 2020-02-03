@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -32,7 +31,7 @@ final class TypeLink extends AbstractLink
 
         $routeParams = [];
         $showOptions = [];
-        if (! $type->isEmpty()) {
+        if (!$type->isEmpty()) {
             $routeParams['id'] = $type->getId();
             $showOptions['name'] = $type->getType();
             $showOptions['description'] = $type->getDescription();
@@ -41,7 +40,7 @@ final class TypeLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/organisation-type/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-organisation-type')
@@ -49,7 +48,7 @@ final class TypeLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/organisation-type/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-organisation-type')
@@ -57,7 +56,7 @@ final class TypeLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/organisation-type/view',
                     'text' => $showOptions[$show] ?? $type->getType()
                 ];

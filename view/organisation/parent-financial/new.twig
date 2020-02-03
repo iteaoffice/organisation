@@ -70,9 +70,6 @@
                 $('input[name="zipCode"]').val(response.zipCode);
                 $('input[name="city"]').val(response.city);
                 $('select[name="country"]').val(response.country);
-            },
-            error: function (xhr) {
-                console.log('Error!  Status = ' + xhr.status);
             }
         });
     });

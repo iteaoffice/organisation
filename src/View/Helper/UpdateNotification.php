@@ -22,7 +22,6 @@ use Organisation\Entity\Organisation;
 use Organisation\Service\UpdateService;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\View\Helper\AbstractHelper;
-
 use function sprintf;
 
 /**
@@ -45,7 +44,7 @@ final class UpdateNotification extends AbstractHelper
     {
         if ($this->updateService->hasPendingUpdates($organisation)) {
             return sprintf(
-                '<div class="alert alert-info"><i class="fa fa-info-circle"></i> %s</div>',
+                '<div class="alert alert-info"><i class="fas fa-info-circle"></i> %s</div>',
                 $this->translator->translate('txt-your-organisation-has-pending-updates')
             );
         }

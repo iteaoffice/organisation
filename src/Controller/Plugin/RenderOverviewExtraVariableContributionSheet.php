@@ -1,5 +1,4 @@
 <?php
-
 /**
 *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -31,34 +30,13 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class RenderOverviewExtraVariableContributionSheet extends AbstractPlugin
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var ModuleOptions
-     */
-    private $moduleOptions;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var TwigRenderer
-     */
-    private $renderer;
+    private ParentService $parentService;
+    private ModuleOptions $moduleOptions;
+    private ProjectService $projectService;
+    private VersionService $versionService;
+    private ContactService $contactService;
+    private AffiliationService $affiliationService;
+    private TwigRenderer $renderer;
 
     public function __construct(
         ParentService $parentService,

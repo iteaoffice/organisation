@@ -30,12 +30,13 @@ final class UpdateLink extends AbstractLink
         string $action = 'view',
         string $show = 'name',
         Organisation $organisation = null
-    ): string {
+    ): string
+    {
         $update ??= new Update();
 
         $routeParams = [];
         $showOptions = [];
-        if (! $update->isEmpty()) {
+        if (!$update->isEmpty()) {
             $routeParams['id'] = $update->getId();
             $showOptions['name'] = $update->getOrganisation()->parseFullName();
         }
@@ -45,14 +46,14 @@ final class UpdateLink extends AbstractLink
             $routeParams['organisationId'] = $organisation->getId();
         }
 
-        if (! $this->hasAccess($update, UpdateAssertion::class, $action)) {
+        if (!$this->hasAccess($update, UpdateAssertion::class, $action)) {
             return '';
         }
 
         switch ($action) {
             case 'edit-admin':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/organisation/update/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-update')
@@ -60,14 +61,14 @@ final class UpdateLink extends AbstractLink
                 break;
             case 'view-admin':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/organisation/update/view',
                     'text' => $showOptions[$show] ?? $update->getOrganisation()
                 ];
                 break;
             case 'approve':
                 $linkParams = [
-                    'icon' => 'fa-thumbs-o-up',
+                    'icon' => 'far fa-thumbs-up',
                     'route' => 'zfcadmin/organisation/update/approve',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-approve-update')
@@ -75,7 +76,7 @@ final class UpdateLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'community/organisation/update',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-update-organisation')

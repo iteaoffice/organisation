@@ -49,10 +49,10 @@
 
                     <tr class="{% if hasWrongParentChild %}table-danger{% endif %} {% if canBeDeleted %}table-warning{% endif %}">
                         <td>
-                            {% if hasWrongParentChild %}<i class="fa text-danger fa-exclamation-triangle"
-                                                           aria-hidden="true"
+                            {% if hasWrongParentChild %}<i class="fas text-danger fa-exclamation-triangle"
+
                                                            title="{{ translate("txt-parent-has-recursive-structure-it-is-parent-itself-but-child-of-other-parent") }}"></i>{% endif %}
-                            {% if canBeDeleted %}<i class="fa text-warning fa-trash-o" aria-hidden="true"
+                            {% if canBeDeleted %}<i class="far text-warning fa-trash-alt"
                                                     title="{{ translate("txt-parent-is-empty-and-can-be-deleted") }}"></i>{% endif %}
                             {{ parentLink(parent, 'view', 'parent') }} {{ parentLink(parent, 'edit', 'icon') }}
                         </td>

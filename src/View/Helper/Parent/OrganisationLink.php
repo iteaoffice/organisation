@@ -29,7 +29,7 @@ final class OrganisationLink extends AbstractLink
         string $action = 'view',
         string $show = 'text'
     ): string {
-        if (! $this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
+        if (!$this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
             return '';
         }
 
@@ -44,7 +44,7 @@ final class OrganisationLink extends AbstractLink
         switch ($action) {
             case 'add-affiliation':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/parent/organisation/add-affiliation',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-parent-organisation-add-affiliation')
@@ -60,7 +60,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/parent/organisation/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-parent-organisation')
@@ -68,7 +68,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/parent/organisation/view',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-view-parent-organisation')

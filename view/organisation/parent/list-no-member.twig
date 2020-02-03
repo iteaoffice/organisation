@@ -66,7 +66,7 @@
                             {% endfor %}
                         </td>
                         <td>{{ contactLink(parent.contact,'view-admin','name') }} <a
-                                    href="mailto:{{ parent.contact.email }}"><i class="fa fa-envelope-o"></i></a></td>
+                                    href="mailto:{{ parent.contact.email }}"><i class="far fa-envelope"></i></a></td>
                         <td>{% if address %}{{ address.address }}<br>{{ address.zipCode }} {{ address.city }}
                                 <br>{{ address.country }}{% endif %}</td>
                     </tr>
@@ -77,7 +77,7 @@
             {% include 'application/partial/pagination-control' %}
 
             <a href="{{ url('zfcadmin/parent/list-no-member-export',{'encodedFilter': encodedFilter}) }}" class="btn btn-primary btn-sm"><i
-                        class="fa fa-file-excel-o"></i> {{ translate("txt-export-csv") }}</a>
+                        class="far fa-file-excel"></i> {{ translate("txt-export-csv") }}</a>
             <small>({{ translate("txt-export-parents-based-on-filter-explanation") }})</small>
         {% else %}
             {{ ztbalert().info(translate("txt-no-parent-found"))|raw }}

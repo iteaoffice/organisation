@@ -34,14 +34,14 @@ final class DoaLink extends AbstractLink
     ): string {
         $doa ??= new Doa();
 
-        if (! $this->hasAccess($doa, DoaAssertion::class, $action)) {
+        if (!$this->hasAccess($doa, DoaAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
 
-        if (! $doa->isEmpty()) {
+        if (!$doa->isEmpty()) {
             $routeParams['id'] = $doa->getId();
             $showOptions['name'] = (string)$doa;
         }
@@ -53,7 +53,7 @@ final class DoaLink extends AbstractLink
         switch ($action) {
             case 'upload':
                 $linkParams = [
-                    'icon' => 'fa-upload',
+                    'icon' => 'fas fa-upload',
                     'route' => 'zfcadmin/parent/doa/upload',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-upload-doa-for-parent')
@@ -61,7 +61,7 @@ final class DoaLink extends AbstractLink
                 break;
             case 'download':
                 $linkParams = [
-                    'icon' => 'fa-download',
+                    'icon' => 'fas fa-download',
                     'route' => 'zfcadmin/parent/doa/download',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-download-doa-for-parent')
@@ -70,7 +70,7 @@ final class DoaLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-file-o',
+                    'icon' => 'far fa-file',
                     'route' => 'zfcadmin/parent/doa/view',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-view-doa-for-parent')
@@ -78,7 +78,7 @@ final class DoaLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/parent/doa/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-doa-for-parent')

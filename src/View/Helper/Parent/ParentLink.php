@@ -37,13 +37,13 @@ final class ParentLink extends AbstractLink
     ): string {
         $parent ??= new Entity\OParent();
 
-        if (! $this->hasAccess($parent, ParentAssertion::class, $action)) {
+        if (!$this->hasAccess($parent, ParentAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (! $parent->isEmpty()) {
+        if (!$parent->isEmpty()) {
             $routeParams['id'] = $parent->getId();
             $showOptions['parent'] = (string)$parent;
         }
@@ -62,7 +62,7 @@ final class ParentLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/parent/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-parent')
@@ -70,7 +70,7 @@ final class ParentLink extends AbstractLink
                 break;
             case 'view':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/parent/view',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-view-parent')
@@ -78,7 +78,7 @@ final class ParentLink extends AbstractLink
                 break;
             case 'import-project':
                 $linkParams = [
-                    'icon' => 'fa-upload',
+                    'icon' => 'fas fa-upload',
                     'route' => 'zfcadmin/parent/import/project',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-import-project')
@@ -94,7 +94,7 @@ final class ParentLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/parent/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-parent')
@@ -110,7 +110,7 @@ final class ParentLink extends AbstractLink
                 break;
             case 'overview-variable-contribution':
                 $linkParams = [
-                    'icon' => 'fa-eur',
+                    'icon' => 'fas fa-euro-sign',
                     'route' => 'zfcadmin/parent/overview-variable-contribution',
                     'text' => $showOptions[$show] ?? sprintf(
                         $this->translator->translate('txt-overview-variable-contribution-for-parent-in-program-%s-in-%s'),
@@ -121,7 +121,7 @@ final class ParentLink extends AbstractLink
                 break;
             case 'overview-variable-contribution-pdf':
                 $linkParams = [
-                    'icon' => 'fa-file-pdf-o',
+                    'icon' => 'far fa-file-pdf',
                     'route' => 'zfcadmin/parent/overview-variable-contribution-pdf',
                     'text' => $showOptions[$show] ?? sprintf(
                         $this->translator->translate('txt-overview-variable-contribution-for-parent-in-program-%s-in-%s-pdf'),
@@ -132,7 +132,7 @@ final class ParentLink extends AbstractLink
                 break;
             case 'overview-extra-variable-contribution':
                 $linkParams = [
-                    'icon' => 'fa-eur',
+                    'icon' => 'fas fa-euro-sign',
                     'route' => 'zfcadmin/parent/overview-extra-variable-contribution',
                     'text' => $showOptions[$show] ?? sprintf(
                         $this->translator->translate('txt-overview-extra-variable-contribution-for-parent-in-program-%s-in-%s'),
@@ -143,7 +143,7 @@ final class ParentLink extends AbstractLink
                 break;
             case 'overview-extra-variable-contribution-pdf':
                 $linkParams = [
-                    'icon' => 'fa-file-pdf-o',
+                    'icon' => 'far fa-file-pdf',
                     'route' => 'zfcadmin/parent/overview-extra-variable-contribution-pdf',
                     'text' => $showOptions[$show] ?? sprintf(
                         $this->translator->translate('txt-overview-extra-variable-contribution-for-parent-in-program-%s-in-%s-pdf'),

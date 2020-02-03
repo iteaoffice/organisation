@@ -34,13 +34,13 @@ final class OrganisationLink extends AbstractLink
     ): string {
         $organisation ??= new Organisation();
 
-        if (! $this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
+        if (!$this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (! $organisation->isEmpty()) {
+        if (!$organisation->isEmpty()) {
             $routeParams['id'] = $organisation->getId();
             $routeParams['docRef'] = $organisation->getDocRef();
             $showOptions['name'] = OrganisationService::parseBranch($branch, $organisation);
@@ -55,7 +55,7 @@ final class OrganisationLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/organisation/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-organisation')
@@ -63,7 +63,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'view-admin':
                 $linkParams = [
-                    'icon' => 'fa-link',
+                    'icon' => 'fas fa-link',
                     'route' => 'zfcadmin/organisation/view',
                     'text' => $showOptions[$show]
                         ?? OrganisationService::parseBranch($branch, $organisation)
@@ -71,7 +71,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/organisation/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-organisation')
@@ -79,7 +79,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'manage-web':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/organisation/manage-web',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-manage-websites')
@@ -87,7 +87,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'edit-financial':
                 $linkParams = [
-                    'icon' => 'fa-credit-card',
+                    'icon' => 'far fa-credit-card',
                     'route' => 'zfcadmin/organisation/financial/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-financial-organisation')
@@ -96,7 +96,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'list-financial':
                 $linkParams = [
-                    'icon' => 'fa-credit-card',
+                    'icon' => 'far fa-credit-card',
                     'route' => 'zfcadmin/organisation/financial/list',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-list-financial-organisations')
@@ -104,7 +104,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'add-affiliation':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/organisation/add-affiliation',
                     'text' => $showOptions[$show]
                         ?? sprintf(

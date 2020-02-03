@@ -32,13 +32,13 @@ final class FinancialLink extends AbstractLink
     ): string {
         $financial ??= new Entity\Parent\Financial();
 
-        if (! $this->hasAccess($financial, ParentFinancialAssertion::class, $action)) {
+        if (!$this->hasAccess($financial, ParentFinancialAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (! $financial->isEmpty()) {
+        if (!$financial->isEmpty()) {
             $routeParams['id'] = $financial->getId();
             $showOptions['organisation'] = $financial->getOrganisation()->getOrganisation();
         }
@@ -50,7 +50,7 @@ final class FinancialLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/parent/financial/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-financial-organisation')
@@ -58,7 +58,7 @@ final class FinancialLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/parent/financial/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-financial-organisation')

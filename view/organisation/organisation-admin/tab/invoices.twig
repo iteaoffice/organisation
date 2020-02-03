@@ -51,7 +51,7 @@
                 <td>{{ result.fields.status_name }}</td>
                 <td title="{{ translate("txt-invoice-total") }}: &euro; {{ result.fields.total }}">{% if result.fields.total < 0.1 %}
                         <i
-                                class="fa fa-plus-circle" title="{{ translate("txt-credit-invoice") }}"></i>
+                                class="fas fa-plus-circle" title="{{ translate("txt-credit-invoice") }}"></i>
                     {% endif %} {{ result.fields.booking_total|currency_decimal }}</td>
             </tr>
         {% endfor %}

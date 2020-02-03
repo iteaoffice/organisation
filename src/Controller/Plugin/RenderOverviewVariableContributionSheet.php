@@ -1,7 +1,6 @@
 <?php
-
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -16,13 +15,13 @@ namespace Organisation\Controller\Plugin;
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Invoice\Service\InvoiceService;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Organisation\Entity\OParent;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use ZfcTwig\View\TwigRenderer;
 
 /**
@@ -32,38 +31,14 @@ use ZfcTwig\View\TwigRenderer;
  */
 final class RenderOverviewVariableContributionSheet extends AbstractPlugin
 {
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var InvoiceService
-     */
-    private $invoiceService;
-    /**
-     * @var ModuleOptions
-     */
-    private $moduleOptions;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var VersionService
-     */
-    private $versionService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var AffiliationService
-     */
-    private $affiliationService;
-    /**
-     * @var TwigRenderer
-     */
-    private $renderer;
+    private ParentService $parentService;
+    private InvoiceService $invoiceService;
+    private ModuleOptions $moduleOptions;
+    private ProjectService $projectService;
+    private VersionService $versionService;
+    private ContactService $contactService;
+    private AffiliationService $affiliationService;
+    private TwigRenderer $renderer;
 
     public function __construct(
         ParentService $parentService,
@@ -74,15 +49,16 @@ final class RenderOverviewVariableContributionSheet extends AbstractPlugin
         ContactService $contactService,
         AffiliationService $affiliationService,
         TwigRenderer $renderer
-    ) {
-        $this->parentService = $parentService;
-        $this->invoiceService = $invoiceService;
-        $this->moduleOptions = $moduleOptions;
-        $this->projectService = $projectService;
-        $this->versionService = $versionService;
-        $this->contactService = $contactService;
+    )
+    {
+        $this->parentService      = $parentService;
+        $this->invoiceService     = $invoiceService;
+        $this->moduleOptions      = $moduleOptions;
+        $this->projectService     = $projectService;
+        $this->versionService     = $versionService;
+        $this->contactService     = $contactService;
         $this->affiliationService = $affiliationService;
-        $this->renderer = $renderer;
+        $this->renderer           = $renderer;
     }
 
     public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
@@ -92,7 +68,7 @@ final class RenderOverviewVariableContributionSheet extends AbstractPlugin
         $pdf->AddPage();
         $pdf->SetFontSize(8);
 
-        $projects = $this->parentService->renderProjectsByParentInYear($parent, $program, $year);
+        $projects      = $this->parentService->renderProjectsByParentInYear($parent, $program, $year);
         $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
 
         $content = $this->renderer->render(

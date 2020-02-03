@@ -98,19 +98,19 @@
                                class="check_import  {% if parentOrganisation.id %}known_parent{% endif %}"
                                value="{{ key }}"></td>
                     <td>{% if parentOrganisation.parent.id %}{{ parentLink(parentOrganisation.parent,'view', 'parent') }}{% else %} {{ parentOrganisation.parent }}
-                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                            <i class="fas fa-plus"></i>{% endif %}</td>
                     <td>{% if parentOrganisation.parent %}{{ countryLink(parentOrganisation.parent.organisation.country,'view-admin','iso3') }}{% endif %}</td>
-                    <td>{% if parentOrganisation.id %}{{ parentOrganisationLink(parentOrganisation,'view', 'organisation') }}{% else %}{{  parentOrganisation }} <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                    <td>{% if parentOrganisation.id %}{{ parentOrganisationLink(parentOrganisation,'view', 'organisation') }}{% else %}{{  parentOrganisation }} <i class="fas fa-plus"></i>{% endif %}</td>
                     <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin','iso3') }}</td>
                     <td>{{ affiliation.id }}</td>
                     <td>{% if affiliation.project.id %}{{ projectLink(affiliation.project,'view-admin','name') }}{% else %}{{ affiliation.project }}
-                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                            <i class="fas fa-plus"></i>{% endif %}</td>
                     <td>{% if affiliation.project.call.id %}{{ callLink(affiliation.project.call,'view-admin','name') }}{% else %}{{ affiliation.project.call }}
-                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                            <i class="fas fa-plus"></i>{% endif %}</td>
                     <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view','name') }}{% else %}{{ affiliation.project.call.program }}
-                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                            <i class="fas fa-plus"></i>{% endif %}</td>
                     <td>{% if affiliation.id %}{{ affiliationLink(affiliation,'view-admin','name') }}{% else %}{{ affiliation }}
-                            <i class="fa fa-plus" aria-hidden="true"></i>{% endif %}</td>
+                            <i class="fas fa-plus"></i>{% endif %}</td>
                     <td>{{ parentOrganisation.parent.type }}</td>
                     <td>{{ translate(parentOrganisation.parent.memberType(true)) }}</td>
                     <td>{% for doa in parentOrganisation.parent.doa %}{{ doa }} {% endfor %}</td>

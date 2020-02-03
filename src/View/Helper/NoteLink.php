@@ -29,12 +29,13 @@ final class NoteLink extends AbstractLink
         string $action = 'view',
         string $show = 'name',
         Organisation $organisation = null
-    ): string {
+    ): string
+    {
         $note ??= new Note();
 
         $routeParams = [];
         $showOptions = [];
-        if (! $note->isEmpty()) {
+        if (!$note->isEmpty()) {
             $routeParams['id'] = $note->getId();
             $showOptions['name'] = $note->getNote();
         }
@@ -46,7 +47,7 @@ final class NoteLink extends AbstractLink
         switch ($action) {
             case 'new':
                 $linkParams = [
-                    'icon' => 'fa-plus',
+                    'icon' => 'fas fa-plus',
                     'route' => 'zfcadmin/organisation/note/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-note')
@@ -54,7 +55,7 @@ final class NoteLink extends AbstractLink
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'fa-pencil-square-o',
+                    'icon' => 'far fa-edit',
                     'route' => 'zfcadmin/organisation/note/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-note')

@@ -22,7 +22,7 @@
             <dd>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</dd>
             <dt>{{ translate("txt-websites") }} {{ organisationLink(organisation, 'manage-web', 'icon') }}</dt>
             {% for web in organisation.web %}
-                <dd><a href="{{ web.web }}">{{ web.web }}</a> {% if web.isMain %}<i class="fa fa-help fa-thumb-tack"
+                <dd><a href="{{ web.web }}">{{ web.web }}</a> {% if web.isMain %}<i class="fas fa-thumbtack"
                                                                                     title="{{ translate("txt-website-is-main") }}"></i>{% endif %}
                 </dd>
             {% else %}
