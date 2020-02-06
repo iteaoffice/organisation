@@ -29,7 +29,7 @@ final class OrganisationLink extends AbstractLink
         string $action = 'view',
         string $show = 'text'
     ): string {
-        if (!$this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
+        if (! $this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
             return '';
         }
 
@@ -52,7 +52,7 @@ final class OrganisationLink extends AbstractLink
                 break;
             case 'merge':
                 $linkParams = [
-                    'icon' => 'fa-compress',
+                    'icon' => 'fas fa-compress-alt',
                     'route' => 'zfcadmin/parent/organisation/merge',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-merge-parent-organisation')

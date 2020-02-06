@@ -63,21 +63,21 @@ final class ParentController extends OrganisationAbstractController
         EntityManager $entityManager,
         TranslatorInterface $translator
     ) {
-        $this->parentService = $parentService;
+        $this->parentService       = $parentService;
         $this->organisationService = $organisationService;
-        $this->contactService = $contactService;
-        $this->programService = $programService;
-        $this->invoiceService = $invoiceService;
-        $this->formService = $formService;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+        $this->contactService      = $contactService;
+        $this->programService      = $programService;
+        $this->invoiceService      = $invoiceService;
+        $this->formService         = $formService;
+        $this->entityManager       = $entityManager;
+        $this->translator          = $translator;
     }
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
+        $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $query = $this->parentService->findFiltered(
+        $query        = $this->parentService->findFiltered(
             Entity\OParent::class,
             $filterPlugin->getFilter()
         );
@@ -93,11 +93,11 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'paginator' => $paginator,
-                'form' => $form,
+                'paginator'     => $paginator,
+                'form'          => $form,
                 'encodedFilter' => urlencode($filterPlugin->getHash()),
-                'order' => $filterPlugin->getOrder(),
-                'direction' => $filterPlugin->getDirection(),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
                 'parentService' => $this->parentService
             ]
         );
@@ -105,9 +105,9 @@ final class ParentController extends OrganisationAbstractController
 
     public function listNoMemberAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
+        $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $parentQuery = $this->parentService
+        $parentQuery  = $this->parentService
             ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
@@ -121,14 +121,14 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'paginator' => $paginator,
-                'form' => $form,
-                'encodedFilter' => urlencode($filterPlugin->getHash()),
-                'order' => $filterPlugin->getOrder(),
-                'direction' => $filterPlugin->getDirection(),
+                'paginator'           => $paginator,
+                'form'                => $form,
+                'encodedFilter'       => urlencode($filterPlugin->getHash()),
+                'order'               => $filterPlugin->getOrder(),
+                'direction'           => $filterPlugin->getDirection(),
                 'organisationService' => $this->organisationService,
-                'contactService' => $this->contactService,
-                'parentService' => $this->parentService,
+                'contactService'      => $this->contactService,
+                'parentService'       => $this->parentService,
             ]
         );
     }
@@ -136,7 +136,7 @@ final class ParentController extends OrganisationAbstractController
     public function listNoMemberExportAction(): Response
     {
         $filterPlugin = $this->getOrganisationFilter();
-        $parentQuery = $this->parentService
+        $parentQuery  = $this->parentService
             ->findActiveParentWhichAreNoMember($filterPlugin->getFilter());
 
         /** @var Entity\OParent[] $parents */
@@ -191,7 +191,7 @@ final class ParentController extends OrganisationAbstractController
                         $this->translator->translate($parent->getMemberType(true)),
                         $this->translator->translate($parent->getArtemisiaMemberType(true)),
                         $this->translator->translate($parent->getEpossMemberType(true)),
-                        implode($projects, ';'),
+                        implode(';', $projects),
                         $parent->getContact()->parseFullName(),
                         $parent->getContact()->getEmail(),
                         null !== $address ? $address->getAddress() : '',
@@ -213,7 +213,7 @@ final class ParentController extends OrganisationAbstractController
 
         /** @var Response $response */
         $response = $this->getResponse();
-        $headers = $response->getHeaders();
+        $headers  = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'text/csv');
         $headers->addHeaderLine(
             'Content-Disposition',
@@ -237,7 +237,7 @@ final class ParentController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
 
         $parent = new Entity\OParent();
-        $form = $this->formService->prepare($parent, $data);
+        $form   = $this->formService->prepare($parent, $data);
         $form->remove('delete');
 
         if (null !== $organisation) {
@@ -353,7 +353,7 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'form' => $form,
+                'form'   => $form,
                 'parent' => $parent,
             ]
         );
@@ -427,7 +427,7 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'form' => $form,
+                'form'   => $form,
                 'parent' => $parent,
             ]
         );
@@ -480,14 +480,14 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'parent' => $parent,
+                'parent'              => $parent,
                 'organisationService' => $this->organisationService,
-                'contactService' => $this->contactService,
-                'year' => $year,
-                'form' => $form,
-                'programs' => $this->programService->findAll(Program::class),
-                'parentService' => $this->parentService,
-                'invoiceService' => $this->invoiceService
+                'contactService'      => $this->contactService,
+                'year'                => $year,
+                'form'                => $form,
+                'programs'            => $this->programService->findAll(Program::class),
+                'parentService'       => $this->parentService,
+                'invoiceService'      => $this->invoiceService
             ]
         );
     }
@@ -512,9 +512,9 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'year' => $year,
-                'parent' => $parent,
-                'program' => $program,
+                'year'          => $year,
+                'parent'        => $parent,
+                'program'       => $program,
                 'invoiceMethod' => $invoiceMethod,
                 'invoiceFactor' => $this->parentService->parseInvoiceFactor($parent, $program)
 
@@ -543,15 +543,15 @@ final class ParentController extends OrganisationAbstractController
 
         $renderPaymentSheet = $this->renderOverviewVariableContributionSheet($parent, $program, $year);
 
-        $response->getHeaders()
-            ->addHeaderLine(
-                'Content-Disposition',
-                'attachment; filename="' . sprintf(
-                    'Overview variable Contribution %s %s.pdf',
-                    $parent->getOrganisation()->getDocRef(),
-                    $year
-                ) . '"'
-            )
+        $response->getHeaders()->addHeaderLine(
+            'Content-Disposition',
+            'attachment; filename="' .
+            sprintf(
+                '%s Estimated Variable Contribution ECSEL_%s.pdf',
+                $year,
+                $parent->getOrganisation()->getOrganisation()
+            ) . '"'
+        )
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
@@ -577,8 +577,8 @@ final class ParentController extends OrganisationAbstractController
 
         return new ViewModel(
             [
-                'year' => $year,
-                'parent' => $parent,
+                'year'    => $year,
+                'parent'  => $parent,
                 'program' => $program
 
             ]
@@ -606,15 +606,15 @@ final class ParentController extends OrganisationAbstractController
 
         $renderPaymentSheet = $this->renderOverviewExtraVariableContributionSheet($parent, $program, $year);
 
-        $response->getHeaders()
-            ->addHeaderLine(
-                'Content-Disposition',
-                'attachment; filename="' . sprintf(
-                    'Overview extra variable contribution %s %s.pdf',
-                    $parent->getOrganisation()->getDocRef(),
-                    $year
-                ) . '"'
-            )
+        $response->getHeaders()->addHeaderLine(
+            'Content-Disposition',
+            'attachment; filename="' .
+            sprintf(
+                '%s Estimated Extra Variable Contribution ECSEL_%s.pdf',
+                $year,
+                $parent->getOrganisation()->getOrganisation()
+            ) . '"'
+        )
             ->addHeaderLine('Content-Type: application/pdf')
             ->addHeaderLine('Content-Length', strlen($renderPaymentSheet->getPDFData()));
         $response->setContent($renderPaymentSheet->getPDFData());
@@ -641,7 +641,7 @@ final class ParentController extends OrganisationAbstractController
             if (isset($data['upload']) && $form->isValid()) {
                 $fileData = file_get_contents($data['file']['tmp_name']);
 
-                $importSession->active = true;
+                $importSession->active   = true;
                 $importSession->fileData = $fileData;
 
                 $handleImport = $this->handleParentAndProjectImport(

@@ -32,13 +32,13 @@ final class FinancialLink extends AbstractLink
     ): string {
         $financial ??= new Entity\Parent\Financial();
 
-        if (!$this->hasAccess($financial, ParentFinancialAssertion::class, $action)) {
+        if (! $this->hasAccess($financial, ParentFinancialAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (!$financial->isEmpty()) {
+        if (! $financial->isEmpty()) {
             $routeParams['id'] = $financial->getId();
             $showOptions['organisation'] = $financial->getOrganisation()->getOrganisation();
         }

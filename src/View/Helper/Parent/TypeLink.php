@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -26,13 +27,12 @@ final class TypeLink extends AbstractLink
         Type $type = null,
         string $action = 'view',
         string $show = 'name'
-    ): string
-    {
+    ): string {
         $type ??= new Type();
 
         $routeParams = [];
         $showOptions = [];
-        if (!$type->isEmpty()) {
+        if (! $type->isEmpty()) {
             $routeParams['id'] = $type->getId();
             $showOptions['name'] = $type->getType();
         }

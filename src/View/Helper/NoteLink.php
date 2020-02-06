@@ -29,13 +29,12 @@ final class NoteLink extends AbstractLink
         string $action = 'view',
         string $show = 'name',
         Organisation $organisation = null
-    ): string
-    {
+    ): string {
         $note ??= new Note();
 
         $routeParams = [];
         $showOptions = [];
-        if (!$note->isEmpty()) {
+        if (! $note->isEmpty()) {
             $routeParams['id'] = $note->getId();
             $showOptions['name'] = $note->getNote();
         }

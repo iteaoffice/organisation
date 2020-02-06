@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
@@ -49,8 +50,7 @@ final class RenderOverviewVariableContributionSheet extends AbstractPlugin
         ContactService $contactService,
         AffiliationService $affiliationService,
         TwigRenderer $renderer
-    )
-    {
+    ) {
         $this->parentService      = $parentService;
         $this->invoiceService     = $invoiceService;
         $this->moduleOptions      = $moduleOptions;

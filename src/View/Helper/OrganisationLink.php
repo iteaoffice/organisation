@@ -34,13 +34,13 @@ final class OrganisationLink extends AbstractLink
     ): string {
         $organisation ??= new Organisation();
 
-        if (!$this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
+        if (! $this->hasAccess($organisation, OrganisationAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (!$organisation->isEmpty()) {
+        if (! $organisation->isEmpty()) {
             $routeParams['id'] = $organisation->getId();
             $routeParams['docRef'] = $organisation->getDocRef();
             $showOptions['name'] = OrganisationService::parseBranch($branch, $organisation);

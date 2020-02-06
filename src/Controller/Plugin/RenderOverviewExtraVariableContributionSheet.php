@@ -1,6 +1,7 @@
 <?php
+
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -14,13 +15,13 @@ namespace Organisation\Controller\Plugin;
 
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Organisation\Entity\OParent;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use ZfcTwig\View\TwigRenderer;
 
 /**
@@ -47,13 +48,13 @@ final class RenderOverviewExtraVariableContributionSheet extends AbstractPlugin
         AffiliationService $affiliationService,
         TwigRenderer $renderer
     ) {
-        $this->parentService = $parentService;
-        $this->moduleOptions = $moduleOptions;
-        $this->projectService = $projectService;
-        $this->versionService = $versionService;
-        $this->contactService = $contactService;
+        $this->parentService      = $parentService;
+        $this->moduleOptions      = $moduleOptions;
+        $this->projectService     = $projectService;
+        $this->versionService     = $versionService;
+        $this->contactService     = $contactService;
         $this->affiliationService = $affiliationService;
-        $this->renderer = $renderer;
+        $this->renderer           = $renderer;
     }
 
     public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
@@ -84,7 +85,7 @@ final class RenderOverviewExtraVariableContributionSheet extends AbstractPlugin
                     AffiliationService::WHICH_INVOICING,
                     $year
                 ),
-                'membershipDate'      => sprintf('01-09-%s', $year),
+                'membershipDate'      => sprintf('31-12-%s', $year - 1),
                 'amountOfMemberships' => $this->parentService->parseMembershipFactor($parent),
                 'invoiceFactor'       => $this->parentService->parseInvoiceFactor($parent, $program),
             ]

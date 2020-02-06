@@ -37,13 +37,13 @@ final class ParentLink extends AbstractLink
     ): string {
         $parent ??= new Entity\OParent();
 
-        if (!$this->hasAccess($parent, ParentAssertion::class, $action)) {
+        if (! $this->hasAccess($parent, ParentAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
-        if (!$parent->isEmpty()) {
+        if (! $parent->isEmpty()) {
             $routeParams['id'] = $parent->getId();
             $showOptions['parent'] = (string)$parent;
         }

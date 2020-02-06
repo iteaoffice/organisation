@@ -30,13 +30,12 @@ final class UpdateLink extends AbstractLink
         string $action = 'view',
         string $show = 'name',
         Organisation $organisation = null
-    ): string
-    {
+    ): string {
         $update ??= new Update();
 
         $routeParams = [];
         $showOptions = [];
-        if (!$update->isEmpty()) {
+        if (! $update->isEmpty()) {
             $routeParams['id'] = $update->getId();
             $showOptions['name'] = $update->getOrganisation()->parseFullName();
         }
@@ -46,7 +45,7 @@ final class UpdateLink extends AbstractLink
             $routeParams['organisationId'] = $organisation->getId();
         }
 
-        if (!$this->hasAccess($update, UpdateAssertion::class, $action)) {
+        if (! $this->hasAccess($update, UpdateAssertion::class, $action)) {
             return '';
         }
 
