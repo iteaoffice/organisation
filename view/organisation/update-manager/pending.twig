@@ -12,25 +12,32 @@
 {% if pendingUpdates|length > 0 %}
     <table class="table table-hover table-striped table-sm">
         <thead>
-            <tr>
-                <th>{{ translate("txt-organisation") }}</th>
-                <th>{{ translate("txt-country") }}</th>
-                <th>{{ translate("txt-contact") }}</th>
-                <th>{{ translate("txt-date-created") }}</th>
-            </tr>
+        <tr>
+            <th>{{ translate("txt-no") }}</th>
+            <th>{{ translate("txt-organisation") }}</th>
+            <th>{{ translate("txt-country") }}</th>
+            <th>{{ translate("txt-contact") }}</th>
+            <th>{{ translate("txt-date-created") }}</th>
+        </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="5"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for update in pendingUpdates %}
             <tr>
-                <td>{{ organisationUpdateLink(update, 'view-admin', 'name') }} ({{ update.organisation.type.type }})</td>
+                <td><small class="text-muted">{{ loop.index }}</small></td>
+                <td>{{ organisationUpdateLink(update, 'view-admin', 'name') }} ({{ update.organisation.type.type }})
+                </td>
                 <td>{{ update.organisation.country.iso3 }}</td>
                 <td>{{ contactLink(update.contact, 'view-admin') }}</td>
                 <td>{{ update.dateCreated|string_date }}</td>
             </tr>
         {% endfor %}
         </tbody>
-        <tfoot>
-        </tfoot>
+
     </table>
 {% else %}
     {{ ztbalert().info(translate("txt-no-organisation-updates-found"))|raw }}

@@ -44,7 +44,8 @@ final class UpdateAssertion extends AbstractAssertion
         RoleInterface $role = null,
         ResourceInterface $update = null,
         $privilege = null
-    ): bool {
+    ): bool
+    {
         $this->setPrivilege($privilege);
 
         $organisation = null;
@@ -52,7 +53,7 @@ final class UpdateAssertion extends AbstractAssertion
             $organisation = $update->getOrganisation();
         }
 
-        if (! $update instanceof Update) {
+        if (!$update instanceof Update) {
             $organisationId = (int)$this->getRouteMatch()->getParam('organisationId', 0);
             /** @var Organisation $organisation */
             $organisation = $this->updateService->find(Organisation::class, $organisationId);
@@ -70,17 +71,27 @@ final class UpdateAssertion extends AbstractAssertion
                 $update->setOrganisation($organisation);
             }
         }
-        // An organisation can only have 1 pending update at a time
-        if (($organisation === null) || $this->updateService->hasPendingUpdates($organisation)) {
-            return false;
-        }
-        if ($organisation === $this->contact->getContactOrganisation()->getOrganisation()) {
-            return true;
-        }
-        if ($this->contactService->contactHasPermit($this->contact, 'edit', $update->getOrganisation())) {
-            return true;
+
+        switch ($this->getPrivilege()) {
+            case 'view-admin':
+            case 'edit-admin':
+            case 'approve':
+                return $this->rolesHaveAccess('office');
+            default:
+                // An organisation can only have 1 pending update at a time
+                if (($organisation === null) || $this->updateService->hasPendingUpdates($organisation)) {
+                    return false;
+                }
+                if ($organisation === $this->contact->getContactOrganisation()->getOrganisation()) {
+                    return true;
+                }
+                if ($this->contactService->contactHasPermit($this->contact, 'edit', $update->getOrganisation())) {
+                    return true;
+                }
+
+                return $this->rolesHaveAccess('office');
         }
 
-        return $this->rolesHaveAccess('office');
+
     }
 }

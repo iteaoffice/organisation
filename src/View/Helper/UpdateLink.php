@@ -30,13 +30,14 @@ final class UpdateLink extends AbstractLink
         string $action = 'view',
         string $show = 'name',
         Organisation $organisation = null
-    ): string {
+    ): string
+    {
         $update ??= new Update();
 
         $routeParams = [];
         $showOptions = [];
-        if (! $update->isEmpty()) {
-            $routeParams['id'] = $update->getId();
+        if (!$update->isEmpty()) {
+            $routeParams['id']   = $update->getId();
             $showOptions['name'] = $update->getOrganisation()->parseFullName();
         }
 
@@ -45,46 +46,46 @@ final class UpdateLink extends AbstractLink
             $routeParams['organisationId'] = $organisation->getId();
         }
 
-        if (! $this->hasAccess($update, UpdateAssertion::class, $action)) {
+        if (!$this->hasAccess($update, UpdateAssertion::class, $action)) {
             return '';
         }
 
         switch ($action) {
             case 'edit-admin':
                 $linkParams = [
-                    'icon' => 'far fa-edit',
+                    'icon'  => 'far fa-edit',
                     'route' => 'zfcadmin/organisation/update/edit',
-                    'text' => $showOptions[$show]
+                    'text'  => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-update')
                 ];
                 break;
             case 'view-admin':
                 $linkParams = [
-                    'icon' => 'fas fa-link',
+                    'icon'  => 'fas fa-link',
                     'route' => 'zfcadmin/organisation/update/view',
-                    'text' => $showOptions[$show] ?? $update->getOrganisation()
+                    'text'  => $showOptions[$show] ?? $update->getOrganisation()
                 ];
                 break;
             case 'approve':
                 $linkParams = [
-                    'icon' => 'far fa-thumbs-up',
+                    'icon'  => 'far fa-thumbs-up',
                     'route' => 'zfcadmin/organisation/update/approve',
-                    'text' => $showOptions[$show]
+                    'text'  => $showOptions[$show]
                         ?? $this->translator->translate('txt-approve-update')
                 ];
                 break;
             case 'edit':
                 $linkParams = [
-                    'icon' => 'far fa-edit',
+                    'icon'  => 'far fa-edit',
                     'route' => 'community/organisation/update',
-                    'text' => $showOptions[$show]
+                    'text'  => $showOptions[$show]
                         ?? $this->translator->translate('txt-update-organisation')
                 ];
                 break;
         }
 
-        $linkParams['action'] = $action;
-        $linkParams['show'] = $show;
+        $linkParams['action']      = $action;
+        $linkParams['show']        = $show;
         $linkParams['routeParams'] = $routeParams;
 
         return $this->parse(Link::fromArray($linkParams));
