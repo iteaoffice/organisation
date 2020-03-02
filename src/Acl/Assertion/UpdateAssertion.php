@@ -44,8 +44,7 @@ final class UpdateAssertion extends AbstractAssertion
         RoleInterface $role = null,
         ResourceInterface $update = null,
         $privilege = null
-    ): bool
-    {
+    ): bool {
         $this->setPrivilege($privilege);
 
         $organisation = null;
@@ -53,7 +52,7 @@ final class UpdateAssertion extends AbstractAssertion
             $organisation = $update->getOrganisation();
         }
 
-        if (!$update instanceof Update) {
+        if (! $update instanceof Update) {
             $organisationId = (int)$this->getRouteMatch()->getParam('organisationId', 0);
             /** @var Organisation $organisation */
             $organisation = $this->updateService->find(Organisation::class, $organisationId);
@@ -91,7 +90,5 @@ final class UpdateAssertion extends AbstractAssertion
 
                 return $this->rolesHaveAccess('office');
         }
-
-
     }
 }

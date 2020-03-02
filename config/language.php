@@ -1,4 +1,5 @@
 <?php
+
 _('txt-organisation-description-placeholder');
 _('txt-organisation-description-label');
 _('txt-organisation-description-help-block');

@@ -24,7 +24,7 @@ use Laminas\Form\Annotation;
  *
  * @ORM\Table(name="organisation_log")
  * @ORM\Entity
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_log")
  */
 class Log extends AbstractEntity

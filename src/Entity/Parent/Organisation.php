@@ -24,7 +24,7 @@ use Laminas\Form\Annotation;
  *
  * @ORM\Table(name="organisation_parent_organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Parent\Organisation")
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_parent_organisation")
  */
 class Organisation extends AbstractEntity

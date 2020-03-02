@@ -23,7 +23,7 @@ use Laminas\Form\Annotation;
 /**
  * @ORM\Table(name="organisation_type")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Type")
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_type")
  */
 class Type extends AbstractEntity

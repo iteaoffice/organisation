@@ -22,7 +22,7 @@ use Program\Entity\Program;
 /**
  * @ORM\Table(name="organisation_parent_invoice")
  * @ORM\Entity
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_parent_invoice")
  *
  */

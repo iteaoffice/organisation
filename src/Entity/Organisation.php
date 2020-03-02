@@ -32,7 +32,7 @@ use Laminas\Form\Annotation;
 /**
  * @ORM\Table(name="organisation")
  * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation")
  * @Annotation\Instance("Organisation\Entity\Organisation")
  */

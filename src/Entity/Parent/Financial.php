@@ -22,11 +22,9 @@ use Organisation\Entity\OParent;
 use Laminas\Form\Annotation;
 
 /**
- * Entity for the Parent.
- *
  * @ORM\Table(name="organisation_parent_financial")
  * @ORM\Entity
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_parent_financial")
  *
  * @category Parent

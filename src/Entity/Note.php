@@ -22,7 +22,7 @@ use Laminas\Form\Annotation;
  *
  * @ORM\Table(name="organisation_note")
  * @ORM\Entity
- * @Annotation\Hydrator("Laminas\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_note")
  */
 class Note extends AbstractEntity
