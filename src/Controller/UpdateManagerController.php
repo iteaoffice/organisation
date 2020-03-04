@@ -15,7 +15,6 @@ namespace Organisation\Controller;
 
 use General\Service\GeneralService;
 use Laminas\Http\Request;
-use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Validator\File\ImageSize;
 use Laminas\Validator\File\MimeType;
@@ -42,11 +41,12 @@ final class UpdateManagerController extends OrganisationAbstractController
         GeneralService $generalService,
         FormService $formService,
         TranslatorInterface $translator
-    ) {
-        $this->updateService = $updateService;
+    )
+    {
+        $this->updateService  = $updateService;
         $this->generalService = $generalService;
-        $this->formService = $formService;
-        $this->translator = $translator;
+        $this->formService    = $formService;
+        $this->translator     = $translator;
     }
 
     public function pendingAction(): ViewModel
@@ -113,7 +113,7 @@ final class UpdateManagerController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (! empty($fileData['file']['name'])) {
+                if (!empty($fileData['file']['name'])) {
                     $logo = $update->getLogo();
                     if ($logo === null) {
                         $logo = new UpdateLogo();
@@ -148,14 +148,11 @@ final class UpdateManagerController extends OrganisationAbstractController
         return new ViewModel(
             [
                 'update' => $update,
-                'form' => $form,
+                'form'   => $form,
             ]
         );
     }
 
-    /**
-     * @return ViewModel|Response
-     */
     public function approveAction()
     {
         /** @var Update $update */
@@ -171,6 +168,6 @@ final class UpdateManagerController extends OrganisationAbstractController
             $this->translator->translate('txt-organisation-update-successfully-applied')
         );
 
-        return $this->redirect()->toRoute('zfcadmin/organisation/update/list');
+        return $this->redirect()->toRoute('zfcadmin/organisation/update/pending');
     }
 }
