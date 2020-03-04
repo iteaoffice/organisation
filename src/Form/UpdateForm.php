@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
-use Organisation\Entity;
 use Laminas\Form\Element;
 use Laminas\Form\Form;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\File\ImageSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\Validator\File\Size;
+use Organisation\Entity;
 
 /**
  * Class UpdateForm
@@ -112,6 +112,7 @@ final class UpdateForm extends Form implements InputFilterProviderInterface
                         [
                             'image/png',
                             'image/jpg',
+                            'image/jpeg',
                         ]
                     ),
                 ],
