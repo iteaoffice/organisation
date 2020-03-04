@@ -42,7 +42,7 @@ use function round;
  */
 class ParentService extends AbstractService
 {
-    private const PARENT_INVOICE_FACTOR = 1.8;
+    public const PARENT_INVOICE_FACTOR = 1.8;
     private ContainerInterface $container;
     private ProjectService $projectService;
     private VersionService $versionService;
