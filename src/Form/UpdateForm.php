@@ -99,7 +99,7 @@ final class UpdateForm extends Form implements InputFilterProviderInterface
                 'validators' => [
                     new Size(
                         [
-                            'min' => '10kb',
+                            'min' => '0kb',
                             'max' => '8MB',
                         ]
                     ),
