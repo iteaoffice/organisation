@@ -41,8 +41,7 @@ final class UpdateManagerController extends OrganisationAbstractController
         GeneralService $generalService,
         FormService $formService,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->updateService  = $updateService;
         $this->generalService = $generalService;
         $this->formService    = $formService;
@@ -113,7 +112,7 @@ final class UpdateManagerController extends OrganisationAbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $logo = $update->getLogo();
                     if ($logo === null) {
                         $logo = new UpdateLogo();

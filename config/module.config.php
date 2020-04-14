@@ -1,7 +1,16 @@
 <?php
 
-use General\Navigation\Factory\NavigationInvokableFactory;
+/**
+ * ITEA Office copyright message placeholder
+ *
+ * @category    Organisation
+ * @package     Config
+ * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
+ * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
+ */
+
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use General\Navigation\Factory\NavigationInvokableFactory;
 use General\View\Factory\ImageHelperFactory;
 use General\View\Factory\LinkHelperFactory;
 use Laminas\Form\ElementFactory;
@@ -17,15 +26,6 @@ use Organisation\Options;
 use Organisation\Search;
 use Organisation\Service;
 use Organisation\View;
-
-/**
- * ITEA Office copyright message placeholder
- *
- * @category    Organisation
- * @package     Config
- * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
- * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
- */
 
 $config = [
     'controllers'        => [
