@@ -281,7 +281,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         $subSelect2->join('project_entity_project.call', 'program_entity_call');
         $subSelect2->andWhere($subSelect2->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
 
-        //The project should at least have an approved FPP
+        //The project should at least have an approved PO
         //Select projects based on a type
         $subSelect = $this->_em->createQueryBuilder();
         $subSelect->select('activeProject.id');
@@ -293,7 +293,7 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         $subSelect2->andWhere($queryBuilder->expr()->in('project_entity_project', $subSelect->getDQL()));
 
         $queryBuilder->setParameter('approved', Version::STATUS_APPROVED);
-        $queryBuilder->setParameter('versionType', \Project\Entity\Version\Type::TYPE_FPP);
+        $queryBuilder->setParameter('versionType', \Project\Entity\Version\Type::TYPE_PO);
 
 
         if (array_key_exists('program', $filter)) {
@@ -306,9 +306,9 @@ final class OParent extends EntityRepository implements FilteredObjectRepository
         );
 
 
-        //Show only the applicants
+        //Exclude the members
         $queryBuilder->andWhere(
-            $queryBuilder->expr()->eq('organisation_entity_parent.memberType', Entity\OParent::MEMBER_TYPE_APPLICANT)
+            $queryBuilder->expr()->neq('organisation_entity_parent.memberType', Entity\OParent::MEMBER_TYPE_MEMBER)
         );
 
         //Exclude the DOA signers

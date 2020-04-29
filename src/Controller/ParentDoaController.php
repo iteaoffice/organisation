@@ -17,16 +17,16 @@ use Contact\Service\ContactService;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
-use Organisation\Entity;
-use Organisation\Form\ParentDoa;
-use Organisation\Service\ParentService;
-use Program\Entity\Program;
-use Program\Service\ProgramService;
 use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\ViewModel;
+use Organisation\Entity;
+use Organisation\Form\ParentDoa;
+use Organisation\Service\ParentService;
+use Program\Entity\Program;
+use Program\Service\ProgramService;
 
 use function file_get_contents;
 
@@ -52,12 +52,12 @@ final class ParentDoaController extends OrganisationAbstractController
         ProgramService $programService,
         TranslatorInterface $translator
     ) {
-        $this->parentService = $parentService;
-        $this->entityManager = $entityManager;
+        $this->parentService  = $parentService;
+        $this->entityManager  = $entityManager;
         $this->generalService = $generalService;
         $this->contactService = $contactService;
         $this->programService = $programService;
-        $this->translator = $translator;
+        $this->translator     = $translator;
     }
 
 
@@ -148,6 +148,7 @@ final class ParentDoaController extends OrganisationAbstractController
             [
                 'dateSigned'   => null === $doa->getDateSigned() ? null : $doa->getDateSigned()->format('Y-m-d'),
                 'dateApproved' => null === $doa->getDateApproved() ? null : $doa->getDateApproved()->format('Y-m-d'),
+                'program'      => $doa->getProgram()
             ],
             $this->getRequest()->getFiles()->toArray(),
             $this->getRequest()->getPost()->toArray()
