@@ -23,11 +23,12 @@ use General\Entity\Country;
 use Invoice\Entity\Invoice;
 use Invoice\Entity\Journal;
 use Invoice\Entity\Reminder;
+use Laminas\Form\Annotation;
 use News\Entity\Magazine\Article;
 use Program\Entity\Call\Doa;
+use Project\Entity\Idea\Meeting\Participant;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
-use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation")
@@ -150,6 +151,13 @@ class Organisation extends AbstractEntity
      * @var Partner[]|Collections\Collection
      */
     private $ideaPartner;
+    /**
+     * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Meeting\Participant", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var Participant[]|Collections\Collection
+     */
+    private $ideaMeetingParticipant;
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Type", inversedBy="organisation", cascade={"persist"})
      * @ORM\JoinColumn(name="type_id", referencedColumnName="type_id", nullable=true)
@@ -294,26 +302,27 @@ class Organisation extends AbstractEntity
 
     public function __construct()
     {
-        $this->affiliation = new Collections\ArrayCollection();
-        $this->affiliationFinancial = new Collections\ArrayCollection();
-        $this->contactOrganisation = new Collections\ArrayCollection();
-        $this->parentFinancial = new Collections\ArrayCollection();
-        $this->names = new Collections\ArrayCollection();
-        $this->log = new Collections\ArrayCollection();
-        $this->logo = new Collections\ArrayCollection();
-        $this->note = new Collections\ArrayCollection();
-        $this->programDoa = new Collections\ArrayCollection();
-        $this->ideaPartner = new Collections\ArrayCollection();
-        $this->invoice = new Collections\ArrayCollection();
-        $this->boothFinancial = new Collections\ArrayCollection();
-        $this->doa = new Collections\ArrayCollection();
-        $this->organisationBooth = new Collections\ArrayCollection();
-        $this->journal = new Collections\ArrayCollection();
-        $this->reminder = new Collections\ArrayCollection();
-        $this->result = new Collections\ArrayCollection();
-        $this->web = new Collections\ArrayCollection();
-        $this->magazineArticle = new Collections\ArrayCollection();
-        $this->updates = new Collections\ArrayCollection();
+        $this->affiliation            = new Collections\ArrayCollection();
+        $this->affiliationFinancial   = new Collections\ArrayCollection();
+        $this->contactOrganisation    = new Collections\ArrayCollection();
+        $this->parentFinancial        = new Collections\ArrayCollection();
+        $this->names                  = new Collections\ArrayCollection();
+        $this->log                    = new Collections\ArrayCollection();
+        $this->logo                   = new Collections\ArrayCollection();
+        $this->note                   = new Collections\ArrayCollection();
+        $this->programDoa             = new Collections\ArrayCollection();
+        $this->ideaPartner            = new Collections\ArrayCollection();
+        $this->ideaMeetingParticipant = new Collections\ArrayCollection();
+        $this->invoice                = new Collections\ArrayCollection();
+        $this->boothFinancial         = new Collections\ArrayCollection();
+        $this->doa                    = new Collections\ArrayCollection();
+        $this->organisationBooth      = new Collections\ArrayCollection();
+        $this->journal                = new Collections\ArrayCollection();
+        $this->reminder               = new Collections\ArrayCollection();
+        $this->result                 = new Collections\ArrayCollection();
+        $this->web                    = new Collections\ArrayCollection();
+        $this->magazineArticle        = new Collections\ArrayCollection();
+        $this->updates                = new Collections\ArrayCollection();
     }
 
     public function hasLogo(): bool
@@ -721,6 +730,17 @@ class Organisation extends AbstractEntity
     {
         $this->updates = $updates;
 
+        return $this;
+    }
+
+    public function getIdeaMeetingParticipant()
+    {
+        return $this->ideaMeetingParticipant;
+    }
+
+    public function setIdeaMeetingParticipant($ideaMeetingParticipant): Organisation
+    {
+        $this->ideaMeetingParticipant = $ideaMeetingParticipant;
         return $this;
     }
 }

@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace Organisation\Acl\Assertion;
 
+use Admin\Entity\Access;
 use Admin\Service\AdminService;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
@@ -176,7 +177,10 @@ abstract class AbstractAssertion implements AssertionInterface
              */
             if (is_array($accessRoleOrCollection)) {
                 foreach ($accessRoleOrCollection as $key => $accessItem) {
-                    $access = $this->adminService->findAccessByName($accessItem);
+                    $access = $accessItem;
+                    if (! $accessItem instanceof Access) {
+                        $access = $this->adminService->findAccessByName($accessItem);
+                    }
 
                     if (null !== $access) {
                         $accessRoleOrCollection[$key] = strtolower($access->getAccess());
@@ -189,6 +193,8 @@ abstract class AbstractAssertion implements AssertionInterface
                     strtolower($this->adminService->findAccessByName($accessRoleOrCollection)->getAccess()),
                 ];
             }
+        } else {
+            $accessRoleOrCollection = array_map('strtolower', $accessRoleOrCollection->toArray());
         }
 
         return $accessRoleOrCollection;
