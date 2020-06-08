@@ -16,7 +16,7 @@ return [
             // And finally, here is where we define our page hierarchy
             'organisation' => [
                 'label'    => _('txt-organisation-admin'),
-                'order'    => 20,
+                'order'    => 30,
                 'route'    => 'zfcadmin/organisation/list',
                 'resource' => 'zfcadmin',
                 'pages'    => [
