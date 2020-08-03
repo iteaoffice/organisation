@@ -32,6 +32,8 @@
             <dd>{{ translate(financial.getEmail(true)) }}</dd>
             <dt>{{ translate("txt-require-purchace-order") }}</dt>
             <dd>{{ translate(financial.getRequiredPurchaseOrder(true)) }}</dd>
+            <dt>{{ translate("txt-send-only-invoice") }}</dt>
+            <dd>{{ translate(financial.getSendOnlyInvoiceText()) }}</dd>
             <dt>{{ translate("txt-iban") }}</dt>
             <dd>{{ financial.iban|default(translate("txt-not-provided")) }}</dd>
             <dt>{{ translate("txt-bic") }}</dt>

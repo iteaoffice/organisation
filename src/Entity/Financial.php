@@ -26,16 +26,18 @@ use Laminas\Form\Annotation;
  */
 class Financial extends AbstractEntity
 {
-    public const VAT_STATUS_UNDEFINED = 0;
-    public const VAT_STATUS_VALID = 1;
-    public const VAT_STATUS_INVALID = 2;
-    public const VAT_STATUS_UNCHECKED = 3;
-    public const NO_OMIT_CONTACT = 0;
-    public const OMIT_CONTACT = 1;
+    public const VAT_STATUS_UNDEFINED       = 0;
+    public const VAT_STATUS_VALID           = 1;
+    public const VAT_STATUS_INVALID         = 2;
+    public const VAT_STATUS_UNCHECKED       = 3;
+    public const NO_OMIT_CONTACT            = 0;
+    public const OMIT_CONTACT               = 1;
     public const NO_REQUIRED_PURCHASE_ORDER = 0;
-    public const REQUIRED_PURCHASE_ORDER = 1;
-    public const NO_EMAIL_DELIVERY = 0;
-    public const EMAIL_DELIVERY = 1;
+    public const REQUIRED_PURCHASE_ORDER    = 1;
+    public const NOT_SEND_ONLY_INVOICE      = 0;
+    public const SEND_ONLY_INVOICE          = 1;
+    public const NO_EMAIL_DELIVERY          = 0;
+    public const EMAIL_DELIVERY             = 1;
 
     protected static array $vatStatusTemplates
         = [
@@ -55,6 +57,12 @@ class Financial extends AbstractEntity
         = [
             self::EMAIL_DELIVERY    => 'txt-delivery-by-email',
             self::NO_EMAIL_DELIVERY => 'txt-delivery-by-postal-mail',
+        ];
+
+    protected static array $sendOnlyInvoiceTemplates
+        = [
+            self::SEND_ONLY_INVOICE     => 'txt-send-only-invoice-as-attachment',
+            self::NOT_SEND_ONLY_INVOICE => 'txt-include-other-attachments-with-invoice',
         ];
 
     protected static array $requiredPurchaseOrderTemplates
@@ -135,6 +143,16 @@ class Financial extends AbstractEntity
      */
     private $requiredPurchaseOrder;
     /**
+     * @ORM\Column(name="send_only_invoice", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"sendOnlyInvoiceTemplates"})
+     * @Annotation\Attributes({"label":"txt-send-only-invoice-label"})
+     * @Annotation\Options({"help-block":"txt-send-only-invoice-help-block"})
+     *
+     * @var int
+     */
+    private $sendOnlyInvoice;
+    /**
      * @ORM\Column(name="email", type="smallint", nullable=false)
      * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"emailTemplates"})
@@ -171,12 +189,13 @@ class Financial extends AbstractEntity
 
     public function __construct()
     {
-        $this->vatStatus = self::VAT_STATUS_UNCHECKED;
-        $this->omitContact = self::NO_OMIT_CONTACT;
+        $this->vatStatus             = self::VAT_STATUS_UNCHECKED;
+        $this->omitContact           = self::NO_OMIT_CONTACT;
         $this->requiredPurchaseOrder = self::NO_REQUIRED_PURCHASE_ORDER;
-        $this->email = self::EMAIL_DELIVERY;
-        $this->vatType = new Collections\ArrayCollection();
-        $this->reminder = new Collections\ArrayCollection();
+        $this->sendOnlyInvoice       = self::NOT_SEND_ONLY_INVOICE;
+        $this->email                 = self::EMAIL_DELIVERY;
+        $this->vatType               = new Collections\ArrayCollection();
+        $this->reminder              = new Collections\ArrayCollection();
     }
 
     public static function getVatStatusTemplates(): array
@@ -199,9 +218,19 @@ class Financial extends AbstractEntity
         return self::$requiredPurchaseOrderTemplates;
     }
 
+    public static function getSendOnlyInvoiceTemplates(): array
+    {
+        return self::$sendOnlyInvoiceTemplates;
+    }
+
     public function hasOmitContact(): bool
     {
         return $this->omitContact === self::OMIT_CONTACT;
+    }
+
+    public function sendOnlyInvoice(): bool
+    {
+        return $this->sendOnlyInvoice === self::SEND_ONLY_INVOICE;
     }
 
     public function __toString(): string
@@ -380,5 +409,21 @@ class Financial extends AbstractEntity
         $this->supplierNumber = $supplierNumber;
 
         return $this;
+    }
+
+    public function getSendOnlyInvoice(): ?int
+    {
+        return $this->sendOnlyInvoice;
+    }
+
+    public function setSendOnlyInvoice(int $sendOnlyInvoice): Financial
+    {
+        $this->sendOnlyInvoice = $sendOnlyInvoice;
+        return $this;
+    }
+
+    public function getSendOnlyInvoiceText(): string
+    {
+        return self::$sendOnlyInvoiceTemplates[$this->sendOnlyInvoice] ?? '';
     }
 }
