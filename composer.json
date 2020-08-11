@@ -34,7 +34,7 @@
     "iteaoffice/project": "^5.1",
     "iteaoffice/event": "^5.1",
     "iteaoffice/invoice": "^5.1",
-    "samsonasik/error-hero-module": "2.*",
+    "samsonasik/error-hero-module": "2.* || 3.*",
     "setasign/fpdi-tcpdf": "~2.0",
     "jield-webdev/zf3-bootstrap4": "dev-master"
   },
