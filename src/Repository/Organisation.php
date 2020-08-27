@@ -17,6 +17,7 @@ use Contact\Entity\Contact;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -71,7 +72,7 @@ class Organisation extends EntityRepository
 
         if (array_key_exists('type', $filter)) {
             $queryBuilder->andWhere(
-                $queryBuilder->expr()->in('organisation_entity_organisation.type', implode($filter['type'], ', '))
+                $queryBuilder->expr()->in('organisation_entity_organisation.type', implode(', ', $filter['type']))
             );
         }
 
@@ -140,7 +141,7 @@ class Organisation extends EntityRepository
         $nextYear = new DateTime();
         $nextYear->sub(new DateInterval('P1Y'));
 
-        $queryBuilder->setParameter('lastYear', $nextYear);
+        $queryBuilder->setParameter('lastYear', $nextYear, Types::DATETIME_MUTABLE);
 
         //Limit to active affiliations
         $queryBuilder->andWhere($queryBuilder->expr()->isNull('affiliation_entity_affiliation.dateEnd'));
@@ -156,7 +157,7 @@ class Organisation extends EntityRepository
         if (array_key_exists('type', $filter)) {
             $queryBuilder->andWhere(
                 $queryBuilder->expr()
-                    ->in('organisation_entity_organisation.type', implode($filter['type'], ', '))
+                    ->in('organisation_entity_organisation.type', implode(', ', $filter['type']))
             );
         }
 
