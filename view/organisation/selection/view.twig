@@ -1,0 +1,110 @@
+{% do headTitle().append(translate("txt-organisation")) %}
+{% do headTitle().append(translate("txt-view-selection-%s")|format(selection)) %}
+
+<h1>{{ selection }}</h1>
+
+{% if error %}
+    {{ ztbalert().danger('<pre>' ~ error ~ '</pre>')|raw }}
+{% endif %}
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item active"><a class="nav-link active" href="#general" data-toggle="tab"
+                                   role="tab">{{ translate("txt-general") }}</a></li>
+    <li class="nav-item"><a class="nav-link" href="#organisations" data-toggle="tab"
+                            role="tab">{{ translate("txt-organisations") }}</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="general">
+        <h2 class="pt-3">{{ translate("txt-general") }}</h2>
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-name") }}</dt>
+            <dd>{{ selection.selection }}</dd>
+            <dt>{{ translate("txt-group-tag") }}</dt>
+            <dd>{{ selection.tag|default(translate("txt-not-provided")) }}</dd>
+            <dt>{{ translate("txt-description") }}</dt>
+            <dd>{{ selection.description|default(translate("txt-not-provided"))|raw|nl2br }}</dd>
+            {% if selection.dateCreated %}
+                <dt>{{ translate("txt-date-created") }}</dt>
+                <dd>{{ selection.dateCreated|string_date }}</dd>
+            {% endif %}
+            {% if selection.dateUpdated %}
+                <dt>{{ translate("txt-date-updated") }}</dt>
+                <dd>{{ selection.dateUpdated|string_date }}</dd>
+            {% endif %}
+            {% if selection.contact %}
+                <dt>{{ translate("txt-owner") }}</dt>
+                <dd>{{ contactLink(selection.contact,'view-admin','name') }}</dd>
+            {% endif %}
+            <dt>{{ translate("txt-amount-of-organisations") }}</dt>
+            <dd>{{ selectionService.getAmountOfOrganisations(selection) }}</dd>
+        </dl>
+
+        <h2>{{ translate("txt-sql-query") }}</h2>
+        {% if selection.sql %}
+            <pre><code class="sql d-block py-3">{{ selection.sql }}</code></pre>
+        {% else %}
+            {{ ztbalert().info(translate("txt-no-query-provided-yet"))|raw }}
+        {% endif %}
+
+        {{ organisationSelectionLink( selection,'edit','button') }}
+        {{ organisationSelectionLink( selection,'copy','button') }}
+        {{ organisationSelectionLink( selection ,'edit-sql','button') }}
+    </div>
+    <div class="tab-pane" role="tabpanel" id="organisations">
+        <h2 class="pt-3">{{ translate("txt-organisations") }}</h2>
+
+        {% if organisations|length > 0 %}
+            <table class="table table-organisation table-striped table-hover table-sm">
+                <thead>
+                <tr>
+                    <th>{{ translate("txt-organisation") }}</th>
+                    <th>{{ translate("txt-type") }}</th>
+                    <th>{{ translate("txt-country") }}</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <td colspan="3"></td>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for organisation in organisations %}
+                    <tr>
+                        <td>
+                            <a href="{{ url('zfcadmin/organisation/view',{'id':organisation['id']}) }}">{{ organisation['organisation'] }}</a>
+                        </td>
+                        <td>{{ organisation['type']['type'] }}</td>
+                        <td>{{ organisation['country']['iso3'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            {{ ztbalert().warning(translate("txt-no-organisations-in-this-selection"))|raw }}
+        {% endif %}
+
+        <hr>
+        {{ organisationSelectionLink( selection ,'edit-sql','button') }}
+        {{ organisationSelectionLink( selection ,'export-csv','button') }}
+        {{ organisationSelectionLink( selection ,'export-excel','button') }}
+    </div>
+</div>
+
+{% do headLink().appendStylesheet('//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css') %}
+{% do headScript().appendFile('//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js', 'text/javascript') %}
+{% do headScript().appendFile('//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js', 'text/javascript') %}
+
+{% do headScript().appendFile("//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.2/highlight.min.js",'text/javascript') %}
+{% do headLink().appendStylesheet("//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.2/styles/github-gist.min.css") %}
+{% do inlineScript().appendScript("hljs.initHighlightingOnLoad();",'text/javascript') %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.table-organisation').DataTable(
+            {"lengthMenu": [[20, 50, -1], [20, 50, "All"]]}
+        );
+    });
+</script>

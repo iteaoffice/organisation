@@ -16,7 +16,7 @@ return [
         'routes' => [
             'image'        => [
                 'child_routes' => [
-                    'organisation-logo' => [
+                    'organisation-logo'        => [
                         'type'    => 'Segment',
                         'options' => [
                             'route'    => '/o/[:id]-[:last-update].[:ext]',
@@ -48,7 +48,7 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes'  => [
-                    'json'   => [
+                    'json' => [
                         'type'         => 'Segment',
                         'options'      => [
                             'route'    => '/json',
@@ -58,7 +58,7 @@ return [
                             ],
                         ],
                         'child_routes' => [
-                            'get-branches' => [
+                            'get-branches'  => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/get-branches.json',
@@ -71,7 +71,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'check-vat'    => [
+                            'check-vat'     => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/check-vat[/vat-:vat].json',
@@ -84,7 +84,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'search'       => [
+                            'search'        => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/search.json',
@@ -94,7 +94,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'search-parent'       => [
+                            'search-parent' => [
                                 'type'    => 'Segment',
                                 'options' => [
                                     'route'    => '/search-parent.json',
@@ -107,7 +107,7 @@ return [
                         ],
 
                     ],
-                    'logo'   => [
+                    'logo' => [
                         'type'    => 'Segment',
                         'options' => [
                             'route'       => '/logo/[:id].[:ext]',
@@ -123,17 +123,17 @@ return [
             ],
             'community'    => [
                 'child_routes' => [
-                    'organisation'      => [
+                    'organisation' => [
                         'type'          => 'Segment',
                         'priority'      => 1001,
                         'options'       => [
-                            'route'    => '/organisation',
+                            'route' => '/organisation',
                         ],
                         'may_terminate' => false,
                         'child_routes'  => [
                             'update' => [
-                                'type'       => 'Segment',
-                                'options'    => [
+                                'type'    => 'Segment',
+                                'options' => [
                                     'route'       => '/update/[:organisationId].html',
                                     'constraints' => [
                                         'organisationId' => '\d+',
@@ -182,7 +182,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'list-inactive'  => [
+                            'list-inactive'   => [
                                 'type'    => 'Literal',
                                 'options' => [
                                     'route'    => '/list/inactive.html',
@@ -340,7 +340,7 @@ return [
                                 ],
                                 'may_terminate' => false,
                                 'child_routes'  => [
-                                    'pending'  => [
+                                    'pending' => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/pending.html',
@@ -349,7 +349,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'edit' => [
+                                    'edit'    => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/edit/[:id].html',
@@ -358,7 +358,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'view' => [
+                                    'view'    => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/view/[:id].html',
@@ -373,6 +373,82 @@ return [
                                             'route'    => '/approve/[:id].html',
                                             'defaults' => [
                                                 'action' => 'approve',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'selection'       => [
+                                'type'          => 'Segment',
+                                'options'       => [
+                                    'route'    => '/selection',
+                                    'defaults' => [
+                                        'controller' => Controller\SelectionController::class,
+                                        'action'     => 'list',
+                                    ],
+                                ],
+                                'may_terminate' => false,
+                                'child_routes'  => [
+                                    'list'     => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                                            'defaults' => [
+                                                'action' => 'list',
+                                            ],
+                                        ],
+                                    ],
+                                    'view'     => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/view/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'view',
+                                            ],
+                                        ],
+                                    ],
+                                    'new'      => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/new.html',
+                                            'defaults' => [
+                                                'action' => 'new',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit'     => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'copy'     => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/copy/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'copy',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit-sql' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/sql/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit-sql',
+                                            ],
+                                        ],
+                                    ],
+                                    'export'             => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/export/[:type]/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'export',
                                             ],
                                         ],
                                     ],

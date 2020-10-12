@@ -25,10 +25,10 @@ use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use Event\Entity\Registration;
 use General\Entity\Country;
-use Organisation\Entity;
-use Project\Repository\Project;
 use Laminas\Stdlib\Parameters;
 use Laminas\Validator\EmailAddress;
+use Organisation\Entity;
+use Project\Repository\Project;
 
 use function array_key_exists;
 use function asort;
@@ -44,7 +44,7 @@ class Organisation extends EntityRepository
 {
     public function findDuplicateOrganisations(array $filter): Query
     {
-        //Make a subselect to match the organisations on itself
+        //Make a sub select to match the organisations on itself
         $subSelect2 = $this->_em->createQueryBuilder();
         $subSelect2->select('COUNT(organisation_entity_organisation2.id)');
         $subSelect2->from(Entity\Organisation::class, 'organisation_entity_organisation2');
@@ -133,7 +133,7 @@ class Organisation extends EntityRepository
 
         /** @var Project $projectRepository */
         $projectRepository = $this->_em->getRepository(\Project\Entity\Project::class);
-        $queryBuilder = $projectRepository->onlyActiveProject($queryBuilder);
+        $queryBuilder      = $projectRepository->onlyActiveProject($queryBuilder);
 
         //Limit to projects which are not recently completed
         $queryBuilder->andWhere('project_entity_project.dateEndActual > :lastYear');
@@ -491,6 +491,79 @@ class Organisation extends EntityRepository
         $queryBuilder->setParameter('country', $organisation->getCountry());
 
         return $queryBuilder->getQuery()->useQueryCache(true)->getResult();
+    }
+
+    public function isOrganisationInSelection(Entity\Organisation $organisation, Entity\Selection $selection): bool
+    {
+        if (! $selection->hasSql()) {
+            return false;
+        }
+
+        $resultSetMap = new Query\ResultSetMapping();
+        $resultSetMap->addEntityResult(Entity\Organisation::class, 'organisation_entity_organisation');
+        $resultSetMap->addFieldResult('organisation_entity_organisation', 'organisation_id', 'id');
+        $query = $this->getEntityManager()->createNativeQuery(
+            'SELECT organisation_id FROM organisation WHERE organisation_id IN ('
+            . $selection->getSql() . ') AND organisation_id = ' . $organisation->getId(),
+            $resultSetMap
+        );
+
+        return count($query->getResult()) > 0;
+    }
+
+    public function findOrganisationsBySelection(Entity\Selection $selection, bool $toArray = false): array
+    {
+        if (! $selection->hasSql()) {
+            return [];
+        }
+
+        $resultSetMap = new Query\ResultSetMapping();
+        $resultSetMap->addEntityResult(Entity\Organisation::class, 'organisation');
+
+        $resultSetMap->addJoinedEntityResult(
+            Entity\Type::class,
+            'organisation_type',
+            'organisation',
+            'type'
+        );
+        $resultSetMap->addJoinedEntityResult(
+            Country::class,
+            'country',
+            'organisation',
+            'country'
+        );
+
+        $resultSetMap->addFieldResult('organisation', 'organisation_id', 'id');
+        $resultSetMap->addFieldResult('organisation', 'organisation', 'organisation');
+        $resultSetMap->addFieldResult('organisation_type', 'type_id', 'id');
+        $resultSetMap->addFieldResult('organisation_type', 'type', 'type');
+        $resultSetMap->addFieldResult('country', 'country_id', 'id');
+        $resultSetMap->addFieldResult('country', 'iso3', 'iso3');
+        $resultSetMap->addFieldResult('country', 'country', 'country');
+
+
+        $query = $this->getEntityManager()->createNativeQuery(
+            'SELECT 
+                      organisation.organisation_id,
+                      organisation.organisation,
+                      organisation_type.type_id,
+                      organisation_type.type,
+                      country.country_id,
+                      country.country,
+                      country.iso3
+                FROM organisation
+                LEFT JOIN organisation_type ON organisation.type_id = organisation_type.type_id
+                LEFT JOIN country ON organisation.country_id = country.country_id
+            WHERE organisation.organisation_id IN (' . $selection->getSql()
+            . ') ORDER BY organisation',
+            $resultSetMap
+        );
+
+        if ($toArray) {
+            return $query->getResult(AbstractQuery::HYDRATE_ARRAY);
+        }
+
+        return $query->getResult();
     }
 
     public function searchOrganisations(

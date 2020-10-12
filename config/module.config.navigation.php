@@ -294,7 +294,61 @@ return [
                         'order' => 30,
                         'route' => 'zfcadmin/organisation/financial/list',
                     ],
-
+                    'selection'                   => [
+                        'label' => _('txt-organisation-selection-list'),
+                        'order' => 40,
+                        'route' => 'zfcadmin/organisation/selection/list',
+                        'pages' => [
+                            'selection' => [
+                                'route'   => 'zfcadmin/organisation/selection/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Organisation\Entity\Selection::class,
+                                    ],
+                                    'invokables' => [
+                                        Organisation\Navigation\Invokable\SelectionLabel::class,
+                                    ],
+                                ],
+                                'pages'   => [
+                                    'edit'     => [
+                                        'label'   => _('txt-organisation-selection-edit'),
+                                        'route'   => 'zfcadmin/organisation/selection/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Organisation\Entity\Selection::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'copy'     => [
+                                        'label'   => _('txt-organisation-selection-copy'),
+                                        'route'   => 'zfcadmin/organisation/selection/copy',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Organisation\Entity\Selection::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'edit-sql' => [
+                                        'label'   => _('txt-organisation-selection-edit-sql'),
+                                        'route'   => 'zfcadmin/organisation/selection/edit-sql',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Organisation\Entity\Selection::class,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'new'       => [
+                                'label' => _('txt-create-new-organisation-selection'),
+                                'route' => 'zfcadmin/organisation/selection/new',
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'config'       => [

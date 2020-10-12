@@ -26,6 +26,9 @@ use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
 use General\Service\EmailService;
 use Invoice\Service\InvoiceService;
+use Laminas\Authentication\AuthenticationService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Organisation\Controller;
 use Organisation\Form\View\Helper\OrganisationFormElement;
 use Organisation\Form\View\Helper\ParentFormElement;
@@ -34,17 +37,14 @@ use Program\Service\CallService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 use Project\Service\VersionService;
-use Laminas\Authentication\AuthenticationService;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
-        Search\Service\OrganisationSearchService::class => [
+        Search\Service\OrganisationSearchService::class                       => [
             'Config'
         ],
-        View\Handler\OrganisationHandler::class => [
+        View\Handler\OrganisationHandler::class                               => [
             'Application',
             'ViewHelperManager',
             TwigRenderer::class,
@@ -55,7 +55,7 @@ return [
             ProjectService::class,
             ArticleService::class
         ],
-        Controller\Plugin\HandleParentAndProjectImport::class => [
+        Controller\Plugin\HandleParentAndProjectImport::class                 => [
             EntityManager::class,
             CountryService::class,
             Service\ParentService::class,
@@ -74,7 +74,7 @@ return [
             AffiliationService::class,
             TwigRenderer::class
         ],
-        Controller\Plugin\RenderOverviewVariableContributionSheet::class => [
+        Controller\Plugin\RenderOverviewVariableContributionSheet::class      => [
             Service\ParentService::class,
             InvoiceService::class,
             Options\ModuleOptions::class,
@@ -84,37 +84,41 @@ return [
             AffiliationService::class,
             TwigRenderer::class
         ],
-        Controller\Plugin\MergeOrganisation::class => [
+        Controller\Plugin\MergeOrganisation::class                            => [
             EntityManager::class,
             Service\UpdateService::class,
             TranslatorInterface::class,
             Logging::class
         ],
-        Controller\Plugin\MergeParentOrganisation::class => [
+        Controller\Plugin\MergeParentOrganisation::class                      => [
             EntityManager::class
         ],
-        Form\OrganisationForm::class => [
+        Controller\Plugin\SelectionExport::class                              => [
+            Service\SelectionService::class,
+            TranslatorInterface::class
+        ],
+        Form\OrganisationForm::class                                          => [
             EntityManager::class
         ],
-        Form\UpdateForm::class => [
+        Form\UpdateForm::class                                                => [
             EntityManager::class
         ],
-        Form\FinancialForm::class => [
+        Form\FinancialForm::class                                             => [
             EntityManager::class
         ],
-        OrganisationFormElement::class => [
+        OrganisationFormElement::class                                        => [
             'ViewHelperManager',
             TranslatorInterface::class
         ],
-        ParentFormElement::class => [
+        ParentFormElement::class                                              => [
             'ViewHelperManager',
             TranslatorInterface::class
         ],
-        View\Helper\UpdateNotification::class => [
+        View\Helper\UpdateNotification::class                                 => [
             Service\UpdateService::class,
             TranslatorInterface::class
         ],
-        View\Helper\OverviewVariableContribution::class => [
+        View\Helper\OverviewVariableContribution::class                       => [
             TwigRenderer::class,
             ProjectService::class,
             VersionService::class,
@@ -123,7 +127,7 @@ return [
             Service\ParentService::class,
             ContactService::class,
         ],
-        View\Helper\OverviewExtraVariableContribution::class => [
+        View\Helper\OverviewExtraVariableContribution::class                  => [
             TwigRenderer::class,
             ProjectService::class,
             VersionService::class,
@@ -132,7 +136,10 @@ return [
             Service\ParentService::class,
             ContactService::class,
         ],
-        Service\UpdateService::class => [
+        Service\SelectionService::class                                       => [
+            EntityManager::class
+        ],
+        Service\UpdateService::class                                          => [
             EntityManager::class,
             EmailService::class
         ]

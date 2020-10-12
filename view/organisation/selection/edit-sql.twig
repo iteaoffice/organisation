@@ -1,0 +1,41 @@
+{% do headTitle().append(translate("txt-organisation")) %}
+{% do headTitle().append(translate("txt-edit-selection")) %}
+
+<h1>{{ translate("txt-edit-selection") }}</h1>
+
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+{% set selectionForm = form.get('organisation_entity_selection') %}
+
+    {{ ztbformelement(selectionForm.get('sql')) }}
+    {{ ztbformelement(form.get('csrf')) }}
+
+<div class="form-group row">
+    <div class="offset-sm-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+
+{% do headScript().appendFile('assets/js/codemirror.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/htmlmixed.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/javascript.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/xml.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/selection-pointer.js', 'text/javascript') %}
+{% do headScript().appendFile('assets/js/codemirror/matchbrackets.js', 'text/javascript') %}
+{% do headLink().appendStylesheet('assets/css/codemirror.css') %}
+
+<script type="text/javascript">
+    var htmlEditor = CodeMirror.fromTextArea(document.getElementById("selection_sql"), {
+        mode: "sql",
+        lineNumbers: true,
+        selectionPointer: true,
+        lineWrapping: true,
+        matchBrackets: true
+    });
+    htmlEditor.setSize(null, 600);
+</script>

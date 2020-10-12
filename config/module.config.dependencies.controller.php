@@ -23,17 +23,16 @@ use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
-use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
 use General\Service\GeneralService;
 use Invoice\Search\Service\InvoiceSearchService;
 use Invoice\Service\InvoiceService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Organisation\Controller;
 use Organisation\Service;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 
 return [
     ConfigAbstractFactory::class => [
@@ -77,6 +76,11 @@ return [
         Controller\OrganisationTypeController::class      => [
             Service\OrganisationService::class,
             Service\FormService::class
+        ],
+        Controller\SelectionController::class             => [
+            Service\SelectionService::class,
+            Service\FormService::class,
+            TranslatorInterface::class
         ],
         Controller\ParentController::class                => [
             Service\ParentService::class,

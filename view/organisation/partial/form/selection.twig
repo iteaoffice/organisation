@@ -1,0 +1,23 @@
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+{% set selectionForm = form.get('organisation_entity_selection') %}
+
+    {{ ztbformelement(selectionForm.get('selection')) }}
+    {{ ztbformelement(selectionForm.get('description')) }}
+    {{ ztbformelement(selectionForm.get('tag')) }}
+    {{ contactformelement(selectionForm.get('contact')) }}
+
+    {{ ztbformelement(form.get('csrf')) }}
+
+<div class="form-group row">
+    <div class="offset-sm-3 col-sm-9">
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+        {% if form.has('delete') %}
+            {{ ztbformelement(form.get('delete')) }}
+        {% endif %}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
