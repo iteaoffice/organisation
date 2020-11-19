@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Organisation\Form;
 
 use Contact\Form\Element\Contact;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Program\Entity\Program;
@@ -78,7 +79,7 @@ final class ParentDoa extends Form\Form implements InputFilterProviderInterface
                         'params' => [
                             'criteria' => [],
                             'orderBy'  => [
-                                'program' => 'ASC',
+                                'program' => Criteria::ASC,
                             ],
                         ],
                     ],
@@ -144,8 +145,8 @@ final class ParentDoa extends Form\Form implements InputFilterProviderInterface
                 'validators' => [
                     new Size(
                         [
-                            'min' => '5kB',
-                            'max' => '8MB',
+                            'min' => '1kB',
+                            'max' => '16MB',
                         ]
                     ),
                     new Extension(

@@ -79,7 +79,7 @@ final class ParentImport extends Form implements InputFilterProviderInterface
                     new Size(
                         [
                             'min' => '1kB',
-                            'max' => '8MB',
+                            'max' => '16MB',
                         ]
                     ),
                     new MimeType(

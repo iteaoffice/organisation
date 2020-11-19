@@ -1,15 +1,10 @@
 {% do headTitle().append(translate("txt-parent-list")) %}
 
-{{ form().closeTag()|raw }}
-
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
-
 {% set filter = form.get('filter') %}
 
-
 <div class="row">
-
     <div class="col-md-10">
 
         <h1>{{ translate("txt-parent-list") }} {{ parentLink(null,'new', 'button') }} {{ parentLink(null,'import-project', 'button') }}</h1>

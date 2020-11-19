@@ -1,13 +1,9 @@
 {% do headTitle().append(translate("txt-organisation-type-list")) %}
 
-{{ form().closeTag()|raw }}
-
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
-
-
 <h1>{{ translate("txt-organisation-type-list") }} {{ organisationTypeLink(null,'new', 'button') }}</h1>
 
 <div class="row">

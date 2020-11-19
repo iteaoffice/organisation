@@ -28,11 +28,9 @@ use Organisation\Controller\Plugin\RenderOverviewVariableContributionSheet;
 use Organisation\Controller\Plugin\SelectionExport;
 use Organisation\Entity;
 use Program\Entity\Program;
-use ZfcUser\Controller\Plugin\ZfcUserAuthentication;
 
 /**
  * @method      Identity|Contact identity()
- * @method      ZfcUserAuthentication zfcUserAuthentication()
  * @method      FlashMessenger flashMessenger()
  * @method      IsAllowed isAllowed($resource, $action)
  * @method      InvoiceFilterPlugin getInvoiceFilter()

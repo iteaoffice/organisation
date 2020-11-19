@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -15,12 +15,12 @@ namespace Organisation\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
-use Laminas\Paginator\Paginator;
-use Laminas\View\Model\ViewModel;
 
 /**
  * Class OrganisationTypeController
@@ -35,14 +35,14 @@ final class OrganisationTypeController extends OrganisationAbstractController
     public function __construct(OrganisationService $organisationService, FormService $formService)
     {
         $this->organisationService = $organisationService;
-        $this->formService = $formService;
+        $this->formService         = $formService;
     }
 
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->organisationService
             ->findFiltered(Entity\Type::class, $filterPlugin->getFilter());
 
@@ -71,7 +71,7 @@ final class OrganisationTypeController extends OrganisationAbstractController
     {
         $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->formService->prepare(Entity\Type::class, null, $data);
+        $form = $this->formService->prepare(Entity\Type::class, $data);
         $form->remove('delete');
 
 

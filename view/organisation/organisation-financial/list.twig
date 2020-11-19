@@ -1,19 +1,12 @@
 {% do headTitle().append(translate("txt-financial-organisation-list")) %}
 
-{{ form().closeTag()|raw }}
-
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
 
-
-
-
 <div class="row">
-
     <div class="col-md-10">
-
         <h1>{{ translate("txt-financial-organisation-list") }}</h1>
 
         <div class="row">

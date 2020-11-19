@@ -1,100 +1,83 @@
 {% do headTitle().append(translate("txt-parent-list-no-member-no-doa")) %}
 
-{{ form().closeTag()|raw }}
-
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
 
-
-
+<h1>{{ translate("txt-parent-list-no-member-no-doa") }}</h1>
 
 <div class="row">
-
-    <div class="col-md-12">
-
-        <h1>{{ translate("txt-parent-list-no-member-no-doa") }}</h1>
-
-        <div class="row">
-            <div class="col-md-6">
-                <p class="lead">{{ translate("txt-parent-list-no-member-explanation") }}</p>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    {{ formelement(filter.get('search')) }}
-                    <div class="input-group-append input-group-btn">
-                        {{ formelement(form.get('submit')) }}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% if paginator.pageRange > 0 %}
-            <table class="table table-hover table-striped table-sm">
-                <thead>
-                <tr>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
-                    <th>{{ translate("txt-member-type") }}</th>
-                    <th>{{ translate("txt-doa") }}</th>
-                    <th>{{ translate("txt-projects") }}</th>
-                    <th>{{ translate("txt-contact") }}</th>
-                    <th>{{ translate("txt-address") }}</th>
-                </tr>
-                </thead>
-                <tfoot>
-                </tfoot>
-                <tbody>
-                {% for parent in paginator.getCurrentItems() %}
-
-                    {% set address = contactService.getMailAddress(parent.contact) %}
-
-                    <tr>
-                        <td>{{ parentLink(parent, 'view', 'parent') }} {{ parentLink(parent, 'edit', 'icon') }}</td>
-
-                        <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
-                        <td>{{ parentTypeLink(parent.type,'view', 'name') }}</td>
-                        <td>{{ translate(parent.getMemberType(true)) }}</td>
-                        <td>{% for doa in parentService.parseDoas(parent) %}{{ doa }}{% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
-                        <td>
-                            {% for organisation in parent.parentOrganisation %}
-                                {% for affiliation in organisation.affiliation %}
-                                    {{ projectLink(affiliation.project,'view-admin','name') }}  {{ affiliationLink(affiliation,'view-admin','icon') }}
-                                {% endfor %}
-                            {% endfor %}
-                        </td>
-                        <td>{{ contactLink(parent.contact,'view-admin','name') }} <a
-                                    href="mailto:{{ parent.contact.email }}"><i class="far fa-envelope"></i></a></td>
-                        <td>{% if address %}{{ address.address }}<br>{{ address.zipCode }} {{ address.city }}
-                                <br>{{ address.country }}{% endif %}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-
-            {% include 'application/partial/pagination-control' %}
-
-            <a href="{{ url('zfcadmin/parent/list-no-member-export',{'encodedFilter': encodedFilter}) }}" class="btn btn-primary btn-sm"><i
-                        class="far fa-file-excel"></i> {{ translate("txt-export-csv") }}</a>
-            <small>({{ translate("txt-export-parents-based-on-filter-explanation") }})</small>
-        {% else %}
-            {{ ztbalert().info(translate("txt-no-parent-found"))|raw }}
-        {% endif %}
+    <div class="col-md-6">
+        <p class="lead">{{ translate("txt-parent-list-no-member-explanation") }}</p>
     </div>
-    <div class="col-md-12">
-        <div class="well well-sm">
-            <fieldset>
-
-                {{ ztbformelement(filter.get('type'), true) }}
-                {{ ztbformelement(filter.get('program'), true) }}
-
-                                   {{ ztbformelement(form.get('submit')) }}
-                    {{ ztbformelement(form.get('clear')) }}
-            </fieldset>
+    <div class="col-md-6">
+        <div class="input-group">
+            {{ formelement(filter.get('search')) }}
+            <div class="input-group-append input-group-btn">
+                {{ formelement(form.get('submit')) }}
+            </div>
         </div>
     </div>
 </div>
+
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent/list-no-member', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
+            <th>{{ translate("txt-member-type") }}</th>
+            <th>{{ translate("txt-doa") }}</th>
+            <th>{{ translate("txt-projects") }}</th>
+            <th>{{ translate("txt-contact") }}</th>
+            <th>{{ translate("txt-address") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+        {% for parent in paginator.getCurrentItems() %}
+
+            {% set address = contactService.getMailAddress(parent.contact) %}
+
+            <tr>
+                <td>{{ parentLink(parent, 'view', 'parent') }} {{ parentLink(parent, 'edit', 'icon') }}</td>
+
+                <td>{{ countryLink(parent.organisation.country,'view-admin','iso3') }}</td>
+                <td>{{ parentTypeLink(parent.type,'view', 'name') }}</td>
+                <td>{{ translate(parent.getMemberType(true)) }}</td>
+                <td>{% for doa in parentService.parseDoas(parent) %}{{ doa }}{% if not loop.last %} &middot; {% endif %}{% endfor %}</td>
+                <td>
+                    {% for organisation in parent.parentOrganisation %}
+                        {% for affiliation in organisation.affiliation %}
+                            {{ projectLink(affiliation.project,'view-admin','name') }}  {{ affiliationLink(affiliation,'view-admin','icon') }}
+                        {% endfor %}
+                    {% endfor %}
+                </td>
+                <td>{{ contactLink(parent.contact,'view-admin','name') }} <a
+                            href="mailto:{{ parent.contact.email }}"><i class="far fa-envelope"></i></a></td>
+                <td>{% if address %}{{ address.address }}<br>{{ address.zipCode }} {{ address.city }}
+                        <br>{{ address.country }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'application/partial/pagination-control' %}
+
+    <a href="{{ url('zfcadmin/parent/list-no-member-export',{'encodedFilter': encodedFilter}) }}"
+       class="btn btn-primary btn-sm"><i
+                class="far fa-file-excel"></i> {{ translate("txt-export-csv") }}</a>
+    <small>({{ translate("txt-export-parents-based-on-filter-explanation") }})</small>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-parent-found"))|raw }}
+{% endif %}
+
+{{ ztbformelement(filter.get('type'), true) }}
+{{ ztbformelement(filter.get('program'), true) }}
+{{ ztbformelement(form.get('submit')) }}
+{{ ztbformelement(form.get('clear')) }}
 
 {{ form().closeTag()|raw }}

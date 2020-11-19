@@ -99,8 +99,8 @@ final class UpdateForm extends Form implements InputFilterProviderInterface
                 'validators' => [
                     new Size(
                         [
-                            'min' => '0kb',
-                            'max' => '8MB',
+                            'min' => '1kB',
+                            'max' => '16MB',
                         ]
                     ),
                     new ImageSize(

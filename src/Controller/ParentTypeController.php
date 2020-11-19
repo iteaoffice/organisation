@@ -68,7 +68,7 @@ final class ParentTypeController extends OrganisationAbstractController
     {
         $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->formService->prepare(Entity\Parent\Type::class, null, $data);
+        $form = $this->formService->prepare(Entity\Parent\Type::class, $data);
         $form->remove('delete');
 
         if ($this->getRequest()->isPost()) {
