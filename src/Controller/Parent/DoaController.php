@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Controller;
+namespace Organisation\Controller\Parent;
 
 use Contact\Service\ContactService;
 use DateTime;
@@ -22,6 +22,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\ViewModel;
+use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Entity;
 use Organisation\Form\ParentDoa;
 use Organisation\Service\ParentService;
@@ -31,11 +32,10 @@ use Program\Service\ProgramService;
 use function file_get_contents;
 
 /**
- * Class ParentDoaController
- *
- * @package Organisation\Controller
+ * Class DoaController
+ * @package Organisation\Controller\Parent
  */
-final class ParentDoaController extends OrganisationAbstractController
+final class DoaController extends OrganisationAbstractController
 {
     private ParentService $parentService;
     private EntityManager $entityManager;

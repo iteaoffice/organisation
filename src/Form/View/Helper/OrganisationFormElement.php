@@ -14,6 +14,10 @@ declare(strict_types=1);
 namespace Organisation\Form\View\Helper;
 
 use Laminas\Form\ElementInterface;
+use Laminas\I18n\Translator\Translator;
+use Laminas\View\HelperPluginManager;
+use Organisation\Entity\Organisation;
+use Organisation\Service\OrganisationService;
 use Zf3Bootstrap4\Form\View\Helper\FormElement;
 
 /**
@@ -23,6 +27,18 @@ use Zf3Bootstrap4\Form\View\Helper\FormElement;
  */
 final class OrganisationFormElement extends FormElement
 {
+    private OrganisationService $organisationService;
+
+    public function __construct(
+        OrganisationService $organisationService,
+        HelperPluginManager $viewHelperManager,
+        Translator $translator
+    ) {
+        parent::__construct($viewHelperManager, $translator);
+
+        $this->organisationService = $organisationService;
+    }
+
     public function __invoke(ElementInterface $element = null, bool $inline = false, bool $formElementOnly = false)
     {
         $this->inline          = $inline;
@@ -62,7 +78,18 @@ final class OrganisationFormElement extends FormElement
         $element->setAttribute('data-live-search', 'true');
         $element->setAttribute('data-abs-ajax-url', 'organisation/json/search.json');
 
-        $element->setValue($element->getValue());
+        //When we have a value, inject the corresponding contact in the value options
+        if (null !== $element->getValue()) {
+            $value = $element->getValue();
+            if ($element->getValue() instanceof Organisation) {
+                $value = $element->getValue()->getId();
+            }
+
+            $organisation = $this->organisationService->findOrganisationById((int)$value);
+            if (null !== $organisation) {
+                $element->setValueOptions([$organisation->getId() => $organisation->parseFormName()]);
+            }
+        }
 
         return parent::render($element);
     }

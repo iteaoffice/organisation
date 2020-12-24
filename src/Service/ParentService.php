@@ -90,10 +90,21 @@ class ParentService extends AbstractService
         );
     }
 
-    public function parentCanBeDeleted(Entity\OParent $parent): bool
+    public function canDeleteParent(Entity\OParent $parent): bool
     {
         return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty()
             && $parent->getInvoiceExtra()->isEmpty();
+    }
+
+    public function canDeleteType(Entity\Parent\Type $type): bool
+    {
+        $cannotDeleteType = [];
+
+        if (! $type->getParent()->isEmpty()) {
+            $cannotDeleteType[] = 'This type still has parents';
+        }
+
+        return count($cannotDeleteType) === 0;
     }
 
     public function findActiveParentWhichAreNoMember(array $filter): QueryBuilder
@@ -222,7 +233,7 @@ class ParentService extends AbstractService
         ?int $year = null
     ): ArrayCollection {
         /** @var \Affiliation\Repository\Affiliation $repository */
-        $repository = $this->entityManager->getRepository(Affiliation::class);
+        $repository   = $this->entityManager->getRepository(Affiliation::class);
         $affiliations = $repository->findAffiliationByParentAndProgramAndWhich($parent, $program, $which, $year);
 
         if (null === $affiliations) {
@@ -304,10 +315,10 @@ class ParentService extends AbstractService
          * 1.8% * SUM FREE RIDERS * FUNDING BY C CHAMBER / 3 * MEMBERSHIPS * SUM OF FUNDING OF ALL C CHAMBERS
          *
          */
-        $sumOfFreeRiders = $this->versionService->findTotalFundingVersionByFreeRidersInVersion($version);
-        $sumOfFundingByCChamber = $this->versionService->findTotalFundingVersionByParentAndVersion($parent, $version);
+        $sumOfFreeRiders         = $this->versionService->findTotalFundingVersionByFreeRidersInVersion($version);
+        $sumOfFundingByCChamber  = $this->versionService->findTotalFundingVersionByParentAndVersion($parent, $version);
         $sumOfFundingByCChambers = $this->versionService->findTotalFundingVersionByCChambersInVersion($version);
-        $amountOfMemberships = $this->parseMembershipFactor($parent);
+        $amountOfMemberships     = $this->parseMembershipFactor($parent);
 
         if ($amountOfMemberships === 0 || $sumOfFundingByCChambers < 0.001) {
             return (float)0;
@@ -381,9 +392,9 @@ class ParentService extends AbstractService
 
             //Initialize the array
             if (! array_key_exists($call->getId(), $projects)) {
-                $projects[$call->getId()]['affiliation'] = [];
-                $projects[$call->getId()]['call'] = $call;
-                $projects[$call->getId()]['totalFunding'] = 0;
+                $projects[$call->getId()]['affiliation']       = [];
+                $projects[$call->getId()]['call']              = $call;
+                $projects[$call->getId()]['totalFunding']      = 0;
                 $projects[$call->getId()]['totalContribution'] = 0;
             }
 
@@ -394,7 +405,7 @@ class ParentService extends AbstractService
                 continue;
             }
 
-            $funding = $this->versionService->findTotalFundingVersionByAffiliationAndVersion(
+            $funding      = $this->versionService->findTotalFundingVersionByAffiliationAndVersion(
                 $affiliation,
                 $latestVersion
             );
@@ -406,13 +417,13 @@ class ParentService extends AbstractService
             );
 
             $projects[$call->getId()]['affiliation'][] = [
-                'affiliation' => $affiliation,
-                'funding' => $funding,
+                'affiliation'  => $affiliation,
+                'funding'      => $funding,
                 'contribution' => $contribution
             ];
 
 
-            $projects[$call->getId()]['totalFunding'] += $funding;
+            $projects[$call->getId()]['totalFunding']      += $funding;
             $projects[$call->getId()]['totalContribution'] += $contribution;
         }
 

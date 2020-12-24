@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Controller;
+namespace Organisation\Controller\Parent;
 
 use Contact\Entity\Address;
 use Contact\Entity\AddressType;
@@ -21,21 +21,21 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Entity\Country;
 use General\Service\CountryService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
+use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Project\Service\ProjectService;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Paginator\Paginator;
-use Laminas\View\Model\ViewModel;
 
 /**
- * Class ParentFinancialController
- *
- * @package Organisation\Controller
+ * Class FinancialController
+ * @package Organisation\Controller\Parent
  */
-final class ParentFinancialController extends OrganisationAbstractController
+final class FinancialController extends OrganisationAbstractController
 {
     private ParentService $parentService;
     private ContactService $contactService;
@@ -54,13 +54,13 @@ final class ParentFinancialController extends OrganisationAbstractController
         EntityManager $entityManager,
         TranslatorInterface $translator
     ) {
-        $this->parentService = $parentService;
-        $this->contactService = $contactService;
-        $this->projectService = $projectService;
-        $this->countryService = $countryService;
+        $this->parentService       = $parentService;
+        $this->contactService      = $contactService;
+        $this->projectService      = $projectService;
+        $this->countryService      = $countryService;
         $this->organisationService = $organisationService;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+        $this->entityManager       = $entityManager;
+        $this->translator          = $translator;
     }
 
     public function newAction()
@@ -85,7 +85,7 @@ final class ParentFinancialController extends OrganisationAbstractController
         );
 
         $formData['attention'] = $parent->getContact()->getDisplayName();
-        $formData['contact'] = $parent->getContact()->getId();
+        $formData['contact']   = $parent->getContact()->getId();
 
         if (
             null !== (
@@ -96,7 +96,7 @@ final class ParentFinancialController extends OrganisationAbstractController
         ) {
             $formData['address'] = $financialAddress->getAddress();
             $formData['zipCode'] = $financialAddress->getZipCode();
-            $formData['city'] = $financialAddress->getCity();
+            $formData['city']    = $financialAddress->getCity();
             $formData['country'] = $financialAddress->getCountry()->getId();
         }
 
@@ -212,7 +212,7 @@ final class ParentFinancialController extends OrganisationAbstractController
             $formData['organisationFinancial'] = $financial->getOrganisation()->getFinancial()->getId();
         }
         $formData['attention'] = $financial->getContact()->getDisplayName();
-        $formData['contact'] = $financial->getContact()->getId();
+        $formData['contact']   = $financial->getContact()->getId();
         //$form->get('contact')->injectContact($financial->getContact());
 
         //Try to find the financial address
@@ -221,7 +221,7 @@ final class ParentFinancialController extends OrganisationAbstractController
         if (null !== $financialAddress) {
             $formData['address'] = $financialAddress->getAddress();
             $formData['zipCode'] = $financialAddress->getZipCode();
-            $formData['city'] = $financialAddress->getCity();
+            $formData['city']    = $financialAddress->getCity();
             $formData['country'] = $financialAddress->getCountry()->getId();
         }
 
@@ -324,9 +324,9 @@ final class ParentFinancialController extends OrganisationAbstractController
 
     public function noFinancialAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
+        $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $parentQuery = $this->parentService
+        $parentQuery  = $this->parentService
             ->findActiveParentWithoutFinancial($filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));

@@ -145,6 +145,13 @@ class Organisation extends AbstractEntity
      */
     private $country;
     /**
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\Board", cascade={"persist"}, mappedBy="organisation")
+     * @Annotation\Exclude()
+     *
+     * @var \Organisation\Entity\Board
+     */
+    private $board;
+    /**
      * @ORM\OneToMany(targetEntity="Project\Entity\Idea\Partner", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
@@ -306,6 +313,7 @@ class Organisation extends AbstractEntity
         $this->affiliationFinancial   = new Collections\ArrayCollection();
         $this->contactOrganisation    = new Collections\ArrayCollection();
         $this->parentFinancial        = new Collections\ArrayCollection();
+        $this->board                  = new Collections\ArrayCollection();
         $this->names                  = new Collections\ArrayCollection();
         $this->log                    = new Collections\ArrayCollection();
         $this->logo                   = new Collections\ArrayCollection();
@@ -360,6 +368,11 @@ class Organisation extends AbstractEntity
     public function parseFullName(): string
     {
         return (string)$this->organisation;
+    }
+
+    public function parseFormName(): string
+    {
+        return trim(sprintf('%s (%s)', $this->organisation, $this->country->getIso3()));
     }
 
     public function getId()
@@ -741,6 +754,17 @@ class Organisation extends AbstractEntity
     public function setIdeaMeetingParticipant($ideaMeetingParticipant): Organisation
     {
         $this->ideaMeetingParticipant = $ideaMeetingParticipant;
+        return $this;
+    }
+
+    public function getBoard()
+    {
+        return $this->board;
+    }
+
+    public function setBoard($board): Organisation
+    {
+        $this->board = $board;
         return $this;
     }
 }

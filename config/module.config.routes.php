@@ -150,13 +150,13 @@ return [
             ],
             'zfcadmin'     => [
                 'child_routes' => [
-                    'organisation'      => [
+                    'organisation' => [
                         'type'          => 'Segment',
                         'priority'      => 1000,
                         'options'       => [
                             'route'    => '/organisation',
                             'defaults' => [
-                                'controller' => Controller\OrganisationAdminController::class,
+                                'controller' => Controller\Organisation\AdminController::class,
                                 'action'     => 'index',
                             ],
                         ],
@@ -242,7 +242,7 @@ return [
                                 'options'       => [
                                     'route'    => '/financial',
                                     'defaults' => [
-                                        'controller' => Controller\OrganisationFinancialController::class,
+                                        'controller' => Controller\Organisation\FinancialController::class,
                                         'action'     => 'index',
                                     ],
                                 ],
@@ -378,6 +378,55 @@ return [
                                     ],
                                 ],
                             ],
+                            'type'            => [
+                                'type'          => 'Segment',
+                                'options'       => [
+                                    'route'    => '/type',
+                                    'defaults' => [
+                                        'controller' => Controller\Organisation\TypeController::class,
+                                        'action'     => 'index',
+                                    ],
+                                ],
+                                'may_terminate' => false,
+                                'child_routes'  => [
+                                    'list' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                                            'defaults' => [
+                                                'action' => 'list',
+                                            ],
+                                        ],
+                                    ],
+                                    'new'  => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/new.html',
+                                            'defaults' => [
+                                                'action' => 'new',
+                                            ],
+                                        ],
+                                    ],
+                                    'edit' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
+                                    ],
+                                    'view' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/view/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'view',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
                             'selection'       => [
                                 'type'          => 'Segment',
                                 'options'       => [
@@ -443,7 +492,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'export'             => [
+                                    'export'   => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/export/[:type]/[:id].html',
@@ -456,13 +505,13 @@ return [
                             ],
                         ],
                     ],
-                    'organisation-type' => [
+                    'board'        => [
                         'type'          => 'Segment',
                         'options'       => [
-                            'route'    => '/organisation-type',
+                            'route'    => '/board',
                             'defaults' => [
-                                'controller' => Controller\OrganisationTypeController::class,
-                                'action'     => 'index',
+                                'controller' => Controller\BoardController::class,
+                                'action'     => 'list',
                             ],
                         ],
                         'may_terminate' => false,
@@ -479,18 +528,9 @@ return [
                             'new'  => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/new.html',
+                                    'route'    => '/new[/organisation-:organisationId].html',
                                     'defaults' => [
                                         'action' => 'new',
-                                    ],
-                                ],
-                            ],
-                            'edit' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/edit/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'edit',
                                     ],
                                 ],
                             ],
@@ -503,9 +543,18 @@ return [
                                     ],
                                 ],
                             ],
+                            'edit' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/edit/[:id].html',
+                                    'defaults' => [
+                                        'action' => 'edit',
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
-                    'parent'            => [
+                    'parent'       => [
                         'type'          => 'Segment',
                         'options'       => [
                             'route'    => '/parent',
@@ -569,7 +618,7 @@ return [
                                     'route'    => '/financial',
                                     'defaults' => [
                                         'action'     => 'not-found',
-                                        'controller' => Controller\ParentFinancialController::class
+                                        'controller' => Controller\Parent\FinancialController::class
                                     ],
                                 ],
                                 'child_routes' => [
@@ -679,7 +728,7 @@ return [
                                 'options'       => [
                                     'route'    => '/organisation',
                                     'defaults' => [
-                                        'controller' => Controller\ParentOrganisationController::class,
+                                        'controller' => Controller\Parent\OrganisationController::class,
                                         'action'     => 'index',
                                     ],
                                 ],
@@ -737,7 +786,7 @@ return [
                                 'options'       => [
                                     'route'    => '/doa',
                                     'defaults' => [
-                                        'controller' => Controller\ParentDoaController::class,
+                                        'controller' => Controller\Parent\DoaController::class,
                                         'action'     => 'index',
                                     ],
                                 ],
@@ -781,101 +830,52 @@ return [
                                     ],
                                 ],
                             ],
-                        ],
-                    ],
-                    'parent-type'       => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/parent-type',
-                            'defaults' => [
-                                'controller' => Controller\ParentTypeController::class,
-                                'action'     => 'index',
-                            ],
-                        ],
-                        'may_terminate' => false,
-                        'child_routes'  => [
-                            'list' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                            'type'                                     => [
+                                'type'          => 'Segment',
+                                'options'       => [
+                                    'route'    => '/type',
                                     'defaults' => [
-                                        'action' => 'list',
+                                        'controller' => Controller\Parent\TypeController::class,
+                                        'action'     => 'index',
                                     ],
                                 ],
-                            ],
-                            'new'  => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/new.html',
-                                    'defaults' => [
-                                        'action' => 'new',
+                                'may_terminate' => false,
+                                'child_routes'  => [
+                                    'list' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/list[/f-:encodedFilter][/page-:page].html',
+                                            'defaults' => [
+                                                'action' => 'list',
+                                            ],
+                                        ],
                                     ],
-                                ],
-                            ],
-                            'edit' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/edit/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'edit',
+                                    'new'  => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/new.html',
+                                            'defaults' => [
+                                                'action' => 'new',
+                                            ],
+                                        ],
                                     ],
-                                ],
-                            ],
-                            'view' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/view/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'view',
+                                    'edit' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/edit/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'edit',
+                                            ],
+                                        ],
                                     ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'parent-status'     => [
-                        'type'          => 'Segment',
-                        'options'       => [
-                            'route'    => '/parent-status',
-                            'defaults' => [
-                                'controller' => Controller\ParentStatusController::class,
-                                'action'     => 'index',
-                            ],
-                        ],
-                        'may_terminate' => false,
-                        'child_routes'  => [
-                            'list' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/list[/f-:encodedFilter][/page-:page].html',
-                                    'defaults' => [
-                                        'action' => 'list',
-                                    ],
-                                ],
-                            ],
-                            'new'  => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/new.html',
-                                    'defaults' => [
-                                        'action' => 'new',
-                                    ],
-                                ],
-                            ],
-                            'edit' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/edit/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'edit',
-                                    ],
-                                ],
-                            ],
-                            'view' => [
-                                'type'    => 'Segment',
-                                'options' => [
-                                    'route'    => '/view/[:id].html',
-                                    'defaults' => [
-                                        'action' => 'view',
+                                    'view' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/view/[:id].html',
+                                            'defaults' => [
+                                                'action' => 'view',
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],

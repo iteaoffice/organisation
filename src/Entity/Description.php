@@ -17,8 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Laminas\Form\Annotation;
 
 /**
- * Description.
- *
  * @ORM\Table(name="organisation_description")
  * @ORM\Entity
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
@@ -52,71 +50,41 @@ class Description extends AbstractEntity
      */
     private $organisation;
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->description;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Description
-     */
-    public function setId($id)
+    public function setId(?int $id): Description
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return Description
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): Description
     {
         $this->description = $description;
-
         return $this;
     }
 
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return Description
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation(?Organisation $organisation): Description
     {
         $this->organisation = $organisation;
-
         return $this;
     }
 }

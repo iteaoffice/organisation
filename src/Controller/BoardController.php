@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -15,42 +15,45 @@ namespace Organisation\Controller;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
-use Organisation\Entity;
-use Organisation\Form;
-use Organisation\Service\FormService;
-use Organisation\Service\ParentService;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
+use Organisation\Entity;
+use Organisation\Service\BoardService;
+use Organisation\Service\FormService;
+use Search\Form\SearchFilter;
 
 /**
- * Class ParentTypeController
- *
+ * Class BoardController
  * @package Organisation\Controller
  */
-final class ParentTypeController extends OrganisationAbstractController
+final class BoardController extends OrganisationAbstractController
 {
-    private ParentService $parentService;
+    private BoardService $boardService;
     private FormService $formService;
+    private TranslatorInterface $translator;
 
-    public function __construct(ParentService $parentService, FormService $formService)
+    public function __construct(BoardService $boardService, FormService $formService, TranslatorInterface $translator)
     {
-        $this->parentService = $parentService;
-        $this->formService = $formService;
+        $this->boardService = $boardService;
+        $this->formService  = $formService;
+        $this->translator   = $translator;
     }
+
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
-        $organisationQuery = $this->parentService->findFiltered(Entity\Parent\Type::class, $filterPlugin->getFilter());
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
+        $organisationQuery = $this->boardService->findFiltered(Entity\Board::class, $filterPlugin->getFilter());
 
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
+        $paginator
+            = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentTypeFilter();
-
+        $form = new SearchFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         return new ViewModel(
@@ -68,21 +71,22 @@ final class ParentTypeController extends OrganisationAbstractController
     {
         $data = $this->getRequest()->getPost()->toArray();
 
-        $form = $this->formService->prepare(Entity\Parent\Type::class, $data);
+        $form = $this->formService->prepare(Entity\Board::class, $data);
         $form->remove('delete');
+
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/parent-type/list');
+                return $this->redirect()->toRoute('zfcadmin/board/list');
             }
 
             if ($form->isValid()) {
-                /* @var $parentType Entity\Parent\Type */
-                $parentType = $form->getData();
+                /* @var $board Entity\Board */
+                $board = $form->getData();
 
-                $result = $this->parentService->save($parentType);
+                $result = $this->boardService->save($board);
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent-type/view',
+                    'zfcadmin/board/view',
                     [
                         'id' => $result->getId(),
                     ]
@@ -93,38 +97,46 @@ final class ParentTypeController extends OrganisationAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-
     public function editAction()
     {
-        $parentType = $this->parentService->find(Entity\Parent\Type::class, (int)$this->params('id'));
+        $board = $this->boardService->find(Entity\Board::class, (int)$this->params('id'));
 
-        if (null === $parentType) {
+        if (null === $board) {
             return $this->notFoundAction();
         }
 
         $data = $this->getRequest()->getPost()->toArray();
-
-        $form = $this->formService->prepare($parentType, $data);
+        $form = $this->formService->prepare($board, $data);
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent-type/view',
+                    'zfcadmin/board/view',
                     [
-                        'id' => $parentType->getId(),
+                        'id' => $board->getId(),
+                    ]
+                );
+            }
+
+            if (isset($data['delete'])) {
+                $this->boardService->delete($board);
+                return $this->redirect()->toRoute(
+                    'zfcadmin/board/list',
+                    [
+                        'id' => $board->getId(),
                     ]
                 );
             }
 
             if ($form->isValid()) {
-                /* @var $parentType Entity\Parent\Type */
-                $parentType = $form->getData();
+                /* @var $board Entity\Board */
+                $board = $form->getData();
 
-                $result = $this->parentService->save($parentType);
+                $this->boardService->save($board);
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent-type/view',
+                    'zfcadmin/board/view',
                     [
-                        'id' => $result->getId(),
+                        'id' => $board->getId(),
                     ]
                 );
             }
@@ -133,15 +145,14 @@ final class ParentTypeController extends OrganisationAbstractController
         return new ViewModel(['form' => $form]);
     }
 
-
     public function viewAction(): ViewModel
     {
-        $type = $this->parentService->find(Entity\Parent\Type::class, (int)$this->params('id'));
+        $board = $this->boardService->find(Entity\Board::class, (int)$this->params('id'));
 
-        if (null === $type) {
+        if (null === $board) {
             return $this->notFoundAction();
         }
 
-        return new ViewModel(['type' => $type]);
+        return new ViewModel(['board' => $board]);
     }
 }

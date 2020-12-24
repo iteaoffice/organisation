@@ -29,21 +29,21 @@ use Laminas\Form\Annotation;
 class Type extends AbstractEntity
 {
     public const NO_INVOICE = 0;
-    public const INVOICE = 1;
+    public const INVOICE    = 1;
 
-    public const TYPE_IFC = 1;
+    public const TYPE_IFC            = 1;
     public const TYPE_LARGE_INDUSTRY = 2;
-    public const TYPE_SME = 3;
-    public const TYPE_RESEARCH = 4;
-    public const TYPE_UNIVERSITY = 5;
-    public const TYPE_GOVERNMENT = 6;
-    public const TYPE_OTHER = 7;
-    public const TYPE_UNKNOWN = 8;
+    public const TYPE_SME            = 3;
+    public const TYPE_RESEARCH       = 4;
+    public const TYPE_UNIVERSITY     = 5;
+    public const TYPE_GOVERNMENT     = 6;
+    public const TYPE_OTHER          = 7;
+    public const TYPE_UNKNOWN        = 8;
 
     protected static array $invoiceTemplates
         = [
             self::NO_INVOICE => 'txt-invoice',
-            self::INVOICE => 'txt-no-invoice',
+            self::INVOICE    => 'txt-no-invoice',
         ];
     /**
      * @ORM\Column(name="type_id", type="integer", options={"unsigned":true})

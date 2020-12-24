@@ -1,22 +1,20 @@
-{% do headTitle().append(translate("txt-parent-type-list")) %}
+{% do headTitle().append(translate("txt-organisation-type-list")) %}
 
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
 
 {% set filter = form.get('filter') %}
-
-<h1>{{ translate("txt-parent-type-list") }} {{ parentTypeLink(null,'new', 'button') }}</h1>
+<h1>{{ translate("txt-organisation-type-list") }} {{ organisationTypeLink(null,'new', 'button') }}</h1>
 
 <div class="row">
     <div class="col-md-6">
-        <p class="lead">{{ translate("txt-parent-type-list-explanation") }}</p>
+        <p class="lead">{{ translate("txt-organisation-type-list-explanation") }}</p>
     </div>
     <div class="col-md-6">
         <div class="input-group">
             {{ formelement(filter.get('search')) }}
             <div class="input-group-append input-group-btn">
                 {{ formelement(form.get('submit')) }}
-                {{ formelement(form.get('clear')) }}
             </div>
         </div>
     </div>
@@ -27,21 +25,23 @@
         <thead>
         <tr>
             <th>{{ translate("txt-id") }}</th>
-            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/parent-type/view', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
-            <th>{{ translate("txt-amount-of-parents") }}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/type/list', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+            <th>{{ translate("txt-description") }}</th>
+            <th>{{ translate("txt-invoice") }}</th>
         </tr>
         </thead>
         <tfoot>
         <tr>
-            <td colspan="3"></td>
+            <td colspan="4"></td>
         </tr>
         </tfoot>
         <tbody>
         {% for type in paginator.getCurrentItems() %}
             <tr>
                 <td><small class="text-muted">{{ type.id }}</small></td>
-                <td>{{ parentTypeLink(type, 'view', 'name') }} {{ parentTypeLink(type, 'edit', 'icon') }}</td>
-                <td>{{ type.parent.count() }}</td>
+                <td>{{ organisationTypeLink(type, 'view', 'name') }} {{ organisationTypeLink(type, 'edit', 'icon') }}</td>
+                <td>{{ type.description }}</td>
+                <td>{{ translate(type.getInvoice(true)) }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -49,7 +49,8 @@
 
     {% include 'application/partial/pagination-control' %}
 {% else %}
-    {{ ztbalert().info(translate("txt-no-parent-types-found"))|raw }}
+    {{ ztbalert().info(translate("txt-no-organisation-types-found"))|raw }}
 {% endif %}
+
 
 {{ form().closeTag()|raw }}

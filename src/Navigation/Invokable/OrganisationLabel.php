@@ -19,9 +19,9 @@ declare(strict_types=1);
 namespace Organisation\Navigation\Invokable;
 
 use General\Navigation\Invokable\AbstractNavigationInvokable;
+use Laminas\Navigation\Page\Mvc;
 use Organisation\Entity\Note;
 use Organisation\Entity\Organisation;
-use Laminas\Navigation\Page\Mvc;
 
 /**
  * Class OrganisationLabel
@@ -32,6 +32,8 @@ final class OrganisationLabel extends AbstractNavigationInvokable
 {
     public function __invoke(Mvc $page): void
     {
+        $label = $this->translator->translate('txt-nav-view');
+
         if ($this->getEntities()->containsKey(Organisation::class)) {
             /** @var Organisation $organisation */
             $organisation = $this->getEntities()->get(Organisation::class);
@@ -49,9 +51,9 @@ final class OrganisationLabel extends AbstractNavigationInvokable
                 ['id' => $note->getOrganisation()->getId()]
             ));
             $label = (string)$note->getOrganisation();
-        } else {
-            $label = $this->translator->translate('txt-nav-view');
         }
-        $page->set('label', $label);
+        if (null === $page->getLabel()) {
+            $page->set('label', $label);
+        }
     }
 }

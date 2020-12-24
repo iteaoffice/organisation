@@ -20,8 +20,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Laminas\Form\Annotation;
 
 /**
- * Entity for the Organisation.
- *
  * @ORM\Table(name="organisation_parent")
  * @ORM\Entity(repositoryClass="Organisation\Repository\OParent")
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")

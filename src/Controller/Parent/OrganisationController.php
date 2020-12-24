@@ -1,7 +1,7 @@
 <?php
 
 /**
-*
+ *
  * @author      Johan van der Heide <johan.van.der.heide@itea3.org>
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  * @license     https://itea3.org/license.txt proprietary
@@ -11,29 +11,29 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Controller;
+namespace Organisation\Controller\Parent;
 
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
 use Contact\Entity\Contact;
 use Contact\Service\ContactService;
+use Laminas\Http\Request;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Laminas\View\Model\ViewModel;
+use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\ParentService;
 use Project\Entity\Project;
 use Project\Service\ProjectService;
-use Laminas\Http\Request;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
-use Laminas\View\Model\ViewModel;
 
 /**
- * Class ParentOrganisationController
- *
- * @package Organisation\Controller
+ * Class OrganisationController
+ * @package Organisation\Controller\Parent
  */
-final class ParentOrganisationController extends OrganisationAbstractController
+final class OrganisationController extends OrganisationAbstractController
 {
     private ParentService $parentService;
     private ProjectService $projectService;
@@ -50,12 +50,12 @@ final class ParentOrganisationController extends OrganisationAbstractController
         FormService $formService,
         TranslatorInterface $translator
     ) {
-        $this->parentService = $parentService;
-        $this->projectService = $projectService;
+        $this->parentService      = $parentService;
+        $this->projectService     = $projectService;
         $this->affiliationService = $affiliationService;
-        $this->contactService = $contactService;
-        $this->formService = $formService;
-        $this->translator = $translator;
+        $this->contactService     = $contactService;
+        $this->formService        = $formService;
+        $this->translator         = $translator;
     }
 
 
@@ -240,7 +240,7 @@ final class ParentOrganisationController extends OrganisationAbstractController
                 $project = $this->projectService->findProjectById((int)$formData['project']);
                 /** @var Contact $contact */
                 $contact = $this->contactService->findContactById((int)$formData['contact']);
-                $branch = $formData['branch'];
+                $branch  = $formData['branch'];
 
                 $affiliation = new Affiliation();
                 $affiliation->setProject($project);

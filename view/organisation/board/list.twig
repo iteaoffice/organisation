@@ -1,0 +1,58 @@
+{% do headTitle().append(translate("txt-board-organisation-list")) %}
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+{% set filter = form.get('filter') %}
+<h1>{{ translate("txt-board-organisation-list") }} {{ boardLink(null,'new', 'button') }}</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <p class="lead">{{ translate("txt-board-organisation-list-explanation") }}</p>
+    </div>
+    <div class="col-md-6">
+        <div class="input-group">
+            {{ formelement(filter.get('search')) }}
+            <div class="input-group-append input-group-btn">
+                {{ formelement(form.get('submit')) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-id") }}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/board/list', 'criteria': 'organisation', 'text': translate("txt-organisation")} %}</a></th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/board/list', 'criteria': 'cluster', 'text': translate("txt-cluster")} %}</a></th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/board/list', 'criteria': 'date-signed', 'text': translate("txt-date-signed")} %}</a></th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/board/list', 'criteria': 'date-end', 'text': translate("txt-date-end")} %}</a></th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="5"></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for board in paginator.getCurrentItems() %}
+            <tr {% if not board.isActive() %}class="table-danger"{% endif %}>
+                <td><small class="text-muted">{{ board.id }}</small></td>
+                <td>{{ boardLink(board, 'view', 'name') }} {{ boardLink(board, 'edit', 'icon') }}</td>
+                <td>{{ clusterLink(board.cluster, 'view','name') }}</td>
+                <td>{{ board.dateSigned|date("d F Y") }}</td>
+                <td>{% if board.dateEnd %}{{ board.dateEnd|date("d F Y") }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'application/partial/pagination-control' %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-board-organisations-found"))|raw }}
+{% endif %}
+
+
+{{ form().closeTag()|raw }}

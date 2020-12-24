@@ -16,8 +16,6 @@ namespace Organisation\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OrganisationBooth.
- *
  * @ORM\Table(name="organisation_booth")
  * @ORM\Entity
  */
@@ -53,91 +51,52 @@ class Booth extends AbstractEntity
      */
     private $contact;
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return sprintf("Booth %s on %s", $this->organisation, $this->booth);
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Booth
-     */
-    public function setId($id)
+    public function setId(?int $id): Booth
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return \Event\Entity\Booth\Booth
-     */
-    public function getBooth()
+    public function getBooth(): ?\Event\Entity\Booth\Booth
     {
         return $this->booth;
     }
 
-    /**
-     * @param \Event\Entity\Booth\Booth $booth
-     *
-     * @return Booth
-     */
-    public function setBooth($booth)
+    public function setBooth(?\Event\Entity\Booth\Booth $booth): Booth
     {
         $this->booth = $booth;
-
         return $this;
     }
 
-    /**
-     * @return Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
 
-    /**
-     * @param Organisation $organisation
-     *
-     * @return Booth
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation(?Organisation $organisation): Booth
     {
         $this->organisation = $organisation;
-
         return $this;
     }
 
-    /**
-     * @return \Contact\Entity\Contact
-     */
-    public function getContact()
+    public function getContact(): ?\Contact\Entity\Contact
     {
         return $this->contact;
     }
 
-    /**
-     * @param \Contact\Entity\Contact $contact
-     *
-     * @return Booth
-     */
-    public function setContact($contact)
+    public function setContact(?\Contact\Entity\Contact $contact): Booth
     {
         $this->contact = $contact;
-
         return $this;
     }
 }

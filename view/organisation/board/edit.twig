@@ -1,0 +1,26 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-edit-board-organisation")) %}
+
+<h1>{{ translate("txt-edit-board-organisation") }}</h1>
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+{% set board = form.get('organisation_entity_board') %}
+
+{{ ztbformelement(board.get('id')) }}
+{{ ztbformelement(board.get('dateSigned')) }}
+{{ ztbformelement(board.get('dateEnd')) }}
+{{ organisationformelement(board.get('organisation')) }}
+{{ ztbformelement(board.get('cluster')) }}
+
+<div class="form-group row">
+    <div class="offset-sm-3 col-sm-9">
+        {{ ztbformelement(form.get('csrf')) }}
+        {{ ztbformelement(form.get('submit')) }}
+        {{ ztbformelement(form.get('cancel')) }}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
+

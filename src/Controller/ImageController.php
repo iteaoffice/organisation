@@ -16,10 +16,10 @@ declare(strict_types=1);
 
 namespace Organisation\Controller;
 
+use Laminas\Http\Response;
 use Organisation\Entity\Logo;
 use Organisation\Entity\UpdateLogo;
 use Organisation\Service\OrganisationService;
-use Laminas\Http\Response;
 
 /**
  * Class ImageController
@@ -42,6 +42,7 @@ final class ImageController extends OrganisationAbstractController
 
         /** @var Logo $logo */
         $logo = $this->organisationService->find(Logo::class, (int) $this->params('id'));
+
 
         if (null === $logo) {
             return $response;

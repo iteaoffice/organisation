@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Controller;
+namespace Organisation\Controller\Organisation;
 
 use Affiliation\Entity\Affiliation;
 use Affiliation\Service\AffiliationService;
@@ -25,6 +25,7 @@ use Exception;
 use General\Service\GeneralService;
 use Invoice\Search\Service\InvoiceSearchService;
 use Invoice\Service\InvoiceService;
+use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Web;
@@ -58,7 +59,7 @@ use function sprintf;
  *
  * @package Organisation\Controller
  */
-class OrganisationAdminController extends OrganisationAbstractController
+class AdminController extends OrganisationAbstractController
 {
     private OrganisationService $organisationService;
     private OrganisationSearchService $searchService;
@@ -302,9 +303,6 @@ class OrganisationAdminController extends OrganisationAbstractController
         );
     }
 
-    /**
-     * @return Response|ViewModel
-     */
     public function newAction()
     {
         $organisation = new Organisation();

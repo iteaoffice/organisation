@@ -24,6 +24,9 @@ use Doctrine\ORM\QueryBuilder;
 use Event\Entity\Meeting\Meeting;
 use General\Entity\Country;
 use Interop\Container\ContainerInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Stdlib\Parameters;
+use Laminas\Validator\EmailAddress;
 use Organisation\Entity;
 use Organisation\Repository;
 use Organisation\Search\Service\OrganisationSearchService;
@@ -35,9 +38,6 @@ use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Stdlib\Parameters;
-use Laminas\Validator\EmailAddress;
 
 use function array_count_values;
 use function array_keys;
@@ -61,16 +61,16 @@ use function trim;
 class OrganisationService extends AbstractService implements SearchUpdateInterface
 {
     private ContainerInterface $container;
-    private $organisationSearchService;
-    private $translator;
+    private OrganisationSearchService $organisationSearchService;
+    private TranslatorInterface $translator;
 
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container->get(EntityManager::class));
 
-        $this->container = $container;
+        $this->container                 = $container;
         $this->organisationSearchService = $container->get(OrganisationSearchService::class);
-        $this->translator = $container->get(TranslatorInterface::class);
+        $this->translator                = $container->get(TranslatorInterface::class);
     }
 
     public static function determineBranch(string $givenName, string $organisation): string
@@ -359,7 +359,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
     public function prepareSearchUpdate($organisation): AbstractQuery
     {
         $searchClient = new Client();
-        $update = $searchClient->createUpdate();
+        $update       = $searchClient->createUpdate();
 
         /** @var Document $organisationDocument */
         $organisationDocument = $update->createDocument();
@@ -438,20 +438,20 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
                 continue;
             }
 
-            $projectId = $project->getId();
+            $projectId                     = $project->getId();
             $projectsOnWebsite[$projectId] = $projectId;
         }
 
-        $projects = [];
+        $projects     = [];
         $affiliations = [];
 
         foreach ($organisation->getAffiliation() as $affiliation) {
             $project = $affiliation->getProject();
 
-            $projectId = $project->getId();
+            $projectId     = $project->getId();
             $affiliationId = $affiliation->getId();
 
-            $projects[$projectId] = $projectId;
+            $projects[$projectId]         = $projectId;
             $affiliations[$affiliationId] = $affiliationId;
         }
 
@@ -607,9 +607,9 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
     }
 
     /**
-     * @param string  $name
+     * @param string $name
      * @param Country $country
-     * @param bool    $onlyMain
+     * @param bool $onlyMain
      *
      * @return Entity\Organisation[]
      */
@@ -685,7 +685,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
     public function updateCollectionInSearchEngine(bool $clearIndex = false): void
     {
         $organisationItems = $this->findAll(Entity\Organisation::class);
-        $collection = [];
+        $collection        = [];
 
         /** @var Entity\Organisation $organisation */
         foreach ($organisationItems as $organisation) {

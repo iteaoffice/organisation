@@ -107,6 +107,7 @@ return [
             EntityManager::class
         ],
         OrganisationFormElement::class                                        => [
+            Service\OrganisationService::class,
             'ViewHelperManager',
             TranslatorInterface::class
         ],
@@ -135,6 +136,9 @@ return [
             InvoiceService::class,
             Service\ParentService::class,
             ContactService::class,
+        ],
+        Service\BoardService::class                                           => [
+            EntityManager::class
         ],
         Service\SelectionService::class                                       => [
             EntityManager::class

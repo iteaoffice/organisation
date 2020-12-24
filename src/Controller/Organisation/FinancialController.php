@@ -11,27 +11,28 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Controller;
+namespace Organisation\Controller\Organisation;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Entity\VatType;
 use General\Service\GeneralService;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Paginator\Paginator;
+use Laminas\View\Model\ViewModel;
+use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Entity\Financial;
 use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Paginator\Paginator;
-use Laminas\View\Model\ViewModel;
 
 /**
  * Class OrganisationFinancialController
  *
  * @package Organisation\Controller
  */
-final class OrganisationFinancialController extends OrganisationAbstractController
+final class FinancialController extends OrganisationAbstractController
 {
     private OrganisationService $organisationService;
     private FormService $formService;
@@ -45,15 +46,15 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
         TranslatorInterface $translator
     ) {
         $this->organisationService = $organisationService;
-        $this->formService = $formService;
-        $this->generalService = $generalService;
-        $this->translator = $translator;
+        $this->formService         = $formService;
+        $this->generalService      = $generalService;
+        $this->translator          = $translator;
     }
 
     public function listAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->organisationService->findOrganisationFinancialList($filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
@@ -140,7 +141,7 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
                 if ($data['vatType'] === '0') {
                     $financial->setVatType(new ArrayCollection());
                 } else {
-                    $vatType = $this->generalService->find(VatType::class, (int)$data['vatType']);
+                    $vatType         = $this->generalService->find(VatType::class, (int)$data['vatType']);
                     $arrayCollection = new ArrayCollection();
                     $arrayCollection->add($vatType);
                     $financial->setVatType($arrayCollection);
@@ -178,8 +179,8 @@ final class OrganisationFinancialController extends OrganisationAbstractControll
 
     public function noFinancialAction(): ViewModel
     {
-        $page = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
         $organisationQuery = $this->organisationService
             ->findActiveOrganisationWithoutFinancial($filterPlugin->getFilter());
 

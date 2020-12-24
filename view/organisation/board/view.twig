@@ -1,0 +1,22 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-board-organisation")) %}
+{% do headTitle().append(board.organisation.parseFullName()) %}
+
+<h1>{{ board }} {{ boardLink(board, 'edit','button') }}</h1>
+
+{% if not board.isActive() %}
+    {{ ztbalert().danger(translate("txt-this-board-company-is-not-active"))|raw }}
+{% endif %}
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-organisation") }}</dt>
+    <dd>{{ organisationLink(board.organisation,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-cluster") }}</dt>
+    <dd>{{ clusterLink(board.cluster,'view','name') }}</dd>
+    <dt>{{ translate("txt-date-signed") }}</dt>
+    <dd>{{ board.dateSigned|date('d F Y') }}</dd>
+    {% if board.dateEnd %}
+        <dt>{{ translate("txt-date-end") }}</dt>
+        <dd>{{ board.dateEnd|date('d F Y') }}</dd>
+    {% endif %}
+</dl>

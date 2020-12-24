@@ -129,7 +129,7 @@ final class SelectionController extends OrganisationAbstractController
 
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf(
-                        $this->translator->translate('txt-query-of-organisation-selection-%s-has-successfully-been-removed'),
+                        $this->translator->translate('txt-query-of-organisation-selection-%s-has-been-updated-successfully'),
                         $selection->getSelection()
                     )
                 );
@@ -158,7 +158,7 @@ final class SelectionController extends OrganisationAbstractController
         $data = $this->getRequest()->getPost()->toArray();
         $form = $this->formService->prepare($selection, $data);
 
-        if (! $this->selectionService->canRemoveSelection($selection)) {
+        if (! $this->selectionService->canDeleteSelection($selection)) {
             $form->remove('delete');
         }
 
@@ -167,7 +167,7 @@ final class SelectionController extends OrganisationAbstractController
                 return $this->redirect()->toRoute('zfcadmin/organisation/selection/view', ['id' => $selection->getId()]);
             }
 
-            if (isset($data['delete']) && $this->selectionService->canRemoveSelection($selection)) {
+            if (isset($data['delete']) && $this->selectionService->canDeleteSelection($selection)) {
                 $this->selectionService->delete($selection);
 
                 $this->flashMessenger()->addSuccessMessage(

@@ -40,7 +40,7 @@
                 {% for parent in paginator.getCurrentItems() %}
 
                     {% set hasWrongParentChild = parentService.hasWrongParentChildRelationship(parent) %}
-                    {% set canBeDeleted = parentService.parentCanBeDeleted(parent) %}
+                    {% set canBeDeleted = parentService.canDeleteParent(parent) %}
 
                     <tr class="{% if hasWrongParentChild %}table-danger{% endif %} {% if canBeDeleted %}table-warning{% endif %}">
                         <td>

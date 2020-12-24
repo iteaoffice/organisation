@@ -41,7 +41,7 @@ final class TypeLink extends AbstractLink
             case 'new':
                 $linkParams = [
                     'icon' => 'fas fa-plus',
-                    'route' => 'zfcadmin/parent-type/new',
+                    'route' => 'zfcadmin/parent/type/new',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-new-parent-type')
                 ];
@@ -49,7 +49,7 @@ final class TypeLink extends AbstractLink
             case 'edit':
                 $linkParams = [
                     'icon' => 'far fa-edit',
-                    'route' => 'zfcadmin/parent-type/edit',
+                    'route' => 'zfcadmin/parent/type/edit',
                     'text' => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-parent-type')
                 ];
@@ -57,7 +57,7 @@ final class TypeLink extends AbstractLink
             case 'view':
                 $linkParams = [
                     'icon' => 'fas fa-link',
-                    'route' => 'zfcadmin/parent-type/view',
+                    'route' => 'zfcadmin/parent/type/view',
                     'text' => $showOptions[$show] ?? $type->getType()
                 ];
                 break;

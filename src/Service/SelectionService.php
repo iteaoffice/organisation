@@ -26,7 +26,7 @@ use Organisation\Repository;
  */
 class SelectionService extends AbstractService
 {
-    public function canRemoveSelection(Entity\Selection $selection): bool
+    public function canDeleteSelection(Entity\Selection $selection): bool
     {
         $cannotRemoveSelection = [];
 

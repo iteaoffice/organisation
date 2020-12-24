@@ -25,7 +25,7 @@ use General\Entity\Country;
 use Invoice\Entity\Invoice;
 use Invoice\Entity\Journal;
 use Invoice\Entity\Reminder;
-use Organisation\Controller\OrganisationAdminController;
+use Organisation\Controller\AdminController;
 use Organisation\Controller\Plugin\MergeOrganisation;
 use Organisation\Entity\Booth;
 use Organisation\Entity\Description;
@@ -356,7 +356,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
     {
         $contact = new Contact();
         $contact->setId(1);
-        $controllerMock = $this->getMockBuilder(OrganisationAdminController::class)
+        $controllerMock = $this->getMockBuilder(AdminController::class)
             ->disableOriginalConstructor()
             ->setMethods(['identity'])
             ->getMock();

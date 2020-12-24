@@ -69,100 +69,69 @@ class Logo extends AbstractEntity
      */
     private $organisation;
 
-    /**
-     * @return mixed
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId($id): Logo
     {
         $this->id = $id;
+        return $this;
     }
 
-
-    /**
-     * @return \General\Entity\ContentType
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * @param \General\Entity\ContentType $contentType
-     */
-    public function setContentType($contentType)
-    {
-        $this->contentType = $contentType;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDateUpdated()
-    {
-        return $this->dateUpdated;
-    }
-
-    /**
-     * @param \DateTime $dateUpdated
-     */
-    public function setDateUpdated($dateUpdated)
-    {
-        $this->dateUpdated = $dateUpdated;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLogoExtension()
-    {
-        return $this->logoExtension;
-    }
-
-    /**
-     * @param string $logoExtension
-     */
-    public function setLogoExtension($logoExtension)
-    {
-        $this->logoExtension = $logoExtension;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getOrganisationLogo()
     {
         return $this->organisationLogo;
     }
 
-    /**
-     * @param string $organisationLogo
-     */
-    public function setOrganisationLogo($organisationLogo)
+    public function setOrganisationLogo($organisationLogo): Logo
     {
         $this->organisationLogo = $organisationLogo;
+        return $this;
+    }
+
+    public function getLogoExtension(): ?string
+    {
+        return $this->logoExtension;
+    }
+
+    public function setLogoExtension(?string $logoExtension): Logo
+    {
+        $this->logoExtension = $logoExtension;
+        return $this;
+    }
+
+    public function getContentType(): ?\General\Entity\ContentType
+    {
+        return $this->contentType;
+    }
+
+    public function setContentType(?\General\Entity\ContentType $contentType): Logo
+    {
+        $this->contentType = $contentType;
+        return $this;
+    }
+
+    public function getDateUpdated(): ?\DateTime
+    {
+        return $this->dateUpdated;
+    }
+
+    public function setDateUpdated(?\DateTime $dateUpdated): Logo
+    {
+        $this->dateUpdated = $dateUpdated;
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): Logo
+    {
+        $this->organisation = $organisation;
+        return $this;
     }
 }

@@ -376,7 +376,7 @@ final class ParentController extends OrganisationAbstractController
         $form->get($parent->get('underscore_entity_name'))->get('organisation')
             ->injectOrganisation($parent->getOrganisation());
 
-        if (! $this->parentService->parentCanBeDeleted($parent)) {
+        if (! $this->parentService->canDeleteParent($parent)) {
             $form->remove('delete');
         }
 
@@ -385,7 +385,7 @@ final class ParentController extends OrganisationAbstractController
                 return $this->redirect()->toRoute('zfcadmin/parent/list');
             }
 
-            if (isset($data['delete']) && $this->parentService->parentCanBeDeleted($parent)) {
+            if (isset($data['delete']) && $this->parentService->canDeleteParent($parent)) {
                 $this->flashMessenger()->addSuccessMessage(
                     sprintf($this->translator->translate('txt-parent-%s-has-successfully-been-deleted'), $parent)
                 );

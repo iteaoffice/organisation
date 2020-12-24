@@ -11,23 +11,23 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Controller;
+namespace Organisation\Controller\Organisation;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
+use Organisation\Controller\OrganisationAbstractController;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 
 /**
- * Class OrganisationTypeController
- *
+ * Class TypeController
  * @package Organisation\Controller
  */
-final class OrganisationTypeController extends OrganisationAbstractController
+final class TypeController extends OrganisationAbstractController
 {
     private OrganisationService $organisationService;
     private FormService $formService;
@@ -37,7 +37,6 @@ final class OrganisationTypeController extends OrganisationAbstractController
         $this->organisationService = $organisationService;
         $this->formService         = $formService;
     }
-
 
     public function listAction(): ViewModel
     {
@@ -77,7 +76,7 @@ final class OrganisationTypeController extends OrganisationAbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/organisation-type/list');
+                return $this->redirect()->toRoute('zfcadmin/organisation/type/list');
             }
 
             if ($form->isValid()) {
@@ -86,7 +85,7 @@ final class OrganisationTypeController extends OrganisationAbstractController
 
                 $result = $this->organisationService->save($type);
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation-type/view',
+                    'zfcadmin/organisation/type/view',
                     [
                         'id' => $result->getId(),
                     ]
@@ -106,13 +105,26 @@ final class OrganisationTypeController extends OrganisationAbstractController
         }
 
         $data = $this->getRequest()->getPost()->toArray();
-
         $form = $this->formService->prepare($type, $data);
+
+        if (! $this->organisationService->canDeleteType($type)) {
+            $form->remove('delete');
+        }
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation-type/view',
+                    'zfcadmin/organisation/type/view',
+                    [
+                        'id' => $type->getId(),
+                    ]
+                );
+            }
+
+            if (isset($data['delete']) && $this->organisationService->canDeleteOrganisation($type)) {
+                $this->organisationService->delete($type);
+                return $this->redirect()->toRoute(
+                    'zfcadmin/organisation/type/list',
                     [
                         'id' => $type->getId(),
                     ]
@@ -125,7 +137,7 @@ final class OrganisationTypeController extends OrganisationAbstractController
 
                 $this->organisationService->save($type);
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation-type/view',
+                    'zfcadmin/organisation/type/view',
                     [
                         'id' => $type->getId(),
                     ]

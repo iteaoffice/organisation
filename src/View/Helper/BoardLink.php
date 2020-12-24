@@ -15,28 +15,28 @@ namespace Organisation\View\Helper;
 
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
-use Organisation\Entity\Note;
+use Organisation\Entity\Board;
 use Organisation\Entity\Organisation;
 
 /**
- * Class NoteLink
+ * Class BoardLink
  * @package Organisation\View\Helper
  */
-final class NoteLink extends AbstractLink
+final class BoardLink extends AbstractLink
 {
     public function __invoke(
-        Note $note = null,
+        Board $board = null,
         string $action = 'view',
         string $show = 'name',
         Organisation $organisation = null
     ): string {
-        $note ??= new Note();
+        $board ??= new Board();
 
         $routeParams = [];
         $showOptions = [];
-        if (! $note->isEmpty()) {
-            $routeParams['id']   = $note->getId();
-            $showOptions['name'] = $note->getNote();
+        if (! $board->isEmpty()) {
+            $routeParams['id']   = $board->getId();
+            $showOptions['name'] = $board->getOrganisation()->parseFullName();
         }
 
         if (null !== $organisation) {
@@ -47,17 +47,25 @@ final class NoteLink extends AbstractLink
             case 'new':
                 $linkParams = [
                     'icon'  => 'fas fa-plus',
-                    'route' => 'zfcadmin/organisation/note/new',
+                    'route' => 'zfcadmin/board/new',
                     'text'  => $showOptions[$show]
-                        ?? $this->translator->translate('txt-new-note')
+                        ?? $this->translator->translate('txt-create-board-organisation')
+                ];
+                break;
+            case 'view':
+                $linkParams = [
+                    'icon'  => 'fas fa-file',
+                    'route' => 'zfcadmin/board/view',
+                    'text'  => $showOptions[$show]
+                        ?? $board->getOrganisation()->parseFullName()
                 ];
                 break;
             case 'edit':
                 $linkParams = [
                     'icon'  => 'far fa-edit',
-                    'route' => 'zfcadmin/organisation/note/edit',
+                    'route' => 'zfcadmin/board/edit',
                     'text'  => $showOptions[$show]
-                        ?? $this->translator->translate('txt-edit-note')
+                        ?? $this->translator->translate('txt-edit-board-organisation')
                 ];
                 break;
         }

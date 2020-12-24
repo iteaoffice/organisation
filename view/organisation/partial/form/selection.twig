@@ -3,6 +3,7 @@
 
 {% set selectionForm = form.get('organisation_entity_selection') %}
 
+    {{ ztbformelement(selectionForm.get('id')) }}
     {{ ztbformelement(selectionForm.get('selection')) }}
     {{ ztbformelement(selectionForm.get('description')) }}
     {{ ztbformelement(selectionForm.get('tag')) }}

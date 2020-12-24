@@ -9,6 +9,8 @@
  * @copyright   Copyright (c) 2019 ITEA Office (https://itea3.org)
  */
 
+namespace Organisation;
+
 return [
     'navigation' => [
         'community' => [],
@@ -20,21 +22,20 @@ return [
                 'route'    => 'zfcadmin/organisation/list',
                 'resource' => 'zfcadmin',
                 'pages'    => [
-                    'organisation-list'           => [
+                    'organisation'           => [
                         'label' => _('txt-nav-organisation-list'),
                         'order' => 10,
                         'route' => 'zfcadmin/organisation/list',
                         'pages' => [
                             'organisation'     => [
-                                'label'   => _('txt-nav-project-partner'),
                                 'route'   => 'zfcadmin/organisation/view',
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Organisation\Entity\Organisation::class,
+                                        'id' => Entity\Organisation::class,
                                     ],
                                     'invokables' => [
-                                        Organisation\Navigation\Invokable\OrganisationLabel::class,
+                                        Navigation\Invokable\OrganisationLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
@@ -44,7 +45,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Organisation::class,
+                                                'id' => Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -54,7 +55,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Organisation::class,
+                                                'id' => Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -64,7 +65,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Organisation::class,
+                                                'id' => Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -74,7 +75,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Organisation::class,
+                                                'id' => Entity\Organisation::class,
                                             ],
                                         ],
                                     ],
@@ -84,7 +85,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\Organisation::class,
+                                                'id' => Entity\Organisation::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'organisationId',
@@ -97,7 +98,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Note::class,
+                                                'id' => Entity\Note::class,
                                             ],
                                         ],
                                     ],
@@ -107,7 +108,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\Organisation::class,
+                                                'id' => Entity\Organisation::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'targetId',
@@ -133,10 +134,10 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Organisation\Entity\OParent::class,
+                                        'id' => Entity\OParent::class,
                                     ],
                                     'invokables' => [
-                                        Organisation\Navigation\Invokable\ParentLabel::class,
+                                        Navigation\Invokable\ParentLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
@@ -146,7 +147,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\OParent::class,
+                                                'id' => Entity\OParent::class,
                                             ],
                                         ],
                                     ],
@@ -156,10 +157,10 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\Parent\Financial::class,
+                                                'id' => Entity\Parent\Financial::class,
                                             ],
                                             'invokables' => [
-                                                Organisation\Navigation\Invokable\Parent\FinancialLabel::class,
+                                                Navigation\Invokable\Parent\FinancialLabel::class,
                                             ],
                                         ],
                                     ],
@@ -169,7 +170,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\OParent::class,
+                                                'id' => Entity\OParent::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'parentId'
@@ -182,7 +183,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\OParent::class,
+                                                'id' => Entity\OParent::class,
                                             ],
                                         ],
                                     ],
@@ -192,7 +193,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\OParent::class,
+                                                'id' => Entity\OParent::class,
                                             ],
                                         ],
                                     ],
@@ -202,7 +203,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\OParent::class,
+                                                'id' => Entity\OParent::class,
                                             ],
                                         ],
                                     ],
@@ -211,10 +212,10 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\Parent\Organisation::class,
+                                                'id' => Entity\Parent\Organisation::class,
                                             ],
                                             'invokables' => [
-                                                Organisation\Navigation\Invokable\Parent\OrganisationLabel::class,
+                                                Navigation\Invokable\Parent\OrganisationLabel::class,
                                             ],
                                         ],
                                         'pages'   => [
@@ -224,7 +225,7 @@ return [
                                                 'visible' => false,
                                                 'params'  => [
                                                     'entities' => [
-                                                        'id' => Organisation\Entity\Parent\Organisation::class,
+                                                        'id' => Entity\Parent\Organisation::class,
                                                     ],
                                                 ],
                                             ],
@@ -234,7 +235,7 @@ return [
                                                 'visible' => false,
                                                 'params'  => [
                                                     'entities' => [
-                                                        'id' => Organisation\Entity\Parent\Organisation::class,
+                                                        'id' => Entity\Parent\Organisation::class,
                                                     ],
                                                 ],
                                             ],
@@ -244,7 +245,7 @@ return [
                                                 'visible' => false,
                                                 'params'  => [
                                                     'entities' => [
-                                                        'id' => Organisation\Entity\Parent\Organisation::class,
+                                                        'id' => Entity\Parent\Organisation::class,
                                                     ],
                                                 ],
                                             ],
@@ -257,7 +258,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\OParent::class,
+                                                'id' => Entity\OParent::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'parentId',
@@ -270,10 +271,10 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\Parent\Doa::class,
+                                                'id' => Entity\Parent\Doa::class,
                                             ],
                                             'invokables' => [
-                                                Organisation\Navigation\Invokable\Parent\DoaLabel::class,
+                                                Navigation\Invokable\Parent\DoaLabel::class,
                                             ],
                                         ],
                                     ],
@@ -294,6 +295,41 @@ return [
                         'order' => 30,
                         'route' => 'zfcadmin/organisation/financial/list',
                     ],
+                    'board'                       => [
+                        'label' => _('txt-board-company-list'),
+                        'route' => 'zfcadmin/board/list',
+                        'order' => 35,
+                        'pages' => [
+                            'parent-type-view' => [
+                                'route'   => 'zfcadmin/board/view',
+                                'visible' => false,
+                                'params'  => [
+                                    'entities'   => [
+                                        'id' => Entity\Board::class,
+                                    ],
+                                    'invokables' => [
+                                        Navigation\Invokable\BoardLabel::class,
+                                    ],
+                                ],
+                                'pages'   => [
+                                    'parent-type-edit' => [
+                                        'label'   => _('txt-edit-board-company'),
+                                        'route'   => 'zfcadmin/board/edit',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Entity\Board::class,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'parent-new'       => [
+                                'label' => _('txt-new-board-company'),
+                                'route' => 'zfcadmin/board/new',
+                            ],
+                        ],
+                    ],
                     'selection'                   => [
                         'label' => _('txt-organisation-selection-list'),
                         'order' => 40,
@@ -304,10 +340,10 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Organisation\Entity\Selection::class,
+                                        'id' => Entity\Selection::class,
                                     ],
                                     'invokables' => [
-                                        Organisation\Navigation\Invokable\SelectionLabel::class,
+                                        Navigation\Invokable\SelectionLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
@@ -317,7 +353,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Selection::class,
+                                                'id' => Entity\Selection::class,
                                             ],
                                         ],
                                     ],
@@ -327,7 +363,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Selection::class,
+                                                'id' => Entity\Selection::class,
                                             ],
                                         ],
                                     ],
@@ -337,7 +373,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Selection::class,
+                                                'id' => Entity\Selection::class,
                                             ],
                                         ],
                                     ],
@@ -355,27 +391,27 @@ return [
                 'pages' => [
                     'organisation-type-list' => [
                         'label' => _('txt-organisation-type-list'),
-                        'route' => 'zfcadmin/organisation-type/list',
+                        'route' => 'zfcadmin/organisation/type/list',
                         'pages' => [
                             'organisation-type-view' => [
-                                'route'   => 'zfcadmin/organisation-type/view',
+                                'route'   => 'zfcadmin/organisation/type/view',
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Organisation\Entity\Type::class,
+                                        'id' => Entity\Type::class,
                                     ],
                                     'invokables' => [
-                                        Organisation\Navigation\Invokable\TypeLabel::class,
+                                        Navigation\Invokable\TypeLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
                                     'organisation-type-edit' => [
                                         'label'   => _('txt-edit-organisation-type'),
-                                        'route'   => 'zfcadmin/organisation-type/edit',
+                                        'route'   => 'zfcadmin/organisation/type/edit',
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Type::class,
+                                                'id' => Entity\Type::class,
                                             ],
                                         ],
                                     ],
@@ -383,33 +419,33 @@ return [
                             ],
                             'organisation-type-new'  => [
                                 'label' => _('txt-create-new-organisation-type'),
-                                'route' => 'zfcadmin/organisation-type/new',
+                                'route' => 'zfcadmin/organisation/type/new',
                             ],
                         ],
                     ],
                     'parent-type-list'       => [
                         'label' => _('txt-parent-type-list'),
-                        'route' => 'zfcadmin/parent-type/list',
+                        'route' => 'zfcadmin/parent/type/list',
                         'pages' => [
                             'parent-type-view' => [
-                                'route'   => 'zfcadmin/parent-type/view',
+                                'route'   => 'zfcadmin/parent/type/view',
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Organisation\Entity\Parent\Type::class,
+                                        'id' => Entity\Parent\Type::class,
                                     ],
                                     'invokables' => [
-                                        Organisation\Navigation\Invokable\Parent\TypeLabel::class,
+                                        Navigation\Invokable\Parent\TypeLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
                                     'parent-type-edit' => [
                                         'label'   => _('txt-edit-parent-type'),
-                                        'route'   => 'zfcadmin/parent-type/edit',
+                                        'route'   => 'zfcadmin/parent/type/edit',
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Organisation\Entity\Parent\Type::class,
+                                                'id' => Entity\Parent\Type::class,
                                             ],
                                         ],
                                     ],
@@ -417,7 +453,7 @@ return [
                             ],
                             'parent-new'       => [
                                 'label' => _('txt-create-new-parent-type'),
-                                'route' => 'zfcadmin/parent-type/new',
+                                'route' => 'zfcadmin/parent/type/new',
                             ],
                         ],
                     ],
@@ -460,10 +496,10 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Organisation\Entity\Update::class,
+                                        'id' => Entity\Update::class,
                                     ],
                                     'invokables' => [
-                                        Organisation\Navigation\Invokable\UpdateLabel::class,
+                                        Navigation\Invokable\UpdateLabel::class,
                                     ],
                                 ],
                                 'pages'   => [
@@ -473,10 +509,10 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Organisation\Entity\Update::class,
+                                                'id' => Entity\Update::class,
                                             ],
                                             'invokables' => [
-                                                Organisation\Navigation\Invokable\UpdateLabel::class,
+                                                Navigation\Invokable\UpdateLabel::class,
                                             ],
                                         ],
                                     ],

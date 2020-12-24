@@ -73,7 +73,7 @@ final class SelectionLink extends AbstractLink
                 break;
             case 'edit-sql':
                 $linkParams = [
-                    'icon'  => 'far fa-edit',
+                    'icon'  => 'fas fa-code',
                     'route' => 'zfcadmin/organisation/selection/edit-sql',
                     'text'  => $showOptions[$show]
                         ?? $this->translator->translate('txt-edit-sql')
