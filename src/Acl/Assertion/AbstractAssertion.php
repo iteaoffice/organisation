@@ -39,36 +39,18 @@ use function strpos;
  */
 abstract class AbstractAssertion implements AssertionInterface
 {
-    /**
-     * @var Contact
-     */
-    protected $contact;
-    /**
-     * @var string
-     */
-    protected $privilege;
-    /**
-     * @var RouteMatch
-     */
-    protected $routeMatch;
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-    /**
-     * @var ContactService
-     */
-    protected $contactService;
-    /**
-     * @var AdminService
-     */
-    private $adminService;
+    protected ?Contact $contact;
+    protected ?string $privilege = null;
+    protected RouteMatch $routeMatch;
+    protected ContainerInterface $container;
+    protected ContactService $contactService;
+    private AdminService $adminService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
+        $this->container      = $container;
         $this->contactService = $container->get(ContactService::class);
-        $this->adminService = $container->get(AdminService::class);
+        $this->adminService   = $container->get(AdminService::class);
 
         $this->contact = new Contact();
         if ($container->get(AuthenticationService::class)->hasIdentity()) {

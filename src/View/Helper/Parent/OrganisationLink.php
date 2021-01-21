@@ -14,7 +14,7 @@ namespace Organisation\View\Helper\Parent;
 
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
-use Organisation\Acl\Assertion\Parent\Organisation as OrganisationAssertion;
+use Organisation\Acl\Assertion\Parent\OrganisationAssertion;
 use Organisation\Entity\Parent\Organisation;
 
 /**

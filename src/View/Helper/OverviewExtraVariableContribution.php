@@ -15,7 +15,7 @@ namespace Organisation\View\Helper;
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Invoice\Service\InvoiceService;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Project\Service\ProjectService;
@@ -43,7 +43,7 @@ class OverviewExtraVariableContribution
         $this->contactService = $contactService;
     }
 
-    public function __invoke(OParent $parent, Program $program, int $year): string
+    public function __invoke(ParentEntity $parent, Program $program, int $year): string
     {
         $invoiceMethod = $this->invoiceService->findInvoiceMethod($program);
 

@@ -15,6 +15,10 @@ namespace Organisation\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
+/**
+ * Class InvokableFactory
+ * @package Organisation\Factory
+ */
 final class InvokableFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)

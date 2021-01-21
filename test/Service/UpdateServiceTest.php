@@ -34,70 +34,68 @@ use Testing\Util\AbstractServiceTest;
  */
 class UpdateServiceTest extends AbstractServiceTest
 {
-    public function testFindPendingUpdates()
+    public function testFindPendingUpdates(): void
     {
         $repositoryMock = $this->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['findBy'])
+            ->onlyMethods(['findBy'])
             ->getMock();
-        $repositoryMock->expects($this->once())
+        $repositoryMock->expects(self::once())
             ->method('findBy')
-            ->with($this->equalTo(['dateApproved' => null]), $this->equalTo(['dateCreated' => Criteria::ASC]))
+            ->with(self::equalTo(['dateApproved' => null]), self::equalTo(['dateCreated' => Criteria::ASC]))
             ->willReturn([]);
-/** @var EntityManager $entityManagerMock */
         $entityManagerMock = $this->getEntityManagerMock(Update::class, $repositoryMock);
-/** @var EmailService $emailServiceMock */
-        $emailServiceMock = $this->getEmailServiceMock();
-        $service = new UpdateService($entityManagerMock, $emailServiceMock);
-        $this->assertEquals([], $service->findPendingUpdates());
+        $emailServiceMock  = $this->getEmailServiceMock();
+        $service           = new UpdateService($entityManagerMock, $emailServiceMock);
+        self::assertEquals([], $service->findPendingUpdates());
     }
 
-    public function testCountPendingUpdates()
+    public function testCountPendingUpdates(): void
     {
         $repositoryMock = $this->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['count'])
+            ->onlyMethods(['count'])
             ->getMock();
-        $repositoryMock->expects($this->once())
+        $repositoryMock->expects(self::once())
             ->method('count')
-            ->with($this->equalTo(['dateApproved' => null]))
+            ->with(self::equalTo(['dateApproved' => null]))
             ->willReturn(1);
-/** @var EntityManager $entityManagerMock */
+
         $entityManagerMock = $this->getEntityManagerMock(Update::class, $repositoryMock);
-/** @var EmailService $emailServiceMock */
-        $emailServiceMock = $this->getEmailServiceMock();
-        $service = new UpdateService($entityManagerMock, $emailServiceMock);
-        $this->assertEquals(1, $service->countPendingUpdates());
+        $emailServiceMock  = $this->getEmailServiceMock();
+        $service           = new UpdateService($entityManagerMock, $emailServiceMock);
+
+        self::assertEquals(1, $service->countPendingUpdates());
     }
 
-    public function testHasUpdates()
+    public function testHasUpdates(): void
     {
-        $organisation = new Organisation();
+        $organisation   = new Organisation();
         $repositoryMock = $this->getMockBuilder(EntityRepository::class)
             ->disableOriginalConstructor()
-            ->setMethods(['count'])
+            ->onlyMethods(['count'])
             ->getMock();
-        $repositoryMock->expects($this->once())
+        $repositoryMock->expects(self::once())
             ->method('count')
-            ->with($this->equalTo(['dateApproved' => null, 'organisation' => $organisation]))
+            ->with(self::equalTo(['dateApproved' => null, 'organisation' => $organisation]))
             ->willReturn(1);
-/** @var EntityManager $entityManagerMock */
+
         $entityManagerMock = $this->getEntityManagerMock(Update::class, $repositoryMock);
-/** @var EmailService $emailServiceMock */
         $emailServiceMock = $this->getEmailServiceMock();
-        $service = new UpdateService($entityManagerMock, $emailServiceMock);
-        $this->assertTrue($service->hasPendingUpdates($organisation));
+
+        $service          = new UpdateService($entityManagerMock, $emailServiceMock);
+        self::assertTrue($service->hasPendingUpdates($organisation));
     }
 
-    public function testApproveUpdate()
+    public function testApproveUpdate(): void
     {
         $organisation     = new Organisation();
         $organisationType = new Type();
         $organisationType->setId(1);
-        $contact          = new Contact();
-        $contentType      = new ContentType();
+        $contact     = new Contact();
+        $contentType = new ContentType();
         $contentType->setId(1);
-        $logo             = new UpdateLogo();
+        $logo = new UpdateLogo();
         $logo->setId(1);
         $logo->setContentType($contentType);
         $logo->setLogoExtension('jpg');
@@ -108,23 +106,21 @@ class UpdateServiceTest extends AbstractServiceTest
         $update->setDescription('Test');
         $update->setType($organisationType);
         $update->setLogo($logo);
-/** @var EntityManager $entityManagerMock */
+
         $entityManagerMock = $this->getEntityManagerMock();
-/** @var EmailService|MockObject $emailServiceMock */
+        /** @var EmailService|MockObject $emailServiceMock */
         $emailServiceMock = $this->getEmailServiceMock();
-        $emailServiceMock->expects($this->once())
-            ->method('addTo')
-            ->with($contact);
+
         $service = new UpdateService($entityManagerMock, $emailServiceMock);
-        $result = $service->approveUpdate($update);
-/** @var Logo $logo */
+        $result  = $service->approveUpdate($update);
+        /** @var Logo $logo */
         $logo = $organisation->getLogo()->first();
-        $this->assertTrue($result);
-        $this->assertInstanceOf(DateTime::class, $update->getDateApproved());
-        $this->assertEquals(1, $organisation->getType()->getId());
-        $this->assertEquals('Test', $organisation->getDescription()->getDescription());
-        $this->assertEquals(1, $logo->getContentType()->getId());
-        $this->assertEquals('jpg', $logo->getLogoExtension());
-        $this->assertEquals('some-binary-string', $logo->getOrganisationLogo());
+        self::assertTrue($result);
+        self::assertInstanceOf(DateTime::class, $update->getDateApproved());
+        self::assertEquals(1, $organisation->getType()->getId());
+        self::assertEquals('Test', $organisation->getDescription()->getDescription());
+        self::assertEquals(1, $logo->getContentType()->getId());
+        self::assertEquals('jpg', $logo->getLogoExtension());
+        self::assertEquals('some-binary-string', $logo->getOrganisationLogo());
     }
 }

@@ -17,17 +17,17 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
-use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Controller\AbstractController;
 use Organisation\Entity;
-use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\ParentService;
+use Search\Form\SearchFilter;
 
 /**
  * Class TypeController
  * @package Organisation\Controller\Parent
  */
-final class TypeController extends OrganisationAbstractController
+final class TypeController extends AbstractController
 {
     private ParentService $parentService;
     private FormService $formService;
@@ -51,8 +51,7 @@ final class TypeController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentTypeFilter();
-
+        $form = new SearchFilter();
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         return new ViewModel(

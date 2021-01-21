@@ -14,7 +14,7 @@ namespace Organisation\View\Helper\Parent;
 
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
-use Organisation\Acl\Assertion\Parent\Financial as ParentFinancialAssertion;
+use Organisation\Acl\Assertion\Parent\FinancialAssertion;
 use Organisation\Entity;
 
 /**
@@ -27,11 +27,11 @@ final class FinancialLink extends AbstractLink
         Entity\Parent\Financial $financial = null,
         string $action = 'view',
         string $show = 'text',
-        Entity\OParent $parent = null
+        Entity\ParentEntity $parent = null
     ): string {
         $financial ??= new Entity\Parent\Financial();
 
-        if (! $this->hasAccess($financial, ParentFinancialAssertion::class, $action)) {
+        if (! $this->hasAccess($financial, FinancialAssertion::class, $action)) {
             return '';
         }
 

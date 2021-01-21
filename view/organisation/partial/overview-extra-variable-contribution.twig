@@ -39,7 +39,7 @@
             </tfoot>
             <tbody>
 
-            {% set activeFreeRiders = affiliationService.findAffiliationByProjectAndWhichAndCriterion(project, constant("Organisation\\Entity\\OParent::CRITERION_FREE_RIDER"), constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) %}
+            {% set activeFreeRiders = affiliationService.findAffiliationByProjectAndWhichAndCriterion(project, constant("Organisation\\Entity\\ParentEntity::CRITERION_FREE_RIDER"), constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) %}
 
             {% for affiliation in affiliationService.findAffiliationByProjectAndWhich(project, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE") ) %}
 
@@ -54,8 +54,8 @@
                         <td>{{ translate(affiliation.parentOrganisation.parent.memberType(true)) }}</td>
                         <td>{% for doa in affiliation.parentOrganisation.parent.doa %}{{ doa }} {% endfor %}</td>
                         <td>
-                            {% if affiliation.parentOrganisation.parent.artemisiaMemberType != constant("Organisation\\Entity\\OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER") %}A{% endif %}
-                            {% if affiliation.parentOrganisation.parent.epossMemberType != constant("Organisation\\Entity\\OParent::EPOSS_MEMBER_TYPE_NO_MEMBER") %}E{% endif %}
+                            {% if affiliation.parentOrganisation.parent.artemisiaMemberType != constant("Organisation\\Entity\\ParentEntity::ARTEMISIA_MEMBER_TYPE_NO_MEMBER") %}A{% endif %}
+                            {% if affiliation.parentOrganisation.parent.epossMemberType != constant("Organisation\\Entity\\ParentEntity::EPOSS_MEMBER_TYPE_NO_MEMBER") %}E{% endif %}
 
                         </td>
                         <td class="text-right">

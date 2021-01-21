@@ -20,7 +20,7 @@ use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_board")
- * @ORM\Entity(repositoryClass="Organisation\Repository\Board")
+ * @ORM\Entity(repositoryClass="Organisation\Repository\BoardRepository")
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_board")
  */
@@ -72,7 +72,7 @@ class Board extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, inversedBy="board")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     * @Annotation\Type("Organisation\Form\Element\Organisation")
+     * @Annotation\Type("Organisation\Form\Element\OrganisationElement")
      * @Annotation\Options({"help-block":"txt-organisation-board-cluster-help-block"})
      * @Annotation\Attributes({"label":"txt-organisation-board-organisation-label"})
      *

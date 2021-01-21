@@ -15,14 +15,12 @@ namespace Organisation\Entity\Parent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Organisation\Entity\AbstractEntity;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Laminas\Form\Annotation;
 
 /**
- * Entity for the Parent Organisation.
- *
  * @ORM\Table(name="organisation_parent_organisation")
- * @ORM\Entity(repositoryClass="Organisation\Repository\Parent\Organisation")
+ * @ORM\Entity(repositoryClass="Organisation\Repository\Parent\OrganisationRepository")
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_parent_organisation")
  */
@@ -37,14 +35,14 @@ class Organisation extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="parentOrganisation", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="parentOrganisation", cascade="persist")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      *
-     * @Annotation\Type("Organisation\Form\Element\OParent")
+     * @Annotation\Type("Organisation\Form\Element\ParentElement")
      * @Annotation\Attributes({"label":"txt-parent-organisation-parent-label"})
      * @Annotation\Options({"help-block":"txt-parent-organisation-parent-help-block"})
      *
-     * @var \Organisation\Entity\OParent
+     * @var \Organisation\Entity\ParentEntity
      */
     private $parent;
     /**
@@ -60,7 +58,7 @@ class Organisation extends AbstractEntity
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, inversedBy="parentOrganisation")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     * @Annotation\Type("Organisation\Form\Element\Organisation")
+     * @Annotation\Type("Organisation\Form\Element\OrganisationElement")
      * @Annotation\Attributes({"label":"txt-parent-organisation-organisation-label"})
      * @Annotation\Options({"help-block":"txt-parent-organisation-organisation-help-block"})
      *
@@ -88,48 +86,48 @@ class Organisation extends AbstractEntity
         return (string)$this->organisation->getOrganisation();
     }
 
-    public function getOrganisation()
+    public function getOrganisation(): \Organisation\Entity\Organisation
     {
         return $this->organisation;
     }
 
-    public function setOrganisation($organisation)
+    public function setOrganisation($organisation): Organisation
     {
         $this->organisation = $organisation;
 
         return $this;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): Organisation
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function getParent()
+    public function getParent(): ParentEntity
     {
         return $this->parent;
     }
 
-    public function setParent(OParent $parent): Organisation
+    public function setParent(ParentEntity $parent): Organisation
     {
         $this->parent = $parent;
 
         return $this;
     }
 
-    public function getContact()
+    public function getContact(): \Contact\Entity\Contact
     {
         return $this->contact;
     }
 
-    public function setContact($contact)
+    public function setContact($contact): Organisation
     {
         $this->contact = $contact;
 
@@ -141,7 +139,7 @@ class Organisation extends AbstractEntity
         return $this->affiliation;
     }
 
-    public function setAffiliation($affiliation)
+    public function setAffiliation($affiliation): Organisation
     {
         $this->affiliation = $affiliation;
 

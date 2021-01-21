@@ -103,6 +103,11 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             && $organisation->getResult()->isEmpty();
     }
 
+    public function canDeleteType(Entity\Type $type): bool
+    {
+        return $type->getOrganisation()->isEmpty();
+    }
+
     public function findOrganisationById(int $id): ?Entity\Organisation
     {
         return $this->entityManager->getRepository(Entity\Organisation::class)->find($id);
@@ -120,7 +125,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function findActiveOrganisationWithoutFinancial($filter): QueryBuilder
     {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findActiveOrganisationWithoutFinancial($filter);
@@ -128,7 +133,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function findDuplicateOrganisations($filter): Query
     {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findDuplicateOrganisations($filter);
@@ -165,7 +170,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function findOrganisationForProfileEditByContact(Contact $contact): array
     {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationForProfileEditByContact($contact);
@@ -191,7 +196,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function findOrganisationFinancialList(array $filter): Query
     {
-        /** @var Repository\Financial $repository */
+        /** @var Repository\FinancialRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Financial::class);
 
         return $repository->findOrganisationFinancialList($filter);
@@ -219,7 +224,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $this->entityManager->find(Contact::class, (int)$contactId);
     }
 
-    public function findOrganisationByDocRef(string $docRef)
+    public function findOrganisationByDocRef(string $docRef): ?Entity\Organisation
     {
         return $this->entityManager->getRepository(Entity\Organisation::class)->findOneBy(['docRef' => $docRef]);
     }
@@ -267,7 +272,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function findInactiveOrganisations(): array
     {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findInactiveOrganisations();
@@ -287,7 +292,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         Country $country,
         string $emailAddress
     ): array {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByNameCountryAndEmailAddress($name, $country, $emailAddress);
@@ -599,7 +604,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         Country $country,
         bool $onlyMain = true
     ): ?Entity\Organisation {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByNameCountry($name, $country, $onlyMain);
@@ -612,9 +617,9 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
      *
      * @return Entity\Organisation[]
      */
-    public function findOrganisationsByNameCountry(string $name, Country $country, bool $onlyMain = true)
+    public function findOrganisationsByNameCountry(string $name, Country $country, bool $onlyMain = true): array
     {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationsByNameCountry($name, $country, $onlyMain);
@@ -624,7 +629,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         Meeting $meeting,
         Parameters $search
     ): array {
-        /** @var Repository\Organisation $repository */
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
 
         return $repository->findOrganisationByMeetingAndDescriptionSearch($meeting, $search);
@@ -697,8 +702,8 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
     public function searchOrganisation(
         string $searchItem,
         int $maxResults = 20
-    ) {
-        /** @var Repository\Organisation $repository */
+    ): array {
+        /** @var Repository\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Organisation::class);
         return $repository->searchOrganisations(
             $searchItem,

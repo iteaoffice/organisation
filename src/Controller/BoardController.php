@@ -26,7 +26,7 @@ use Search\Form\SearchFilter;
  * Class BoardController
  * @package Organisation\Controller
  */
-final class BoardController extends OrganisationAbstractController
+final class BoardController extends AbstractController
 {
     private BoardService $boardService;
     private FormService $formService;

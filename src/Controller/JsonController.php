@@ -28,7 +28,7 @@ use function trim;
  *
  * @package Organisation\Controller
  */
-final class JsonController extends OrganisationAbstractController
+final class JsonController extends AbstractController
 {
     private OrganisationService $organisationService;
     private ParentService $parentService;

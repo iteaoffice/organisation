@@ -79,6 +79,9 @@ class Logo extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @return string|resource
+     */
     public function getOrganisationLogo()
     {
         return $this->organisationLogo;

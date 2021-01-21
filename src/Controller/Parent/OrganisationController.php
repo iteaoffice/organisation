@@ -20,7 +20,7 @@ use Laminas\Http\Request;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
-use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Controller\AbstractController;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
@@ -32,7 +32,7 @@ use Project\Service\ProjectService;
  * Class OrganisationController
  * @package Organisation\Controller\Parent
  */
-final class OrganisationController extends OrganisationAbstractController
+final class OrganisationController extends AbstractController
 {
     private ParentService $parentService;
     private ProjectService $projectService;
@@ -171,7 +171,7 @@ final class OrganisationController extends OrganisationAbstractController
             $otherOrganisation = $this->parentService
                 ->find(Entity\Parent\Organisation::class, (int)$data['merge']);
 
-            $result = $this->mergeParentOrganisation($organisation, $otherOrganisation);
+            $result = $this->parentOrganisationMerge($organisation, $otherOrganisation);
 
             if ($result['success'] === true) {
                 $this->flashMessenger()->setNamespace(FlashMessenger::NAMESPACE_SUCCESS)
@@ -207,7 +207,7 @@ final class OrganisationController extends OrganisationAbstractController
         );
     }
 
-    public function addAffiliationAction()
+    public function createAffiliationAction()
     {
         /** @var Entity\Parent\Organisation $parentOrganisation */
         $parentOrganisation = $this->parentService
@@ -219,7 +219,7 @@ final class OrganisationController extends OrganisationAbstractController
 
         $data = $this->getRequest()->getPost()->toArray();
 
-        $form = new Form\AddParentAffiliation($this->projectService, $parentOrganisation);
+        $form = new Form\CreateAffiliation($this->projectService, $parentOrganisation);
         $form->setData($data);
 
         if ($this->getRequest()->isPost()) {

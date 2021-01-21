@@ -226,12 +226,12 @@ return [
                                     ],
                                 ],
                             ],
-                            'add-affiliation' => [
+                            'create-affiliation' => [
                                 'type'    => 'Segment',
                                 'options' => [
-                                    'route'    => '/add-affiliation/[:id].html',
+                                    'route'    => '/create-affiliation/[:id].html',
                                     'defaults' => [
-                                        'action' => 'add-affiliation',
+                                        'action' => 'create-affiliation',
                                     ],
                                 ],
                             ],

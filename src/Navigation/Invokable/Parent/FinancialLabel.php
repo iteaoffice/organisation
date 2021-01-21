@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Organisation\Navigation\Invokable\Parent;
 
 use General\Navigation\Invokable\AbstractNavigationInvokable;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Parent\Financial;
 use Laminas\Navigation\Page\Mvc;
 
@@ -32,7 +32,7 @@ final class FinancialLabel extends AbstractNavigationInvokable
             /** @var Financial $financial */
             $financial = $this->getEntities()->get(Financial::class);
 
-            $this->getEntities()->set(OParent::class, $financial->getParent());
+            $this->getEntities()->set(ParentEntity::class, $financial->getParent());
             $page->setParams(array_merge($page->getParams(), ['id' => $financial->getId()]));
             $label = (string)$financial;
         }

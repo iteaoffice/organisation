@@ -20,7 +20,7 @@ use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_selection")
- * @ORM\Entity(repositoryClass="Organisation\Repository\Selection")
+ * @ORM\Entity(repositoryClass="Organisation\Repository\SelectionRepository")
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_selection")
  */

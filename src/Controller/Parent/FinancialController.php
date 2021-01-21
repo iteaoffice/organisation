@@ -16,14 +16,11 @@ use Contact\Entity\Address;
 use Contact\Entity\AddressType;
 use Contact\Service\ContactService;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Entity\Country;
 use General\Service\CountryService;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
-use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Controller\AbstractController;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\OrganisationService;
@@ -34,7 +31,7 @@ use Project\Service\ProjectService;
  * Class FinancialController
  * @package Organisation\Controller\Parent
  */
-final class FinancialController extends OrganisationAbstractController
+final class FinancialController extends AbstractController
 {
     private ParentService $parentService;
     private ContactService $contactService;
@@ -77,7 +74,7 @@ final class FinancialController extends OrganisationAbstractController
 
         $financialAddress = null;
 
-        $form = new Form\Financial(
+        $form = new Form\Parent\FinancialForm(
             $parent,
             $this->countryService,
             $this->organisationService
@@ -201,7 +198,7 @@ final class FinancialController extends OrganisationAbstractController
 
         $financialAddress = null;
 
-        $form = new Form\Financial(
+        $form = new Form\Parent\FinancialForm(
             $financial->getParent(),
             $this->countryService,
             $this->organisationService
@@ -317,34 +314,6 @@ final class FinancialController extends OrganisationAbstractController
                 'parentService'  => $this->parentService,
                 'projectService' => $this->projectService,
                 'form'           => $form,
-            ]
-        );
-    }
-
-    public function noFinancialAction(): ViewModel
-    {
-        $page         = $this->params()->fromRoute('page', 1);
-        $filterPlugin = $this->getOrganisationFilter();
-        $parentQuery  = $this->parentService
-            ->findActiveParentWithoutFinancial($filterPlugin->getFilter());
-
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
-        $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
-
-        $form = new Form\ParentFilter($this->entityManager);
-
-        $form->setData(['filter' => $filterPlugin->getFilter()]);
-
-        return new ViewModel(
-            [
-                'paginator'           => $paginator,
-                'form'                => $form,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
-                'organisationService' => $this->organisationService,
             ]
         );
     }

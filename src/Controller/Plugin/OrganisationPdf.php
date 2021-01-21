@@ -28,7 +28,7 @@ final class OrganisationPdf extends TcpdfFpdi
      *
      * @var string
      */
-    protected $template;
+    protected string $template;
 
     public function header(): void
     {

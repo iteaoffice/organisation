@@ -30,7 +30,7 @@ class DoaObject extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Parent\Doa", inversedBy="object", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Parent\Doa", inversedBy="object", cascade={"persist"})
      * @ORM\JoinColumn(name="doa_id", referencedColumnName="doa_id", nullable=false)
      *
      * @var Doa

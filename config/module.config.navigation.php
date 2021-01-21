@@ -133,7 +133,7 @@ return [
                                 'visible' => false,
                                 'params'  => [
                                     'entities'   => [
-                                        'id' => Entity\OParent::class,
+                                        'id' => Entity\ParentEntity::class,
                                     ],
                                     'invokables' => [
                                         Navigation\Invokable\ParentLabel::class,
@@ -146,7 +146,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Entity\OParent::class,
+                                                'id' => Entity\ParentEntity::class,
                                             ],
                                         ],
                                     ],
@@ -169,7 +169,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Entity\OParent::class,
+                                                'id' => Entity\ParentEntity::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'parentId'
@@ -182,7 +182,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Entity\OParent::class,
+                                                'id' => Entity\ParentEntity::class,
                                             ],
                                         ],
                                     ],
@@ -192,7 +192,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Entity\OParent::class,
+                                                'id' => Entity\ParentEntity::class,
                                             ],
                                         ],
                                     ],
@@ -202,7 +202,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities' => [
-                                                'id' => Entity\OParent::class,
+                                                'id' => Entity\ParentEntity::class,
                                             ],
                                         ],
                                     ],
@@ -257,7 +257,7 @@ return [
                                         'visible' => false,
                                         'params'  => [
                                             'entities'   => [
-                                                'id' => Entity\OParent::class,
+                                                'id' => Entity\ParentEntity::class,
                                             ],
                                             'routeParam' => [
                                                 'id' => 'parentId',

@@ -19,7 +19,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use General\Service\CountryService;
 use Organisation\Entity\Name;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Parent\Doa;
 use Organisation\Entity\Parent\Financial;
@@ -48,34 +48,13 @@ use function trim;
  */
 final class HandleParentAndProjectImport extends AbstractImportPlugin
 {
-    /**
-     * @var CountryService
-     */
-    private $countryService;
-    /**
-     * @var ParentService
-     */
-    private $parentService;
-    /**
-     * @var ProjectService
-     */
-    private $projectService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
-     * @var OrganisationService
-     */
-    private $organisationService;
-    /**
-     * @var CallService
-     */
-    private $callService;
-    /**
-     * @var ProgramService
-     */
-    private $programService;
+    private CountryService $countryService;
+    private ParentService $parentService;
+    private ProjectService $projectService;
+    private ContactService $contactService;
+    private OrganisationService $organisationService;
+    private CallService $callService;
+    private ProgramService $programService;
 
     public function __construct(
         EntityManager $entityManager,
@@ -501,12 +480,12 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         Contact $contact,
         Program $program,
         array $content
-    ): OParent {
+    ): ParentEntity {
         //If we find the organisation and the organisation is a parent, just return it
         if (null !== $organisation->getParent()) {
             $parent = $organisation->getParent();
         } else {
-            $parent = new OParent();
+            $parent = new ParentEntity();
             $parent->setContact($contact);
             $parent->setOrganisation($organisation);
         }
@@ -559,9 +538,9 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         //Derive the member type
         switch (true) {
             case $member:
-                return OParent::MEMBER_TYPE_MEMBER;
+                return ParentEntity::MEMBER_TYPE_MEMBER;
             default:
-                return OParent::MEMBER_TYPE_NO_MEMBER;
+                return ParentEntity::MEMBER_TYPE_NO_MEMBER;
         }
     }
 
@@ -573,11 +552,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         //Derive the member type
         switch (true) {
             case $artemisiaMember:
-                return OParent::ARTEMISIA_MEMBER_TYPE_MEMBER;
+                return ParentEntity::ARTEMISIA_MEMBER_TYPE_MEMBER;
             case $artemisiaDOA:
-                return OParent::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER;
+                return ParentEntity::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER;
             default:
-                return OParent::ARTEMISIA_MEMBER_TYPE_NO_MEMBER;
+                return ParentEntity::ARTEMISIA_MEMBER_TYPE_NO_MEMBER;
         }
     }
 
@@ -589,11 +568,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
         //Derive the member type
         switch (true) {
             case $epossMember:
-                return OParent::EPOSS_MEMBER_TYPE_MEMBER;
+                return ParentEntity::EPOSS_MEMBER_TYPE_MEMBER;
             case $epossDOA:
-                return OParent::EPOSS_MEMBER_TYPE_DOA_SIGNER;
+                return ParentEntity::EPOSS_MEMBER_TYPE_DOA_SIGNER;
             default:
-                return OParent::EPOSS_MEMBER_TYPE_NO_MEMBER;
+                return ParentEntity::EPOSS_MEMBER_TYPE_NO_MEMBER;
         }
     }
 }

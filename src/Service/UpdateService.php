@@ -29,9 +29,6 @@ use Organisation\Entity\Update;
  */
 class UpdateService extends AbstractService
 {
-    /**
-     * @var EmailService
-     */
     private EmailService $emailService;
 
     public function __construct(
@@ -69,7 +66,7 @@ class UpdateService extends AbstractService
     {
         /** @var Organisation $organisation */
         $organisation = $update->getOrganisation();
-        $description = $organisation->getDescription();
+        $description  = $organisation->getDescription();
         if ($organisation->getDescription() === null) {
             $description = new Description();
             $description->setOrganisation($organisation);
@@ -97,11 +94,13 @@ class UpdateService extends AbstractService
 
         $this->entityManager->flush();
 
-        // Send confirmation mail
-        $this->emailService->setWebInfo('/organisation/update/approved');
-        $this->emailService->addTo($update->getContact());
-        $this->emailService->setTemplateVariable('display_name', $update->getContact()->getDisplayName());
+        //Send the email
+        $email = $this->emailService->createNewWebInfoEmailBuilder('/organisation/update/approved');
+        $email->addContactTo($update->getContact());
+        $email->setTemplateVariable('display_name', $update->getContact()->getDisplayName());
+        $this->emailService->sendBuilder($email);
 
-        return $this->emailService->send();
+
+        return true;
     }
 }

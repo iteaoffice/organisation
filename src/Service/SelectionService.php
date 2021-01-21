@@ -57,7 +57,7 @@ class SelectionService extends AbstractService
 
     public function findTags(): array
     {
-        /** @var Repository\Selection $repository */
+        /** @var Repository\SelectionRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Selection::class);
 
         return $repository->findTags();

@@ -14,14 +14,13 @@ namespace Organisation\Entity\Parent;
 
 use Contact\Entity\Contact;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\ContentType;
-use Organisation\Entity\AbstractEntity;
-use Organisation\Entity\OParent;
-use Program\Entity\Program;
 use Laminas\Form\Annotation;
+use Organisation\Entity\AbstractEntity;
+use Organisation\Entity\ParentEntity;
+use Program\Entity\Program;
 
 /**
  * @ORM\Table(name="organisation_parent_doa")
@@ -89,10 +88,10 @@ class Doa extends AbstractEntity
      */
     private $dateCreated;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\Parent\DoaObject", cascade={"persist","remove"}, mappedBy="doa")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Parent\DoaObject", cascade={"persist","remove"}, mappedBy="doa")
      * @Annotation\Exclude()
      *
-     * @var DoaObject[]|ArrayCollection
+     * @var DoaObject
      */
     private $object;
     /**
@@ -103,10 +102,10 @@ class Doa extends AbstractEntity
      */
     private $contact;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="doa")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="doa")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id")
      *
-     * @var OParent
+     * @var ParentEntity
      */
     private $parent;
     /**
@@ -117,11 +116,6 @@ class Doa extends AbstractEntity
      */
     private $program;
 
-    public function __construct()
-    {
-        $this->object = new ArrayCollection();
-    }
-
     public function __toString(): string
     {
         return sprintf('%s DOA', $this->program);
@@ -130,6 +124,28 @@ class Doa extends AbstractEntity
     public function parseFileName(): string
     {
         return str_replace(' ', '_', sprintf('DOA_%s_%s', $this->getParent(), $this->getProgram()));
+    }
+
+    public function getParent(): ?ParentEntity
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?ParentEntity $parent): Doa
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    public function getProgram(): ?Program
+    {
+        return $this->program;
+    }
+
+    public function setProgram(?Program $program): Doa
+    {
+        $this->program = $program;
+        return $this;
     }
 
     public function getId(): ?int
@@ -239,28 +255,6 @@ class Doa extends AbstractEntity
     public function setContact(?Contact $contact): Doa
     {
         $this->contact = $contact;
-        return $this;
-    }
-
-    public function getParent(): ?OParent
-    {
-        return $this->parent;
-    }
-
-    public function setParent(?OParent $parent): Doa
-    {
-        $this->parent = $parent;
-        return $this;
-    }
-
-    public function getProgram(): ?Program
-    {
-        return $this->program;
-    }
-
-    public function setProgram(?Program $program): Doa
-    {
-        $this->program = $program;
         return $this;
     }
 }

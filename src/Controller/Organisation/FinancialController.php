@@ -13,16 +13,12 @@ declare(strict_types=1);
 namespace Organisation\Controller\Organisation;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
-use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
 use General\Entity\VatType;
 use General\Service\GeneralService;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
-use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Controller\AbstractController;
 use Organisation\Entity\Financial;
-use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 
@@ -31,7 +27,7 @@ use Organisation\Service\OrganisationService;
  *
  * @package Organisation\Controller
  */
-final class FinancialController extends OrganisationAbstractController
+final class FinancialController extends AbstractController
 {
     private OrganisationService $organisationService;
     private FormService $formService;
@@ -48,32 +44,6 @@ final class FinancialController extends OrganisationAbstractController
         $this->formService         = $formService;
         $this->generalService      = $generalService;
         $this->translator          = $translator;
-    }
-
-    public function listAction(): ViewModel
-    {
-        $page              = $this->params()->fromRoute('page', 1);
-        $filterPlugin      = $this->getOrganisationFilter();
-        $organisationQuery = $this->organisationService->findOrganisationFinancialList($filterPlugin->getFilter());
-
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
-        $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
-
-        $form = new Form\OrganisationFilter($this->organisationService);
-
-        $form->setData(['filter' => $filterPlugin->getFilter()]);
-
-        return new ViewModel(
-            [
-                'paginator'     => $paginator,
-                'form'          => $form,
-                'encodedFilter' => urlencode($filterPlugin->getHash()),
-                'order'         => $filterPlugin->getOrder(),
-                'direction'     => $filterPlugin->getDirection(),
-            ]
-        );
     }
 
     public function editAction()
@@ -172,35 +142,6 @@ final class FinancialController extends OrganisationAbstractController
                 'organisation'        => $organisation,
                 'financial'           => $financial,
                 'form'                => $form,
-            ]
-        );
-    }
-
-    public function noFinancialAction(): ViewModel
-    {
-        $page              = $this->params()->fromRoute('page', 1);
-        $filterPlugin      = $this->getOrganisationFilter();
-        $organisationQuery = $this->organisationService
-            ->findActiveOrganisationWithoutFinancial($filterPlugin->getFilter());
-
-        $paginator
-            = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
-        $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
-
-        $form = new Form\OrganisationFilter($this->organisationService);
-
-        $form->setData(['filter' => $filterPlugin->getFilter()]);
-
-        return new ViewModel(
-            [
-                'paginator'           => $paginator,
-                'form'                => $form,
-                'encodedFilter'       => urlencode($filterPlugin->getHash()),
-                'order'               => $filterPlugin->getOrder(),
-                'direction'           => $filterPlugin->getDirection(),
-                'organisationService' => $this->organisationService,
             ]
         );
     }

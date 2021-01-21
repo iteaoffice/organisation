@@ -15,12 +15,15 @@ namespace Organisation\Service;
 use Admin\Entity\Access;
 use Admin\Entity\Permit;
 use Admin\Repository\Permit\Role;
+use InvalidArgumentException;
 use Organisation\Entity;
 use Contact\Entity\Contact;
 use Contact\Service\SelectionContactService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+
+use function array_key_exists;
 
 /**
  * Class AbstractService
@@ -41,7 +44,7 @@ abstract class AbstractService
     public function findFilteredByContact(string $entity, $filter, Contact $contact): QueryBuilder
     {
         //The 'filter' should always be there to support the repositories
-        if (! \array_key_exists('filter', $filter)) {
+        if (! array_key_exists('filter', $filter)) {
             $filter['filter'] = [];
         }
 
@@ -105,7 +108,7 @@ abstract class AbstractService
         $permitEntity = $this->findPermitEntityByEntity($entity);
 
         if (null === $permitEntity) {
-            throw new \InvalidArgumentException(sprintf("Entity '%s' cannot be found as permit", $entity));
+            throw new InvalidArgumentException(sprintf("Entity '%s' cannot be found as permit", $entity));
         }
 
         //Try to find the corresponding role

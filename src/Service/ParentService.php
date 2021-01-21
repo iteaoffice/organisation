@@ -61,20 +61,20 @@ class ParentService extends AbstractService
         $this->container = $container;
     }
 
-    public static function hasWrongParentChildRelationship(Entity\OParent $parent): bool
+    public static function hasWrongParentChildRelationship(Entity\ParentEntity $parent): bool
     {
         return null !== $parent->getOrganisation()->getParentOrganisation()
             && $parent->getOrganisation()->getParentOrganisation()->getParent()->getId() !== $parent->getId();
     }
 
-    public function findParentById(int $id): ?Entity\OParent
+    public function findParentById(int $id): ?Entity\ParentEntity
     {
-        return $this->entityManager->find(Entity\OParent::class, $id);
+        return $this->entityManager->find(Entity\ParentEntity::class, $id);
     }
 
-    public function findParentByOrganisationName(string $name): ?Entity\OParent
+    public function findParentByOrganisationName(string $name): ?Entity\ParentEntity
     {
-        return $this->entityManager->getRepository(Entity\OParent::class)->findParentByOrganisationName($name);
+        return $this->entityManager->getRepository(Entity\ParentEntity::class)->findParentByOrganisationName($name);
     }
 
     public function findParentTypeByName(string $name): ?Entity\Parent\Type
@@ -85,11 +85,11 @@ class ParentService extends AbstractService
     public function findParents(): ArrayCollection
     {
         return new ArrayCollection(
-            $this->entityManager->getRepository(Entity\OParent::class)->findAll()
+            $this->entityManager->getRepository(Entity\ParentEntity::class)->findAll()
         );
     }
 
-    public function canDeleteParent(Entity\OParent $parent): bool
+    public function canDeleteParent(Entity\ParentEntity $parent): bool
     {
         return $parent->getParentOrganisation()->isEmpty() && $parent->getInvoice()->isEmpty()
             && $parent->getInvoiceExtra()->isEmpty();
@@ -108,15 +108,15 @@ class ParentService extends AbstractService
 
     public function findActiveParentWhichAreNoMember(array $filter): QueryBuilder
     {
-        $repository = $this->entityManager->getRepository(Entity\OParent::class);
+        $repository = $this->entityManager->getRepository(Entity\ParentEntity::class);
 
         return $repository->findActiveParentWhichAreNoMember($filter);
     }
 
     public function findActiveParentWithoutFinancial(array $filter): QueryBuilder
     {
-        /** @var Repository\OParent $repository */
-        $repository = $this->entityManager->getRepository(Entity\OParent::class);
+        /** @var Repository\ParentRepository $repository */
+        $repository = $this->entityManager->getRepository(Entity\ParentEntity::class);
 
         return $repository->findActiveParentWithoutFinancial($filter);
     }
@@ -168,7 +168,7 @@ class ParentService extends AbstractService
         }
 
         //We have no parent so create it all
-        $parent = new Entity\OParent();
+        $parent = new Entity\ParentEntity();
         $parent->setOrganisation($organisation);
         $parent->setContact($contact);
         /** @var Entity\Parent\Type $type */
@@ -188,7 +188,7 @@ class ParentService extends AbstractService
     }
 
     public function findParentOrganisationInParentByOrganisation(
-        Entity\OParent $parent,
+        Entity\ParentEntity $parent,
         Entity\Organisation $organisation
     ): ?Entity\Parent\Organisation {
         foreach ($parent->getParentOrganisation() as $parentOrganisation) {
@@ -200,7 +200,7 @@ class ParentService extends AbstractService
         return null;
     }
 
-    public function parseTotalFundedByParent(Entity\OParent $parent, Program $program, int $year): float
+    public function parseTotalFundedByParent(Entity\ParentEntity $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $totalFunded = 0;
@@ -226,7 +226,7 @@ class ParentService extends AbstractService
     }
 
     public function findAffiliationByParentAndProgramAndWhich(
-        Entity\OParent $parent,
+        Entity\ParentEntity $parent,
         Program $program,
         int $which = AffiliationService::WHICH_ONLY_ACTIVE,
         ?int $year = null
@@ -242,7 +242,7 @@ class ParentService extends AbstractService
         return new ArrayCollection($affiliations);
     }
 
-    public function parseContribution(Entity\OParent $parent, Program $program, int $year): float
+    public function parseContribution(Entity\ParentEntity $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $contribution = 0;
@@ -275,7 +275,7 @@ class ParentService extends AbstractService
     }
 
 
-    public function parseTotalExtraVariableBalanceByParent(Entity\OParent $parent, Program $program, int $year): float
+    public function parseTotalExtraVariableBalanceByParent(Entity\ParentEntity $parent, Program $program, int $year): float
     {
         //Go over each affiliation and sum up what has been paid already
         $balanceTotal = 0;
@@ -301,12 +301,12 @@ class ParentService extends AbstractService
         return round($balanceTotal);
     }
 
-    public function hasExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version): bool
+    public function hasExtraVariableBalanceByParentAndVersion(Entity\ParentEntity $parent, Version $version): bool
     {
         return abs($this->parseExtraVariableBalanceByParentAndVersion($parent, $version)) > 0;
     }
 
-    public function parseExtraVariableBalanceByParentAndVersion(Entity\OParent $parent, Version $version): float
+    public function parseExtraVariableBalanceByParentAndVersion(Entity\ParentEntity $parent, Version $version): float
     {
         /**
          * The formula is
@@ -327,34 +327,34 @@ class ParentService extends AbstractService
                 * $sumOfFundingByCChambers);
     }
 
-    public function parseMembershipFactor(Entity\OParent $parent): int
+    public function parseMembershipFactor(Entity\ParentEntity $parent): int
     {
         return count($this->parseMemberships($parent));
     }
 
-    public function parseMemberships(Entity\OParent $parent): array
+    public function parseMemberships(Entity\ParentEntity $parent): array
     {
         $memberships = [];
 
-        if ($parent->getMemberType() === Entity\OParent::MEMBER_TYPE_MEMBER) {
+        if ($parent->getMemberType() === Entity\ParentEntity::MEMBER_TYPE_MEMBER) {
             $memberships[] = 'AENEAS';
         }
-        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_MEMBER) {
+        if ($parent->getArtemisiaMemberType() === Entity\ParentEntity::ARTEMISIA_MEMBER_TYPE_MEMBER) {
             $memberships[] = 'ARTEMIS-IA';
         }
-        if ($parent->getEpossMemberType() === Entity\OParent::EPOSS_MEMBER_TYPE_MEMBER) {
+        if ($parent->getEpossMemberType() === Entity\ParentEntity::EPOSS_MEMBER_TYPE_MEMBER) {
             $memberships[] = 'EPOSS';
         }
 
         return $memberships;
     }
 
-    public function parseDoaFactor(Entity\OParent $parent, Program $program = null): int
+    public function parseDoaFactor(Entity\ParentEntity $parent, Program $program = null): int
     {
         return count($this->parseDoas($parent, $program));
     }
 
-    public function parseDoas(Entity\OParent $parent, ?Program $program = null): array
+    public function parseDoas(Entity\ParentEntity $parent, ?Program $program = null): array
     {
         $otherDoa = [];
 
@@ -364,17 +364,17 @@ class ParentService extends AbstractService
             }
         }
 
-        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER) {
+        if ($parent->getArtemisiaMemberType() === Entity\ParentEntity::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER) {
             $otherDoa[] = 'ARTEMIS-IA';
         }
-        if ($parent->getEpossMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER) {
+        if ($parent->getEpossMemberType() === Entity\ParentEntity::ARTEMISIA_MEMBER_TYPE_DOA_SIGNER) {
             $otherDoa[] = 'EPOSS';
         }
 
         return $otherDoa;
     }
 
-    public function renderProjectsByParentInYear(Entity\OParent $parent, Program $program, int $year): array
+    public function renderProjectsByParentInYear(Entity\ParentEntity $parent, Program $program, int $year): array
     {
         //Sort the projects per call
         $projects = [];
@@ -429,7 +429,7 @@ class ParentService extends AbstractService
         return $projects;
     }
 
-    public function parseInvoiceFactor(Entity\OParent $parent, Program $program): float
+    public function parseInvoiceFactor(Entity\ParentEntity $parent, Program $program): float
     {
         //If the invoice method is based on the METHOD::METHOD_FUNDING
         if (
@@ -455,7 +455,7 @@ class ParentService extends AbstractService
         return 2.1;
     }
 
-    public function hasDoaForProgram(Entity\OParent $parent, Program $program): bool
+    public function hasDoaForProgram(Entity\ParentEntity $parent, Program $program): bool
     {
         foreach ($parent->getDoa() as $doa) {
             if ($doa->getProgram()->getId() === $program->getId()) {
@@ -466,12 +466,12 @@ class ParentService extends AbstractService
         return false;
     }
 
-    public function hasOtherMemberships(Entity\OParent $parent): bool
+    public function hasOtherMemberships(Entity\ParentEntity $parent): bool
     {
-        if ($parent->getArtemisiaMemberType() === Entity\OParent::ARTEMISIA_MEMBER_TYPE_MEMBER) {
+        if ($parent->getArtemisiaMemberType() === Entity\ParentEntity::ARTEMISIA_MEMBER_TYPE_MEMBER) {
             return true;
         }
-        if ($parent->getEpossMemberType() === Entity\OParent::EPOSS_MEMBER_TYPE_MEMBER) {
+        if ($parent->getEpossMemberType() === Entity\ParentEntity::EPOSS_MEMBER_TYPE_MEMBER) {
             return true;
         }
 
@@ -479,7 +479,7 @@ class ParentService extends AbstractService
     }
 
     public function parseTotal(
-        Entity\OParent $parent,
+        Entity\ParentEntity $parent,
         Program $program,
         int $year,
         array $includeAffiliations = null
@@ -518,14 +518,14 @@ class ParentService extends AbstractService
 
     public function findActiveParents(): ArrayCollection
     {
-        $repository = $this->entityManager->getRepository(Entity\OParent::class);
+        $repository = $this->entityManager->getRepository(Entity\ParentEntity::class);
 
         return new ArrayCollection($repository->findActiveParents());
     }
 
     public function findParentOrganisationByNameLike(string $name): ArrayCollection
     {
-        /** @var Repository\Parent\Organisation $repository */
+        /** @var Repository\Parent\OrganisationRepository $repository */
         $repository = $this->entityManager->getRepository(Entity\Parent\Organisation::class);
 
         return new ArrayCollection($repository->findParentOrganisationByNameLike($name));
@@ -533,21 +533,21 @@ class ParentService extends AbstractService
 
     public function findParentsForInvoicing(Program $program): ArrayCollection
     {
-        /** @var Repository\OParent $repository */
-        $repository = $this->entityManager->getRepository(Entity\OParent::class);
+        /** @var Repository\ParentRepository $repository */
+        $repository = $this->entityManager->getRepository(Entity\ParentEntity::class);
 
         return new ArrayCollection($repository->findParentsForInvoicing($program));
     }
 
     public function findParentsForExtraInvoicing(): ArrayCollection
     {
-        /** @var Repository\OParent $repository */
-        $repository = $this->entityManager->getRepository(Entity\OParent::class);
+        /** @var Repository\ParentRepository $repository */
+        $repository = $this->entityManager->getRepository(Entity\ParentEntity::class);
 
         return new ArrayCollection($repository->findParentsForExtraInvoicing());
     }
 
-    public function getFinancialContact(Entity\OParent $parent): ?Contact
+    public function getFinancialContact(Entity\ParentEntity $parent): ?Contact
     {
         if ($parent->getFinancial()->count() === 1) {
             return $parent->getFinancial()->first()->getContact();
@@ -557,7 +557,7 @@ class ParentService extends AbstractService
     }
 
     public function findAllParentExtraInvoiceByParentYear(
-        Entity\OParent $parent,
+        Entity\ParentEntity $parent,
         int $year,
         Program $program
     ): array {
@@ -567,7 +567,7 @@ class ParentService extends AbstractService
         );
     }
 
-    public function findParentInvoiceByParentYear(Entity\OParent $parent, int $year, Program $program): ArrayCollection
+    public function findParentInvoiceByParentYear(Entity\ParentEntity $parent, int $year, Program $program): ArrayCollection
     {
         return $parent->getInvoice()->filter(
             static function (Entity\Parent\Invoice $invoice) use ($year, $program) {
@@ -577,7 +577,7 @@ class ParentService extends AbstractService
     }
 
     public function findParentExtraInvoiceByParentYear(
-        Entity\OParent $parent,
+        Entity\ParentEntity $parent,
         int $year
     ): ArrayCollection {
         return $parent->getInvoiceExtra()->filter(
@@ -592,7 +592,7 @@ class ParentService extends AbstractService
         return $organisation->getAffiliation()->isEmpty();
     }
 
-    public function canCreateInvoice(Entity\OParent $parent, bool $autoGenerate = false): ArrayCollection
+    public function canCreateInvoice(Entity\ParentEntity $parent, bool $autoGenerate = false): ArrayCollection
     {
         $errors = [];
         switch (true) {
@@ -641,8 +641,8 @@ class ParentService extends AbstractService
         string $searchItem,
         int $maxResults = 20
     ): array {
-        /** @var Repository\OParent $repository */
-        $repository = $this->entityManager->getRepository(Entity\OParent::class);
+        /** @var Repository\ParentRepository $repository */
+        $repository = $this->entityManager->getRepository(Entity\ParentEntity::class);
         return $repository->searchParents(
             $searchItem,
             $maxResults

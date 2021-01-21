@@ -39,7 +39,7 @@ class ParentServiceTest extends AbstractServiceTest
         $service = new ParentService($container);
         $organisation = new Entity\Organisation();
         $organisation->setId(1);
-        $parent = new Entity\OParent();
+        $parent = new Entity\ParentEntity();
         $this->assertNull($service->findParentOrganisationInParentByOrganisation($parent, $organisation));
     }
 
@@ -56,7 +56,7 @@ class ParentServiceTest extends AbstractServiceTest
         $organisation->setId(1);
         $parentOrganisation = new Organisation();
         $parentOrganisation->setOrganisation($organisation);
-        $parent = new Entity\OParent();
+        $parent = new Entity\ParentEntity();
         $parent->getParentOrganisation()->add($parentOrganisation);
         $this->assertEquals($parentOrganisation, $service->findParentOrganisationInParentByOrganisation($parent, $organisation));
     }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Organisation\Navigation\Invokable\Parent;
 
 use General\Navigation\Invokable\AbstractNavigationInvokable;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Parent\Organisation;
 use Laminas\Navigation\Page\Mvc;
 
@@ -32,7 +32,7 @@ final class OrganisationLabel extends AbstractNavigationInvokable
             /** @var Organisation $organisation */
             $organisation = $this->getEntities()->get(Organisation::class);
 
-            $this->getEntities()->set(OParent::class, $organisation->getParent());
+            $this->getEntities()->set(ParentEntity::class, $organisation->getParent());
             $page->setParams(array_merge($page->getParams(), ['id' => $organisation->getId()]));
             $label = (string)$organisation;
         }

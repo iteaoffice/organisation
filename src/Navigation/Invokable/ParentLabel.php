@@ -14,7 +14,7 @@ namespace Organisation\Navigation\Invokable;
 
 use General\Navigation\Invokable\AbstractNavigationInvokable;
 use Laminas\Navigation\Page\Mvc;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 
 /**
  * Class ParentLabel
@@ -26,9 +26,9 @@ final class ParentLabel extends AbstractNavigationInvokable
     {
         $label = $this->translator->translate('txt-nav-view');
 
-        if ($this->getEntities()->containsKey(OParent::class)) {
-            /** @var OParent $parent */
-            $parent = $this->getEntities()->get(OParent::class);
+        if ($this->getEntities()->containsKey(ParentEntity::class)) {
+            /** @var ParentEntity $parent */
+            $parent = $this->getEntities()->get(ParentEntity::class);
 
             $page->setParams(
                 array_merge(

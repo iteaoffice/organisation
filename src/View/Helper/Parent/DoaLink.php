@@ -14,8 +14,8 @@ namespace Organisation\View\Helper\Parent;
 
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
-use Organisation\Acl\Assertion\Parent\Doa as DoaAssertion;
-use Organisation\Entity\OParent;
+use Organisation\Acl\Assertion\Parent\DoaAssertion;
+use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Parent\Doa;
 
 /**
@@ -29,7 +29,7 @@ final class DoaLink extends AbstractLink
         Doa $doa = null,
         string $action = 'view',
         string $show = 'name',
-        OParent $parent = null
+        ParentEntity $parent = null
     ): string {
         $doa ??= new Doa();
 

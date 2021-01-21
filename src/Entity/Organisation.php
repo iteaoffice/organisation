@@ -31,7 +31,7 @@ use Project\Entity\Result\Result;
 
 /**
  * @ORM\Table(name="organisation")
- * @ORM\Entity(repositoryClass="Organisation\Repository\Organisation")
+ * @ORM\Entity(repositoryClass="Organisation\Repository\OrganisationRepository")
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation")
  * @Annotation\Instance("Organisation\Entity\Organisation")
@@ -102,10 +102,10 @@ class Organisation extends AbstractEntity
      */
     private $affiliationFinancial;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\OParent", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\ParentEntity", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
      * @Annotation\Exclude()
      *
-     * @var OParent
+     * @var ParentEntity
      */
     private $parent;
     /**
@@ -352,6 +352,11 @@ class Organisation extends AbstractEntity
         return null !== $this->description && ! empty($this->description->getDescription());
     }
 
+    public function hasFinancial(): bool
+    {
+        return null !== $this->financial;
+    }
+
     public function hasPendingUpdate(): bool
     {
         return ! $this->updates->filter(
@@ -475,7 +480,7 @@ class Organisation extends AbstractEntity
         return $this->parent;
     }
 
-    public function setParent(?OParent $parent): Organisation
+    public function setParent(?ParentEntity $parent): Organisation
     {
         $this->parent = $parent;
 

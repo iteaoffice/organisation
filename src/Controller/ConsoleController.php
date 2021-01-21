@@ -19,7 +19,7 @@ use Organisation\Service\OrganisationService;
  *
  * @package Organisation\Controller
  */
-final class ConsoleController extends OrganisationAbstractController
+final class ConsoleController extends AbstractController
 {
     private OrganisationService $organisationService;
 

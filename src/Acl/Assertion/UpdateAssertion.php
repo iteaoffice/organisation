@@ -27,10 +27,7 @@ use Organisation\Service\UpdateService;
  */
 final class UpdateAssertion extends AbstractAssertion
 {
-    /**
-     * @var UpdateService
-     */
-    private $updateService;
+    private UpdateService $updateService;
 
     public function __construct(ContainerInterface $container)
     {

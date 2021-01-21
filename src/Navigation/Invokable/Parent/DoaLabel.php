@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Organisation\Navigation\Invokable\Parent;
 
 use General\Navigation\Invokable\AbstractNavigationInvokable;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Parent\Doa;
 use Laminas\Navigation\Page\Mvc;
 
@@ -31,7 +31,7 @@ final class DoaLabel extends AbstractNavigationInvokable
         if ($this->getEntities()->containsKey(Doa::class)) {
             /** @var Doa $doa */
             $doa = $this->getEntities()->get(Doa::class);
-            $this->getEntities()->set(OParent::class, $doa->getParent());
+            $this->getEntities()->set(ParentEntity::class, $doa->getParent());
 
             $label = (string)$doa;
         }

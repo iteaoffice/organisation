@@ -24,8 +24,11 @@ use General\Entity\Country;
 use Invoice\Entity\Invoice;
 use Invoice\Entity\Journal;
 use Invoice\Entity\Reminder;
-use Organisation\Controller\AdminController;
-use Organisation\Controller\Plugin\MergeOrganisation;
+use Laminas\I18n\Translator\Translator;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\Stdlib\DispatchableInterface;
+use Organisation\Controller\Organisation\ManagerController;
+use Organisation\Controller\Plugin\Merge\OrganisationMerge;
 use Organisation\Entity\Booth;
 use Organisation\Entity\Description;
 use Organisation\Entity\Financial;
@@ -33,8 +36,8 @@ use Organisation\Entity\Log;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Name;
 use Organisation\Entity\Note;
-use Organisation\Entity\OParent;
 use Organisation\Entity\Organisation;
+use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Type;
 use Organisation\Entity\Update;
 use Organisation\Entity\Web;
@@ -44,25 +47,22 @@ use Program\Entity\Doa;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
 use Testing\Util\AbstractServiceTest;
-use Laminas\I18n\Translator\Translator;
-use Laminas\Stdlib\DispatchableInterface;
 
 use function in_array;
 
 /**
- * Class MergeOrganisationTest
+ * Class OrganisationMergeTest
  *
  * @package OrganisationTest\Controller\Plugin
  */
 final class MergeOrganisationTest extends AbstractServiceTest
 {
-    /** @var Organisation */
-    private $source;
-/** @var Organisation */
-    private $target;
-/** @var Translator */
-    private $translator;
-/**
+    private Organisation $source;
+    private Organisation $target;
+    private TranslatorInterface $translator;
+    private Logging $errorLog;
+
+    /**
      * Set up basic properties
      */
     public function setUp(): void
@@ -70,136 +70,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $this->source     = $this->createSource();
         $this->target     = $this->createTarget();
         $this->translator = $this->setUpTranslatorMock();
-    }
-
-    /**
-     * Test the basic __invoke magic method returning the plugin instance
-     *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::__invoke
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::__construct
-     */
-    public function testInvoke()
-    {
-        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->getUpUpdateServiceMock(), $this->translator);
-        $instance = $mergeOrganisation();
-        $this->assertSame($mergeOrganisation, $instance);
-    }
-
-    /**
-     * Test the pre-merge checks
-     *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::checkMerge
-     */
-    public function testCheckMerge()
-    {
-        $mergeOrganisation = new MergeOrganisation($this->getEntityManagerMock(), $this->getUpUpdateServiceMock(), $this->translator);
-// Set up some merge-preventing circumstances
-        $this->source->getFinancial()->setVat('NL123');
-        $this->target->getFinancial()->setVat('NL456');
-        $this->source->setParent(new OParent());
-        $this->target->setParent(new OParent());
-        $otherCountry = new Country();
-        $otherCountry->setId(2);
-        $this->source->setCountry($otherCountry);
-        $update = new Update();
-        $this->source->getUpdates()->add($update);
-// Run the merge check
-        $errors = $mergeOrganisation()->checkMerge($this->source, $this->target);
-        $this->assertEquals(true, in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-both-be-parents', $errors));
-        $this->assertEquals(true, in_array('txt-organisations-cant-have-different-countries', $errors));
-        $this->assertEquals(true, in_array('txt-source-organisation-has-pending-updates', $errors));
-    }
-
-    /**
-     * Test the actual merge
-     *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::merge
-     */
-    public function testMerge()
-    {
-        /** @var DispatchableInterface $controllerMock */
-        $controllerMock = $this->setUpControllerMock();
-        $mergeOrganisation = new MergeOrganisation($this->setUpEntityManagerMock(), $this->getUpUpdateServiceMock(), $this->translator);
-        $mergeOrganisation->setController($controllerMock);
-        $result = $mergeOrganisation()->merge($this->source, $this->target);
-        $this->assertEquals(true, $result['success']);
-        $this->assertEquals('', $result['errorMessage']);
-        $this->assertEquals(1, $this->target->getType()->getId());
-        $this->assertEquals($this->source->getDateCreated(), $this->target->getDateCreated());
-        $this->assertEquals($this->source->getDateUpdated(), $this->target->getDateUpdated());
-        $this->assertEquals(1, $this->target->getDescription()->getId());
-        $this->assertEquals($this->target, $this->target->getDescription()->getOrganisation());
-        $this->assertEquals(1, $this->target->getFinancial()->getId());
-        $this->assertEquals($this->target, $this->target->getFinancial()->getOrganisation());
-        $this->assertEquals(1, $this->target->getLogo()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getLogo()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getLog()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getLog()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getWeb()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getWeb()->first()->getOrganisation());
-        $this->assertEquals('Merged organisation Organisation 1 (1) into Organisation 2 (2)', $this->target->getNote()->first()->getNote());
-        $this->assertEquals(1, $this->target->getNote()->last()->getId());
-        $this->assertEquals($this->target, $this->target->getNote()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getNames()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getNames()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getAffiliation()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getAffiliation()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getAffiliationFinancial()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getAffiliationFinancial()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getParent()->getId());
-        $this->assertEquals($this->target, $this->target->getParent()->getOrganisation());
-        $this->assertEquals(1, $this->target->getParentFinancial()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getParentFinancial()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getParentOrganisation()->getId());
-        $this->assertEquals($this->target, $this->target->getParentOrganisation()->getOrganisation());
-        $this->assertEquals(1, $this->target->getContactOrganisation()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getContactOrganisation()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getOrganisationBooth()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getOrganisationBooth()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getBoothFinancial()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getBoothFinancial()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getIdeaPartner()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getIdeaPartner()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getInvoice()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getInvoice()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getJournal()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getJournal()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getProgramDoa()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getProgramDoa()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getDoa()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getDoa()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getReminder()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getReminder()->first()->getOrganisation());
-        $this->assertEquals(1, $this->target->getResult()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getResult()->first()->getOrganisation()->first());
-        $this->assertEquals(1, $this->target->getUpdates()->first()->getId());
-        $this->assertEquals($this->target, $this->target->getUpdates()->first()->getOrganisation());
-    }
-
-    /**
-     * Test a failing merge
-     *
-     * @covers \Organisation\Controller\Plugin\MergeOrganisation::merge
-     */
-    public function testMergeFail()
-    {
-        $entityManagerMock = $this->setUpEntityManagerMock(true);
-        $mergeOrganisationNoLog = new MergeOrganisation($entityManagerMock, $this->getUpUpdateServiceMock(), $this->translator);
-        $responseNoLog          = $mergeOrganisationNoLog->merge($this->source, $this->target);
-        $this->assertEquals(false, $responseNoLog['success']);
-        $this->assertEquals('Oops!', $responseNoLog['errorMessage']);
-/** @var Logging|MockObject $errorLoggerMock */
-        $errorLoggerMock = $this->getMockBuilder(Logging::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['handleErrorException'])
-            ->getMock();
-        $errorLoggerMock->expects($this->once())
-            ->method('handleErrorException')
-            ->with($this->isInstanceOf('Exception'));
-        $mergeOrganisationLog = new MergeOrganisation($entityManagerMock, $this->getUpUpdateServiceMock(), $this->translator, $errorLoggerMock);
-        $responseLog = $mergeOrganisationLog()->merge($this->source, $this->target);
-        $this->assertEquals(false, $responseLog['success']);
+        $this->errorLog   = $this->setUpErrorLoggingMock();
     }
 
     /**
@@ -236,7 +107,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $affiliationFinancial = new \Affiliation\Entity\Financial();
         $affiliationFinancial->setId(1);
         $affiliationFinancial->setOrganisation($source);
-        $parent = new OParent();
+        $parent = new ParentEntity();
         $parent->setId(1);
         $parent->setOrganisation($source);
         $parentFinancial = new \Organisation\Entity\Parent\Financial();
@@ -310,9 +181,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         return $source;
     }
 
-    /**
-     * @return Organisation
-     */
     private function createTarget(): Organisation
     {
         $country = new Country();
@@ -337,13 +205,151 @@ final class MergeOrganisationTest extends AbstractServiceTest
     private function setUpTranslatorMock()
     {
         $translatorMock = $this->getMockBuilder(Translator::class)
-            ->setMethods(['translate'])
+            ->onlyMethods(['translate'])
             ->getMock();
-// Just let the translator return the untranslated string
-        $translatorMock->expects($this->any())
+        // Just let the translator return the untranslated string
+        $translatorMock
             ->method('translate')
-            ->will($this->returnArgument(0));
+            ->will(self::returnArgument(0));
         return $translatorMock;
+    }
+
+    /**
+     * Set up the error logger mock object.
+     *
+     * @return Logging|MockObject
+     */
+    private function setUpErrorLoggingMock()
+    {
+        /** @var Logging|MockObject $errorLoggerMock */
+        $errorLoggerMock = $this->getMockBuilder(Logging::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['handleErrorException'])
+            ->getMock();
+        $errorLoggerMock
+            ->method('handleErrorException')
+            ->with(self::isInstanceOf('Exception'));
+        return $errorLoggerMock;
+    }
+
+    /**
+     * Test the basic __invoke magic method returning the plugin instance
+     *
+     * @covers \Organisation\Controller\Plugin\Merge\OrganisationMerge::__invoke
+     * @covers \Organisation\Controller\Plugin\Merge\OrganisationMerge::__construct
+     */
+    public function testInvoke(): void
+    {
+        $organisationMerge = new OrganisationMerge($this->getEntityManagerMock(), $this->getUpUpdateServiceMock(), $this->translator, $this->errorLog);
+        $instance          = $organisationMerge();
+        self::assertSame($organisationMerge, $instance);
+    }
+
+    /**
+     * @return MockObject|UpdateService
+     */
+    private function getUpUpdateServiceMock()
+    {
+        $updateServiceMock = $this->getMockBuilder(UpdateService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['hasPendingUpdates'])
+            ->getMock();
+        $updateServiceMock
+            ->method('hasPendingUpdates')
+            ->willReturn(true);
+        return $updateServiceMock;
+    }
+
+    /**
+     * Test the pre-merge checks
+     *
+     * @covers \Organisation\Controller\Plugin\Merge\OrganisationMerge::checkMerge
+     */
+    public function testCheckMerge(): void
+    {
+        $organisationMerge = new OrganisationMerge($this->getEntityManagerMock(), $this->getUpUpdateServiceMock(), $this->translator, $this->errorLog);
+        // Set up some merge-preventing circumstances
+        $this->source->getFinancial()->setVat('NL123');
+        $this->target->getFinancial()->setVat('NL456');
+        $this->source->setParent(new ParentEntity());
+        $this->target->setParent(new ParentEntity());
+        $otherCountry = new Country();
+        $otherCountry->setId(2);
+        $this->source->setCountry($otherCountry);
+        $update = new Update();
+        $this->source->getUpdates()->add($update);
+        // Run the merge check
+        $errors = $organisationMerge()->checkMerge($this->source, $this->target);
+        self::assertEquals(true, in_array('txt-cannot-merge-VAT-NL456-and-NL123', $errors, true));
+        self::assertEquals(true, in_array('txt-organisations-cant-both-be-parents', $errors, true));
+        self::assertEquals(true, in_array('txt-organisations-cant-have-different-countries', $errors, true));
+        self::assertEquals(true, in_array('txt-source-organisation-has-pending-updates', $errors, true));
+    }
+
+    /**
+     * Test the actual merge
+     *
+     * @covers \Organisation\Controller\Plugin\Merge\OrganisationMerge::merge
+     */
+    public function testMerge(): void
+    {
+        /** @var DispatchableInterface $controllerMock */
+        $controllerMock    = $this->setUpControllerMock();
+        $organisationMerge = new OrganisationMerge($this->setUpEntityManagerMock(), $this->getUpUpdateServiceMock(), $this->translator, $this->errorLog);
+        $organisationMerge->setController($controllerMock);
+        $result = $organisationMerge()->merge($this->source, $this->target);
+        self::assertEquals(true, $result['success']);
+        self::assertEquals('', $result['errorMessage']);
+        self::assertEquals(1, $this->target->getType()->getId());
+        self::assertEquals($this->source->getDateCreated(), $this->target->getDateCreated());
+        self::assertEquals($this->source->getDateUpdated(), $this->target->getDateUpdated());
+        self::assertEquals(1, $this->target->getDescription()->getId());
+        self::assertEquals($this->target, $this->target->getDescription()->getOrganisation());
+        self::assertEquals(1, $this->target->getFinancial()->getId());
+        self::assertEquals($this->target, $this->target->getFinancial()->getOrganisation());
+        self::assertEquals(1, $this->target->getLogo()->first()->getId());
+        self::assertEquals($this->target, $this->target->getLogo()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getLog()->first()->getId());
+        self::assertEquals($this->target, $this->target->getLog()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getWeb()->first()->getId());
+        self::assertEquals($this->target, $this->target->getWeb()->first()->getOrganisation());
+        self::assertEquals('Merged organisation Organisation 1 (1) into Organisation 2 (2)', $this->target->getNote()->first()->getNote());
+        self::assertEquals(1, $this->target->getNote()->last()->getId());
+        self::assertEquals($this->target, $this->target->getNote()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getNames()->first()->getId());
+        self::assertEquals($this->target, $this->target->getNames()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getAffiliation()->first()->getId());
+        self::assertEquals($this->target, $this->target->getAffiliation()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getAffiliationFinancial()->first()->getId());
+        self::assertEquals($this->target, $this->target->getAffiliationFinancial()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getParent()->getId());
+        self::assertEquals($this->target, $this->target->getParent()->getOrganisation());
+        self::assertEquals(1, $this->target->getParentFinancial()->first()->getId());
+        self::assertEquals($this->target, $this->target->getParentFinancial()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getParentOrganisation()->getId());
+        self::assertEquals($this->target, $this->target->getParentOrganisation()->getOrganisation());
+        self::assertEquals(1, $this->target->getContactOrganisation()->first()->getId());
+        self::assertEquals($this->target, $this->target->getContactOrganisation()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getOrganisationBooth()->first()->getId());
+        self::assertEquals($this->target, $this->target->getOrganisationBooth()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getBoothFinancial()->first()->getId());
+        self::assertEquals($this->target, $this->target->getBoothFinancial()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getIdeaPartner()->first()->getId());
+        self::assertEquals($this->target, $this->target->getIdeaPartner()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getInvoice()->first()->getId());
+        self::assertEquals($this->target, $this->target->getInvoice()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getJournal()->first()->getId());
+        self::assertEquals($this->target, $this->target->getJournal()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getProgramDoa()->first()->getId());
+        self::assertEquals($this->target, $this->target->getProgramDoa()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getDoa()->first()->getId());
+        self::assertEquals($this->target, $this->target->getDoa()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getReminder()->first()->getId());
+        self::assertEquals($this->target, $this->target->getReminder()->first()->getOrganisation());
+        self::assertEquals(1, $this->target->getResult()->first()->getId());
+        self::assertEquals($this->target, $this->target->getResult()->first()->getOrganisation()->first());
+        self::assertEquals(1, $this->target->getUpdates()->first()->getId());
+        self::assertEquals($this->target, $this->target->getUpdates()->first()->getOrganisation());
     }
 
     /**
@@ -355,29 +361,14 @@ final class MergeOrganisationTest extends AbstractServiceTest
     {
         $contact = new Contact();
         $contact->setId(1);
-        $controllerMock = $this->getMockBuilder(AdminController::class)
+        $controllerMock = $this->getMockBuilder(ManagerController::class)
             ->disableOriginalConstructor()
-            ->setMethods(['identity'])
+            ->addMethods(['identity'])
             ->getMock();
-        $controllerMock->expects($this->once())
+        $controllerMock->expects(self::once())
             ->method('identity')
-            ->will($this->returnValue($contact));
+            ->willReturn($contact);
         return $controllerMock;
-    }
-
-    /**
-     * @return MockObject|UpdateService
-     */
-    private function getUpUpdateServiceMock()
-    {
-        $updateServiceMock = $this->getMockBuilder(UpdateService::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['hasPendingUpdates'])
-            ->getMock();
-        $updateServiceMock->expects($this->any())
-            ->method('hasPendingUpdates')
-            ->willReturn(true);
-        return $updateServiceMock;
     }
 
     /**
@@ -390,25 +381,53 @@ final class MergeOrganisationTest extends AbstractServiceTest
     {
         $entityManagerMock = $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
-            ->setMethods(['persist', 'remove', 'flush'])
+            ->onlyMethods(['persist', 'remove', 'flush'])
             ->getMock();
-// Short circuit when an exception should be thrown
+        // Short circuit when an exception should be thrown
         if ($throwException) {
             $exception = new ORMException('Oops!');
-            $entityManagerMock->expects($this->any())->method('persist')->will($this->throwException($exception));
-            $entityManagerMock->expects($this->any())->method('remove')->will($this->throwException($exception));
-            $entityManagerMock->expects($this->any())->method('flush')->will($this->throwException($exception));
+            $entityManagerMock->method('persist')->will(self::throwException($exception));
+            $entityManagerMock->method('remove')->will(self::throwException($exception));
+            $entityManagerMock->method('flush')->will(self::throwException($exception));
             return $entityManagerMock;
         }
 
         // Setup the parameters depending on merge strategy
         $params = [
-            [$this->isInstanceOf(Log::class)],
-            [$this->isInstanceOf(Note::class)],
+            [self::isInstanceOf(Log::class)],
+            [self::isInstanceOf(Note::class)],
         ];
-        $entityManagerMock->expects($this->exactly(\count($params)))->method('persist')->withConsecutive(...$params);
-        $entityManagerMock->expects($this->once())->method('remove')->with($this->source);
-        $entityManagerMock->expects($this->exactly(2))->method('flush');
+        $entityManagerMock->expects(self::exactly(\count($params)))->method('persist')->withConsecutive(...$params);
+        $entityManagerMock->expects(self::once())->method('remove')->with($this->source);
+        $entityManagerMock->expects(self::exactly(2))->method('flush');
         return $entityManagerMock;
+    }
+
+    /**
+     * Test a failing merge
+     *
+     * @covers \Organisation\Controller\Plugin\Merge\OrganisationMerge::merge
+     */
+    public function testMergeFail(): void
+    {
+        $entityManagerMock      = $this->setUpEntityManagerMock(true);
+        $organisationMergeNoLog = new OrganisationMerge($entityManagerMock, $this->getUpUpdateServiceMock(), $this->translator, $this->errorLog);
+        $responseNoLog          = $organisationMergeNoLog->merge($this->source, $this->target);
+        self::assertEquals(false, $responseNoLog['success']);
+        self::assertEquals('Oops!', $responseNoLog['errorMessage']);
+
+        /** @var Logging|MockObject $errorLoggerMock */
+        $errorLoggerMock = $this->getMockBuilder(Logging::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['handleErrorException'])
+            ->getMock();
+        $errorLoggerMock->expects(self::once())
+            ->method('handleErrorException')
+            ->with(self::isInstanceOf('Exception'));
+
+
+        $organisationMergeLog = new OrganisationMerge($entityManagerMock, $this->getUpUpdateServiceMock(), $this->translator, $errorLoggerMock);
+        $responseLog          = $organisationMergeLog()->merge($this->source, $this->target);
+        self::assertEquals(false, $responseLog['success']);
     }
 }

@@ -21,7 +21,7 @@ use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_financial")
- * @ORM\Entity(repositoryClass="Organisation\Repository\Financial")
+ * @ORM\Entity(repositoryClass="Organisation\Repository\FinancialRepository")
  */
 class Financial extends AbstractEntity
 {
@@ -75,98 +75,78 @@ class Financial extends AbstractEntity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("Laminas\Form\Element\Hidden")
-     *
-     * @var int
      */
-    private $id;
+    private ?int $id = null;
     /**
      * @ORM\Column(name="vat", type="string", nullable=true)
      * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-vat-number", "help-block":"txt-vat-number-help-block"})
-     * @var string
      */
-    private $vat;
+    private ?string $vat = null;
     /**
      * @ORM\Column(name="date_vat", type="datetime", nullable=true)
-     * @Annotation\Exclude
-     * @var DateTime
+     * @Annotation\Exclude()
      */
-    private $dateVat;
+    private ?DateTime $dateVat = null;
     /**
      * @ORM\Column(name="vat_status", type="smallint", nullable=false)
      * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"vatStatusTemplates"})
      * @Annotation\Attributes({"label":"txt-vat-status"})
-     *
-     * @var int
      */
-    private $vatStatus;
+    private int $vatStatus;
     /**
      * @ORM\Column(name="omitcontact", type="smallint", nullable=false)
      * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"omitContactTemplates"})
      * @Annotation\Attributes({"label":"txt-omit-contact"})
-     *
-     * @var int
      */
-    private $omitContact;
+    private int $omitContact;
     /**
      * @ORM\Column(name="iban", type="string", nullable=true)
      * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-iban"})
-     * @var string
      */
-    private $iban;
+    private ?string $iban = null;
     /**
      * @ORM\Column(name="supplier_number", type="string", nullable=true)
      * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-supplier-number"})
-     * @var string
      */
-    private $supplierNumber;
+    private ?string $supplierNumber = null;
     /**
      * @ORM\Column(name="bic", type="string", nullable=true)
      * @Annotation\Type("Laminas\Form\Element\Text")
      * @Annotation\Attributes({"label":"txt-bic"})
-     *
-     * @var string
      */
-    private $bic;
+    private ?string $bic = null;
     /**
      * @ORM\Column(name="required_purchase_order", type="smallint", nullable=false)
      * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"requiredPurchaseOrderTemplates"})
      * @Annotation\Attributes({"label":"txt-required-purchase-order"})
-     *
-     * @var int
      */
-    private $requiredPurchaseOrder;
+    private int $requiredPurchaseOrder;
     /**
      * @ORM\Column(name="send_only_invoice", type="smallint", nullable=false)
      * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"sendOnlyInvoiceTemplates"})
      * @Annotation\Attributes({"label":"txt-send-only-invoice-label"})
      * @Annotation\Options({"help-block":"txt-send-only-invoice-help-block"})
-     *
-     * @var int
      */
-    private $sendOnlyInvoice;
+    private int $sendOnlyInvoice;
     /**
      * @ORM\Column(name="email", type="smallint", nullable=false)
      * @Annotation\Type("Laminas\Form\Element\Radio")
      * @Annotation\Attributes({"array":"emailTemplates"})
      * @Annotation\Attributes({"label":"txt-delivery-by-email-order"})
-     *
-     * @var int
      */
-    private $email;
+    private int $email;
     /**
      * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financial", cascade="persist")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
-     *
-     * @var Organisation
      */
-    private $organisation;
+    private Organisation $organisation;
     /**
      * @ORM\ManyToMany(targetEntity="General\Entity\VatType", cascade="persist", inversedBy="organisationFinancial")
      * @ORM\JoinTable(name="vat_type_financial",
@@ -225,6 +205,11 @@ class Financial extends AbstractEntity
     public function hasOmitContact(): bool
     {
         return $this->omitContact === self::OMIT_CONTACT;
+    }
+
+    public function sendByEmail(): bool
+    {
+        return $this->email === self::EMAIL_DELIVERY;
     }
 
     public function sendOnlyInvoice(): bool
@@ -290,7 +275,7 @@ class Financial extends AbstractEntity
         return $this;
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -302,13 +287,14 @@ class Financial extends AbstractEntity
         return $this;
     }
 
-    public function getOmitContact(bool $textual = false)
+    public function getOmitContact(): int
     {
-        if ($textual) {
-            return self::$omitContactTemplates[$this->omitContact];
-        }
-
         return $this->omitContact;
+    }
+
+    public function getOmitContactText(): string
+    {
+        return self::$omitContactTemplates[$this->omitContact] ?? '';
     }
 
     public function setOmitContact($omitContact): Financial
@@ -330,13 +316,14 @@ class Financial extends AbstractEntity
         return $this;
     }
 
-    public function getRequiredPurchaseOrder(bool $textual = false)
+    public function getRequiredPurchaseOrder(): int
     {
-        if ($textual) {
-            return self::$requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder];
-        }
-
         return $this->requiredPurchaseOrder;
+    }
+
+    public function getRequiredPurchaseOrderText(): string
+    {
+        return self::$requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder] ?? '';
     }
 
     public function setRequiredPurchaseOrder($requiredPurchaseOrder): Financial
@@ -358,13 +345,14 @@ class Financial extends AbstractEntity
         return $this;
     }
 
-    public function getVatStatus(bool $textual = false)
+    public function getVatStatus(): int
     {
-        if ($textual) {
-            return self::$vatStatusTemplates[$this->vatStatus];
-        }
-
         return $this->vatStatus;
+    }
+
+    public function getVatStatusText(): string
+    {
+        return self::$vatStatusTemplates[$this->vatStatus] ?? '';
     }
 
     public function setVatStatus($vatStatus): Financial

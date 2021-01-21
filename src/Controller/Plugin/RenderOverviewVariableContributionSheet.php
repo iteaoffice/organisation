@@ -16,7 +16,7 @@ use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
 use Invoice\Service\InvoiceService;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Organisation\Options\ModuleOptions;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
@@ -60,7 +60,7 @@ final class RenderOverviewVariableContributionSheet extends AbstractPlugin
         $this->renderer           = $renderer;
     }
 
-    public function __invoke(OParent $parent, Program $program, int $year): OrganisationPdf
+    public function __invoke(ParentEntity $parent, Program $program, int $year): OrganisationPdf
     {
         $pdf = new OrganisationPdf();
         $pdf->setTemplate($this->moduleOptions->getOverviewVariableContributionTemplate());

@@ -16,7 +16,7 @@ use Affiliation\Entity\Affiliation;
 use Doctrine\ORM\EntityManager;
 use General\Entity\Country;
 use Organisation\Entity;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Type;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
@@ -26,46 +26,25 @@ use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
  */
 abstract class AbstractImportPlugin extends AbstractPlugin
 {
-    /**
-     * @var string
-     */
-    protected $delimiter = "\t";
-    /**
-     * @var array
-     */
-    protected $header = [];
-    /**
-     * @var array
-     */
-    protected $headerKeys = [];
-    /**
-     * @var array
-     */
-    protected $keys = [];
-    /**
-     * @var array
-     */
-    protected $content = [];
-    /**
-     * @var array
-     */
-    protected $errors = [];
-    /**
-     * @var array
-     */
-    protected $warnings = [];
+    protected string $delimiter = "\t";
+    protected array $header = [];
+    protected array $headerKeys = [];
+    protected array $keys = [];
+    protected array $content = [];
+    protected array $errors = [];
+    protected array $warnings = [];
     /**
      * @var Affiliation[]
      */
-    protected $affiliation = [];
+    protected array $affiliation = [];
     /**
      * @var Affiliation[]
      */
-    protected $importedAffiliation = [];
+    protected array $importedAffiliation = [];
     /**
      * @var EntityManager
      */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

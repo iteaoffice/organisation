@@ -6,7 +6,7 @@
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
 
-{% set parent = form.get('organisation_entity_oparent') %}
+{% set parent = form.get('organisation_entity_parententity') %}
 
 {{ ztbformelement(parent.get('id')) }}
 {{ ztbformelement(parent.get('type')) }}

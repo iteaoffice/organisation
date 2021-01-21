@@ -15,7 +15,7 @@ namespace Organisation\Entity\Parent;
 use Doctrine\ORM\Mapping as ORM;
 use Laminas\Form\Annotation;
 use Organisation\Entity\AbstractEntity;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Program\Entity\Program;
 
 /**
@@ -34,13 +34,13 @@ class Invoice extends AbstractEntity
      *
      * @var int
      */
-    private $id;
+    private int $id;
     /**
      * @ORM\Column(name="year", type="integer", options={"unsigned":true})
      *
      * @var int
      */
-    private $year;
+    private int $year;
     /**
      * @ORM\Column(name="amount_invoiced", type="decimal", precision=10, scale=2, nullable=true)
      *
@@ -48,24 +48,24 @@ class Invoice extends AbstractEntity
      */
     private $amountInvoiced;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="invoice", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="invoice", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      *
-     * @var OParent
+     * @var ParentEntity
      */
-    private $parent;
+    private ParentEntity $parent;
     /**
      * @ORM\OneToOne(targetEntity="Invoice\Entity\Invoice", inversedBy="parentInvoice", cascade={"persist"})
      * @ORM\JoinColumn(name="invoice_id", referencedColumnName="invoice_id", nullable=false)
      * @var \Invoice\Entity\Invoice
      */
-    private $invoice;
+    private \Invoice\Entity\Invoice $invoice;
     /**
      * @ORM\ManyToOne(targetEntity="Program\Entity\Program", inversedBy="parentInvoice", cascade={"persist"})
      * @ORM\JoinColumn(name="program_id", referencedColumnName="program_id", nullable=false)
      * @var Program
      */
-    private $program;
+    private Program $program;
 
     public function __toString(): string
     {
@@ -108,12 +108,12 @@ class Invoice extends AbstractEntity
         return $this;
     }
 
-    public function getParent(): OParent
+    public function getParent(): ParentEntity
     {
         return $this->parent;
     }
 
-    public function setParent(OParent $parent): Invoice
+    public function setParent(ParentEntity $parent): Invoice
     {
         $this->parent = $parent;
 

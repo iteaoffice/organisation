@@ -22,7 +22,7 @@ use Organisation\Service\OrganisationService;
  *
  * @package Organisation\Controller
  */
-final class ImageController extends OrganisationAbstractController
+final class ImageController extends AbstractController
 {
     private OrganisationService $organisationService;
 

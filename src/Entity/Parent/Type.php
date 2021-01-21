@@ -14,14 +14,12 @@ namespace Organisation\Entity\Parent;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Organisation\Entity\AbstractEntity;
 use Laminas\Form\Annotation;
+use Organisation\Entity\AbstractEntity;
 
 /**
- * Entity for the Partner.
- *
  * @ORM\Table(name="organisation_parent_type")
- * @ORM\Entity(repositoryClass="Organisation\Repository\Parent\Type")
+ * @ORM\Entity(repositoryClass="Organisation\Repository\Parent\TypeRepository")
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_parent_type")
  */
@@ -30,7 +28,7 @@ class Type extends AbstractEntity
     public const TYPE_A_CHAMBER = 1;
     public const TYPE_B_CHAMBER = 2;
     public const TYPE_C_CHAMBER = 3;
-    public const TYPE_OTHER = 4;
+    public const TYPE_OTHER     = 4;
     /**
      * @ORM\Column(name="type_id", type="integer", options={"unsigned":true})
      * @ORM\Id
@@ -55,106 +53,64 @@ class Type extends AbstractEntity
      */
     private $description;
     /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\OParent", cascade={"persist"}, mappedBy="type")
+     * @ORM\OneToMany(targetEntity="Organisation\Entity\ParentEntity", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
      *
-     * @var \Organisation\Entity\OParent[]|ArrayCollection
+     * @var \Organisation\Entity\ParentEntity[]|ArrayCollection
      */
     private $parent;
 
-    /**
-     * Type constructor.
-     */
     public function __construct()
     {
         $this->parent = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return (string)$this->type;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Type
-     */
-    public function setId($id): Type
+    public function setId(?int $id): Type
     {
         $this->id = $id;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return Type
-     */
-    public function setType(string $type): Type
+    public function setType(?string $type): Type
     {
         $this->type = $type;
-
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     *
-     * @return Type
-     */
-    public function setDescription(string $description): Type
+    public function setDescription(?string $description): Type
     {
         $this->description = $description;
-
         return $this;
     }
 
-    /**
-     * @return ArrayCollection|\Organisation\Entity\OParent[]
-     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    /**
-     * @param ArrayCollection|\Organisation\Entity\OParent[] $parent
-     *
-     * @return Type
-     */
-    public function setParent($parent)
+    public function setParent($parent): Type
     {
         $this->parent = $parent;
-
         return $this;
     }
 }

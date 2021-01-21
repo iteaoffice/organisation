@@ -32,14 +32,8 @@ use function urldecode;
  */
 final class GetFilter extends AbstractPlugin
 {
-    /**
-     * @var ServiceManager
-     */
-    private $serviceManager;
-    /**
-     * @var array
-     */
-    private $filter = [];
+    private ServiceManager $serviceManager;
+    private array $filter = [];
 
     public function __construct(ServiceManager $serviceManager)
     {

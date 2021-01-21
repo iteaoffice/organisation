@@ -30,7 +30,7 @@ use Throwable;
  *
  * @package Organisation\Controller
  */
-final class SelectionController extends OrganisationAbstractController
+final class SelectionController extends AbstractController
 {
     private SelectionService $selectionService;
     private FormService $formService;

@@ -14,9 +14,10 @@ namespace Organisation\Controller\Organisation;
 
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as PaginatorAdapter;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
-use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Controller\AbstractController;
 use Organisation\Entity;
 use Organisation\Form;
 use Organisation\Service\FormService;
@@ -26,15 +27,17 @@ use Organisation\Service\OrganisationService;
  * Class TypeController
  * @package Organisation\Controller
  */
-final class TypeController extends OrganisationAbstractController
+final class TypeController extends AbstractController
 {
     private OrganisationService $organisationService;
     private FormService $formService;
+    private TranslatorInterface $translator;
 
-    public function __construct(OrganisationService $organisationService, FormService $formService)
+    public function __construct(OrganisationService $organisationService, FormService $formService, TranslatorInterface $translator)
     {
         $this->organisationService = $organisationService;
         $this->formService         = $formService;
+        $this->translator          = $translator;
     }
 
     public function listAction(): ViewModel
@@ -50,7 +53,7 @@ final class TypeController extends OrganisationAbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\OrganisationFilter($this->organisationService);
+        $form = new Form\OrganisationFilterForm($this->organisationService);
 
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
@@ -83,6 +86,13 @@ final class TypeController extends OrganisationAbstractController
                 $type = $form->getData();
 
                 $result = $this->organisationService->save($type);
+
+                $this->flashMessenger()->addSuccessMessage(
+                    $this->translator->translate(
+                        'txt-organisation-type-has-been-created-successfully'
+                    )
+                );
+
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/type/view',
                     [
@@ -120,14 +130,16 @@ final class TypeController extends OrganisationAbstractController
                 );
             }
 
-            if (isset($data['delete']) && $this->organisationService->canDeleteOrganisation($type)) {
+            if (isset($data['delete']) && $this->organisationService->canDeleteType($type)) {
                 $this->organisationService->delete($type);
-                return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/type/list',
-                    [
-                        'id' => $type->getId(),
-                    ]
+
+                $this->flashMessenger()->addSuccessMessage(
+                    $this->translator->translate(
+                        'txt-organisation-type-has-been-deleted-successfully'
+                    )
                 );
+
+                return $this->redirect()->toRoute('zfcadmin/organisation/type/list');
             }
 
             if ($form->isValid()) {
@@ -135,6 +147,13 @@ final class TypeController extends OrganisationAbstractController
                 $type = $form->getData();
 
                 $this->organisationService->save($type);
+
+                $this->flashMessenger()->addSuccessMessage(
+                    $this->translator->translate(
+                        'txt-organisation-type-has-been-updated-successfully'
+                    )
+                );
+
                 return $this->redirect()->toRoute(
                     'zfcadmin/organisation/type/view',
                     [

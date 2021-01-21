@@ -17,7 +17,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Organisation\Entity\AbstractEntity;
-use Organisation\Entity\OParent;
+use Organisation\Entity\ParentEntity;
 use Laminas\Form\Annotation;
 
 /**
@@ -39,10 +39,10 @@ class Financial extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\OParent", inversedBy="financial", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="financial", cascade="persist")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      *
-     * @var OParent
+     * @var ParentEntity
      */
     private $parent;
     /**
@@ -119,12 +119,12 @@ class Financial extends AbstractEntity
         return $this;
     }
 
-    public function getParent(): ?OParent
+    public function getParent(): ?ParentEntity
     {
         return $this->parent;
     }
 
-    public function setParent(?OParent $parent): Financial
+    public function setParent(?ParentEntity $parent): Financial
     {
         $this->parent = $parent;
         return $this;

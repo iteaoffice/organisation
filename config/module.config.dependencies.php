@@ -78,14 +78,15 @@ return [
             AffiliationService::class,
             TwigRenderer::class
         ],
-        Controller\Plugin\MergeOrganisation::class                            => [
+        Controller\Plugin\Merge\OrganisationMerge::class                      => [
             EntityManager::class,
             Service\UpdateService::class,
             TranslatorInterface::class,
             Logging::class
         ],
-        Controller\Plugin\MergeParentOrganisation::class                      => [
-            EntityManager::class
+        Controller\Plugin\Merge\ParentOrganisationMerge::class                => [
+            EntityManager::class,
+            Logging::class
         ],
         Controller\Plugin\SelectionExport::class                              => [
             Service\SelectionService::class,
@@ -94,7 +95,7 @@ return [
         Form\OrganisationForm::class                                          => [
             EntityManager::class
         ],
-        Form\UpdateForm::class                                                => [
+        Form\Organisation\UpdateForm::class                                   => [
             EntityManager::class
         ],
         Form\FinancialForm::class                                             => [

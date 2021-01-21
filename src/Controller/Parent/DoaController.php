@@ -21,9 +21,9 @@ use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Validator\File\FilesSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\ViewModel;
-use Organisation\Controller\OrganisationAbstractController;
+use Organisation\Controller\AbstractController;
 use Organisation\Entity;
-use Organisation\Form\ParentDoa;
+use Organisation\Form;
 use Organisation\Service\ParentService;
 use Program\Entity\Program;
 use Program\Service\ProgramService;
@@ -34,7 +34,7 @@ use function file_get_contents;
  * Class DoaController
  * @package Organisation\Controller\Parent
  */
-final class DoaController extends OrganisationAbstractController
+final class DoaController extends AbstractController
 {
     private ParentService $parentService;
     private EntityManager $entityManager;
@@ -72,7 +72,7 @@ final class DoaController extends OrganisationAbstractController
             $this->getRequest()->getPost()->toArray(),
             $this->getRequest()->getFiles()->toArray()
         );
-        $form = new ParentDoa($this->entityManager);
+        $form = new Form\Parent\DoaForm($this->entityManager);
         $form->setData($data);
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
@@ -152,7 +152,7 @@ final class DoaController extends OrganisationAbstractController
             $this->getRequest()->getFiles()->toArray(),
             $this->getRequest()->getPost()->toArray()
         );
-        $form = new ParentDoa($this->entityManager);
+        $form = new Form\Parent\DoaForm($this->entityManager);
         $form->setData($data);
 
         $form->get('contact')->injectContact($doa->getContact());
@@ -182,8 +182,8 @@ final class DoaController extends OrganisationAbstractController
                     /*
                      * Replace the content of the object
                      */
-                    if (! $doa->getObject()->isEmpty()) {
-                        $doa->getObject()->first()->setObject(
+                    if (! null === $doa->getObject()) {
+                        $doa->getObject()->setObject(
                             file_get_contents($fileData['file']['tmp_name'])
                         );
                     } else {
@@ -250,13 +250,11 @@ final class DoaController extends OrganisationAbstractController
          */
         $doa = $this->parentService->find(Entity\Parent\Doa::class, (int)$this->params('id'));
 
-        if (null === $doa || count($doa->getObject()) === 0) {
+        if (null === $doa || null === $doa->getObject()) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
-        /*
-         * Due to the BLOB issue, we treat this as an array and we need to capture the first element
-         */
-        $object = $doa->getObject()->first()->getObject();
+
+        $object = $doa->getObject()->getObject();
 
         $response->setContent(stream_get_contents($object));
         $response->getHeaders()->addHeaderLine(

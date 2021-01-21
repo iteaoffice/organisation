@@ -33,7 +33,7 @@ use function sprintf;
  * Class UpdateController
  * @package Organisation\Controller
  */
-final class UpdateController extends OrganisationAbstractController
+final class UpdateController extends AbstractController
 {
     private OrganisationService $organisationService;
     private GeneralService $generalService;
@@ -42,12 +42,12 @@ final class UpdateController extends OrganisationAbstractController
 
     public function __construct(
         OrganisationService $organisationService,
-        GeneralService $generalservice,
+        GeneralService $generalService,
         FormService $formService,
         TranslatorInterface $translator
     ) {
         $this->organisationService = $organisationService;
-        $this->generalService      = $generalservice;
+        $this->generalService      = $generalService;
         $this->formService         = $formService;
         $this->translator          = $translator;
     }

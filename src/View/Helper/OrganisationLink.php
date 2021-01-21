@@ -15,7 +15,7 @@ namespace Organisation\View\Helper;
 use Content\Entity\Route;
 use General\ValueObject\Link\Link;
 use General\View\Helper\AbstractLink;
-use Organisation\Acl\Assertion\Organisation as OrganisationAssertion;
+use Organisation\Acl\Assertion\OrganisationAssertion;
 use Organisation\Entity\Organisation;
 use Organisation\Service\OrganisationService;
 
