@@ -1,0 +1,88 @@
+<h3>{{ translate("txt-project-doa") }}</h3>
+
+<table class="table table-hover table-striped table-sm">
+    <tr>
+        <th>{{ translate("txt-doa-id") }}</th>
+        <th>{{ translate("txt-signer") }}</th>
+        <th>{{ translate("txt-date-signed") }}</th>
+        <th>{{ translate("txt-project") }}</th>
+        <th>{{ translate("txt-actions") }}</th>
+    </tr>
+    {% for doa in organisationDoa %}
+        <tr>
+            <td>{{ doaLink(doa,'view-admin','name') }}</td>
+            <td>{{ contactLink(doa.contact,'view-admin','name') }}</td>
+            <td>{% if doa.dateSigned %}{{ doa.dateSigned|string_date }}{% endif %}</td>
+            <td>{{ projectLink(doa.affiliation.project,'view-admin','name') }}
+                {{ projectLink(doa.affiliation.project,'view-community','icon') }}
+            </td>
+            <td>{{ doaLink(doa,'edit-admin','icon') }} {{ doaLink(doa,'download','icon') }} </td>
+        </tr>
+    {% endfor %}
+</table>
+
+<h3>{{ translate("txt-project-loi") }}</h3>
+
+<table class="table table-hover table-striped table-sm">
+    <tr>
+        <th>{{ translate("txt-loi-id") }}</th>
+        <th>{{ translate("txt-signer") }}</th>
+        <th>{{ translate("txt-date-signed") }}</th>
+        <th>{{ translate("txt-project") }}</th>
+        <th>{{ translate("txt-actions") }}</th>
+    </tr>
+    {% for loi in organisationLoi %}
+        <tr>
+            <td>{{ loiLink(loi,'view-admin','name') }}</td>
+            <td>{{ contactLink(loi.contact,'view-admin','name') }}</td>
+            <td>{% if loi.dateSigned %}{{ loi.dateSigned|string_date }}{% endif %}</td>
+            <td>{{ projectLink(loi.affiliation.project,'view-admin','name') }} {{ projectLink(loi.affiliation.project,'view-community','icon') }}
+            </td>
+            <td>{{ loiLink(loi,'edit-admin','icon') }} {% if loi.hasObject() %}{{ loiLink(loi,'download','icon') }}{% endif %}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+<h3>{{ translate("txt-program-doa") }}</h3>
+
+<table class="table table-hover table-striped table-sm">
+    <tr>
+        <th>{{ translate("txt-doa-id") }}</th>
+        <th>{{ translate("txt-signer") }}</th>
+        <th>{{ translate("txt-date-signed") }}</th>
+        <th>{{ translate("txt-program") }}</th>
+        <th>{{ translate("txt-actions") }}</th>
+    </tr>
+    {% for doa in organisation.programDoa %}
+        <tr>
+            <td>{{ programDoaLink(doa,'view','name') }}</td>
+            <td>{{ contactLink(doa.contact,'view-admin','name') }}</td>
+            <td>{% if doa.dateSigned %}{{ doa.dateSigned|string_date }}{% endif %}</td>
+            <td>{{ programLink(doa.program,'view') }}</td>
+            <td>{{ programDoaLink(doa,'download','icon') }} {{ programDoaLink(doa,'replace','icon') }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+
+<h3>{{ translate("txt-programcall-doa") }}</h3>
+
+<table class="table table-hover table-striped table-sm">
+    <tr>
+        <th>{{ translate("txt-doa-id") }}</th>
+        <th>{{ translate("txt-signer") }}</th>
+        <th>{{ translate("txt-date-signed") }}</th>
+        <th>{{ translate("txt-call") }}</th>
+        <th>{{ translate("txt-actions") }}</th>
+    </tr>
+    {% for doa in organisation.doa %}
+        <tr>
+            <td>{{ doa.id }}</td>
+            <td>{{ doa.contact.displayName }}</td>
+            <td>{% if doa.dateSigned %}{{ doa.dateSigned|string_date }}{% endif %}</td>
+            <td>{{ doa.call }}</td>
+            <td></td>
+        </tr>
+    {% endfor %}
+</table>
