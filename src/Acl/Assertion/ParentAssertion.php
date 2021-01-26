@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Organisation\Acl\Assertion;
 
-use Admin\Entity\Access;
 use Laminas\Permissions\Acl\Acl;
 use Laminas\Permissions\Acl\Resource\ResourceInterface;
 use Laminas\Permissions\Acl\Role\RoleInterface;
+use Organisation\Entity\ParentEntity;
 
 /**
  * Class ParentEntity
@@ -32,9 +32,13 @@ final class ParentAssertion extends AbstractAssertion
     ): bool {
         $this->setPrivilege($privilege);
 
+        /** @var ParentEntity $parent */
+        $parent = $resource;
+
         switch ($this->getPrivilege()) {
-            case 'view-public':
-                return true;
+            case 'create-from-organisation':
+                return ! $parent->getOrganisation()->hasParent();
+
             default:
                 return $this->rolesHaveAccess('office');
         }

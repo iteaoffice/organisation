@@ -14,7 +14,6 @@ namespace Organisation\Navigation\Invokable;
 
 use General\Navigation\Invokable\AbstractNavigationInvokable;
 use Laminas\Navigation\Page\Mvc;
-use Organisation\Entity\Note;
 use Organisation\Entity\Organisation;
 
 /**
@@ -36,15 +35,7 @@ final class OrganisationLabel extends AbstractNavigationInvokable
                 ['id' => $organisation->getId()]
             ));
             $label = (string)$organisation;
-        // Get organisation from note
-        } elseif ($this->getEntities()->containsKey(Note::class)) {
-            /** @var Note $note */
-            $note = $this->getEntities()->get(Note::class);
-            $page->setParams(array_merge(
-                $page->getParams(),
-                ['id' => $note->getOrganisation()->getId()]
-            ));
-            $label = (string)$note->getOrganisation();
+            // Get organisation from note
         }
         if (null === $page->getLabel()) {
             $page->set('label', $label);

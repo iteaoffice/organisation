@@ -39,7 +39,6 @@ final class BoardController extends AbstractController
         $this->translator   = $translator;
     }
 
-
     public function listAction(): ViewModel
     {
         $page              = $this->params()->fromRoute('page', 1);

@@ -33,7 +33,7 @@
         <dd>{{ contentTypeIcon(doa.contentType) }} {{ doa.contentType.description }} ({{ doa.size|parse_size }})</dd>
     {% endif %}
     <dt>{{ translate("txt-download") }}</dt>
-    <dd>{{ doaLink(doa,'download','text') }}</dd>
+    <dd>{{ affiliationDoaLink(doa,'download','text') }}</dd>
 </dl>
 
-{{ doaLink(doa,'edit-admin','button') }}
+{{ affiliationDoaLink(doa,'edit-admin','button') }}

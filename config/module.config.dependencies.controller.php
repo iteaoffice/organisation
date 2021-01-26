@@ -30,51 +30,47 @@ use Project\Service\ProjectService;
 
 return [
     ConfigAbstractFactory::class => [
-        Controller\ConsoleController::class             => [
+        Controller\ConsoleController::class                => [
             Service\OrganisationService::class
         ],
-        Controller\JsonController::class                => [
+        Controller\JsonController::class                   => [
             Service\OrganisationService::class,
             Service\ParentService::class,
             TranslatorInterface::class
         ],
-        Controller\Organisation\NoteController::class          => [
+        Controller\Organisation\NoteController::class      => [
             Service\OrganisationService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\ImageController::class               => [
+        Controller\ImageController::class                  => [
             Service\OrganisationService::class
         ],
-        Controller\BoardController::class               => [
+        Controller\BoardController::class                  => [
             Service\BoardService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Organisation\DetailsController::class       => [
+        Controller\Organisation\DetailsController::class   => [
             Service\OrganisationService::class,
-            InvoiceService::class,
             InvoiceSearchService::class,
             ProjectService::class,
             AffiliationService::class,
             DoaService::class,
             LoiService::class,
-            GeneralService::class,
-            EntityManager::class,
-            Service\FormService::class,
-            TranslatorInterface::class
+            EntityManager::class
         ],
-        Controller\Organisation\FinancialController::class     => [
+        Controller\Organisation\FinancialController::class => [
             Service\OrganisationService::class,
             Service\FormService::class,
             GeneralService::class,
             TranslatorInterface::class
         ],
-        Controller\Organisation\ListController::class          => [
+        Controller\Organisation\ListController::class      => [
             Service\OrganisationService::class,
             Search\Service\OrganisationSearchService::class
         ],
-        Controller\Organisation\ManagerController::class       => [
+        Controller\Organisation\ManagerController::class   => [
             Service\OrganisationService::class,
             ProjectService::class,
             ContactService::class,
@@ -83,27 +79,38 @@ return [
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Organisation\TypeController::class          => [
+        Controller\Organisation\TypeController::class      => [
             Service\OrganisationService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\SelectionController::class           => [
+        Controller\SelectionController::class              => [
             Service\SelectionService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\ContributionController::class              => [
+        Controller\Parent\ContributionController::class    => [
+            Service\ParentService::class,
+            ProgramService::class,
+            InvoiceService::class,
+        ],
+        Controller\Parent\ListController::class            => [
+            Service\ParentService::class,
+            Service\OrganisationService::class,
+            ContactService::class,
+            EntityManager::class,
+            TranslatorInterface::class
+        ],
+        Controller\Parent\DetailsController::class         => [
             Service\ParentService::class,
             Service\OrganisationService::class,
             ContactService::class,
             ProgramService::class,
             InvoiceService::class,
-            Service\FormService::class,
             EntityManager::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\OrganisationController::class => [
+        Controller\Parent\OrganisationController::class    => [
             Service\ParentService::class,
             ProjectService::class,
             AffiliationService::class,
@@ -111,12 +118,12 @@ return [
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\TypeController::class         => [
+        Controller\Parent\TypeController::class            => [
             Service\ParentService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\DoaController::class          => [
+        Controller\Parent\DoaController::class             => [
             Service\ParentService::class,
             EntityManager::class,
             GeneralService::class,
@@ -124,22 +131,21 @@ return [
             ProgramService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\FinancialController::class    => [
+        Controller\Parent\FinancialController::class       => [
             Service\ParentService::class,
             ContactService::class,
             ProjectService::class,
             CountryService::class,
             Service\OrganisationService::class,
-            EntityManager::class,
             TranslatorInterface::class
         ],
-        Controller\UpdateController::class              => [
+        Controller\UpdateController::class                 => [
             Service\OrganisationService::class,
             GeneralService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Update\ManagerController::class      => [
+        Controller\Update\ManagerController::class         => [
             Service\UpdateService::class,
             GeneralService::class,
             Service\FormService::class,

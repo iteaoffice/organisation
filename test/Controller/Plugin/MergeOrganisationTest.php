@@ -137,9 +137,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $programDoa = new Doa();
         $programDoa->setId(1);
         $programDoa->setOrganisation($source);
-        $doa = new \Program\Entity\Call\Doa();
-        $doa->setId(1);
-        $doa->setOrganisation($source);
+
         $reminder = new Reminder();
         $reminder->setId(1);
         $reminder->setOrganisation($source);
@@ -174,7 +172,7 @@ final class MergeOrganisationTest extends AbstractServiceTest
         $source->setInvoice(new ArrayCollection([$invoice]));
         $source->setJournal(new ArrayCollection([$invoiceJournal]));
         $source->setProgramDoa(new ArrayCollection([$programDoa]));
-        $source->setDoa(new ArrayCollection([$doa]));
+
         $source->setReminder(new ArrayCollection([$reminder]));
         $source->setResult(new ArrayCollection([$result]));
         $source->setUpdates(new ArrayCollection([$update]));
@@ -342,8 +340,6 @@ final class MergeOrganisationTest extends AbstractServiceTest
         self::assertEquals($this->target, $this->target->getJournal()->first()->getOrganisation());
         self::assertEquals(1, $this->target->getProgramDoa()->first()->getId());
         self::assertEquals($this->target, $this->target->getProgramDoa()->first()->getOrganisation());
-        self::assertEquals(1, $this->target->getDoa()->first()->getId());
-        self::assertEquals($this->target, $this->target->getDoa()->first()->getOrganisation());
         self::assertEquals(1, $this->target->getReminder()->first()->getId());
         self::assertEquals($this->target, $this->target->getReminder()->first()->getOrganisation());
         self::assertEquals(1, $this->target->getResult()->first()->getId());

@@ -109,31 +109,6 @@ final class ListController extends AbstractController
         );
     }
 
-    public function financialAction(): ViewModel
-    {
-        $page              = $this->params()->fromRoute('page', 1);
-        $filterPlugin      = $this->getOrganisationFilter();
-        $organisationQuery = $this->organisationService->findOrganisationFinancialList($filterPlugin->getFilter());
-
-        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
-        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
-        $paginator->setCurrentPageNumber($page);
-        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
-
-        $form = new OrganisationFilterForm($this->organisationService);
-        $form->setData(['filter' => $filterPlugin->getFilter()]);
-
-        return new ViewModel(
-            [
-                'paginator'     => $paginator,
-                'form'          => $form,
-                'encodedFilter' => urlencode($filterPlugin->getHash()),
-                'order'         => $filterPlugin->getOrder(),
-                'direction'     => $filterPlugin->getDirection(),
-            ]
-        );
-    }
-
     public function duplicateAction(): ViewModel
     {
         $page              = $this->params()->fromRoute('page', 1);
@@ -168,6 +143,31 @@ final class ListController extends AbstractController
         return new ViewModel(
             [
                 'inactiveOrganisations' => $inactiveOrganisations
+            ]
+        );
+    }
+
+    public function financialAction(): ViewModel
+    {
+        $page              = $this->params()->fromRoute('page', 1);
+        $filterPlugin      = $this->getOrganisationFilter();
+        $organisationQuery = $this->organisationService->findOrganisationFinancialList($filterPlugin->getFilter());
+
+        $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($organisationQuery, false)));
+        $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
+
+        $form = new OrganisationFilterForm($this->organisationService);
+        $form->setData(['filter' => $filterPlugin->getFilter()]);
+
+        return new ViewModel(
+            [
+                'paginator'     => $paginator,
+                'form'          => $form,
+                'encodedFilter' => urlencode($filterPlugin->getHash()),
+                'order'         => $filterPlugin->getOrder(),
+                'direction'     => $filterPlugin->getDirection(),
             ]
         );
     }

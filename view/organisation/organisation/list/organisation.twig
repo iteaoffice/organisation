@@ -1,0 +1,63 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-organisation-list")) %}
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+
+<h1>{{ translate("txt-organisation-admin-list") }} {{ organisationLink(null,'new','button') }}</h1>
+
+{{ filterbarelement(form) }}
+{% include('application/partial/form-badges') %}
+<p class="text-muted">{{ translate("txt-%s-items-on-%s-pages")|format(paginator.adapter.count,paginator.pageRange) }}</p>
+
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/organisation', 'criteria': 'organisation', 'text': translate("txt-organisation")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/organisation', 'criteria': 'type', 'text': translate("txt-type")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/organisation', 'criteria': 'parent', 'text': translate("txt-parent")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/organisation', 'criteria': 'country', 'text': translate("txt-country")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/organisation', 'criteria': 'contacts', 'text': translate("txt-contacts")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/organisation', 'criteria': 'projects', 'text': translate("txt-projects")} %}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+        {% for result in paginator.getCurrentItems() %}
+            <tr>
+                <td>
+                    {% if result.fields.is_parent %}<span
+                            class="badge badge-info"><a class="text-reset" href="{{ url("zfcadmin/parent/view",{'id':result.fields.own_parent_id }) }}">{{ translate("txt-parent") }}</a></span> {% endif %}
+                    <a href="{{ url("zfcadmin/organisation/details/general",{'id':result.fields.organisation_id }) }}">{{ result.fields.organisation }}</a>
+                    <a href="{{ url("zfcadmin/organisation/edit",{'id':result.fields.organisation_id }) }}"><i
+                                class="far fa-edit"></i></a>
+                </td>
+                <td>{{ result.fields.organisation_type }}</td>
+                <td>
+                    {% if result.fields.has_parent %}
+                        {% if  result.fields.has_wrong_parent_child_relationship %}
+                            <span class="badge badge-danger">{{ translate("txt-is-parent-but-has-other-parent") }}</span>
+                        {% endif %}
+
+                        {% if not result.fields.is_own_parent %}
+                            <a href="{{ url("zfcadmin/parent/view",{'id':result.fields.parent_id }) }}">{{ result.fields.parent }}</a>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>{{ result.fields.country }}</td>
+                <td>{{ result.fields.contacts }}</td>
+                <td>{{ result.fields.projects }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'application/partial/pagination-control' with {'paginator': paginator} %}
+{% else %}
+    {{ ztbalert().info(translate("txt-no-organisation-found"))|raw }}
+{% endif %}
+
+{{ form().closeTag()|raw }}

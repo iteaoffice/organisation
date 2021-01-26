@@ -1,0 +1,81 @@
+{% include 'organisation/organisation/details/tabs' %}
+
+<h2>{{ translate("txt-financial") }}</h2>
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-debtor-number") }}</dt>
+    <dd>{{ organisationService.parseDebtorNumber(organisation) }}</dd>
+    <dt>{{ translate("txt-credit-number") }}</dt>
+    <dd>{{ organisationService.parseCreditNumber(organisation) }}</dd>
+</dl>
+{% set financial = organisation.financial %}
+
+    {% if financial %}
+        <dl class="dl-horizontal">
+            <dt>{{ translate("txt-vat-number") }}</dt>
+            {% if financial.vat %}
+                <dd>{{ financial.vat }}
+                    (<span id="vatStatus">{{ translate(financial.getVatStatusText()) }}
+                        - {{ translate("txt-checked-on-%s")|format(financial.dateVat|date("d-m-Y")) }}</span>)
+                    <i class="fas fa-sync-alt checkVat cursor-pointer" data-financial="{{ financial.id }}"></i>
+                </dd>
+            {% else %}
+                <dd>{{ translate("txt-no-VAT-number-known") }}</dd>
+            {% endif %}
+            <dt>{{ translate("txt-vat-type") }}</dt>
+            {% for vatType in financial.vatType %}
+                <dd>{{ vatType.type }}</dd>
+            {% else %}
+                <dd>{{ translate("txt-no-vat-enforcement") }}</dd>
+            {% endfor %}
+            <dt>{{ translate("txt-omit-contact-on-invoice") }}</dt>
+            <dd>{{ translate(financial.getOmitContactText()) }}</dd>
+            <dt>{{ translate("txt-invoice-via-email") }}</dt>
+            <dd>{{ translate(financial.getEmailText()) }}</dd>
+            <dt>{{ translate("txt-require-purchace-order") }}</dt>
+            <dd>{{ translate(financial.getRequiredPurchaseOrderText()) }}</dd>
+            <dt>{{ translate("txt-send-only-invoice") }}</dt>
+            <dd>{{ translate(financial.getSendOnlyInvoiceText()) }}</dd>
+            <dt>{{ translate("txt-iban") }}</dt>
+            <dd>{{ financial.iban|default(translate("txt-not-provided")) }}</dd>
+            <dt>{{ translate("txt-bic") }}</dt>
+            <dd>{{ financial.bic|default(translate("txt-not-provided")) }}</dd>
+            <dt>{{ translate("txt-supplier-number") }}</dt>
+            <dd>{{ financial.supplierNumber|default(translate("txt-not-provided")) }}</dd>
+            <dt>{{ translate("txt-amount-of-invoices") }}</dt>
+            <dd>
+                <a href="{{ url('zfcadmin/organisation/details/invoices',{'id': organisation.id}) }}">{{ organisation.invoice.count() }}</a>
+            </dd>
+        </dl>
+    {% else %}
+        {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisation))|raw }}
+    {% endif %}
+
+{{ organisationLink(organisation,'edit-financial','button') }}
+
+
+<script type="text/javascript">
+    $(document).on('click', '.checkVat', function (e) {
+        var $this = $(this);
+
+        var $financialId = $this.data('financial');
+
+        $this.addClass('fa-spin');
+
+        $.ajax({
+            url: '{{ serverUrl() }}{{ url('organisation/json/check-vat') }}',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                'financialId': $financialId,
+            },
+            success: function (response) {
+                $("#vatStatus").html(response.result);
+                $this.removeClass('fa-spin');
+            },
+            error: function (xhr) {
+                alert('Error! Did you enable adblock????? Status = ' + xhr.status);
+            }
+        });
+    });
+</script>

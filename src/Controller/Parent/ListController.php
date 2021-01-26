@@ -223,7 +223,7 @@ final class ListController extends AbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $form = new Form\ParentFilterForm();
+        $form = new Form\ParentFilterForm($this->entityManager);
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         return new ViewModel(

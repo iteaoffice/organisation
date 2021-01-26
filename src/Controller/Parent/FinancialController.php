@@ -15,7 +15,6 @@ namespace Organisation\Controller\Parent;
 use Contact\Entity\Address;
 use Contact\Entity\AddressType;
 use Contact\Service\ContactService;
-use Doctrine\ORM\EntityManager;
 use General\Entity\Country;
 use General\Service\CountryService;
 use Laminas\I18n\Translator\TranslatorInterface;
@@ -38,7 +37,6 @@ final class FinancialController extends AbstractController
     private ProjectService $projectService;
     private CountryService $countryService;
     private OrganisationService $organisationService;
-    private EntityManager $entityManager;
     private TranslatorInterface $translator;
 
     public function __construct(
@@ -47,7 +45,6 @@ final class FinancialController extends AbstractController
         ProjectService $projectService,
         CountryService $countryService,
         OrganisationService $organisationService,
-        EntityManager $entityManager,
         TranslatorInterface $translator
     ) {
         $this->parentService       = $parentService;
@@ -55,7 +52,6 @@ final class FinancialController extends AbstractController
         $this->projectService      = $projectService;
         $this->countryService      = $countryService;
         $this->organisationService = $organisationService;
-        $this->entityManager       = $entityManager;
         $this->translator          = $translator;
     }
 
@@ -101,13 +97,11 @@ final class FinancialController extends AbstractController
 
         $form->setData($data);
 
-
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/financial',
                     ['id' => $parent->getId(),],
-                    ['fragment' => 'financial',]
                 );
             }
 
@@ -164,9 +158,8 @@ final class FinancialController extends AbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
-                    ['id' => $financial->getParent()->getId(),],
-                    ['fragment' => 'financial',]
+                    'zfcadmin/parent/details/financial',
+                    ['id' => $financial->getParent()->getId()]
                 );
             }
         }
@@ -240,17 +233,15 @@ final class FinancialController extends AbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
-                    ['id' => $financial->getParent()->getId(),],
-                    ['fragment' => 'financial',]
+                    'zfcadmin/parent/details/financial',
+                    ['id' => $financial->getParent()->getId()]
                 );
             }
 
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
-                    ['id' => $financial->getParent()->getId(),],
-                    ['fragment' => 'financial',]
+                    'zfcadmin/parent/details/financial',
+                    ['id' => $financial->getParent()->getId()]
                 );
             }
 
@@ -302,9 +293,8 @@ final class FinancialController extends AbstractController
             }
 
             return $this->redirect()->toRoute(
-                'zfcadmin/parent/view',
-                ['id' => $financial->getParent()->getId(),],
-                ['fragment' => 'financial',]
+                'zfcadmin/parent/details/financial',
+                ['id' => $financial->getParent()->getId()]
             );
         }
 

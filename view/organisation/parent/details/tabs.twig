@@ -1,0 +1,44 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-parent")) %}
+{% do headTitle().append(parent.organisation.organisation) %}
+{% do headTitle().append(parent.organisation.country.country) %}
+
+<h1>{{ parent.organisation.organisation }}, {{ parent.organisation.country.country }}</h1>
+
+
+{% set navigation =
+    {   'general' :
+        {   'route': 'zfcadmin/parent/details/general',
+            'text' : translate("txt-general")
+        },
+        'organisations':
+        {
+            'route': 'zfcadmin/parent/details/organisations',
+            'text' : translate("txt-organisations")
+        },
+        'doas':
+        {
+            'route': 'zfcadmin/parent/details/doas',
+            'text' : translate("txt-doas")
+        },
+        'financial':
+        {
+            'route': 'zfcadmin/parent/details/financial',
+            'text' : translate("txt-financial")
+        },
+        'invoices':
+        {
+            'route': 'zfcadmin/parent/details/invoices',
+            'text' : translate("txt-invoices")
+        }
+    } %}
+
+
+<ul class="nav nav-tabs pt-3" role="tablist">
+    {% for key, params in navigation %}
+        <li class="nav-item"><a href="{{ url(params.route,{'id':parent.id}) }}"
+                                aria-controls="{{ key }}"
+                                role="tab"
+                                class="nav-link {% if key == tab %}active{% endif %}">{{ params.text|raw }}</a></li>
+    {% endfor %}
+</ul>

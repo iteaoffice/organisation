@@ -78,7 +78,7 @@ class ManagerController extends AbstractController
 
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/organisation/list');
+                return $this->redirect()->toRoute('zfcadmin/organisation/list/organisation');
             }
 
             if ($form->isValid()) {
@@ -116,7 +116,7 @@ class ManagerController extends AbstractController
                     )
                 );
 
-                return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $organisation->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/organisation/details/general', ['id' => $organisation->getId()]);
             }
         }
 
@@ -145,7 +145,7 @@ class ManagerController extends AbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $organisation->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/organisation/details/general', ['id' => $organisation->getId()]);
             }
 
             if (isset($data['delete']) && $this->organisationService->canDeleteOrganisation($organisation)) {
@@ -158,7 +158,7 @@ class ManagerController extends AbstractController
 
                 $this->organisationService->delete($organisation);
 
-                return $this->redirect()->toRoute('zfcadmin/organisation/list');
+                return $this->redirect()->toRoute('zfcadmin/organisation/list/organisation');
             }
 
             if ($form->isValid()) {
@@ -202,7 +202,7 @@ class ManagerController extends AbstractController
                     )
                 );
 
-                return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $organisation->getId()]);
+                return $this->redirect()->toRoute('zfcadmin/organisation/details/general', ['id' => $organisation->getId()]);
             }
         }
 
@@ -248,7 +248,7 @@ class ManagerController extends AbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $this->params('id')]);
+                return $this->redirect()->toRoute('zfcadmin/organisation/details/general', ['id' => $this->params('id')]);
             }
 
             if ($form->isValid()) {
@@ -285,10 +285,10 @@ class ManagerController extends AbstractController
                 }
 
                 if (isset($data['submit'])) {
-                    return $this->redirect()->toRoute('zfcadmin/organisation/view', ['id' => $this->params('id')]);
+                    return $this->redirect()->toRoute('zfcadmin/organisation/details/general', ['id' => $this->params('id')]);
                 }
 
-                return $this->redirect()->toRoute('zfcadmin/organisation/manage-web', ['id' => $this->params('id')]);
+                return $this->redirect()->toRoute('zfcadmin/organisation/web', ['id' => $this->params('id')]);
             }
         }
 
@@ -317,9 +317,8 @@ class ManagerController extends AbstractController
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisation->getId()],
-                    ['fragment' => 'project']
+                    'zfcadmin/organisation/details/projects',
+                    ['id' => $organisation->getId()]
                 );
             }
 
@@ -351,9 +350,8 @@ class ManagerController extends AbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
+                    'zfcadmin/organisation/details/projects',
                     ['id' => $organisation->getId()],
-                    ['fragment' => 'project']
                 );
             }
         }
@@ -386,9 +384,8 @@ class ManagerController extends AbstractController
             // Cancel the merge
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $target->getId()],
-                    ['fragment' => 'merge']
+                    'zfcadmin/organisation/details/merge',
+                    ['id' => $target->getId()]
                 );
             }
 
@@ -403,22 +400,21 @@ class ManagerController extends AbstractController
             // Do the merge
             if (isset($data['merge'])) {
                 $result = $this->organisationMerge()->merge($source, $target);
-                $tab    = 'general';
+                $route  = 'zfcadmin/organisation/details/general';
                 if ($result['success']) {
                     $this->flashMessenger()->addSuccessMessage(
                         $this->translator->translate('txt-organisations-have-been-successfully-merged')
                     );
                 } else {
-                    $tab = 'merge';
+                    $route = 'zfcadmin/organisation/details/merge';
                     $this->flashMessenger()->setNamespace('error')->addMessage(
                         $this->translator->translate('txt-organisation-merge-failed')
                     );
                 }
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $target->getId()],
-                    ['fragment' => $tab]
+                    $route,
+                    ['id' => $target->getId()]
                 );
             }
         }

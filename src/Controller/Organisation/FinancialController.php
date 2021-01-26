@@ -82,17 +82,15 @@ final class FinancialController extends AbstractController
                 $this->organisationService->delete($financial);
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
+                    'zfcadmin/organisation/details/financial',
                     ['id' => $organisation->getId()],
-                    ['fragment' => 'financial']
                 );
             }
 
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
+                    'zfcadmin/organisation/details/financial',
                     ['id' => $organisation->getId()],
-                    ['fragment' => 'financial']
                 );
             }
 
@@ -126,11 +124,9 @@ final class FinancialController extends AbstractController
                     )
                 );
 
-
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
+                    'zfcadmin/organisation/details/financial',
                     ['id' => $organisation->getId()],
-                    ['fragment' => 'financial']
                 );
             }
         }

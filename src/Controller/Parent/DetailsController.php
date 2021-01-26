@@ -92,13 +92,10 @@ final class DetailsController extends AbstractController
             );
 
             return $this->redirect()->toRoute(
-                'zfcadmin/parent/view',
+                'zfcadmin/parent/details/doas',
                 [
                     'id' => $parent->getId(),
                 ],
-                [
-                    'fragment' => 'doa'
-                ]
             );
         }
 

@@ -24,7 +24,6 @@ use Invoice\Entity\Journal;
 use Invoice\Entity\Reminder;
 use Laminas\Form\Annotation;
 use News\Entity\Magazine\Article;
-use Program\Entity\Call\Doa;
 use Project\Entity\Idea\Meeting\Participant;
 use Project\Entity\Idea\Partner;
 use Project\Entity\Result\Result;
@@ -256,13 +255,6 @@ class Organisation extends AbstractEntity
      */
     private $boothFinancial;
     /**
-     * @ORM\OneToMany(targetEntity="Program\Entity\Call\Doa", cascade={"persist","remove"}, mappedBy="organisation")
-     * @Annotation\Exclude()
-     *
-     * @var Doa[]|Collections\Collection
-     */
-    private $doa;
-    /**
      * @ORM\OneToMany(targetEntity="Organisation\Entity\Booth", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
@@ -322,7 +314,6 @@ class Organisation extends AbstractEntity
         $this->ideaMeetingParticipant = new Collections\ArrayCollection();
         $this->invoice                = new Collections\ArrayCollection();
         $this->boothFinancial         = new Collections\ArrayCollection();
-        $this->doa                    = new Collections\ArrayCollection();
         $this->organisationBooth      = new Collections\ArrayCollection();
         $this->journal                = new Collections\ArrayCollection();
         $this->reminder               = new Collections\ArrayCollection();
@@ -361,7 +352,7 @@ class Organisation extends AbstractEntity
     {
         return ! $this->updates->filter(
             fn (Update $update) => ! $update->isApproved()
-        )->$this->isEmpty();
+        )->isEmpty();
     }
 
     public function __toString(): string
@@ -379,7 +370,7 @@ class Organisation extends AbstractEntity
         return trim(sprintf('%s (%s)', $this->organisation, $this->country->getIso3()));
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -475,7 +466,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getParent()
+    public function getParent(): ?ParentEntity
     {
         return $this->parent;
     }
@@ -499,7 +490,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getParentOrganisation()
+    public function getParentOrganisation(): ?parent\Organisation
     {
         return $this->parentOrganisation;
     }
@@ -511,7 +502,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getCountry()
+    public function getCountry(): ?Country
     {
         return $this->country;
     }
@@ -535,7 +526,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getType()
+    public function getType(): ?Type
     {
         return $this->type;
     }
@@ -571,7 +562,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getDescription()
+    public function getDescription(): ?Description
     {
         return $this->description;
     }
@@ -607,7 +598,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getFinancial()
+    public function getFinancial(): ?Financial
     {
         return $this->financial;
     }
@@ -651,18 +642,6 @@ class Organisation extends AbstractEntity
     public function setBoothFinancial($boothFinancial): Organisation
     {
         $this->boothFinancial = $boothFinancial;
-
-        return $this;
-    }
-
-    public function getDoa()
-    {
-        return $this->doa;
-    }
-
-    public function setDoa($doa): Organisation
-    {
-        $this->doa = $doa;
 
         return $this;
     }
@@ -738,7 +717,7 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getUpdates(): Collections\Collection
+    public function getUpdates()
     {
         return $this->updates;
     }

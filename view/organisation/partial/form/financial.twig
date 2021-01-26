@@ -30,9 +30,9 @@
 
     <div class="col-sm-9">
         <p class="form-control-plaintext"><span
-                    id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
+                    id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatusText()) }}
                 ({{ financial.dateVat|string_date }})</span>
-
+            <i class="fas fa-sync-alt checkVat cursor-pointer" data-financial="{{ financial.id }}"></i>
     </div>
 </div>
 

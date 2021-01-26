@@ -1,0 +1,121 @@
+{% include 'organisation/organisation/details/tabs' %}
+
+<h2>{{ translate("txt-legal") }}</h2>
+
+<h3>{{ translate("txt-project-doa") }}</h3>
+
+{% if affiliationDoa|length > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-id") }}</th>
+            <th>{{ translate("txt-doa") }}</th>
+            <th>{{ translate("txt-signer") }}</th>
+            <th>{{ translate("txt-date-signed") }}</th>
+            <th>{{ translate("txt-date-approved") }}</th>
+            <th>{{ translate("txt-has-file") }}</th>
+            <th>{{ translate("txt-project") }}</th>
+            <th>{{ translate("txt-partner-name") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8"></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for doa in affiliationDoa %}
+            <tr>
+                <td><small class="text-muted">{{ doa.id }}</td>
+                <td>{{ affiliationDoaLink(doa,'view-admin','name') }} {{ affiliationDoaLink(doa,'edit-admin','icon') }} {% if doa.hasObject() %}{{ affiliationDoaLink(doa,'download','icon') }}{% endif %}</td>
+                <td>{{ contactLink(doa.contact,'view-admin','name') }}</td>
+                <td>{% if doa.isSigned() %}{{ doa.dateSigned|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if doa.isApproved() %}{{ doa.dateApproved|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if doa.hasObject() %}{{ translate("txt-yes") }}{% endif %}</td>
+                <td>{{ projectLink(doa.affiliation.project,'view-admin','name') }}</td>
+                <td>{{ affiliationLink(doa.affiliation,'view-admin','name') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-program-doas-found-in-the-system"))|raw }}
+{% endif %}
+
+<h3>{{ translate("txt-project-loi") }}</h3>
+
+{% if affiliationLoi|length > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-id") }}</th>
+            <th>{{ translate("txt-loi") }}</th>
+            <th>{{ translate("txt-signer") }}</th>
+            <th>{{ translate("txt-date-signed") }}</th>
+            <th>{{ translate("txt-date-approved") }}</th>
+            <th>{{ translate("txt-has-file") }}</th>
+            <th>{{ translate("txt-project") }}</th>
+            <th>{{ translate("txt-partner-name") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8"></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for loi in affiliationLoi %}
+            <tr>
+                <td><small class="text-muted">{{ loi.id }}</td>
+                <td>{{ affiliationLoiLink(loi,'view-admin','name') }} {{ affiliationLoiLink(loi,'edit-admin','icon') }} {% if loi.hasObject() %}{{ affiliationLoiLink(loi,'download','icon') }}{% endif %}</td>
+                <td>{{ contactLink(loi.contact,'view-admin','name') }}</td>
+                <td>{% if loi.isSigned() %}{{ loi.dateSigned|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if loi.isApproved() %}{{ loi.dateApproved|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if loi.hasObject() %}{{ translate("txt-yes") }}{% endif %}</td>
+                <td>{{ projectLink(loi.affiliation.project,'view-admin','name') }}</td>
+                <td>{{ affiliationLink(loi.affiliation,'view-admin','name') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-program-doas-found-in-the-system"))|raw }}
+{% endif %}
+
+
+<h3>{{ translate("txt-program-doa") }}</h3>
+{% if organisation.programDoa|length > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{{ translate("txt-id") }}</th>
+            <th>{{ translate("txt-doa") }}</th>
+            <th>{{ translate("txt-signer") }}</th>
+            <th>{{ translate("txt-date-signed") }}</th>
+            <th>{{ translate("txt-date-approved") }}</th>
+            <th>{{ translate("txt-has-file") }}</th>
+            <th>{{ translate("txt-program") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="7"></td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for doa in organisation.programDoa %}
+            <tr>
+                <td><small class="text-muted">{{ doa.id }}</td>
+                <td>{{ programDoaLink(doa,'view-admin','name') }} {{ programDoaLink(doa,'edit-admin','icon') }} {% if doa.hasObject() %}{{ programDoaLink(doa,'download','icon') }}{% endif %}</td>
+                <td>{{ contactLink(doa.contact,'view-admin','name') }}</td>
+                <td>{% if doa.isSigned() %}{{ doa.dateSigned|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if doa.isApproved() %}{{ doa.dateApproved|date('d-m-Y') }}{% endif %}</td>
+                <td>{% if doa.hasObject() %}{{ translate("txt-yes") }}{% endif %}</td>
+                <td>{{ programLink(doa.program,'view','name') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    {{ ztbalert().info(translate("txt-no-program-doas-found-in-the-system"))|raw }}
+{% endif %}

@@ -246,13 +246,8 @@ class Financial extends AbstractEntity
         return $this;
     }
 
-
-    public function getEmail(bool $textual = false)
+    public function getEmail()
     {
-        if ($textual) {
-            return self::$emailTemplates[$this->email];
-        }
-
         return $this->email;
     }
 
@@ -261,6 +256,11 @@ class Financial extends AbstractEntity
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getEmailText(): string
+    {
+        return self::$emailTemplates[$this->email] ?? '';
     }
 
     public function getIban(): ?string
@@ -292,16 +292,16 @@ class Financial extends AbstractEntity
         return $this->omitContact;
     }
 
-    public function getOmitContactText(): string
-    {
-        return self::$omitContactTemplates[$this->omitContact] ?? '';
-    }
-
     public function setOmitContact($omitContact): Financial
     {
         $this->omitContact = $omitContact;
 
         return $this;
+    }
+
+    public function getOmitContactText(): string
+    {
+        return self::$omitContactTemplates[$this->omitContact] ?? '';
     }
 
     public function getOrganisation(): ?Organisation
@@ -321,16 +321,16 @@ class Financial extends AbstractEntity
         return $this->requiredPurchaseOrder;
     }
 
-    public function getRequiredPurchaseOrderText(): string
-    {
-        return self::$requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder] ?? '';
-    }
-
     public function setRequiredPurchaseOrder($requiredPurchaseOrder): Financial
     {
         $this->requiredPurchaseOrder = $requiredPurchaseOrder;
 
         return $this;
+    }
+
+    public function getRequiredPurchaseOrderText(): string
+    {
+        return self::$requiredPurchaseOrderTemplates[$this->requiredPurchaseOrder] ?? '';
     }
 
     public function getVat(): ?string
@@ -350,16 +350,16 @@ class Financial extends AbstractEntity
         return $this->vatStatus;
     }
 
-    public function getVatStatusText(): string
-    {
-        return self::$vatStatusTemplates[$this->vatStatus] ?? '';
-    }
-
     public function setVatStatus($vatStatus): Financial
     {
         $this->vatStatus = $vatStatus;
 
         return $this;
+    }
+
+    public function getVatStatusText(): string
+    {
+        return self::$vatStatusTemplates[$this->vatStatus] ?? '';
     }
 
     public function getVatType()

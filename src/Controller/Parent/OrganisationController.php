@@ -105,7 +105,7 @@ final class OrganisationController extends AbstractController
                 $this->parentService->delete($organisation);
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/organisations',
                     [
                         'id' => $organisation->getParent()->getId(),
                     ]
@@ -193,7 +193,7 @@ final class OrganisationController extends AbstractController
             }
 
             return $this->redirect()->toRoute(
-                'zfcadmin/parent/view',
+                'zfcadmin/parent/details/organisations',
                 ['id' => $organisation->getParent()->getId()]
             );
         }

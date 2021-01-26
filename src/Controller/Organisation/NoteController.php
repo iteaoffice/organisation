@@ -60,9 +60,8 @@ final class NoteController extends AbstractController
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisation->getId()],
-                    ['fragment' => 'note']
+                    'zfcadmin/organisation/details/notes',
+                    ['id' => $organisation->getId()]
                 );
             }
 
@@ -78,11 +77,9 @@ final class NoteController extends AbstractController
                         $organisation
                     )
                 );
-
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $organisation->getId()],
-                    ['fragment' => 'note']
+                    'zfcadmin/organisation/details/notes',
+                    ['id' => $organisation->getId()]
                 );
             }
         }
@@ -111,9 +108,8 @@ final class NoteController extends AbstractController
         if ($request->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $note->getOrganisation()->getId()],
-                    ['fragment' => 'note']
+                    'zfcadmin/organisation/details/notes',
+                    ['id' => $note->getOrganisation()->getId()]
                 );
             }
 
@@ -124,9 +120,8 @@ final class NoteController extends AbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $note->getOrganisation()->getId()],
-                    ['fragment' => 'note']
+                    'zfcadmin/organisation/details/notes',
+                    ['id' => $note->getOrganisation()->getId()]
                 );
             }
 
@@ -140,9 +135,8 @@ final class NoteController extends AbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/organisation/view',
-                    ['id' => $note->getOrganisation()->getId()],
-                    ['fragment' => 'note']
+                    'zfcadmin/organisation/details/notes',
+                    ['id' => $note->getOrganisation()->getId()]
                 );
             }
         }

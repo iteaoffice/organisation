@@ -1,0 +1,68 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(organisation.organisation) %}
+{% do headTitle().append(organisation.country.country) %}
+
+<h1>{{ organisation.organisation }}, {{ organisation.country.country }}</h1>
+
+
+{% set navigation =
+    {   'general' :
+        {   'route': 'zfcadmin/organisation/details/general',
+            'text' : translate("txt-general")
+        },
+        'parent':
+        {
+            'route': 'zfcadmin/organisation/details/parent',
+            'text' : translate("txt-parent")
+        },
+        'legal':
+        {
+            'route': 'zfcadmin/organisation/details/legal',
+            'text' : translate("txt-legal")
+        },
+        'financial':
+        {
+            'route': 'zfcadmin/organisation/details/financial',
+            'text' : translate("txt-financial")
+        },
+        'invoices':
+        {
+            'route': 'zfcadmin/organisation/details/invoices',
+            'text' : translate("txt-invoices")
+        },
+        'notes':
+        {
+            'route': 'zfcadmin/organisation/details/notes',
+            'text' : translate("txt-notes")
+        },
+        'contacts':
+        {
+            'route': 'zfcadmin/organisation/details/contacts',
+            'text' : translate("txt-contacts")
+        },
+        'projects':
+        {
+            'route': 'zfcadmin/organisation/details/projects',
+            'text' : translate("txt-projects")
+        },
+        'ideas':
+        {
+            'route': 'zfcadmin/organisation/details/ideas',
+            'text' : translate("txt-ideas")
+        },
+        'merge':
+        {
+            'route': 'zfcadmin/organisation/details/merge',
+            'text' : translate("txt-merge")
+        },
+    } %}
+
+
+<ul class="nav nav-tabs pt-3" role="tablist">
+    {% for key, params in navigation %}
+        <li class="nav-item"><a href="{{ url(params.route,{'id':organisation.id}) }}"
+                                aria-controls="{{ key }}"
+                                role="tab"
+                                class="nav-link {% if key == tab %}active{% endif %}">{{ params.text|raw }}</a></li>
+    {% endfor %}
+</ul>

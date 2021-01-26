@@ -121,6 +121,11 @@ class Doa extends AbstractEntity
         return sprintf('%s DOA', $this->program);
     }
 
+    public function hasObject(): bool
+    {
+        return null !== $this->object;
+    }
+
     public function parseFileName(): string
     {
         return str_replace(' ', '_', sprintf('DOA_%s_%s', $this->getParent(), $this->getProgram()));

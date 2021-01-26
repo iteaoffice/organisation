@@ -60,6 +60,7 @@
             <table class="table table-organisation table-striped table-hover table-sm">
                 <thead>
                 <tr>
+                    <th>{{ translate("txt-id") }}</th>
                     <th>{{ translate("txt-organisation") }}</th>
                     <th>{{ translate("txt-type") }}</th>
                     <th>{{ translate("txt-country") }}</th>
@@ -67,14 +68,15 @@
                 </thead>
                 <tfoot>
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                 </tr>
                 </tfoot>
                 <tbody>
                 {% for organisation in organisations %}
                     <tr>
+                        <td><small class="text-muted">{{ organisation['id'] }}</small></td>
                         <td>
-                            <a href="{{ url('zfcadmin/organisation/view',{'id':organisation['id']}) }}">{{ organisation['organisation'] }}</a>
+                            <a href="{{ url('zfcadmin/organisation/details/general',{'id':organisation['id']}) }}">{{ organisation['organisation'] }}</a>
                         </td>
                         <td>{{ organisation['type']['type'] }}</td>
                         <td>{{ organisation['country']['iso3'] }}</td>

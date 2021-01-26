@@ -77,7 +77,7 @@ final class DoaController extends AbstractController
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/doas',
                     ['id' => $parent->getId()]
                 );
             }
@@ -120,7 +120,7 @@ final class DoaController extends AbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/doas',
                     ['id' => $parent->getId()]
                 );
             }
@@ -161,7 +161,7 @@ final class DoaController extends AbstractController
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/doas',
                     ['id' => $doa->getParent()->getId()]
                 );
             }
@@ -170,7 +170,7 @@ final class DoaController extends AbstractController
                 $this->parentService->delete($doa);
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/doas',
                     ['id' => $doa->getParent()->getId()]
                 );
             }
@@ -182,7 +182,7 @@ final class DoaController extends AbstractController
                     /*
                      * Replace the content of the object
                      */
-                    if (! null === $doa->getObject()) {
+                    if ($doa->hasObject()) {
                         $doa->getObject()->setObject(
                             file_get_contents($fileData['file']['tmp_name'])
                         );
@@ -226,8 +226,8 @@ final class DoaController extends AbstractController
                 );
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
-                    ['id' => $doa->getParent()->getId()]
+                    'zfcadmin/parent/doa/view',
+                    ['id' => $doa->getId()]
                 );
             }
         }
@@ -250,7 +250,7 @@ final class DoaController extends AbstractController
          */
         $doa = $this->parentService->find(Entity\Parent\Doa::class, (int)$this->params('id'));
 
-        if (null === $doa || null === $doa->getObject()) {
+        if (null === $doa || ! $doa->hasObject()) {
             return $response->setStatusCode(Response::STATUS_CODE_404);
         }
 

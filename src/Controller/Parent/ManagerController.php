@@ -15,7 +15,6 @@ namespace Organisation\Controller\Parent;
 use Contact\Service\ContactService;
 use DateTime;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\Session\Container;
 use Laminas\View\Model\ViewModel;
 use Organisation\Controller\AbstractController;
 use Organisation\Entity;
@@ -23,9 +22,6 @@ use Organisation\Form;
 use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
-
-use function array_merge_recursive;
-use function set_time_limit;
 
 /**
  * Class ParentController
@@ -84,7 +80,7 @@ final class ManagerController extends AbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/parent/list');
+                return $this->redirect()->toRoute('zfcadmin/parent/list/parent');
             }
 
             if ($form->isValid()) {
@@ -97,7 +93,7 @@ final class ManagerController extends AbstractController
                 $this->organisationService->save($parent->getOrganisation());
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/general',
                     [
                         'id' => $parent->getId(),
                     ]
@@ -131,7 +127,7 @@ final class ManagerController extends AbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/parent/list');
+                return $this->redirect()->toRoute('zfcadmin/parent/list/parent');
             }
 
             if (isset($data['delete']) && $this->parentService->canDeleteParent($parent)) {
@@ -146,7 +142,7 @@ final class ManagerController extends AbstractController
 
                 $this->organisationService->save($organisation);
 
-                return $this->redirect()->toRoute('zfcadmin/parent/list');
+                return $this->redirect()->toRoute('zfcadmin/parent/list/parent');
             }
 
             if ($form->isValid()) {
@@ -166,7 +162,7 @@ final class ManagerController extends AbstractController
                 $this->organisationService->save($parent->getOrganisation());
 
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/general',
                     [
                         'id' => $parent->getId(),
                     ]
@@ -218,7 +214,7 @@ final class ManagerController extends AbstractController
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
                 return $this->redirect()->toRoute(
-                    'zfcadmin/parent/view',
+                    'zfcadmin/parent/details/general',
                     [
                         'id' => $parent->getId(),
                     ]
@@ -257,46 +253,5 @@ final class ManagerController extends AbstractController
                 'parent' => $parent,
             ]
         );
-    }
-
-    public function importProjectAction(): ViewModel
-    {
-        set_time_limit(0);
-
-        $data = array_merge_recursive(
-            $this->getRequest()->getPost()->toArray(),
-            $this->getRequest()->getFiles()->toArray()
-        );
-        $form = new Form\Parent\ImportForm();
-        $form->setData($data);
-
-        /** store the data in the session, so we can use it when we really handle the import */
-        $importSession = new Container('import');
-
-        $handleImport = null;
-        if ($this->getRequest()->isPost()) {
-            if (isset($data['upload']) && $form->isValid()) {
-                $fileData = file_get_contents($data['file']['tmp_name']);
-
-                $importSession->active   = true;
-                $importSession->fileData = $fileData;
-
-                $handleImport = $this->handleParentAndProjectImport(
-                    $fileData,
-                    [],
-                    false
-                );
-            }
-
-            if (isset($data['import'], $data['key']) && $importSession->active) {
-                $handleImport = $this->handleParentAndProjectImport(
-                    $importSession->fileData,
-                    $data['key'],
-                    true
-                );
-            }
-        }
-
-        return new ViewModel(['form' => $form, 'handleImport' => $handleImport]);
     }
 }

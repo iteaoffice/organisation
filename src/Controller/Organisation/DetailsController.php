@@ -16,16 +16,12 @@ use Affiliation\Service\AffiliationService;
 use Affiliation\Service\DoaService;
 use Affiliation\Service\LoiService;
 use Doctrine\ORM\EntityManager;
-use General\Service\GeneralService;
 use Invoice\Search\Service\InvoiceSearchService;
-use Invoice\Service\InvoiceService;
 use Laminas\Http\Request;
-use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Paginator\Paginator;
 use Laminas\View\Model\ViewModel;
 use Organisation\Controller\AbstractController;
 use Organisation\Form\Organisation\MergeForm;
-use Organisation\Service\FormService;
 use Organisation\Service\OrganisationService;
 use Project\Service\ProjectService;
 use Search\Form\SearchResult;
@@ -42,44 +38,76 @@ use function implode;
 final class DetailsController extends AbstractController
 {
     private OrganisationService $organisationService;
-    private InvoiceService $invoiceService;
     private InvoiceSearchService $invoiceSearchService;
     private ProjectService $projectService;
     private AffiliationService $affiliationService;
     private DoaService $doaService;
     private LoiService $loiService;
-    private GeneralService $generalService;
     private EntityManager $entityManager;
-    private FormService $formService;
-    private TranslatorInterface $translator;
 
     public function __construct(
         OrganisationService $organisationService,
-        InvoiceService $invoiceService,
         InvoiceSearchService $invoiceSearchService,
         ProjectService $projectService,
         AffiliationService $affiliationService,
         DoaService $doaService,
         LoiService $loiService,
-        GeneralService $generalService,
-        EntityManager $entityManager,
-        FormService $formService,
-        TranslatorInterface $translator
+        EntityManager $entityManager
     ) {
         $this->organisationService  = $organisationService;
-        $this->invoiceService       = $invoiceService;
         $this->invoiceSearchService = $invoiceSearchService;
         $this->projectService       = $projectService;
         $this->affiliationService   = $affiliationService;
         $this->doaService           = $doaService;
         $this->loiService           = $loiService;
-        $this->generalService       = $generalService;
         $this->entityManager        = $entityManager;
-        $this->formService          = $formService;
-        $this->translator           = $translator;
     }
 
-    public function viewAction(): ViewModel
+    public function generalAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation'        => $organisation,
+            'organisationService' => $this->organisationService,
+            'tab'                 => 'general'
+        ]);
+    }
+
+    public function parentAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation' => $organisation,
+            'tab'          => 'parent'
+        ]);
+    }
+
+    public function financialAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation'        => $organisation,
+            'organisationService' => $this->organisationService,
+            'tab'                 => 'financial'
+        ]);
+    }
+
+    public function invoicesAction(): ViewModel
     {
         $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
 
@@ -149,25 +177,111 @@ final class DetailsController extends AbstractController
         $paginator->setCurrentPageNumber($page);
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
-        $mergeForm = new MergeForm($this->entityManager, $organisation);
+        return new ViewModel([
+            'organisation' => $organisation,
+            'form'         => $form,
+            'order'        => $data['order'],
+            'direction'    => $data['direction'],
+            'query'        => $data['query'],
+            'badges'       => $form->getBadges(),
+            'arguments'    => http_build_query($form->getFilteredData()),
+            'paginator'    => $paginator,
+            'tab'          => 'invoices'
+        ]);
+    }
+
+    public function legalAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation'   => $organisation,
+            'affiliationDoa' => $this->doaService->findDoaByOrganisation($organisation),
+            'affiliationLoi' => $this->loiService->findLoiByOrganisation($organisation),
+            'tab'            => 'legal'
+        ]);
+    }
+
+    public function notesAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation' => $organisation,
+            'tab'          => 'notes'
+        ]);
+    }
+
+    public function contactsAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation'   => $organisation,
+            'projectService' => $this->projectService,
+            'tab'            => 'contacts'
+        ]);
+    }
+
+    public function projectsAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation'   => $organisation,
+            'projectService' => $this->projectService,
+            'affiliations'   => $this->affiliationService->findAffiliationByOrganisation($organisation),
+            'tab'            => 'projects'
+        ]);
+    }
+
+    public function ideasAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel([
+            'organisation' => $organisation,
+            'tab'          => 'ideas'
+        ]);
+    }
+
+    public function mergeAction(): ViewModel
+    {
+        $organisation = $this->organisationService->findOrganisationById((int)$this->params('id'));
+
+        if (null === $organisation) {
+            return $this->notFoundAction();
+        }
+
+        $form = new MergeForm($this->entityManager, $organisation);
 
         return new ViewModel(
             [
-                'form'                => $form,
-                'order'               => $data['order'],
-                'direction'           => $data['direction'],
-                'query'               => $data['query'],
-                'badges'              => $form->getBadges(),
-                'arguments'           => http_build_query($form->getFilteredData()),
-                'paginator'           => $paginator,
+
                 'organisation'        => $organisation,
-                'invoiceService'      => $this->invoiceService,
                 'organisationService' => $this->organisationService,
-                'organisationDoa'     => $this->doaService->findDoaByOrganisation($organisation),
-                'organisationLoi'     => $this->loiService->findLoiByOrganisation($organisation),
-                'projectService'      => $this->projectService,
-                'affiliations'        => $this->affiliationService->findAffiliationByOrganisation($organisation),
-                'mergeForm'           => $mergeForm,
+                'form'                => $form,
+                'tab'                 => 'merge'
             ]
         );
     }

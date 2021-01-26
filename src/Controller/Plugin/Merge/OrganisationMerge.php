@@ -243,13 +243,6 @@ class OrganisationMerge extends AbstractPlugin
             $source->getProgramDoa()->remove($key);
         }
 
-        // Transfer program call doa
-        foreach ($source->getDoa() as $key => $callDoa) {
-            $callDoa->setOrganisation($target);
-            $target->getDoa()->add($callDoa);
-            $source->getDoa()->remove($key);
-        }
-
         // Transfer reminders
         foreach ($source->getReminder() as $key => $reminder) {
             $reminder->setOrganisation($target);

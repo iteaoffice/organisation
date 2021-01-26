@@ -1,0 +1,80 @@
+{% do headTitle().append(translate("txt-duplicate-organisations")) %}
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+{% set filter = form.get('filter') %}
+
+<div class="row">
+
+    <div class="col-md-9">
+
+        <h1>{{ translate("txt-duplicate-organisations") }}</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p>{{ translate("txt-duplicate-organisations-explanation") }}</p>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    {{ formelement(filter.get('search')) }}
+                    <div class="input-group-append input-group-btn">
+                        {{ formelement(form.get('submit')) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if paginator.pageRange > 0 %}
+            <table class="table table-hover table-striped table-sm">
+                <thead>
+                <tr>
+                    <th>{{ translate("txt-id") }}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/duplicate', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/duplicate', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
+                    <th>{{ translate("txt-contacts") }}</th>
+                    <th>{{ translate("txt-projects") }}</th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/duplicate', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/duplicate', 'criteria': 'amount', 'text': translate("txt-amount")} %}</a></th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <td colspan="7"></td>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for organisationAndAmount in paginator.getCurrentItems() %}
+
+                    {% set organisation = organisationAndAmount['organisation'] %}
+
+                    <tr>
+                        <td><small class="text-muted">{{ organisation.id }}</small></td>
+                        <td>{{ organisationLink(organisation, 'view-admin', 'name') }}</td>
+                        <td>{{ organisation.country.iso3 }}</td>
+                        <td>{{ organisationService.getContactCount(organisation, constant("Contact\\Service\\ContactService::WHICH_ONLY_ACTIVE")) }}</td>
+                        <td>{{ organisationService.getAffiliationCount(organisation, constant("Affiliation\\Service\\AffiliationService::WHICH_ONLY_ACTIVE")) }}</td>
+                        <td>{{ organisation.getType().type }}</td>
+                        <td>{{ organisationAndAmount['amount'] }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% include 'application/partial/pagination-control' %}
+        {% else %}
+            {{ ztbalert().info(translate("txt-no-duplicate-organisation-found"))|raw }}
+        {% endif %}
+    </div>
+    <div class="col-md-3">
+        <div class="well well-sm">
+            <fieldset>
+                {{ ztbformelement(filter.get('type'), true) }}
+                {{ ztbformelement(form.get('submit')) }}
+                {{ ztbformelement(form.get('clear')) }}
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}
