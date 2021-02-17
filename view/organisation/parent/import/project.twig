@@ -5,7 +5,6 @@
 
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
-
  {{ ztbformelement(form.get('file')) }}
 
 <div class="form-group row">
@@ -30,10 +29,7 @@
             </div>
         {% endif %}
     </div>
-
-
 </div>
-
 
 <div class="form-group row">
     <div class="offset-sm-3 col-sm-9">
@@ -45,123 +41,127 @@
 {% if  handleImport.getImportedAffiliation()|length > 0 %}
     {{ ztbalert().success(translate("txt-%s-parents-imported")|format(handleImport.getImportedAffiliation()|length))|raw }}
 {% endif %}
-
-
+</div>
+<div class="container-fluid">
     {% if  handleImport.getAffiliation()|length > 0 %}
-        <table class="table table-hover table-striped table-sm">
-            <thead>
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>{{ translate("txt-parent") }}</th>
+            <th>{{ translate("txt-country") }}</th>
+            <th>{{ translate("txt-parent-organisation") }}</th>
+            <th>{{ translate("txt-parent-organisation-country") }}</th>
+            <th>{{ translate("txt-affiliation-id") }}</th>
+            <th>{{ translate("txt-project") }}</th>
+            <th>{{ translate("txt-call") }}</th>
+            <th>{{ translate("txt-program") }}</th>
+            <th>{{ translate("txt-affiliation") }}</th>
+            <th>{{ translate("txt-type") }}</th>
+            <th>{{ translate("txt-aenaes-member-type") }}</th>
+            <th>{{ translate("txt-aeneas-doa") }}</th>
+            <th>{{ translate("txt-artemis-ia-member-status") }}</th>
+            <th>{{ translate("txt-eposs-member-status") }}</th>
+
+            <th>{{ translate("txt-funding-eu") }}</th>
+            <th>{{ translate("txt-funding-national") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        <tr>
+            <td colspan="12">
+                <button class="btn btn-sm btn-info" id="check_all"
+                        onclick="return false;">{{ translate("txt-check-all") }}</button>
+                <button class="btn btn-sm btn-info" id="check_none"
+                        onclick="return false;">{{ translate("txt-check-none") }}</button>
+                <button class="btn btn-sm btn-info" id="check_inverse"
+                        onclick="return false;">{{ translate("txt-check-inverse") }}</button>
+                <button class="btn btn-sm btn-info" id="check_known"
+                        onclick="return false;">{{ translate("txt-check-known-parents") }}</button>
+                <button class="btn btn-sm btn-info" id="check_unknown"
+                        onclick="return false;">{{ translate("txt-check-unknown-parents") }}</button>
+            </td>
+        </tr>
+        </tfoot>
+        <tbody>
+        {% for key, affiliation in handleImport.getAffiliation() %}
+
+            {% set parentOrganisation = affiliation.parentOrganisation %}
+            {% set funded = affiliation.funded.last %}
+
             <tr>
-                <th></th>
-                <th>{{ translate("txt-parent") }}</th>
-                <th>{{ translate("txt-country") }}</th>
-                <th>{{ translate("txt-parent-organisation") }}</th>
-                <th>{{ translate("txt-parent-organisation-country") }}</th>
-                <th>{{ translate("txt-affiliation-id") }}</th>
-                <th>{{ translate("txt-project") }}</th>
-                <th>{{ translate("txt-call") }}</th>
-                <th>{{ translate("txt-program") }}</th>
-                <th>{{ translate("txt-affiliation") }}</th>
-                <th>{{ translate("txt-type") }}</th>
-                <th>{{ translate("txt-aenaes-member-type") }}</th>
-                <th>{{ translate("txt-aeneas-doa") }}</th>
-                <th>{{ translate("txt-artemis-ia-member-status") }}</th>
-                <th>{{ translate("txt-eposs-member-status") }}</th>
-
-                <th>{{ translate("txt-funding-eu") }}</th>
-                <th>{{ translate("txt-funding-national") }}</th>
+                <td><small class="text-muted">{{ loop.index }}</small></td>
+                <td><input type="checkbox" name="key[]"
+                           class="check_import  {% if parentOrganisation.id %}known_parent{% endif %}"
+                           value="{{ key }}"></td>
+                <td>{% if parentOrganisation.parent.id %}{{ parentLink(parentOrganisation.parent,'view', 'parent') }}{% else %} {{ parentOrganisation.parent }}
+                        <i class="fas fa-plus"></i>{% endif %}</td>
+                <td>{% if parentOrganisation.parent %}{{ countryLink(parentOrganisation.parent.organisation.country,'view-admin','iso3') }}{% endif %}</td>
+                <td>{% if parentOrganisation.id %}{{ parentOrganisationLink(parentOrganisation,'view', 'organisation') }}{% else %}{{ parentOrganisation }}
+                        <i class="fas fa-plus"></i>{% endif %}</td>
+                <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin','iso3') }}</td>
+                <td>{{ affiliation.id }}</td>
+                <td>{% if affiliation.project.id %}{{ projectLink(affiliation.project,'view-admin','name') }}{% else %}{{ affiliation.project }}
+                        <i class="fas fa-plus"></i>{% endif %}</td>
+                <td>{% if affiliation.project.call.id %}{{ callLink(affiliation.project.call,'view-admin','name') }}{% else %}{{ affiliation.project.call }}
+                        <i class="fas fa-plus"></i>{% endif %}</td>
+                <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view','name') }}{% else %}{{ affiliation.project.call.program }}
+                        <i class="fas fa-plus"></i>{% endif %}</td>
+                <td>{% if affiliation.id %}{{ affiliationLink(affiliation,'view-admin','name') }}{% else %}{{ affiliation }}
+                        <i class="fas fa-plus"></i>{% endif %}</td>
+                <td>{{ parentOrganisation.parent.type }}</td>
+                <td>{{ translate(parentOrganisation.parent.memberType(true)) }}</td>
+                <td>{% for doa in parentOrganisation.parent.doa %}{{ doa }} {% endfor %}</td>
+                <td>{{ translate(parentOrganisation.parent.artemisiaMemberType(true)) }}</td>
+                <td>{{ translate(parentOrganisation.parent.epossMemberType(true)) }}</td>
+                <td>{{ funded.fundingEu }}</td>
+                <td>{{ funded.fundingNational }}</td>
             </tr>
-            </thead>
-            <tfoot>
-            <tr>
-                <td colspan="11">
-                    <button class="btn btn-sm btn-info" id="check_all"
-                            onclick="return false;">{{ translate("txt-check-all") }}</button>
-                    <button class="btn btn-sm btn-info" id="check_none"
-                            onclick="return false;">{{ translate("txt-check-none") }}</button>
-                    <button class="btn btn-sm btn-info" id="check_inverse"
-                            onclick="return false;">{{ translate("txt-check-inverse") }}</button>
-                    <button class="btn btn-sm btn-info" id="check_known"
-                            onclick="return false;">{{ translate("txt-check-known") }}</button>
-                    <button class="btn btn-sm btn-info" id="check_unknown"
-                            onclick="return false;">{{ translate("txt-check-unknown") }}</button>
-                </td>
-            </tr>
-            </tfoot>
-            <tbody>
-            {% for key, affiliation in handleImport.getAffiliation() %}
+        {% endfor %}
+        </tbody>
+    </table>
 
-                {% set parentOrganisation = affiliation.parentOrganisation %}
-                {% set funded = affiliation.funded.last %}
-
-                <tr>
-                    <td><input type="checkbox" name="key[]"
-                               class="check_import  {% if parentOrganisation.id %}known_parent{% endif %}"
-                               value="{{ key }}"></td>
-                    <td>{% if parentOrganisation.parent.id %}{{ parentLink(parentOrganisation.parent,'view', 'parent') }}{% else %} {{ parentOrganisation.parent }}
-                            <i class="fas fa-plus"></i>{% endif %}</td>
-                    <td>{% if parentOrganisation.parent %}{{ countryLink(parentOrganisation.parent.organisation.country,'view-admin','iso3') }}{% endif %}</td>
-                    <td>{% if parentOrganisation.id %}{{ parentOrganisationLink(parentOrganisation,'view', 'organisation') }}{% else %}{{  parentOrganisation }} <i class="fas fa-plus"></i>{% endif %}</td>
-                    <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin','iso3') }}</td>
-                    <td>{{ affiliation.id }}</td>
-                    <td>{% if affiliation.project.id %}{{ projectLink(affiliation.project,'view-admin','name') }}{% else %}{{ affiliation.project }}
-                            <i class="fas fa-plus"></i>{% endif %}</td>
-                    <td>{% if affiliation.project.call.id %}{{ callLink(affiliation.project.call,'view-admin','name') }}{% else %}{{ affiliation.project.call }}
-                            <i class="fas fa-plus"></i>{% endif %}</td>
-                    <td>{% if affiliation.project.call.program.id %}{{ programLink(affiliation.project.call.program,'view','name') }}{% else %}{{ affiliation.project.call.program }}
-                            <i class="fas fa-plus"></i>{% endif %}</td>
-                    <td>{% if affiliation.id %}{{ affiliationLink(affiliation,'view-admin','name') }}{% else %}{{ affiliation }}
-                            <i class="fas fa-plus"></i>{% endif %}</td>
-                    <td>{{ parentOrganisation.parent.type }}</td>
-                    <td>{{ translate(parentOrganisation.parent.memberType(true)) }}</td>
-                    <td>{% for doa in parentOrganisation.parent.doa %}{{ doa }} {% endfor %}</td>
-                    <td>{{ translate(parentOrganisation.parent.artemisiaMemberType(true)) }}</td>
-                    <td>{{ translate(parentOrganisation.parent.epossMemberType(true)) }}</td>
-                    <td>{{ funded.fundingEu }}</td>
-                    <td>{{ funded.fundingNational }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="form-group row">
-            <div class="offset-sm-3 col-sm-9">
-                {{ ztbformelement(form.get('import')) }}
-            </div>
+    <div class="form-group row">
+        <div class="offset-sm-3 col-sm-9">
+            {{ ztbformelement(form.get('import')) }}
         </div>
+    </div>
 
 
-        {{ form().closeTag()|raw }}
-
+    {{ form().closeTag()|raw }}
+</div>
+<div class="container">
     {% endif %}
 
-<script type="text/javascript">
-    $("#check_all").click(function () {
-        $('.check_import').prop('checked', true);
-    });
-
-    $("#check_none").click(function () {
-        $('.check_import').prop('checked', false);
-    });
-
-    $("#check_known").click(function () {
-        $('.known_parent').prop('checked', true);
-        $('.check_import:not(.known_parent)').prop('checked', false);
-    });
-
-    $("#check_unknown").click(function () {
-        $('.known_parent').prop('checked', false);
-        $('.check_import:not(.known_parent)').prop('checked', true);
-    });
-
-    $("#check_inverse").click(function () {
-        $('input:checkbox:not(:disabled)').each(function () {
-            if (!$(this).prop('checked')) {
-                $(this).prop('checked', true);
-            } else {
-                $(this).prop('checked', false);
-            }
+    <script>
+        $("#check_all").click(function () {
+            $('.check_import').prop('checked', true);
         });
-    });
+
+        $("#check_none").click(function () {
+            $('.check_import').prop('checked', false);
+        });
+
+        $("#check_known").click(function () {
+            $('.known_parent').prop('checked', true);
+            $('.check_import:not(.known_parent)').prop('checked', false);
+        });
+
+        $("#check_unknown").click(function () {
+            $('.known_parent').prop('checked', false);
+            $('.check_import:not(.known_parent)').prop('checked', true);
+        });
+
+        $("#check_inverse").click(function () {
+            $('input:checkbox:not(:disabled)').each(function () {
+                if (!$(this).prop('checked')) {
+                    $(this).prop('checked', true);
+                } else {
+                    $(this).prop('checked', false);
+                }
+            });
+        });
 
 
-</script>
+    </script>

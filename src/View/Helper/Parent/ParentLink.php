@@ -70,7 +70,7 @@ final class ParentLink extends AbstractLink
             case 'details':
                 $linkParams = [
                     'icon'  => 'fas fa-link',
-                    'route' => 'zfcadmin/parent/general/details',
+                    'route' => 'zfcadmin/parent/details/general',
                     'text'  => $showOptions[$show] ?? (string) $parent
                 ];
                 break;

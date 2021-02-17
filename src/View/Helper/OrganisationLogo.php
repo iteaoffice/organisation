@@ -17,9 +17,8 @@ use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 
 /**
- * Class ChallengeIcon
- *
- * @package Challenge\View\Helper
+ * Class OrganisationLogo
+ * @package Organisation\View\Helper
  */
 final class OrganisationLogo extends AbstractImage
 {
@@ -35,14 +34,14 @@ final class OrganisationLogo extends AbstractImage
             return '';
         }
 
-        $linkParams = [];
+        $linkParams          = [];
         $linkParams['route'] = 'image/organisation-logo';
-        $linkParams['show'] = $show;
+        $linkParams['show']  = $show;
         $linkParams['width'] = $width;
 
         $routeParams = [
-            'id' => $logo->getId(),
-            'ext' => $logo->getContentType()->getExtension(),
+            'id'          => $logo->getId(),
+            'ext'         => $logo->getContentType()->getExtension(),
             'last-update' => $logo->getDateUpdated()->getTimestamp(),
         ];
 

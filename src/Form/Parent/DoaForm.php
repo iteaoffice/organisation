@@ -119,6 +119,12 @@ final class DoaForm extends Form\Form implements InputFilterProviderInterface
         );
         $this->add(
             [
+                'type' => Form\Element\Csrf::class,
+                'name' => 'csrf',
+            ]
+        );
+        $this->add(
+            [
                 'type'       => Form\Element\Submit::class,
                 'name'       => 'delete',
                 'attributes' => [

@@ -127,7 +127,12 @@ final class ManagerController extends AbstractController
 
         if ($this->getRequest()->isPost()) {
             if (isset($data['cancel'])) {
-                return $this->redirect()->toRoute('zfcadmin/parent/list/parent');
+                return $this->redirect()->toRoute(
+                    'zfcadmin/parent/details/general',
+                    [
+                        'id' => $parent->getId(),
+                    ]
+                );
             }
 
             if (isset($data['delete']) && $this->parentService->canDeleteParent($parent)) {

@@ -6,6 +6,7 @@
     <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-id") }}</th>
             <th>{{ translate("txt-parent-organisation") }}</th>
             <th>{{ translate("txt-country") }}</th>
             <th>{{ translate("txt-type") }}</th>
@@ -13,15 +14,30 @@
             <th>{{ translate("txt-projects") }}</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="6"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for parentOrganisation in parent.parentOrganisation %}
             <tr>
+                <td><small class="text-muted">{{ parentOrganisation.id }}</small></td>
                 <td>
-                    {% if parentOrganisation.organisation.isParent() %}<span
-                            class="badge badge-info">{{ translate("txt-parent") }}</span>{% endif %}
+                    {% if parentOrganisation.organisation.isParent() %}
+                        {% if parentOrganisation.organisation.parent.id != parent.id %}
+                            <span class="badge badge-danger"
+                                  title="{{ translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself") }}">{{ translate("txt-error") }}</span>
+                        {% else %}
+                            <span class="badge badge-success">{{ translate("txt-self") }}</span>
+                        {% endif %}
+
+                        <span class="badge badge-info">{{ translate("txt-parent") }}</span>
+
+                    {% endif %}
                     {{ parentOrganisationLink(parentOrganisation,'view','organisation') }} {{ parentOrganisationLink(parentOrganisation,'edit','icon') }}
                 </td>
-                <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin', 'name') }}</td>
+                <td>{{ countryLink(parentOrganisation.organisation.country,'view-admin', 'iso3') }}</td>
                 <td>{{ organisationTypeLink(parentOrganisation.organisation.type, 'view', 'name') }}</td>
                 <td>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</td>
                 <td>{{ parentOrganisation.affiliation.count() }}</td>

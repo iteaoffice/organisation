@@ -28,7 +28,7 @@ use Organisation\View;
 
 $config = [
     'controllers'        => [
-        'factories' => [
+        'factories'  => [
             Controller\JsonController::class => ConfigAbstractFactory::class,
 
             Controller\ConsoleController::class => ConfigAbstractFactory::class,
@@ -49,12 +49,16 @@ $config = [
             Controller\Parent\ListController::class         => ConfigAbstractFactory::class,
             Controller\Parent\ManagerController::class      => ConfigAbstractFactory::class,
             Controller\Parent\OrganisationController::class => ConfigAbstractFactory::class,
-            Controller\Parent\TypeController::class         => ConfigAbstractFactory::class,
+
+            Controller\Parent\TypeController::class => ConfigAbstractFactory::class,
 
             Controller\SelectionController::class      => ConfigAbstractFactory::class,
             Controller\UpdateController::class         => ConfigAbstractFactory::class,
             Controller\Update\ManagerController::class => ConfigAbstractFactory::class,
         ],
+        'invokables' => [
+            Controller\Parent\ImportController::class
+        ]
     ],
     'controller_plugins' => [
         'aliases'   => [

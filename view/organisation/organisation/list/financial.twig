@@ -35,27 +35,30 @@
                     <th colspan="2">{{ translate("txt-vat-status") }}</th>
                     <th>{{ translate("txt-omit-contact") }}</th>
                     <th>{{ translate("txt-email") }}</th>
-                    <th>{{ translate("txt-require-purchase-order") }}</th>
+                    <th><abbr title="{{ translate("txt-require-purchase-order") }}">{{ translate("txt-po") }}</abbr></th>
                 </tr>
                 </thead>
                 <tfoot>
-                    <tr><td colspan="10"></td></tr>
+                <tr>
+                    <td colspan="10"></td>
+                </tr>
                 </tfoot>
                 <tbody>
                 {% for financial in paginator.getCurrentItems() %}
                     <tr>
-                        <td><small class="text-muted">{{ organisation.id }}</small></td>
-                        <td>{{ organisationLink(financial.organisation, 'view-admin', 'name') }} {{ organisationLink(financial.organisation, 'edit-financial', 'icon') }}</td>
+                        <td><small class="text-muted">{{ financial.id }}</small></td>
+                        <td>{{ organisationLink(financial.organisation, 'financial-admin', 'name') }} {{ organisationLink(financial.organisation, 'edit-financial', 'icon') }}</td>
                         <td>{{ financial.organisation.country.iso3 }}</td>
                         <td>{{ financial.organisation.getType().type }}</td>
                         <td>{{ financial.vat }}</td>
-                        <td id="vatStatus_{{ financial.id }}">{{ translate(financial.vatStatus(true)) }}
-                            ({{ financial.dateVat|string_date }})
+                        <td id="vatStatus_{{ financial.id }}">{{ translate(financial.getVatStatusText()) }}
+                            {% if financial.dateVat %}({{ financial.dateVat|string_date }}){% endif %}
                         <td><i class="fas fa-sync-alt checkVat cursor-pointer" rel="{{ financial.id }}"></i></td>
                         {# <td>{% for type in financial.vatType %}{{ type }}{% endfor %}</td> #}
                         <td>{{ translate(financial.getOmitContactText()) }}</td>
-                        <td>{{ translate(financial.getEmailText()) }}</td>
-                        <td>{{ translate(financial.getRequiredPurchaseOrderText()) }}</td>
+                        <td>{% if financial.getEmail() %}<i class="fas fa-check text-success"></i>{% endif %}</td>
+                        <td>{% if financial.getRequiredPurchaseOrder() %}<i
+                                    class="fas fa-check text-success"></i>{% endif %}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

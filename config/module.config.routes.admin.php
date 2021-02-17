@@ -71,8 +71,7 @@ return [
                                     ],
                                 ],
                             ],
-
-                            'details' => [
+                            'details'            => [
                                 'type'          => 'Literal',
                                 'options'       => [
                                     'route'    => '/details',
@@ -175,7 +174,7 @@ return [
                                     ],
                                 ],
                             ],
-                            'list'    => [
+                            'list'               => [
                                 'type'          => 'Literal',
                                 'options'       => [
                                     'route'    => '/list',
@@ -187,6 +186,15 @@ return [
                                 'may_terminate' => false,
                                 'child_routes'  => [
                                     'organisation' => [
+                                        'type'    => 'Segment',
+                                        'options' => [
+                                            'route'    => '/organisation[/f-:encodedFilter][/page-:page].html',
+                                            'defaults' => [
+                                                'action' => 'organisation',
+                                            ],
+                                        ],
+                                    ],
+                                    'parent'       => [
                                         'type'    => 'Segment',
                                         'options' => [
                                             'route'    => '/parent[/f-:encodedFilter][/page-:page].html',

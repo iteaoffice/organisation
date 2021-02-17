@@ -10,20 +10,20 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Form;
+namespace Organisation\Form\Parent;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
-use Program\Entity\Program;
 use Laminas\Form;
 use Laminas\InputFilter\InputFilterProviderInterface;
+use Program\Entity\Program;
 
 /**
- * Class CreateParentDoa
- *
- * @package Organisation\Form
+ * Class CreateParentDoaForm
+ * @package Organisation\Form\Parent
  */
-final class CreateParentDoa extends Form\Form implements InputFilterProviderInterface
+final class CreateParentDoaForm extends Form\Form implements InputFilterProviderInterface
 {
     public function __construct(EntityManager $entityManager)
     {
@@ -43,7 +43,7 @@ final class CreateParentDoa extends Form\Form implements InputFilterProviderInte
                         'params' => [
                             'criteria' => [],
                             'orderBy'  => [
-                                'program' => 'ASC',
+                                'program' => Criteria::ASC,
                             ],
                         ],
                     ],

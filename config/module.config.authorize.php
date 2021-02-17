@@ -39,6 +39,7 @@ return [
                 ['route' => 'zfcadmin/organisation/list/organisation', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list/duplicate', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list/inactive', 'roles' => ['office']],
+                ['route' => 'zfcadmin/organisation/list/financial', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/list/no-financial', 'roles' => ['office']],
 
                 ['route' => 'zfcadmin/organisation/new', 'roles' => ['office']],
@@ -64,7 +65,6 @@ return [
                 ['route' => 'zfcadmin/organisation/type/view', 'roles' => ['office']],
 
                 ['route' => 'zfcadmin/organisation/search-form', 'roles' => ['office']],
-                ['route' => 'zfcadmin/organisation/financial/list', 'roles' => ['office']],
                 ['route' => 'zfcadmin/organisation/financial/edit', 'roles' => ['office']],
 
                 ['route' => 'zfcadmin/organisation/note/new', 'roles' => ['office']],

@@ -15,8 +15,9 @@ namespace Organisation\Controller\Plugin\Merge;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use ErrorHeroModule\Handler\Logging;
-use Organisation\Entity\Parent\Organisation;
+use Laminas\Http\PhpEnvironment\Request;
 use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
+use Organisation\Entity\Parent\Organisation;
 
 /**
  * Class ParentOrganisation
@@ -30,7 +31,7 @@ final class ParentOrganisationMerge extends AbstractPlugin
     public function __construct(EntityManager $entityManager, Logging $errorLogger)
     {
         $this->entityManager = $entityManager;
-        $this->errorLogger = $errorLogger;
+        $this->errorLogger   = $errorLogger;
     }
 
     public function __invoke(Organisation $mainOrganisation, Organisation $otherOrganisation): array
@@ -44,14 +45,14 @@ final class ParentOrganisationMerge extends AbstractPlugin
 
                 $this->entityManager->persist($affiliation);
             }
-
             // Step 12: Persist main affiliation, remove the other + flush and update permissions
-
             $this->entityManager->remove($otherOrganisation);
             $this->entityManager->flush();
         } catch (ORMException $e) {
             $response = ['success' => false, 'errorMessage' => $e->getMessage()];
-            \error_log($e->getFile() . ':' . $e->getLine() . ' ' . $e->getMessage());
+            if ($this->errorLogger instanceof Logging) {
+                $this->errorLogger->handleErrorException($e, new Request());
+            }
         }
 
         return $response;

@@ -15,15 +15,13 @@ namespace Organisation\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * OrganisationWeb.
- *
  * @ORM\Table(name="organisation_web")
  * @ORM\Entity
  */
 class Web extends AbstractEntity
 {
     public const NOT_MAIN = 0;
-    public const MAIN = 1;
+    public const MAIN     = 1;
 
     protected static array $mainTemplates
         = [
@@ -59,6 +57,11 @@ class Web extends AbstractEntity
      */
     private $organisation;
 
+    public static function getMainTemplates(): array
+    {
+        return self::$mainTemplates;
+    }
+
     public function __toString(): string
     {
         return sprintf($this->web);
@@ -69,72 +72,47 @@ class Web extends AbstractEntity
         return $this->main === self::MAIN;
     }
 
-    public static function getMainTemplates(): array
-    {
-        return self::$mainTemplates;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id)
+    public function setId(?int $id): Web
     {
         $this->id = $id;
+        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getMain()
-    {
-        return $this->main;
-    }
-
-    /**
-     * @param int $main
-     */
-    public function setMain($main)
-    {
-        $this->main = $main;
-    }
-
-    /**
-     * @return \Organisation\Entity\Organisation
-     */
-    public function getOrganisation()
-    {
-        return $this->organisation;
-    }
-
-    /**
-     * @param \Organisation\Entity\Organisation $organisation
-     */
-    public function setOrganisation($organisation)
-    {
-        $this->organisation = $organisation;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWeb()
+    public function getWeb(): ?string
     {
         return $this->web;
     }
 
-    /**
-     * @param string $web
-     */
-    public function setWeb($web)
+    public function setWeb(?string $web): Web
     {
         $this->web = $web;
+        return $this;
+    }
+
+    public function getMain(): ?int
+    {
+        return $this->main;
+    }
+
+    public function setMain(?int $main): Web
+    {
+        $this->main = $main;
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): Web
+    {
+        $this->organisation = $organisation;
+        return $this;
     }
 }

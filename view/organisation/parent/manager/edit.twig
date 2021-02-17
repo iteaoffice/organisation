@@ -6,16 +6,10 @@
 {% do form.prepare() %}
 {{ form().openTag(form)|raw }}
 
-<div class="form-group row">
-    <label class="col-sm-3 col-form-label">{{ translate("txt-parent") }}</label>
-
-    <div class="col-sm-9">
-        <p class="form-control-plaintext">{{ parentLink(parent,'view','parent') }}</p>
-    </div>
-</div>
-
 {% set parentForm = form.get('organisation_entity_parententity') %}
 
+{{ organisationformelement(parentForm.get('organisation')) }}
+{{ contactformelement(parentForm.get('contact')) }}
 {{ ztbformelement(parentForm.get('id')) }}
 {{ ztbformelement(parentForm.get('type')) }}
 
@@ -30,8 +24,6 @@
 {{ ztbformelement(parentForm.get('memberType')) }}
 {{ ztbformelement(parentForm.get('epossMemberType')) }}
 {{ ztbformelement(parentForm.get('artemisiaMemberType')) }}
-{{ organisationformelement(parentForm.get('organisation')) }}
-{{ contactformelement(parentForm.get('contact')) }}
 {{ ztbformelement(parentForm.get('dateEnd')) }}
 {{ ztbformelement(form.get('csrf')) }}
 

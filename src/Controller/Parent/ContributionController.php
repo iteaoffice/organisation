@@ -12,15 +12,10 @@ declare(strict_types=1);
 
 namespace Organisation\Controller\Parent;
 
-use Contact\Service\ContactService;
-use Doctrine\ORM\EntityManager;
 use Invoice\Service\InvoiceService;
 use Laminas\Http\Response;
-use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
 use Organisation\Controller\AbstractController;
-use Organisation\Service\FormService;
-use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Program\Service\ProgramService;
 
@@ -46,7 +41,7 @@ final class ContributionController extends AbstractController
         $this->invoiceService = $invoiceService;
     }
 
-    public function overviewVariableContributionAction(): ViewModel
+    public function variableAction(): ViewModel
     {
         $parent = $this->parentService->findParentById((int)$this->params('id'));
 
@@ -76,7 +71,7 @@ final class ContributionController extends AbstractController
         );
     }
 
-    public function overviewVariableContributionPdfAction(): Response
+    public function variablePdfAction(): Response
     {
         /** @var Response $response */
         $response = $this->getResponse();
@@ -113,7 +108,7 @@ final class ContributionController extends AbstractController
         return $response;
     }
 
-    public function overviewExtraVariableContributionAction(): ViewModel
+    public function extraVariableAction(): ViewModel
     {
         $parent = $this->parentService->findParentById((int)$this->params('id'));
 
@@ -139,7 +134,7 @@ final class ContributionController extends AbstractController
         );
     }
 
-    public function overviewExtraVariableContributionPdfAction(): Response
+    public function extraVariablePdfAction(): Response
     {
         /** @var Response $response */
         $response = $this->getResponse();

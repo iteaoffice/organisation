@@ -25,6 +25,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Organisation\Controller;
 use Organisation\Service;
+use Organisation\Service\FormService;
 use Program\Service\ProgramService;
 use Project\Service\ProjectService;
 
@@ -93,6 +94,13 @@ return [
             Service\ParentService::class,
             ProgramService::class,
             InvoiceService::class,
+        ],
+        Controller\Parent\ManagerController::class         => [
+            Service\ParentService::class,
+            Service\OrganisationService::class,
+            ContactService::class,
+            FormService::class,
+            TranslatorInterface::class
         ],
         Controller\Parent\ListController::class            => [
             Service\ParentService::class,

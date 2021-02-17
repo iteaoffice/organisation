@@ -5,40 +5,45 @@
 
 <h1>{{ parent.organisation.organisation }}, {{ parent.organisation.country.country }}</h1>
 
+{% if parentService.hasWrongParentChildRelationship(parent) %}
+    {{ ztbalert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
+
+    {% if parentService.canDeleteParent(parent) %}{{ ztbalert().info(translate("txt-this-parent-can-be-deleted-to-solve-the-recursive-parenting"))|raw }}{% endif %}
+{% endif %}
 
 {% set navigation =
     {   'general' :
-        {   'route': 'zfcadmin/parent/details/general',
-            'text' : translate("txt-general")
-        },
-        'organisations':
-        {
-            'route': 'zfcadmin/parent/details/organisations',
-            'text' : translate("txt-organisations")
-        },
-        'doas':
-        {
-            'route': 'zfcadmin/parent/details/doas',
-            'text' : translate("txt-doas")
-        },
-        'financial':
-        {
-            'route': 'zfcadmin/parent/details/financial',
-            'text' : translate("txt-financial")
-        },
-        'invoices':
-        {
-            'route': 'zfcadmin/parent/details/invoices',
-            'text' : translate("txt-invoices")
-        }
-    } %}
+    {   'route': 'zfcadmin/parent/details/general',
+        'text' : translate("txt-general")
+    },
+    'organisations':
+    {
+        'route': 'zfcadmin/parent/details/organisations',
+        'text' : translate("txt-organisations")
+    },
+    'doas':
+    {
+        'route': 'zfcadmin/parent/details/doas',
+        'text' : translate("txt-doas")
+    },
+    'financial':
+    {
+        'route': 'zfcadmin/parent/details/financial',
+        'text' : translate("txt-financial")
+    },
+    'invoices':
+    {
+        'route': 'zfcadmin/parent/details/invoices',
+        'text' : translate("txt-invoices")
+    }
+} %}
 
 
 <ul class="nav nav-tabs pt-3" role="tablist">
-    {% for key, params in navigation %}
-        <li class="nav-item"><a href="{{ url(params.route,{'id':parent.id}) }}"
-                                aria-controls="{{ key }}"
-                                role="tab"
-                                class="nav-link {% if key == tab %}active{% endif %}">{{ params.text|raw }}</a></li>
-    {% endfor %}
+{% for key, params in navigation %}
+<li class="nav-item"><a href="{{ url(params.route,{'id':parent.id}) }}"
+aria-controls="{{ key }}"
+role="tab"
+class="nav-link {% if key == tab %}active{% endif %}">{{ params.text|raw }}</a></li>
+{% endfor %}
 </ul>

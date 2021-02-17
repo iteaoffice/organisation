@@ -76,6 +76,7 @@ return [
     'organisation/organisation/type/edit'                       => __DIR__ . '//view/organisation/organisation/type/edit.twig',
     'organisation/partial/form/financial'                       => __DIR__ . '//view/organisation/partial/form/financial.twig',
     'organisation/partial/form/note'                            => __DIR__ . '//view/organisation/partial/form/note.twig',
+    'organisation/partial/form/type'                            => __DIR__ . '//view/organisation/partial/form/type.twig',
     'organisation/partial/form/update'                          => __DIR__ . '//view/organisation/partial/form/update.twig',
     'organisation/partial/form/organisation'                    => __DIR__ . '//view/organisation/partial/form/organisation.twig',
     'organisation/partial/form/selection'                       => __DIR__ . '//view/organisation/partial/form/selection.twig',

@@ -68,6 +68,14 @@ final class OrganisationLink extends AbstractLink
                         ?? OrganisationService::parseBranch($branch, $organisation)
                 ];
                 break;
+            case 'financial-admin':
+                $linkParams = [
+                    'icon'  => 'fas fa-link',
+                    'route' => 'zfcadmin/organisation/details/financial',
+                    'text'  => $showOptions[$show]
+                        ?? OrganisationService::parseBranch($branch, $organisation)
+                ];
+                break;
             case 'edit':
                 $linkParams = [
                     'icon'  => 'far fa-edit',

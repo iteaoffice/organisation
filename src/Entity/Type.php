@@ -21,15 +21,12 @@ use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_type")
- * @ORM\Entity(repositoryClass="Organisation\Repository\Type")
+ * @ORM\Entity(repositoryClass="Organisation\Repository\TypeRepository")
  * @Annotation\Hydrator("Laminas\Hydrator\ObjectPropertyHydrator")
  * @Annotation\Name("organisation_type")
  */
 class Type extends AbstractEntity
 {
-    public const NO_INVOICE = 0;
-    public const INVOICE    = 1;
-
     public const TYPE_IFC            = 1;
     public const TYPE_LARGE_INDUSTRY = 2;
     public const TYPE_SME            = 3;
@@ -39,11 +36,6 @@ class Type extends AbstractEntity
     public const TYPE_OTHER          = 7;
     public const TYPE_UNKNOWN        = 8;
 
-    protected static array $invoiceTemplates
-        = [
-            self::NO_INVOICE => 'txt-invoice',
-            self::INVOICE    => 'txt-no-invoice',
-        ];
     /**
      * @ORM\Column(name="type_id", type="integer", options={"unsigned":true})
      * @ORM\Id
@@ -65,21 +57,11 @@ class Type extends AbstractEntity
     /**
      * @ORM\Column(name="description", type="string", nullable=false, unique=true)
      * @Annotation\Type("\Laminas\Form\Element\Text")
-     * @Annotation\Options({"label":"txt-type"})
-     * @Annotation\Required(true)
+     * @Annotation\Options({"label":"txt-organistion-type-description-label","help-block":"txt-organistion-type-description-help-block"})
      *
      * @var string
      */
     private $description;
-    /**
-     * @ORM\Column(type="smallint",nullable=true)
-     * @Annotation\Type("Laminas\Form\Element\Radio")
-     * @Annotation\Attributes({"array":"invoiceTemplates"})
-     * @Annotation\Attributes({"label":"txt-invoice"})
-     *
-     * @var int
-     */
-    private $invoice;
     /**
      * @ORM\OneToMany(targetEntity="Event\Entity\Meeting\Cost", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
@@ -115,11 +97,6 @@ class Type extends AbstractEntity
         $this->meetingCost         = new Collections\ArrayCollection();
         $this->organisationUpdates = new Collections\ArrayCollection();
         $this->questionnaires      = new Collections\ArrayCollection();
-    }
-
-    public static function getInvoiceTemplates(): array
-    {
-        return self::$invoiceTemplates;
     }
 
     public function __toString(): string
@@ -159,22 +136,6 @@ class Type extends AbstractEntity
     public function setDescription($description): Type
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getInvoice(bool $textual = false)
-    {
-        if ($textual) {
-            return self::$invoiceTemplates[$this->invoice];
-        }
-
-        return $this->invoice;
-    }
-
-    public function setInvoice($invoice): Type
-    {
-        $this->invoice = $invoice;
 
         return $this;
     }

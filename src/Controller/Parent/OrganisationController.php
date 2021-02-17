@@ -156,10 +156,10 @@ final class OrganisationController extends AbstractController
         /** @var Request $request */
         $request = $this->getRequest();
 
-        /** @var Entity\Parent\Organisation $organisation */
-        $organisation = $this->parentService->find(Entity\Parent\Organisation::class, (int)$this->params('id'));
+        /** @var Entity\Parent\Organisation $parentOrganisation */
+        $parentOrganisation = $this->parentService->find(Entity\Parent\Organisation::class, (int)$this->params('id'));
 
-        if (null === $organisation) {
+        if (null === $parentOrganisation) {
             return $this->notFoundAction();
         }
 
@@ -171,7 +171,7 @@ final class OrganisationController extends AbstractController
             $otherOrganisation = $this->parentService
                 ->find(Entity\Parent\Organisation::class, (int)$data['merge']);
 
-            $result = $this->parentOrganisationMerge($organisation, $otherOrganisation);
+            $result = $this->parentOrganisationMerge($parentOrganisation, $otherOrganisation);
 
             if ($result['success'] === true) {
                 $this->flashMessenger()->setNamespace(FlashMessenger::NAMESPACE_SUCCESS)
@@ -180,9 +180,9 @@ final class OrganisationController extends AbstractController
                             $this->translator->translate(
                                 'txt-merge-of-organisation-%s-and-%s-in-in-parent-%s-was-successful'
                             ),
-                            $organisation->getOrganisation(),
+                            $parentOrganisation->getOrganisation(),
                             $otherOrganisation->getOrganisation(),
-                            $organisation->getParent()->getOrganisation()
+                            $parentOrganisation->getParent()->getOrganisation()
                         )
                     );
             } else {
@@ -194,15 +194,15 @@ final class OrganisationController extends AbstractController
 
             return $this->redirect()->toRoute(
                 'zfcadmin/parent/details/organisations',
-                ['id' => $organisation->getParent()->getId()]
+                ['id' => $parentOrganisation->getParent()->getId()]
             );
         }
 
         return new ViewModel(
             [
-                'organisation'  => $organisation,
-                'merge'         => $data['merge'] ?? null,
-                'parentService' => $this->parentService
+                'parentOrganisation' => $parentOrganisation,
+                'merge'              => $data['merge'] ?? null,
+                'parentService'      => $this->parentService
             ]
         );
     }

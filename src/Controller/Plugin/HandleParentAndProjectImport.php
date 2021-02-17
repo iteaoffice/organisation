@@ -19,11 +19,11 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use General\Service\CountryService;
 use Organisation\Entity\Name;
-use Organisation\Entity\ParentEntity;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Parent\Doa;
 use Organisation\Entity\Parent\Financial;
 use Organisation\Entity\Parent\Type as ParentType;
+use Organisation\Entity\ParentEntity;
 use Organisation\Service\OrganisationService;
 use Organisation\Service\ParentService;
 use Program\Entity\Call\Call;
@@ -153,6 +153,11 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             }
         }
 
+        //Short circuit the function if we already found issues
+        if ($this->hasErrors()) {
+            return true;
+        }
+
         /*
          * Create the lookup-table
          */
@@ -172,16 +177,14 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                     'EPS in row %s is empty',
                     $counter
                 );
-            } else {
-                if (
-                    null === $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']])
-                ) {
-                    $this->errors[] = sprintf(
-                        'EPS (%s) in row %s cannot be found',
-                        $content[$this->headerKeys['EPS']],
-                        $counter
-                    );
-                }
+            } elseif (
+                null === $this->countryService->findCountryByCD($content[$this->headerKeys['EPS']])
+            ) {
+                $this->errors[] = sprintf(
+                    'EPS (%s) in row %s cannot be found',
+                    $content[$this->headerKeys['EPS']],
+                    $counter
+                );
             }
 
             if (! empty($content[$this->headerKeys['Member Type']])) {
@@ -263,6 +266,13 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
                 $call = new Call();
                 $call->setProgram($program);
                 $call->setCall($callName);
+                $call->setProjectNumberMask($callName . '-##');
+
+                $fppOpen = new DateTime();
+                $call->setFppOpenDate($fppOpen->modify('first day of february ' . $year));
+                $fppClosed = new DateTime();
+                $call->setFppCloseDate($fppClosed->modify('last day of april ' . $year));
+
                 $call->setActive(Call::INACTIVE);
 
                 $program->getCall()->add($call);
@@ -273,6 +283,7 @@ final class HandleParentAndProjectImport extends AbstractImportPlugin
             if (null === $project) {
                 $project = new Project();
                 $project->setProject($content[$this->headerKeys['Proposal Acronym']]);
+                $project->setNumber($this->projectService->findNextProjectNumberInCall($call));
 
                 //Derive te start and end date
                 $dateStart = new DateTime();

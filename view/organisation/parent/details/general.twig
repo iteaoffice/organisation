@@ -5,6 +5,14 @@
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-organisation") }}</dt>
     <dd>{{ organisationLink(parent.organisation,'view-admin','name') }}</dd>
+
+    {% if parentService.hasWrongParentChildRelationship(parent) %}
+        <dt class="text-danger">{{ translate("txt-parent") }}</dt>
+
+        <dd>{{ parentLink(parent.organisation.parentOrganisation.parent,'view','name') }}</dd>
+        <dd class="text-danger">{{ translate("txt-this-organisation-cannot-have-a-parent-remove-this-parent-or-remove-the-link-to-the-parent") }}</dd>
+    {% endif %}
+
     <dt>{{ translate("txt-organisation-country") }}</dt>
     <dd>{{ parent.organisation.country }}</dd>
     <dt>{{ translate("txt-parent-type") }}</dt>
@@ -28,7 +36,6 @@
         <dd>{{ parentService.parseInvoiceFactor(parent, program) }}%</dd>
     {% endfor %}
 </dl>
-
 
 
 {{ parentLink(parent, 'edit','button') }}

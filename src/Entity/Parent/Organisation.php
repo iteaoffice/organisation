@@ -14,9 +14,9 @@ namespace Organisation\Entity\Parent;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Laminas\Form\Annotation;
 use Organisation\Entity\AbstractEntity;
 use Organisation\Entity\ParentEntity;
-use Laminas\Form\Annotation;
 
 /**
  * @ORM\Table(name="organisation_parent_organisation")
@@ -98,12 +98,12 @@ class Organisation extends AbstractEntity
         return $this;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id): Organisation
+    public function setId(?int $id): Organisation
     {
         $this->id = $id;
 

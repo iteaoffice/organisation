@@ -21,7 +21,7 @@ use Laminas\Validator\File\Size;
 
 /**
  * Class ImportForm
- * @package Organisation\Form
+ * @package Organisation\Form\Parent
  */
 final class ImportForm extends Form implements InputFilterProviderInterface
 {
@@ -37,7 +37,8 @@ final class ImportForm extends Form implements InputFilterProviderInterface
                 'type'    => File::class,
                 'name'    => 'file',
                 'options' => [
-                    'label' => 'txt-file',
+                    'label'      => 'txt-file',
+                    'help-block' => 'txt-parent-import-file-requirements',
                 ],
             ]
         );

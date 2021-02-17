@@ -147,7 +147,7 @@ return [
                                         'options' => [
                                             'route'    => '/project.html',
                                             'defaults' => [
-                                                'action' => 'import-project',
+                                                'action' => 'project',
                                             ],
                                         ],
                                     ],

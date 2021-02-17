@@ -3,24 +3,52 @@
 
 <h1>{{ translate("txt-view-parent-organisation-%s")|format(parentOrganisation) }}</h1>
 
+<p>{{ translate("txt-view-parent-organisation-%s-in-parent-explanation-%s")|format(parentOrganisation.organisation, parentOrganisation.parent.organisation) }}</p>
+
+{% if parentOrganisation.organisation.isParent() %}
+    {% if parentOrganisation.organisation.parent.id != parentOrganisation.parent.id %}
+        {{ ztbalert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
+    {% else %}
+        {{ ztbalert().info(translate("txt-this-is-the-parent-itself"))|raw }}
+    {% endif %}
+{% endif %}
+
+<h3 class="h4">{{ translate("txt-organisation-in-parent-information") }}</h3>
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-parent-organisation") }}</dt>
+    <dd>{{ organisationLink(parentOrganisation.organisation,'view-admin','name') }}</dd>
+
+    {% if parentOrganisation.organisation.isParent() and parentOrganisation.organisation.parent.id != parentOrganisation.parent.id %}
+        <dt class="text-danger">{{ translate("txt-parent") }}</dt>
+        <dd>{{ parentLink(parentOrganisation.organisation.parent,'view','name') }}</dd>
+        <dd class="text-danger">{{ translate("txt-this-parent-should-be-the-same-as-the-parent-below") }}</dd>
+    {% endif %}
+
+
+    <dt>{{ translate("txt-parent-organisation-country") }}</dt>
+    <dd>{{ countryLink(parentOrganisation.organisation.country,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-representative") }}</dt>
+    <dd>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</dd>
+</dl>
+
+<h3 class="h4">{{ translate("txt-parent-information") }}</h3>
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-parent-name") }}</dt>
     <dd>{{ parentLink(parentOrganisation.parent,'view','parent') }}</dd>
+    <dt>{{ translate("txt-parent-country") }}</dt>
+    <dd>{{ countryLink(parentOrganisation.parent.organisation.country,'view-admin') }}</dd>
     <dt>{{ translate("txt-parent-type") }}</dt>
     <dd>{{ translate(parentOrganisation.parent.getMemberType(true)) }}</dd>
-    <dt>{{ translate("txt-organisation") }}</dt>
-    <dd>{{ organisationLink(parentOrganisation.organisation,'view-admin','name') }}</dd>
-    <dt>{{ translate("txt-representative") }}</dt>
-    <dd>{{ contactLink(parentOrganisation.contact,'view-admin','name') }}</dd>
-
 </dl>
 
+<h3 class="h4">{{ translate("txt-projects") }}</h3>
 {% if parentOrganisation.affiliation.count() > 0 %}
     <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-id") }}</th>
+            <th>{{ translate("txt-organisation-in-project") }}</th>
             <th>{{ translate("txt-parent") }}</th>
-            <th>{{ translate("txt-parent-organisation") }}</th>
             <th>{{ translate("txt-project") }}</th>
             <th>{{ translate("txt-name-in-project") }}</th>
             <th>{{ translate("txt-program-call") }}</th>
@@ -28,11 +56,17 @@
             <th>{{ translate("txt-amount-of-versions") }}</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for affiliation in parentOrganisation.affiliation %}
             <tr>
-                <td>{{ parentLink(affiliation.parentOrganisation.parent,'view','parent') }}</td>
+                <td><small class="text-muted">{{ affiliation.id }}</small></td>
                 <td>{{ affiliationLink(affiliation,'view-admin','parent-organisation') }}</td>
+                <td>{{ parentLink(affiliation.parentOrganisation.parent,'view','parent') }}</td>
                 <td>{{ projectLink(affiliation.project,'view-admin', 'project') }}</td>
                 <td>{% for name in affiliation.parentOrganisation.organisation.names|filter(name => name.project == affiliation.project) -%}{{ name.name }}{% endfor %}</td>
                 <td>{{ callLink(affiliation.project.call,'view-admin', 'name') }}</td>

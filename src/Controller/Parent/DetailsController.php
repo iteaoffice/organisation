@@ -57,7 +57,7 @@ final class DetailsController extends AbstractController
         $this->translator          = $translator;
     }
 
-    public function viewAction()
+    public function generalAction(): ViewModel
     {
         $parent = $this->parentService->findParentById((int)$this->params('id'));
 
@@ -65,9 +65,41 @@ final class DetailsController extends AbstractController
             return $this->notFoundAction();
         }
 
-        $year = (int)date('Y');
+        return new ViewModel(
+            [
+                'parent'        => $parent,
+                'parentService' => $this->parentService,
+                'programs'      => $this->programService->findAll(Program::class),
+                'tab'           => 'general'
+            ]
+        );
+    }
 
-        $form = new Form\CreateParentDoa($this->entityManager);
+    public function organisationsAction(): ViewModel
+    {
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
+
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+        return new ViewModel(
+            [
+                'parent'        => $parent,
+                'parentService' => $this->parentService,
+                'tab'           => 'organisations'
+            ]
+        );
+    }
+
+    public function doasAction()
+    {
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
+
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        $form = new Form\Parent\CreateParentDoaForm($this->entityManager);
         $form->setData($this->getRequest()->getPost()->toArray());
         if ($this->getRequest()->isPost() && $form->isValid()) {
             $counter = 0;
@@ -101,14 +133,47 @@ final class DetailsController extends AbstractController
 
         return new ViewModel(
             [
+                'parent'        => $parent,
+                'parentService' => $this->parentService,
+                'form'          => $form,
+                'tab'           => 'doas'
+            ]
+        );
+    }
+
+    public function financialAction(): ViewModel
+    {
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
+
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel(
+            [
                 'parent'              => $parent,
+                'parentService'       => $this->parentService,
                 'organisationService' => $this->organisationService,
                 'contactService'      => $this->contactService,
-                'year'                => $year,
-                'form'                => $form,
-                'programs'            => $this->programService->findAll(Program::class),
-                'parentService'       => $this->parentService,
-                'invoiceService'      => $this->invoiceService
+                'tab'                 => 'financial'
+            ]
+        );
+    }
+
+    public function invoicesAction(): ViewModel
+    {
+        $parent = $this->parentService->findParentById((int)$this->params('id'));
+
+        if (null === $parent) {
+            return $this->notFoundAction();
+        }
+
+        return new ViewModel(
+            [
+                'parent'         => $parent,
+                'parentService'  => $this->parentService,
+                'invoiceService' => $this->invoiceService,
+                'tab'            => 'invoices'
             ]
         );
     }

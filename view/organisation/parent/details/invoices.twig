@@ -15,36 +15,44 @@
     <table class="table table-hover table-striped table-sm">
         <thead>
         <tr>
+            <th>{{ translate("txt-id") }}</th>
             <th>{{ translate("txt-invoice") }}</th>
             <th>{{ translate("txt-invoice-type") }}</th>
             <th>{{ translate("txt-invoice-date") }}</th>
             <th>{{ translate("txt-organisation") }}</th>
-            <th>{{ translate("txt-amount-invoiced") }}</th>
+            <th class="text-right">{{ translate("txt-amount-invoiced") }}</th>
             <th>{{ translate("txt-status") }}</th>
             <th>{{ translate("txt-program") }}</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <td colspan="8"></td>
+        </tr>
+        </tfoot>
         <tbody>
         {% for varInvoice in parent.invoice %}
             <tr>
+                <td><small class="text-muted">{{ varInvoice.invoice.id }}</small></td>
                 <td>{{ invoiceLink(varInvoice.invoice,'view', 'invoice') }}</td>
                 <td>{{ translate(invoiceService.parseType(varInvoice.invoice, true)) }}</td>
                 <td>{{ varInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
                 <td>{{ organisationLink(varInvoice.invoice.organisation,'view-admin', 'name') }}</td>
-                <td>{{ varInvoice.amountInvoiced|currency_decimal }}</td>
+                <td class="text-right">{{ varInvoice.amountInvoiced|currency_decimal }}</td>
                 <td>{{ invoiceService.parseStatus(varInvoice.invoice, true) }}</td>
-                <td>{{ varInvoice.program }}</td>
+                <td>{{ programLink(varInvoice.program,'view','name') }}</td>
             </tr>
         {% endfor %}
         {% for extraVarInvoice in parent.invoiceExtra %}
             <tr>
+                <td><small class="text-muted">{{ extraVarInvoice.invoice.id }}</small></td>
                 <td>{{ invoiceLink(extraVarInvoice.invoice,'view', 'invoice') }}</td>
                 <td>{{ translate(invoiceService.parseType(extraVarInvoice.invoice, true)) }}</td>
                 <td>{{ extraVarInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
                 <td>{{ organisationLink(extraVarInvoice.invoice.organisation,'view-admin', 'name') }}</td>
-                <td>{{ extraVarInvoice.amountInvoiced|currency_decimal }}</td>
+                <td class="text-right">{{ extraVarInvoice.amountInvoiced|currency_decimal }}</td>
                 <td>{{ invoiceService.parseStatus(extraVarInvoice.invoice, true) }}</td>
-                <td>{{ extraVarInvoice.program }}</td>
+                <td>{{ programLink(extraVarInvoice.program,'view','name') }}</td>
             </tr>
         {% endfor %}
         </tbody>
