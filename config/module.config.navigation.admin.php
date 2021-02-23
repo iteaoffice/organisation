@@ -36,7 +36,7 @@ return [
                                     ],
                                 ],
                                 'pages'   => [
-                                    'parent'             => [
+                                    'parent'    => [
                                         'label'   => _('txt-parent'),
                                         'route'   => 'zfcadmin/organisation/details/parent',
                                         'visible' => false,
@@ -46,7 +46,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'legal'              => [
+                                    'legal'     => [
                                         'label'   => _('txt-legal'),
                                         'route'   => 'zfcadmin/organisation/details/legal',
                                         'visible' => false,
@@ -56,7 +56,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'financial'          => [
+                                    'financial' => [
                                         'label'   => _('txt-financial'),
                                         'route'   => 'zfcadmin/organisation/details/financial',
                                         'visible' => false,
@@ -88,7 +88,7 @@ return [
                                             ],
                                         ]
                                     ],
-                                    'notes'              => [
+                                    'notes'     => [
                                         'label'   => _('txt-notes'),
                                         'route'   => 'zfcadmin/organisation/details/notes',
                                         'visible' => false,
@@ -97,8 +97,75 @@ return [
                                                 'id' => Entity\Organisation::class,
                                             ],
                                         ],
+                                        'pages'   => [
+                                            'add-note'  => [
+                                                'label'   => _('txt-nav-add-note'),
+                                                'route'   => 'zfcadmin/organisation/note/new',
+                                                'visible' => false,
+                                                'params'  => [
+                                                    'entities'   => [
+                                                        'id' => Entity\Organisation::class,
+                                                    ],
+                                                    'routeParam' => [
+                                                        'id' => 'organisationId',
+                                                    ],
+                                                ],
+                                            ],
+                                            'edit-note' => [
+                                                'label'   => _('txt-nav-edit-note'),
+                                                'route'   => 'zfcadmin/organisation/note/edit',
+                                                'visible' => false,
+                                                'params'  => [
+                                                    'entities' => [
+                                                        'id' => Entity\Note::class,
+                                                    ],
+                                                ],
+                                            ],
+                                        ]
                                     ],
-                                    'edit'               => [
+                                    'contacts'  => [
+                                        'label'   => _('txt-contacts'),
+                                        'route'   => 'zfcadmin/organisation/details/contacts',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'projects'  => [
+                                        'label'   => _('txt-projects'),
+                                        'route'   => 'zfcadmin/organisation/details/projects',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Entity\Organisation::class,
+                                            ],
+                                        ],
+                                        'pages'   => [
+                                            'create-affiliation' => [
+                                                'label'   => _('txt-nav-add-affiliation'),
+                                                'route'   => 'zfcadmin/organisation/create-affiliation',
+                                                'visible' => false,
+                                                'params'  => [
+                                                    'entities' => [
+                                                        'id' => Entity\Organisation::class,
+                                                    ],
+                                                ],
+                                            ],
+                                        ]
+                                    ],
+                                    'ideas'     => [
+                                        'label'   => _('txt-ideas'),
+                                        'route'   => 'zfcadmin/organisation/details/ideas',
+                                        'visible' => false,
+                                        'params'  => [
+                                            'entities' => [
+                                                'id' => Entity\Organisation::class,
+                                            ],
+                                        ],
+                                    ],
+                                    'edit'      => [
                                         'label'   => _('txt-nav-edit'),
                                         'route'   => 'zfcadmin/organisation/edit',
                                         'visible' => false,
@@ -108,7 +175,7 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'web'                => [
+                                    'web'       => [
                                         'label'   => _('txt-nav-manage-web'),
                                         'route'   => 'zfcadmin/organisation/web',
                                         'visible' => false,
@@ -118,53 +185,30 @@ return [
                                             ],
                                         ],
                                     ],
-                                    'create-affiliation' => [
-                                        'label'   => _('txt-nav-add-affiliation'),
-                                        'route'   => 'zfcadmin/organisation/create-affiliation',
-                                        'visible' => false,
-                                        'params'  => [
-                                            'entities' => [
-                                                'id' => Entity\Organisation::class,
-                                            ],
-                                        ],
-                                    ],
-
-
-                                    'add-note'  => [
-                                        'label'   => _('txt-nav-add-note'),
-                                        'route'   => 'zfcadmin/organisation/note/new',
-                                        'visible' => false,
-                                        'params'  => [
-                                            'entities'   => [
-                                                'id' => Entity\Organisation::class,
-                                            ],
-                                            'routeParam' => [
-                                                'id' => 'organisationId',
-                                            ],
-                                        ],
-                                    ],
-                                    'edit-note' => [
-                                        'label'   => _('txt-nav-edit-note'),
-                                        'route'   => 'zfcadmin/organisation/note/edit',
-                                        'visible' => false,
-                                        'params'  => [
-                                            'entities' => [
-                                                'id' => Entity\Note::class,
-                                            ],
-                                        ],
-                                    ],
                                     'merge'     => [
                                         'label'   => _('txt-nav-merge'),
-                                        'route'   => 'zfcadmin/organisation/merge',
+                                        'route'   => 'zfcadmin/organisation/details/merge',
                                         'visible' => false,
                                         'params'  => [
-                                            'entities'   => [
+                                            'entities' => [
                                                 'id' => Entity\Organisation::class,
                                             ],
-                                            'routeParam' => [
-                                                'id' => 'targetId',
-                                            ],
                                         ],
+                                        'pages'   => [
+                                            'merge' => [
+                                                'label'   => _('txt-nav-merge-preview'),
+                                                'route'   => 'zfcadmin/organisation/merge',
+                                                'visible' => false,
+                                                'params'  => [
+                                                    'entities'   => [
+                                                        'id' => Entity\Organisation::class,
+                                                    ],
+                                                    'routeParam' => [
+                                                        'id' => 'targetId'
+                                                    ]
+                                                ],
+                                            ],
+                                        ]
                                     ],
                                 ],
                             ],

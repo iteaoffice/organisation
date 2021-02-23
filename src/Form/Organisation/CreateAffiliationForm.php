@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Organisation\Form\Organisation;
 
 use Contact\Form\Element\Contact;
+use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Submit;
 use Laminas\Form\Element\Text;
@@ -119,6 +120,12 @@ final class CreateAffiliationForm extends Form
                     'class' => 'btn btn-primary',
                     'value' => _('txt-submit'),
                 ],
+            ]
+        );
+        $this->add(
+            [
+                'type' => Csrf::class,
+                'name' => 'csrf',
             ]
         );
         $this->add(

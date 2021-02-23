@@ -141,7 +141,7 @@ return [
                                         'options' => [
                                             'route'    => '/[:id]/contacts.html',
                                             'defaults' => [
-                                                'action' => 'contact',
+                                                'action' => 'contacts',
                                             ],
                                         ],
                                     ],
@@ -150,7 +150,7 @@ return [
                                         'options' => [
                                             'route'    => '/[:id]/projects.html',
                                             'defaults' => [
-                                                'action' => 'project',
+                                                'action' => 'projects',
                                             ],
                                         ],
                                     ],
@@ -159,7 +159,7 @@ return [
                                         'options' => [
                                             'route'    => '/[:id]/ideas.html',
                                             'defaults' => [
-                                                'action' => 'idea',
+                                                'action' => 'ideas',
                                             ],
                                         ],
                                     ],

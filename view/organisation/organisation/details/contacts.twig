@@ -23,7 +23,7 @@
             {% set contact = contactOrganisation.contact %}
 
             <tr {% if not contact.isActive() %}class="table-danger"{% endif %}>
-                <td><span class="text-muted">{{ contact.id }}</span></td>
+                <td><small class="text-muted">{{ contact.id }}</small></td>
                 <td>{{ contactLink(contact, 'view-admin', 'name') }} {% if contact.dateEnd %}({{ translate("txt-expired-on-%s")|format(contact.dateEnd|date("d-m-Y")) }}){% endif %}{{ contactLink(contact, 'edit-admin', 'icon') }}</td>
                 <td>{{ contact.email }} <a href="mailto:{{ contact.email }}"><i class="far fa-envelope"></i> </a></td>
                 <td>{{ contact.contactOrganisation.organisation.country }}</td>

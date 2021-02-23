@@ -109,10 +109,10 @@ final class OrganisationLink extends AbstractLink
                         ?? $this->translator->translate('txt-list-financial-organisations')
                 ];
                 break;
-            case 'add-affiliation':
+            case 'create-affiliation':
                 $linkParams = [
                     'icon'  => 'fas fa-plus',
-                    'route' => 'zfcadmin/organisation/add-affiliation',
+                    'route' => 'zfcadmin/organisation/create-affiliation',
                     'text'  => $showOptions[$show]
                         ?? sprintf(
                             $this->translator->translate('txt-add-organisation-%s-to-project'),

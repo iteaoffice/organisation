@@ -41,7 +41,9 @@ use function round;
  */
 class ParentService extends AbstractService
 {
-    public const PARENT_INVOICE_FACTOR = 1.8;
+    public const PARENT_INVOICE_FACTOR = 1.7;
+    public const DOA_INVOICE_FACTOR    = 1.9;
+
     private ContainerInterface $container;
     private ProjectService $projectService;
     private VersionService $versionService;
@@ -452,7 +454,7 @@ class ParentService extends AbstractService
             return 0;
         }
 
-        return 2.1;
+        return self::DOA_INVOICE_FACTOR;
     }
 
     public function hasDoaForProgram(Entity\ParentEntity $parent, Program $program): bool

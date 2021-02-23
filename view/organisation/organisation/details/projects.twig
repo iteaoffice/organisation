@@ -24,7 +24,7 @@
         {% for affiliation in affiliations %}
             <tr {% if affiliation.project.contact.id == affiliation.contact.id %}class="table-success"
                 {% endif %}{% if not affiliation.isActive() %}class="table-danger"{% endif %}>
-                <td><small class="text-muted">{{ affiliation.project.id }}</small></td>
+                <td><small class="text-muted">{{ affiliation.id }}</small></td>
                 <td>{{ projectLink(affiliation.project,'view-admin','name') }}
                     {{ projectLink(affiliation.project,'view-community','icon') }}
                 </td>
@@ -45,7 +45,7 @@
     {{ ztbalert().info(translate("txt-%s-is-not-active-in-a-project"))|format(organisation)|raw }}
 {% endif %}
 
-{{ organisationLink(organisation,'add-affiliation','button') }}
+{{ organisationLink(organisation,'create-affiliation','button') }}
 
 <h3 class="pt-3">{{ translate("txt-result-as-for-organisation") }}</h3>
 {% if organisation.result.count() > 0 %}
