@@ -95,7 +95,7 @@ return [
         Form\OrganisationForm::class                                             => [
             EntityManager::class
         ],
-        Form\Organisation\UpdateForm::class                                      => [
+        Form\UpdateForm::class                                                   => [
             EntityManager::class
         ],
         Form\FinancialForm::class                                                => [

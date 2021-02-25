@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Form\Organisation;
+namespace Organisation\Form;
 
 use Doctrine\ORM\EntityManager;
 use Laminas\Form\Element;
@@ -20,7 +20,6 @@ use Laminas\Validator\File\ImageSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\Validator\File\Size;
 use Organisation\Entity;
-use Organisation\Form\ObjectFieldset;
 
 /**
  * Class UpdateForm
