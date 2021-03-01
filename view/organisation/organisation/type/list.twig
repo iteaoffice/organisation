@@ -27,12 +27,11 @@
             <th>{{ translate("txt-id") }}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/type/list', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
             <th>{{ translate("txt-description") }}</th>
-            <th>{{ translate("txt-invoice") }}</th>
         </tr>
         </thead>
         <tfoot>
         <tr>
-            <td colspan="4"></td>
+            <td colspan="3"></td>
         </tr>
         </tfoot>
         <tbody>
@@ -41,7 +40,6 @@
                 <td><small class="text-muted">{{ type.id }}</small></td>
                 <td>{{ organisationTypeLink(type, 'view', 'name') }} {{ organisationTypeLink(type, 'edit', 'icon') }}</td>
                 <td>{{ type.description }}</td>
-                <td>{{ translate(type.getInvoice(true)) }}</td>
             </tr>
         {% endfor %}
         </tbody>
