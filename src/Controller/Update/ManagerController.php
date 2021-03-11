@@ -22,6 +22,7 @@ use Organisation\Controller\AbstractController;
 use Organisation\Entity\Update;
 use Organisation\Entity\UpdateLogo;
 use Organisation\Service\FormService;
+use Organisation\Service\OrganisationService;
 use Organisation\Service\UpdateService;
 
 /**
@@ -31,20 +32,23 @@ use Organisation\Service\UpdateService;
 final class ManagerController extends AbstractController
 {
     private UpdateService $updateService;
+    private OrganisationService $organisationService;
     private GeneralService $generalService;
     private FormService $formService;
     private TranslatorInterface $translator;
 
     public function __construct(
         UpdateService $updateService,
+        OrganisationService $organisationService,
         GeneralService $generalService,
         FormService $formService,
         TranslatorInterface $translator
     ) {
-        $this->updateService  = $updateService;
-        $this->generalService = $generalService;
-        $this->formService    = $formService;
-        $this->translator     = $translator;
+        $this->updateService       = $updateService;
+        $this->organisationService = $organisationService;
+        $this->generalService      = $generalService;
+        $this->formService         = $formService;
+        $this->translator          = $translator;
     }
 
     public function pendingAction(): ViewModel
@@ -67,7 +71,8 @@ final class ManagerController extends AbstractController
 
         return new ViewModel(
             [
-                'update' => $update
+                'update'              => $update,
+                'organisationService' => $this->organisationService
             ]
         );
     }

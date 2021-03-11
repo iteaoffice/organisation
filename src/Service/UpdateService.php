@@ -21,6 +21,7 @@ use Organisation\Entity\Description;
 use Organisation\Entity\Logo;
 use Organisation\Entity\Organisation;
 use Organisation\Entity\Update;
+use Organisation\Entity\Web;
 
 /**
  * Class UpdateService
@@ -29,14 +30,17 @@ use Organisation\Entity\Update;
  */
 class UpdateService extends AbstractService
 {
+    private OrganisationService $organisationService;
     private EmailService $emailService;
 
     public function __construct(
         EntityManager $entityManager,
+        OrganisationService $organisationService,
         EmailService $emailService
     ) {
         parent::__construct($entityManager);
-        $this->emailService = $emailService;
+        $this->organisationService = $organisationService;
+        $this->emailService        = $emailService;
     }
 
     public function findPendingUpdates(): array
@@ -88,6 +92,30 @@ class UpdateService extends AbstractService
             $logo->setLogoExtension($update->getLogo()->getLogoExtension());
             $logo->setOrganisationLogo($update->getLogo()->getOrganisationLogo());
             $organisation->setLogo(new ArrayCollection([$logo]));
+        }
+
+        //Handle the web :)
+        //When an request for update comes in we assume that the URL povided by the dude is aways the only MAIN website we need
+        //So therefore we make all others NON main and promote the one given as the new MAIN
+
+        //First invalidate all the mains
+        foreach ($update->getOrganisation()->getWeb() as $web) {
+            $web->setMain(Web::NOT_MAIN);
+            $this->entityManager->persist($web);
+        }
+
+        //We first try to find the web
+        if (null !== $update->getWebsite()) {
+            $web = $this->organisationService->findWebByWeb($update->getOrganisation(), $update->getWebsite());
+
+            if (null === $web) {
+                $web = new Web();
+                $web->setWeb($update->getWebsite());
+                $web->setOrganisation($update->getOrganisation());
+            }
+
+            $web->setMain(Web::MAIN);
+            $this->entityManager->persist($web);
         }
 
         $update->setDateApproved(new DateTime());

@@ -140,6 +140,7 @@ return [
         ],
         Service\UpdateService::class                                             => [
             EntityManager::class,
+            Service\OrganisationService::class,
             EmailService::class
         ]
     ]

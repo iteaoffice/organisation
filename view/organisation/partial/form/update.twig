@@ -6,19 +6,30 @@
 <div class="form-group row">
     <label class="col-sm-3 col-form-label">{{ translate("txt-organisation") }}</label>
     <div class="col-sm-9">
-        <p class="form-control-plaintext">{{ update.organisation }} {{ organisationLink(update.organisation, 'view-admin', 'icon') }}</p>
+        <p class="form-control-plaintext">{{ update.organisation }}
+            ({{ update.organisation.country }}) {{ organisationLink(update.organisation, 'view-admin', 'icon') }}
+            <small class="form-text text-muted">{{ translate("txt-contact-the-office-if-you-want-to-update-the-organisation-name") }}</small>
+        </p>
+
     </div>
 </div>
 
 {{ ztbformelement(updateForm.get('description')) }}
 {{ ztbformelement(updateForm.get('type')) }}
+{{ ztbformelement(updateForm.get('website')) }}
+
 <div class="form-group row">
     <label class="col-sm-3 col-form-label">{{ translate("txt-current-logo") }}</label>
     <div class="col-sm-9">
-        <p class="form-control-plaintext">{{ organisationLogo(update.organisation, 300) }}</p>
+        {% if update.organisation.logo.isEmpty() %}
+            <p class="form-control-plaintext">{{ translate("txt-no-organisation-logo-found") }}</p>
+        {% else %}
+            <p class="form-control-plaintext">{{ organisationLogo(update.organisation, 300) }}</p>
+        {% endif %}
     </div>
 </div>
 {{ ztbformelement(form.get('file')) }}
+
 {{ ztbformelement(form.get('csrf')) }}
 
 <div class="form-group row">
@@ -38,8 +49,7 @@
 <script type="text/javascript">
     tinymce.init({
         selector: 'textarea',
-        plugins: ['link'],
-        toolbar: "undo redo | bold italic | bullist numlist outdent indent | link",
+        toolbar: "undo redo | bold italic",
         menubar: false,
         force_br_newlines: true,
         relative_urls: true,

@@ -1,43 +1,51 @@
 {% do headTitle().append(translate("txt-admin")) %}
 {% do headTitle().append(translate("txt-view-update-for-%s")|format(update.organisation)) %}
 
-<h1>{{ translate("txt-current") }}</h1>
+<h1>{{ update.organisation }}</h1>
 
-<div class="row">
-    <div class="col-md-9">
-        <dl class="dl-horizontal">
-            <dt>{{ translate("txt-name") }}</dt>
-            <dd>{{ organisationLink(update.organisation,'view-admin','name') }}</dd>
-            <dt>{{ translate("txt-organisation-type") }}</dt>
-            <dd>{{ organisationTypeLink(update.organisation.type,'view','description') }}</dd>
-            <dt>{{ translate("txt-description") }}</dt>
-            <dd>{{ update.organisation.description|raw }}</dd>
+{% set mainWeb = organisationService.findMainWeb(update.organisation) %}
 
-        </dl>
-    </div>
-    <div class="col-md-3">
-        <img class="img-fluid" src="{{ organisationLogo(update.organisation, 350, constant("General\\ValueObject\\Image\\ImageDecoration::SHOW_RAW")) }}">
-    </div>
-</div>
-
-<h1>{{ translate("txt-updated") }}</h1>
-
-<div class="row">
-    <div class="col-md-9">
-        <dl class="dl-horizontal">
-            <dt>{{ translate("txt-name") }}</dt>
-            <dd>{{ organisationLink(update.organisation,'view-admin','name') }}</dd>
-            <dt>{{ translate("txt-organisation-type") }}</dt>
-            <dd>{{ organisationTypeLink(update.type,'view','description') }}</dd>
-            <dt>{{ translate("txt-description") }}</dt>
-            <dd>{{ update.description|default(update.organisation.description)|raw }}</dd>
-        </dl>
-    </div>
-    <div class="col-md-3">
-        {{ organisationUpdateLogo(update, 300) }}
-    </div>
-</div>
-
-<hr>
+<table class="table table-hover table-sm table-striped">
+    <thead>
+    <tr>
+        <th></th>
+        <th>{{ translate("txt-current") }}</th>
+        <th>{{ translate("txt-updated") }}</th>
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+        <td colspan="3"></td>
+    </tr>
+    </tfoot>
+    <tbody>
+    <tr>
+        <td>{{ translate("txt-name") }}</td>
+        <td colspan="2">{{ organisationLink(update.organisation,'view-admin','name') }}</td>
+    </tr>
+    <tr>
+        <td>{{ translate("txt-organisation-type") }}</td>
+        <td>{{ organisationTypeLink(update.organisation.type,'view','description') }}</td>
+        <td>{{ organisationTypeLink(update.type,'view','description') }}</td>
+    </tr>
+    <tr>
+        <td>{{ translate("txt-description") }}</td>
+        <td>{{ update.organisation.description|raw }}</td>
+        <td>{{ update.description|raw }}</td>
+    </tr>
+    <tr>
+        <td>{{ translate("txt-main-website") }}</td>
+        <td>{% if mainWeb.web %}<a href="{{ mainWeb.web }}">{{ mainWeb.web }}</a>{% endif %}</td>
+        <td>{% if update.webSite %}<a href="{{ update.webSite }}">{{ update.webSite }}</a>{% endif %}</td>
+    </tr>
+    <tr>
+        <td>{{ translate("txt-logo") }}</td>
+        <td><img class="img-fluid"
+                 src="{{ organisationLogo(update.organisation, 300, constant("General\\ValueObject\\Image\\ImageDecoration::SHOW_RAW")) }}">
+        </td>
+        <td>{{ organisationUpdateLogo(update, 300) }}</td>
+    </tr>
+    </tbody>
+</table>
 
 {{ organisationUpdateLink(update, 'approve', 'button') }} {{ organisationUpdateLink(update, 'edit-admin', 'button') }}

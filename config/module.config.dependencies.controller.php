@@ -155,6 +155,7 @@ return [
         ],
         Controller\Update\ManagerController::class         => [
             Service\UpdateService::class,
+            Service\OrganisationService::class,
             GeneralService::class,
             Service\FormService::class,
             TranslatorInterface::class

@@ -13,21 +13,16 @@ declare(strict_types=1);
 namespace Organisation\Controller;
 
 use General\Service\GeneralService;
-use Organisation\Entity\Logo;
-use Organisation\Entity\Organisation;
-use Organisation\Entity\Update;
-use Organisation\Entity\UpdateLogo;
-use Organisation\Form\UpdateForm;
-use Organisation\Service\FormService;
-use Organisation\Service\OrganisationService;
 use Laminas\Http\Request;
-use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Validator\File\ImageSize;
 use Laminas\Validator\File\MimeType;
 use Laminas\View\Model\ViewModel;
-
-use function sprintf;
+use Organisation\Entity\Organisation;
+use Organisation\Entity\Update;
+use Organisation\Entity\UpdateLogo;
+use Organisation\Service\FormService;
+use Organisation\Service\OrganisationService;
 
 /**
  * Class UpdateController
@@ -59,7 +54,7 @@ final class UpdateController extends AbstractController
         /** @var Organisation $organisation */
         $organisation = $this->organisationService->find(
             Organisation::class,
-            (int) $this->params('organisationId', 0)
+            (int)$this->params('organisationId', 0)
         );
 
         if ($organisation === null) {
@@ -73,6 +68,9 @@ final class UpdateController extends AbstractController
         }
         $update->setType($organisation->getType());
         $update->setOrganisation($organisation);
+        if (null !== $this->organisationService->findMainWeb($organisation)) {
+            $update->setWebsite($this->organisationService->findMainWeb($organisation)->getWeb());
+        }
 
         $data = array_merge(
             $request->getPost()->toArray(),
@@ -106,7 +104,7 @@ final class UpdateController extends AbstractController
                     $logo->setContentType(
                         $this->generalService->findContentTypeByContentTypeName($fileTypeValidator->type)
                     );
-                    $logo->setLogoExtension((string) $logo->getContentType()->getExtension());
+                    $logo->setLogoExtension((string)$logo->getContentType()->getExtension());
                     $update->setLogo($logo);
                 }
 

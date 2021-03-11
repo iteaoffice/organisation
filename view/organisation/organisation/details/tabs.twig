@@ -4,6 +4,8 @@
 
 <h1>{{ organisation.organisation }}, {{ organisation.country.country }}</h1>
 
+{{ organisationUpdateNotification(organisation) }}
+
 {% set parentText = translate("txt-parent") %}
 {% if organisation.isParent() and organisation.hasParent() and (organisation.parent.id != organisation.parentOrganisation.parent.id) %}
     {% set parentText = '<i class="fas fa-exclamation-triangle text-danger"></i> ' ~ translate("txt-parent") %}

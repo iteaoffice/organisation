@@ -76,7 +76,7 @@ class Update extends AbstractEntity
      */
     private $logo;
     /**
-     * @ORM\Column(name="description", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="description", type="text", length=65535, nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({
      *     "label":"txt-organisation-description-label",
@@ -87,6 +87,18 @@ class Update extends AbstractEntity
      * @var string
      */
     private $description;
+    /**
+     * @ORM\Column(name="website", type="text", length=1000, nullable=true)
+     * @Annotation\Type("\Laminas\Form\Element\Url")
+     * @Annotation\Options({
+     *     "label":"txt-organisation-update-website-label",
+     *     "help-block":"txt-organisation-update-website-help-block"
+     * })
+     * @Annotation\Attributes({"placeholder":"txt-organisation-update-website-placeholder"})
+     *
+     * @var string
+     */
+    private $website;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=false)
      * @Gedmo\Timestampable(on="create")
@@ -193,6 +205,17 @@ class Update extends AbstractEntity
     public function setDateApproved(DateTime $dateApproved): Update
     {
         $this->dateApproved = $dateApproved;
+        return $this;
+    }
+
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    public function setWebsite(?string $website): Update
+    {
+        $this->website = $website;
         return $this;
     }
 }

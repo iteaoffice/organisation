@@ -77,7 +77,7 @@ final class UpdateLink extends AbstractLink
                     'icon'  => 'far fa-edit',
                     'route' => 'community/organisation/update',
                     'text'  => $showOptions[$show]
-                        ?? $this->translator->translate('txt-update-organisation')
+                        ?? $this->translator->translate('txt-update-organisation-information')
                 ];
                 break;
         }

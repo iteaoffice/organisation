@@ -139,6 +139,23 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $repository->findDuplicateOrganisations($filter);
     }
 
+    public function findMainWeb(Entity\Organisation $organisation): ?Entity\Web
+    {
+        $web = null;
+
+        foreach ($organisation->getWeb() as $website) {
+            if (null === $web && $website->isMain()) {
+                $web = $website;
+            }
+        }
+        return $web;
+    }
+
+    public function findWebByWeb(Entity\Organisation $organisation, string $web): ?Entity\Web
+    {
+        return $this->entityManager->getRepository(Entity\Web::class)->findOneBy(['organisation' => $organisation, 'web' => $web]);
+    }
+
     public function findOrganisationByResult(Result $result): array
     {
         //Create a list of organisations
