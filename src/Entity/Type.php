@@ -49,7 +49,6 @@ class Type extends AbstractEntity
      * @ORM\Column(name="type", type="string", nullable=false, unique=true)
      * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-type"})
-     * @Annotation\Required(true)
      *
      * @var string
      */
@@ -62,6 +61,15 @@ class Type extends AbstractEntity
      * @var string
      */
     private $description;
+    /**
+     * @ORM\Column(name="standard_type", type="string", nullable=false, unique=false)
+     * @Annotation\Type("\Laminas\Form\Element\Text")
+     * @Annotation\Options({"label":"txt-organistion-type-standard-type-label","help-block":"txt-organistion-type-standard-type-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-organistion-type-standard-type-placeholder"})
+     *
+     * @var string
+     */
+    private $standardType;
     /**
      * @ORM\OneToMany(targetEntity="Event\Entity\Meeting\Cost", cascade={"persist"}, mappedBy="type")
      * @Annotation\Exclude()
@@ -137,6 +145,17 @@ class Type extends AbstractEntity
     {
         $this->description = $description;
 
+        return $this;
+    }
+
+    public function getStandardType(): ?string
+    {
+        return $this->standardType;
+    }
+
+    public function setStandardType(string $standardType): Type
+    {
+        $this->standardType = $standardType;
         return $this;
     }
 

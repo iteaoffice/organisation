@@ -70,7 +70,7 @@ class Note extends AbstractEntity
      */
     private $contact;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="note", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="note", cascade={"persist"})
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      * @Annotation\Exclude()
      *

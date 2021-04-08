@@ -35,7 +35,7 @@ class Organisation extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="parentOrganisation", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="parentOrganisation", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      *
      * @Annotation\Type("Organisation\Form\Element\ParentElement")
@@ -46,7 +46,7 @@ class Organisation extends AbstractEntity
      */
     private $parent;
     /**
-     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade="persist", inversedBy="parentOrganisation")
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="parentOrganisation")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      * @Annotation\Type("Contact\Form\Element\Contact")
      * @Annotation\Attributes({"label":"txt-parent-organisation-representative-label"})

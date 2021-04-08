@@ -59,7 +59,7 @@ class Name extends AbstractEntity
      */
     private $project;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="names", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="names", cascade={"persist"})
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      *
      * @var Organisation

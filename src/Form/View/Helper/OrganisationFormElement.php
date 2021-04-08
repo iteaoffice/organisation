@@ -79,17 +79,17 @@ final class OrganisationFormElement extends FormElement
         $element->setAttribute('data-abs-ajax-url', 'organisation/json/search.json');
 
         //When we have a value, inject the corresponding contact in the value options
-//        if (null !== $element->getValue()) {
-//            $value = $element->getValue();
-//            if ($element->getValue() instanceof Organisation) {
-//                $value = $element->getValue()->getId();
-//            }
-//
-//            $organisation = $this->organisationService->findOrganisationById((int)$value);
-//            if (null !== $organisation) {
-//                $element->setValueOptions([$organisation->getId() => $organisation->parseFormName()]);
-//            }
-//        }
+        if (null !== $element->getValue()) {
+            $value = $element->getValue();
+            if ($element->getValue() instanceof Organisation) {
+                $value = $element->getValue()->getId();
+            }
+
+            $organisation = $this->organisationService->findOrganisationById((int)$value);
+            if (null !== $organisation) {
+                $element->setValueOptions([$organisation->getId() => $organisation->parseFormName()]);
+            }
+        }
 
         return parent::render($element);
     }

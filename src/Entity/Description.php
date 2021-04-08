@@ -42,7 +42,7 @@ class Description extends AbstractEntity
      */
     private $description;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="description", cascade="persist")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="description", cascade={"persist"})
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false, unique=true)
      *
      * @var \Organisation\Entity\Organisation

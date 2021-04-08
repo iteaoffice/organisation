@@ -29,21 +29,21 @@ class Booth extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\OneToOne(targetEntity="Event\Entity\Booth\Booth", cascade="persist", inversedBy="organisationBooth")
+     * @ORM\OneToOne(targetEntity="Event\Entity\Booth\Booth", cascade={"persist"}, inversedBy="organisationBooth")
      * @ORM\JoinColumn(name="booth_id", referencedColumnName="booth_id", nullable=false)
      *
      * @var \Event\Entity\Booth\Booth
      */
     private $booth;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", cascade="persist", inversedBy="organisationBooth")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\Organisation", cascade={"persist"}, inversedBy="organisationBooth")
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      *
      * @var \Organisation\Entity\Organisation
      */
     private $organisation;
     /**
-     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade="persist", inversedBy="organisationBooth")
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="organisationBooth")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      *
      * @var \Contact\Entity\Contact

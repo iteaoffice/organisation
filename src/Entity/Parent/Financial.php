@@ -39,14 +39,14 @@ class Financial extends AbstractEntity
      */
     private $id;
     /**
-     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="financial", cascade="persist")
+     * @ORM\ManyToOne(targetEntity="Organisation\Entity\ParentEntity", inversedBy="financial", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="parent_id", nullable=false)
      *
      * @var ParentEntity
      */
     private $parent;
     /**
-     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade="persist", inversedBy="parentFinancial")
+     * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="parentFinancial")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=false)
      *
      * @var Contact

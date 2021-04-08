@@ -143,12 +143,12 @@ class Financial extends AbstractEntity
      */
     private int $email;
     /**
-     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financial", cascade="persist")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\Organisation", inversedBy="financial", cascade={"persist"})
      * @ORM\JoinColumn(name="organisation_id", referencedColumnName="organisation_id", nullable=false)
      */
     private Organisation $organisation;
     /**
-     * @ORM\ManyToMany(targetEntity="General\Entity\VatType", cascade="persist", inversedBy="organisationFinancial")
+     * @ORM\ManyToMany(targetEntity="General\Entity\VatType", cascade={"persist"}, inversedBy="organisationFinancial")
      * @ORM\JoinTable(name="vat_type_financial",
      *            joinColumns={@ORM\JoinColumn(name="financial_id", referencedColumnName="financial_id")},
      *            inverseJoinColumns={@ORM\JoinColumn(name="type_id", referencedColumnName="type_id")}

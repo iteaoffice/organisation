@@ -14,8 +14,8 @@ namespace Organisation\InputFilter;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator\UniqueObject;
-use Organisation\Entity\Type;
 use Laminas\InputFilter\InputFilter;
+use Organisation\Entity\Type;
 
 /**
  * Class TypeFilter
@@ -55,6 +55,46 @@ final class TypeFilter extends InputFilter
                         ],
                     ],
                 ],
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'       => 'description',
+                'required'   => true,
+                'filters'    => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 255,
+                        ],
+                    ],
+                    [
+                        'name'    => UniqueObject::class,
+                        'options' => [
+                            'object_repository' => $entityManager->getRepository(Type::class),
+                            'object_manager'    => $entityManager,
+                            'use_context'       => true,
+                            'fields'            => 'description',
+                        ],
+                    ],
+                ],
+            ]
+        );
+        $inputFilter->add(
+            [
+                'name'     => 'standardType',
+                'required' => true,
+                'filters'  => [
+                    ['name' => 'StripTags'],
+                    ['name' => 'StringTrim'],
+                ],
+
             ]
         );
         $inputFilter->add(
