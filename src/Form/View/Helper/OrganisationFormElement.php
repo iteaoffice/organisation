@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Organisation\Form\View\Helper;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\PersistentCollection;
 use Laminas\Form\ElementInterface;
 use Laminas\I18n\Translator\Translator;
 use Laminas\View\HelperPluginManager;
+use LaminasBootstrap5\Form\View\Helper\FormElement;
 use Organisation\Entity\Organisation;
 use Organisation\Service\OrganisationService;
-use Zf3Bootstrap4\Form\View\Helper\FormElement;
 
 /**
  * Class OrganisationFormElement
@@ -39,10 +41,9 @@ final class OrganisationFormElement extends FormElement
         $this->organisationService = $organisationService;
     }
 
-    public function __invoke(ElementInterface $element = null, bool $inline = false, bool $formElementOnly = false)
+    public function __invoke(ElementInterface $element = null, $type = self::TYPE_HORIZONTAL, bool $formElementOnly = false)
     {
-        $this->inline          = $inline;
-        $this->formElementOnly = $formElementOnly;
+        $this->type = $type;
 
         $this->view->headLink()
             ->appendStylesheet('/assets/css/bootstrap-select.min.css');
@@ -81,13 +82,26 @@ final class OrganisationFormElement extends FormElement
         //When we have a value, inject the corresponding contact in the value options
         if (null !== $element->getValue()) {
             $value = $element->getValue();
-            if ($element->getValue() instanceof Organisation) {
-                $value = $element->getValue()->getId();
+
+            if ($value instanceof Collection) {
+                $values = [];
+                foreach ($value as $organisation) {
+                    $values[$organisation->getId()] = $organisation->parseFormName();
+                }
+
+                $element->setValueOptions($values);
+                $element->setValue(array_keys($values));
             }
 
-            $organisation = $this->organisationService->findOrganisationById((int)$value);
-            if (null !== $organisation) {
-                $element->setValueOptions([$organisation->getId() => $organisation->parseFormName()]);
+            if (! $value instanceof Collection) {
+                if ($element->getValue() instanceof Organisation) {
+                    $value = $element->getValue()->getId();
+                }
+
+                $organisation = $this->organisationService->findOrganisationById((int)$value);
+                if (null !== $organisation) {
+                    $element->setValueOptions([$organisation->getId() => $organisation->parseFormName()]);
+                }
             }
         }
 

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Organisation\Form\View\Helper;
 
 use Laminas\Form\ElementInterface;
-use Zf3Bootstrap4\Form\View\Helper\FormElement;
+use LaminasBootstrap5\Form\View\Helper\FormElement;
 
 /**
  * Class ParentFormElement
@@ -23,10 +23,9 @@ use Zf3Bootstrap4\Form\View\Helper\FormElement;
  */
 final class ParentFormElement extends FormElement
 {
-    public function __invoke(ElementInterface $element = null, bool $inline = false, bool $formElementOnly = false)
+    public function __invoke(ElementInterface $element = null, $type = self::TYPE_HORIZONTAL, bool $formElementOnly = false)
     {
-        $this->inline          = $inline;
-        $this->formElementOnly = $formElementOnly;
+        $this->type          = $type;
 
         $this->view->headLink()
             ->appendStylesheet('/assets/css/bootstrap-select.min.css');

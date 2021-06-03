@@ -262,6 +262,13 @@ class Organisation extends AbstractEntity
      */
     private $organisationBooth;
     /**
+     * @ORM\OneToMany(targetEntity="Event\Entity\Registration\Financial", cascade={"persist"}, mappedBy="organisation", fetch="EXTRA_LAZY")
+     * @Annotation\Exclude()
+     *
+     * @var \Event\Entity\Registration\Financial[]|Collections\Collection
+     */
+    private $registrationFinancial;
+    /**
      * @ORM\OneToMany(targetEntity="Invoice\Entity\Journal", cascade={"persist"}, mappedBy="organisation")
      * @Annotation\Exclude()
      *
@@ -314,6 +321,7 @@ class Organisation extends AbstractEntity
         $this->ideaMeetingParticipant = new Collections\ArrayCollection();
         $this->invoice                = new Collections\ArrayCollection();
         $this->boothFinancial         = new Collections\ArrayCollection();
+        $this->registrationFinancial  = new Collections\ArrayCollection();
         $this->organisationBooth      = new Collections\ArrayCollection();
         $this->journal                = new Collections\ArrayCollection();
         $this->reminder               = new Collections\ArrayCollection();
@@ -748,6 +756,17 @@ class Organisation extends AbstractEntity
     public function setBoard($board): Organisation
     {
         $this->board = $board;
+        return $this;
+    }
+
+    public function getRegistrationFinancial()
+    {
+        return $this->registrationFinancial;
+    }
+
+    public function setRegistrationFinancial($registrationFinancial): Organisation
+    {
+        $this->registrationFinancial = $registrationFinancial;
         return $this;
     }
 }
