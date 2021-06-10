@@ -25,7 +25,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <th colspan="2" class="text-right">
+        <th colspan="2" class="text-end">
             {{ translate("txt-total") }}</th>
         <th style="border-top: 2px solid black;">{{ parentService.parseTotalFundedByParent(parent, program, year)|round_currency }}</th>
         <th style="border-top: 2px solid black;">{{ parentService.parseContribution(parent, program, year)|round_currency }}</th>
@@ -45,7 +45,7 @@
     </thead>
     <tfoot>
     <tr>
-        <th colspan="2" class="text-right">
+        <th colspan="2" class="text-end">
             {{ translate("txt-total-due-by-%s-variable-contribution-for-projects-in-program-%s")|format(parent, program) }}</th>
         <th style="border-top: 2px solid black;">{{ parentService.parseTotal(parent, program, year)|round_currency }}</th>
     </tr>

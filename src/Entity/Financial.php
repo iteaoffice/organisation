@@ -217,6 +217,11 @@ class Financial extends AbstractEntity
         return $this->sendOnlyInvoice === self::SEND_ONLY_INVOICE;
     }
 
+    public function hasValidVat(): bool
+    {
+        return $this->vatStatus === self::VAT_STATUS_VALID;
+    }
+
     public function __toString(): string
     {
         return (string)$this->organisation;

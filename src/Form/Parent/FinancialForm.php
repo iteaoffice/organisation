@@ -15,6 +15,7 @@ namespace Organisation\Form\Parent;
 use Contact\Entity\Contact;
 use General\Entity\Country;
 use General\Service\CountryService;
+use Laminas\Form\Element\Csrf;
 use Laminas\Form\Element\Radio;
 use Laminas\Form\Element\Select;
 use Laminas\Form\Element\Submit;
@@ -219,6 +220,12 @@ final class FinancialForm extends Form
                 'attributes' => [
                     'required' => true,
                 ],
+            ]
+        );
+        $this->add(
+            [
+                'type' => Csrf::class,
+                'name' => 'csrf',
             ]
         );
         $this->add(

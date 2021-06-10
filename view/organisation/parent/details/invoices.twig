@@ -20,7 +20,7 @@
             <th>{{ translate("txt-invoice-type") }}</th>
             <th>{{ translate("txt-invoice-date") }}</th>
             <th>{{ translate("txt-organisation") }}</th>
-            <th class="text-right">{{ translate("txt-amount-invoiced") }}</th>
+            <th class="text-end">{{ translate("txt-amount-invoiced") }}</th>
             <th>{{ translate("txt-status") }}</th>
             <th>{{ translate("txt-program") }}</th>
         </tr>
@@ -38,7 +38,7 @@
                 <td>{{ translate(invoiceService.parseType(varInvoice.invoice, true)) }}</td>
                 <td>{{ varInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
                 <td>{{ organisationLink(varInvoice.invoice.organisation,'view-admin', 'name') }}</td>
-                <td class="text-right">{{ varInvoice.amountInvoiced|currency_decimal }}</td>
+                <td class="text-end">{{ varInvoice.amountInvoiced|currency_decimal }}</td>
                 <td>{{ invoiceService.parseStatus(varInvoice.invoice, true) }}</td>
                 <td>{{ programLink(varInvoice.program,'view','name') }}</td>
             </tr>
@@ -50,7 +50,7 @@
                 <td>{{ translate(invoiceService.parseType(extraVarInvoice.invoice, true)) }}</td>
                 <td>{{ extraVarInvoice.invoice.dateInvoice|date('d-m-Y') }}</td>
                 <td>{{ organisationLink(extraVarInvoice.invoice.organisation,'view-admin', 'name') }}</td>
-                <td class="text-right">{{ extraVarInvoice.amountInvoiced|currency_decimal }}</td>
+                <td class="text-end">{{ extraVarInvoice.amountInvoiced|currency_decimal }}</td>
                 <td>{{ invoiceService.parseStatus(extraVarInvoice.invoice, true) }}</td>
                 <td>{{ programLink(extraVarInvoice.program,'view','name') }}</td>
             </tr>
