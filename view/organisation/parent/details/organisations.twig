@@ -26,13 +26,13 @@
                 <td>
                     {% if parentOrganisation.organisation.isParent() %}
                         {% if parentOrganisation.organisation.parent.id != parent.id %}
-                            <span class="badge badge-danger"
+                            <span class="badge bg-danger"
                                   title="{{ translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself") }}">{{ translate("txt-error") }}</span>
                         {% else %}
-                            <span class="badge badge-success">{{ translate("txt-self") }}</span>
+                            <span class="badge bg-success">{{ translate("txt-self") }}</span>
                         {% endif %}
 
-                        <span class="badge badge-info">{{ translate("txt-parent") }}</span>
+                        <span class="badge bg-info">{{ translate("txt-parent") }}</span>
 
                     {% endif %}
                     {{ parentOrganisationLink(parentOrganisation,'view','organisation') }} {{ parentOrganisationLink(parentOrganisation,'edit','icon') }}

@@ -30,7 +30,7 @@
             <tr>
                 <td>
                     {% if result.fields.is_parent %}<span
-                            class="badge badge-info"><a class="text-reset" href="{{ url("zfcadmin/parent/details/general",{'id':result.fields.own_parent_id }) }}">{{ translate("txt-parent") }}</a></span> {% endif %}
+                            class="badge bg-info"><a class="text-reset" href="{{ url("zfcadmin/parent/details/general",{'id':result.fields.own_parent_id }) }}">{{ translate("txt-parent") }}</a></span> {% endif %}
                     <a href="{{ url("zfcadmin/organisation/details/general",{'id':result.fields.organisation_id }) }}">{{ result.fields.organisation }}</a>
                     <a href="{{ url("zfcadmin/organisation/edit",{'id':result.fields.organisation_id }) }}"><i
                                 class="far fa-edit"></i></a>
@@ -39,7 +39,7 @@
                 <td>
                     {% if result.fields.has_parent %}
                         {% if  result.fields.has_wrong_parent_child_relationship %}
-                            <span class="badge badge-danger">{{ translate("txt-is-parent-but-has-other-parent") }}</span>
+                            <span class="badge bg-danger">{{ translate("txt-is-parent-but-has-other-parent") }}</span>
                         {% endif %}
 
                         {% if not result.fields.is_own_parent %}
