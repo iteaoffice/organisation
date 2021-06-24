@@ -45,23 +45,13 @@ final class OrganisationFormElement extends FormElement
     {
         $this->type = $type;
 
-        $this->view->headLink()
-            ->appendStylesheet('/assets/css/bootstrap-select.min.css');
-        $this->view->headLink()
-            ->appendStylesheet('/assets/css/ajax-bootstrap-select.min.css');
-        $this->view->headScript()->appendFile(
-            '/assets/js/bootstrap-select.min.js',
-            'text/javascript'
-        );
-        $this->view->headScript()->appendFile(
-            '/assets/js/ajax-bootstrap-select.min.js',
-            'text/javascript'
-        );
-        $this->view->inlineScript()->appendScript(
-            "
-                $('.selectpicker-organisation').selectpicker().ajaxSelectPicker();",
-            'text/javascript'
-        );
+        $this->view->headLink()->appendStylesheet('/assets/bootstrap-select-1.14-dev/dist/css/bootstrap-select.min.css');
+        $this->view->headScript()->appendFile('/assets/bootstrap-select-1.14-dev/dist/js/bootstrap-select.min.js', 'text/javascript');
+        $this->view->headLink()->appendStylesheet('/assets/ajax-bootstrap-select/dist/css/ajax-bootstrap-select.css');
+        $this->view->headScript()->appendFile('/assets/ajax-bootstrap-select/dist/js/ajax-bootstrap-select.js', 'text/javascript');
+
+
+        $this->view->inlineScript()->appendScript("$('.selectpicker-organisation').selectpicker().ajaxSelectPicker();", 'text/javascript');
 
 
         if ($element) {
