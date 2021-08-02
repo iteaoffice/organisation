@@ -6,9 +6,9 @@
 <h1>{{ parent.organisation.organisation }}, {{ parent.organisation.country.country }}</h1>
 
 {% if parentService.hasWrongParentChildRelationship(parent) %}
-    {{ ztbalert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
+    {{ lbs5alert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
 
-    {% if parentService.canDeleteParent(parent) %}{{ ztbalert().info(translate("txt-this-parent-can-be-deleted-to-solve-the-recursive-parenting"))|raw }}{% endif %}
+    {% if parentService.canDeleteParent(parent) %}{{ lbs5alert().info(translate("txt-this-parent-can-be-deleted-to-solve-the-recursive-parenting"))|raw }}{% endif %}
 {% endif %}
 
 {% set navigation =

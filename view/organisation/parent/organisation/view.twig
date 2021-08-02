@@ -7,9 +7,9 @@
 
 {% if parentOrganisation.organisation.isParent() %}
     {% if parentOrganisation.organisation.parent.id != parentOrganisation.parent.id %}
-        {{ ztbalert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
+        {{ lbs5alert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
     {% else %}
-        {{ ztbalert().info(translate("txt-this-is-the-parent-itself"))|raw }}
+        {{ lbs5alert().info(translate("txt-this-is-the-parent-itself"))|raw }}
     {% endif %}
 {% endif %}
 
@@ -77,7 +77,7 @@
         </tbody>
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-parent-organisation-%s-is-not-active-in-a-project")|format(organisation))|raw }}
+    {{ lbs5alert().info(translate("txt-parent-organisation-%s-is-not-active-in-a-project")|format(organisation))|raw }}
 {% endif %}
 
 {{ parentOrganisationLink(parentOrganisation, 'edit','button') }} {{ parentOrganisationLink(parentOrganisation, 'add-affiliation','button') }} {{ parentOrganisationLink(parentOrganisation, 'merge','button') }}

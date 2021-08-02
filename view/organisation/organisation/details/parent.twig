@@ -3,11 +3,11 @@
 <h2>{{ translate("txt-parent-information") }}</h2>
 
 {% if organisation.parent.id == organisation.parentOrganisation.parent.id %}
-    {{ ztbalert().info(translate("txt-organisation-is-its-own-parent"))|raw }}
+    {{ lbs5alert().info(translate("txt-organisation-is-its-own-parent"))|raw }}
 {% endif %}
 
 {% if organisation.isParent() and organisation.hasParent() and (organisation.parent.id != organisation.parentOrganisation.parent.id) %}
-    {{ ztbalert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
+    {{ lbs5alert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
 {% endif %}
 
 <h3>{{ translate("txt-is-parent") }}</h3>
@@ -27,7 +27,7 @@
         <dd>{{ organisation.parent.dateUpdated|string_date }}</dd>
     </dl>
 {% else %}
-    {{ ztbalert().info(translate("txt-organisation-%s-is-no-parent")|format(organisation))|raw }}
+    {{ lbs5alert().info(translate("txt-organisation-%s-is-no-parent")|format(organisation))|raw }}
 
     {{ parentLink(null,'create-from-organisation','button',organisation) }}
 {% endif %}
@@ -50,5 +50,5 @@
         <dd>{{ organisation.parentOrganisation.parent.dateUpdated|string_date }}</dd>
     </dl>
 {% else %}
-    {{ ztbalert().info(translate("txt-organisation-%s-is-has-no-parent")|format(organisation))|raw }}
+    {{ lbs5alert().info(translate("txt-organisation-%s-is-has-no-parent")|format(organisation))|raw }}
 {% endif %}

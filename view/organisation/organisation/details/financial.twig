@@ -48,7 +48,7 @@
             </dd>
         </dl>
     {% else %}
-        {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(organisation))|raw }}
+        {{ lbs5alert().info(translate("txt-no-financial-information-known-for-%s")|format(organisation))|raw }}
     {% endif %}
 
 {{ organisationLink(organisation,'edit-financial','button') }}

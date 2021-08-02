@@ -5,7 +5,7 @@
 <h1>{{ board }} {{ boardLink(board, 'edit','button') }}</h1>
 
 {% if not board.isActive() %}
-    {{ ztbalert().danger(translate("txt-this-board-company-is-not-active"))|raw }}
+    {{ lbs5alert().danger(translate("txt-this-board-company-is-not-active"))|raw }}
 {% endif %}
 
 <dl class="dl-horizontal">

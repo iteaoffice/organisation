@@ -8,6 +8,8 @@
  * @license     https://itea3.org/license.txt proprietary
  */
 
+namespace Organisation;
+
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use General\Navigation\Factory\NavigationInvokableFactory;
 use General\View\Factory\ImageHelperFactory;
@@ -15,16 +17,6 @@ use General\View\Factory\LinkHelperFactory;
 use Laminas\Form\ElementFactory;
 use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Laminas\Stdlib;
-use Organisation\Acl;
-use Organisation\Controller;
-use Organisation\Factory;
-use Organisation\Form;
-use Organisation\InputFilter;
-use Organisation\Navigation;
-use Organisation\Options;
-use Organisation\Search;
-use Organisation\Service;
-use Organisation\View;
 
 $config = [
     'controllers'        => [
@@ -143,6 +135,7 @@ $config = [
     ],
     'service_manager'    => [
         'factories'  => [
+            Command\Cleanup::class                               => ConfigAbstractFactory::class,
             Options\ModuleOptions::class                         => Factory\ModuleOptionsFactory::class,
             Form\OrganisationForm::class                         => ConfigAbstractFactory::class,
             Form\UpdateForm::class                               => ConfigAbstractFactory::class,

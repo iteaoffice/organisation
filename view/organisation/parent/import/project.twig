@@ -39,7 +39,7 @@
 </div>
 
 {% if  handleImport.getImportedAffiliation()|length > 0 %}
-    {{ ztbalert().success(translate("txt-%s-parents-imported")|format(handleImport.getImportedAffiliation()|length))|raw }}
+    {{ lbs5alert().success(translate("txt-%s-parents-imported")|format(handleImport.getImportedAffiliation()|length))|raw }}
 {% endif %}
 </div>
 <div class="container-fluid">

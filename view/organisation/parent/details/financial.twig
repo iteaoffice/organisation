@@ -9,7 +9,7 @@
     {% endif %}
 
     {% if not financial.organisation.financial %}
-        {{ ztbalert().info(translate("txt-billing-organisation-has-no-financial-information-edit-with-button-%s")|format(organisationLink(financial.organisation, 'edit-financial','button', invoice.branch )))|raw }}
+        {{ lbs5alert().info(translate("txt-billing-organisation-has-no-financial-information-edit-with-button-%s")|format(organisationLink(financial.organisation, 'edit-financial','button', invoice.branch )))|raw }}
     {% endif %}
 
     <dl class="dl-horizontal">
@@ -66,6 +66,6 @@
         <hr>
     {% endif %}
 {% else %}
-    {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(parent))|raw }}
+    {{ lbs5alert().info(translate("txt-no-financial-information-known-for-%s")|format(parent))|raw }}
 {% endfor %}
 

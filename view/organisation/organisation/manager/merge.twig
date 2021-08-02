@@ -102,7 +102,7 @@
             </dd>
         </dl>
         {% else %}
-            {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(source))|raw }}
+            {{ lbs5alert().info(translate("txt-no-financial-information-known-for-%s")|format(source))|raw }}
         {% endif %}
     </div>
 
@@ -189,7 +189,7 @@
             </dd>
         </dl>
         {% else %}
-            {{ ztbalert().info(translate("txt-no-financial-information-known-for-%s")|format(target))|raw }}
+            {{ lbs5alert().info(translate("txt-no-financial-information-known-for-%s")|format(target))|raw }}
         {% endif %}
     </div>
 </div>

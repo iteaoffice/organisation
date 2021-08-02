@@ -37,6 +37,7 @@ use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use function array_count_values;
 use function array_keys;
@@ -279,10 +280,13 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
     }
 
-    public function removeInactiveOrganisations(): void
+    public function removeInactiveOrganisations(OutputInterface $output): void
     {
         $inactiveOrganisations = $this->findInactiveOrganisations();
+        /** @var Entity\Organisation $inactiveOrganisation */
         foreach ($inactiveOrganisations as $inactiveOrganisation) {
+            $output->writeln(sprintf("%s (%d) removed", $inactiveOrganisation->parseFullName(), $inactiveOrganisation->getId()));
+
             $this->delete($inactiveOrganisation);
         }
     }

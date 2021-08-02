@@ -46,7 +46,7 @@
         </tbody>
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-this-parent-%s-has-no-organisations")|format(parent))|raw }}
+    {{ lbs5alert().info(translate("txt-this-parent-%s-has-no-organisations")|format(parent))|raw }}
 {% endif %}
 
  {{ parentLink(parent, 'add-organisation','button') }}

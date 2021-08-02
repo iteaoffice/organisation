@@ -57,7 +57,7 @@
 
     {% include 'application/partial/pagination-control' %}
 {% else %}
-    {{ ztbalert().info(translate("txt-no-invoice-found"))|raw }}
+    {{ lbs5alert().info(translate("txt-no-invoice-found"))|raw }}
 {% endif %}
 
 {{ form().closeTag()|raw }}

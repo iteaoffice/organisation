@@ -7,9 +7,9 @@
 
 {% if parentOrganisation.organisation.isParent() %}
     {% if parentOrganisation.organisation.parent.id != parentOrganisation.parent.id %}
-        {{ ztbalert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
+        {{ lbs5alert().danger(translate("txt-recursive-parenting-here-organisation-has-parent-but-is-also-parent-itself"))|raw }}
     {% else %}
-        {{ ztbalert().info(translate("txt-this-is-the-parent-itself"))|raw }}
+        {{ lbs5alert().info(translate("txt-this-is-the-parent-itself"))|raw }}
     {% endif %}
 {% endif %}
 

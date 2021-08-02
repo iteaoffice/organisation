@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Organisation;
 
-use Laminas\Console\Adapter\AdapterInterface;
 use Laminas\ModuleManager\Feature;
 
 /**
@@ -20,19 +19,10 @@ use Laminas\ModuleManager\Feature;
  *
  * @package Organisation
  */
-final class Module implements Feature\ConfigProviderInterface, Feature\ConsoleUsageProviderInterface
+final class Module implements Feature\ConfigProviderInterface
 {
     public function getConfig(): array
     {
         return include __DIR__ . '/../config/module.config.php';
-    }
-
-    public function getConsoleUsage(AdapterInterface $console): array
-    {
-        return [
-            'Organisation management',
-            // Describe available commands
-            'organisation cleanup' => 'Perform a cleanup of to be empty organisations',
-        ];
     }
 }

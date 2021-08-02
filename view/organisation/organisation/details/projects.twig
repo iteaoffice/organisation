@@ -42,7 +42,7 @@
         </tbody>
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-%s-is-not-active-in-a-project"))|format(organisation)|raw }}
+    {{ lbs5alert().info(translate("txt-%s-is-not-active-in-a-project"))|format(organisation)|raw }}
 {% endif %}
 
 {{ organisationLink(organisation,'create-affiliation','button') }}
@@ -77,5 +77,5 @@
         </tbody>
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-no-results-has-been-created-for-%s")|format(organisation))|raw }}
+    {{ lbs5alert().info(translate("txt-no-results-has-been-created-for-%s")|format(organisation))|raw }}
 {% endif %}

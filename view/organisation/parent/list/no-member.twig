@@ -72,7 +72,7 @@
                 class="far fa-file-excel"></i> {{ translate("txt-export-csv") }}</a>
     <small>({{ translate("txt-export-parents-based-on-filter-explanation") }})</small>
 {% else %}
-    {{ ztbalert().info(translate("txt-no-parent-found"))|raw }}
+    {{ lbs5alert().info(translate("txt-no-parent-found"))|raw }}
 {% endif %}
 
 {{ ztbformelement(filter.get('type'), true) }}

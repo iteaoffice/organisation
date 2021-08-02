@@ -58,5 +58,5 @@
         </tbody>
     </table>
 {% else %}
-    {{ ztbalert().info(translate("txt-this-parent-%s-has-no-invoices")|format(parent))|raw }}
+    {{ lbs5alert().info(translate("txt-this-parent-%s-has-no-invoices")|format(parent))|raw }}
 {% endif %}

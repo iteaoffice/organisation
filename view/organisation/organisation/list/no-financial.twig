@@ -58,7 +58,7 @@
 
             {% include 'application/partial/pagination-control' %}
         {% else %}
-            {{ ztbalert().info(translate("txt-no-organisations-found-which-have-no-financial-organisation"))|raw }}
+            {{ lbs5alert().info(translate("txt-no-organisations-found-which-have-no-financial-organisation"))|raw }}
         {% endif %}
     </div>
     <div class="col-md-3">

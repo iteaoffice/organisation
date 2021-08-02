@@ -35,6 +35,9 @@ use ZfcTwig\View\TwigRenderer;
 
 return [
     ConfigAbstractFactory::class => [
+        Command\Cleanup::class                                                   => [
+            Service\OrganisationService::class
+        ],
         Search\Service\OrganisationSearchService::class                          => [
             'Config'
         ],
