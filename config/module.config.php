@@ -23,7 +23,6 @@ $config = [
         'factories'  => [
             Controller\JsonController::class => ConfigAbstractFactory::class,
 
-            Controller\ConsoleController::class => ConfigAbstractFactory::class,
             Controller\ImageController::class   => ConfigAbstractFactory::class,
             Controller\BoardController::class   => ConfigAbstractFactory::class,
 

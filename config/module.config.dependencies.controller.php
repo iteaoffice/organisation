@@ -31,9 +31,6 @@ use Project\Service\ProjectService;
 
 return [
     ConfigAbstractFactory::class => [
-        Controller\ConsoleController::class                => [
-            Service\OrganisationService::class
-        ],
         Controller\JsonController::class                   => [
             Service\OrganisationService::class,
             Service\ParentService::class,
