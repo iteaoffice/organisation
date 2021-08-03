@@ -24,32 +24,32 @@
 
 <fieldset>
     <legend>{{ translate("txt-financial-organisation") }}</legend>
-    {{ ztbformelement(form.get('organisationFinancial')) }}
-    {{ ztbformelement(form.get('branch')) }}
-    {{ ztbformelement(form.get('contact')) }}
+    {{ lbs5formelement(form.get('organisationFinancial')) }}
+    {{ lbs5formelement(form.get('branch')) }}
+    {{ lbs5formelement(form.get('contact')) }}
 </fieldset>
 
 <fieldset>
     <legend>{{ translate("txt-billing-address") }}</legend>
 
-    {{ ztbformelement(form.get('omitContact')) }}
-    {{ ztbformelement(form.get('address')) }}
-    {{ ztbformelement(form.get('zipCode')) }}
-    {{ ztbformelement(form.get('city')) }}
-    {{ ztbformelement(form.get('country')) }}
+    {{ lbs5formelement(form.get('omitContact')) }}
+    {{ lbs5formelement(form.get('address')) }}
+    {{ lbs5formelement(form.get('zipCode')) }}
+    {{ lbs5formelement(form.get('city')) }}
+    {{ lbs5formelement(form.get('country')) }}
 </fieldset>
 
 
-{{ ztbformelement(form.get('preferredDelivery')) }}
+{{ lbs5formelement(form.get('preferredDelivery')) }}
 
 <hr>
 
 <div class="row mb-3">
     <div class="offset-sm-3 col-sm-9">
-        {{ ztbformelement(form.get('csrf')) }}
-        {{ ztbformelement(form.get('submit')) }}
-        {{ ztbformelement(form.get('delete')) }}
-        {{ ztbformelement(form.get('cancel')) }}
+        {{ lbs5formelement(form.get('csrf')) }}
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('delete')) }}
+        {{ lbs5formelement(form.get('cancel')) }}
     </div>
 </div>
 

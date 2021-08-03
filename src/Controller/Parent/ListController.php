@@ -72,7 +72,6 @@ final class ListController extends AbstractController
         $paginator->setPageRange(ceil($paginator->getTotalItemCount() / $paginator::getDefaultItemCountPerPage()));
 
         $form = new Form\ParentFilterForm($this->entityManager);
-
         $form->setData(['filter' => $filterPlugin->getFilter()]);
 
         return new ViewModel(
@@ -215,8 +214,7 @@ final class ListController extends AbstractController
     {
         $page         = $this->params()->fromRoute('page', 1);
         $filterPlugin = $this->getOrganisationFilter();
-        $parentQuery  = $this->parentService
-            ->findActiveParentWithoutFinancial($filterPlugin->getFilter());
+        $parentQuery  = $this->parentService->findActiveParentWithoutFinancial($filterPlugin->getFilter());
 
         $paginator = new Paginator(new PaginatorAdapter(new ORMPaginator($parentQuery, false)));
         $paginator::setDefaultItemCountPerPage(($page === 'all') ? PHP_INT_MAX : 25);

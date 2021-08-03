@@ -3,7 +3,7 @@
 
 {% set financialForm = form.get('organisation_entity_financial') %}
 
-{{ ztbformelement(financialForm.get('id')) }}
+{{ lbs5formelement(financialForm.get('id')) }}
 
 <div class="row mb-3">
     <label class="col-sm-3 col-form-label">{{ translate("txt-debtor-number") }}</label>
@@ -22,8 +22,8 @@
 </div>
 
 
-{{ ztbformelement(financialForm.get('vat')) }}
-{{ ztbformelement(financialForm.get('vatStatus')) }}
+{{ lbs5formelement(financialForm.get('vat')) }}
+{{ lbs5formelement(financialForm.get('vatStatus')) }}
 
 <div class="row mb-3">
     <label class="col-sm-3 col-form-label">{{ translate("txt-vat-status") }}</label>
@@ -36,23 +36,23 @@
     </div>
 </div>
 
-{{ ztbformelement(form.get('vatType')) }}
-{{ ztbformelement(financialForm.get('omitContact')) }}
-{{ ztbformelement(financialForm.get('iban')) }}
-{{ ztbformelement(financialForm.get('bic')) }}
-{{ ztbformelement(financialForm.get('supplierNumber')) }}
-{{ ztbformelement(financialForm.get('requiredPurchaseOrder')) }}
-{{ ztbformelement(financialForm.get('sendOnlyInvoice')) }}
-{{ ztbformelement(financialForm.get('email')) }}
+{{ lbs5formelement(form.get('vatType')) }}
+{{ lbs5formelement(financialForm.get('omitContact')) }}
+{{ lbs5formelement(financialForm.get('iban')) }}
+{{ lbs5formelement(financialForm.get('bic')) }}
+{{ lbs5formelement(financialForm.get('supplierNumber')) }}
+{{ lbs5formelement(financialForm.get('requiredPurchaseOrder')) }}
+{{ lbs5formelement(financialForm.get('sendOnlyInvoice')) }}
+{{ lbs5formelement(financialForm.get('email')) }}
 {{ formelement(form.get('csrf')) }}
 
 
 <div class="row mb-3">
     <div class="offset-sm-3 col-sm-9">
-        {{ ztbformelement(form.get('submit')) }}
-        {{ ztbformelement(form.get('cancel')) }}
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('cancel')) }}
         {% if form.has('delete') %}
-            {{ ztbformelement(form.get('delete')) }}
+            {{ lbs5formelement(form.get('delete')) }}
         {% endif %}
     </div>
 </div>

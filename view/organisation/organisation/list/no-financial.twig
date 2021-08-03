@@ -28,11 +28,11 @@
                 <thead>
                 <tr>
                     <th>{{ translate("txt-id") }}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/no-financial', 'criteria': 'name', 'text': translate("txt-name")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/no-financial', 'criteria': 'country', 'text': translate("txt-country")} %}</a></th>
                     <th>{{ translate("txt-contacts") }}</th>
                     <th>{{ translate("txt-projects") }}</th>
-                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/financial/no-financial', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
+                    <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/organisation/list/no-financial', 'criteria': 'type', 'text': translate("txt-type")} %}</a></th>
                     <th>{{ translate("txt-actions") }}</th>
                 </tr>
                 </thead>
@@ -62,14 +62,10 @@
         {% endif %}
     </div>
     <div class="col-md-3">
-        <div class="well well-sm">
-            <fieldset>
-                {{ ztbformelement(filter.get('type'), true) }}
+        {{ lbs5formelement(filter.get('type'), 'default') }}
 
-                {{ ztbformelement(form.get('submit')) }}
-                {{ ztbformelement(form.get('clear')) }}
-            </fieldset>
-        </div>
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('clear')) }}
     </div>
 </div>
 

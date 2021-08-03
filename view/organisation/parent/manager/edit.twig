@@ -10,8 +10,8 @@
 
 {{ organisationformelement(parentForm.get('organisation')) }}
 {{ contactformelement(parentForm.get('contact')) }}
-{{ ztbformelement(parentForm.get('id')) }}
-{{ ztbformelement(parentForm.get('type')) }}
+{{ lbs5formelement(parentForm.get('id')) }}
+{{ lbs5formelement(parentForm.get('type')) }}
 
 <div class="row mb-3">
     <label class="col-sm-3 col-form-label">{{ translate("txt-program-doa") }}</label>
@@ -21,19 +21,19 @@
     </div>
 </div>
 
-{{ ztbformelement(parentForm.get('memberType')) }}
-{{ ztbformelement(parentForm.get('epossMemberType')) }}
-{{ ztbformelement(parentForm.get('artemisiaMemberType')) }}
-{{ ztbformelement(parentForm.get('dateEnd')) }}
-{{ ztbformelement(form.get('csrf')) }}
+{{ lbs5formelement(parentForm.get('memberType')) }}
+{{ lbs5formelement(parentForm.get('epossMemberType')) }}
+{{ lbs5formelement(parentForm.get('artemisiaMemberType')) }}
+{{ lbs5formelement(parentForm.get('dateEnd')) }}
+{{ lbs5formelement(form.get('csrf')) }}
 
 <div class="row mb-3">
     <div class="offset-sm-3 col-sm-9">
-        {{ ztbformelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('submit')) }}
         {% if form.has('delete') %}
-            {{ ztbformelement(form.get('delete')) }}
+            {{ lbs5formelement(form.get('delete')) }}
         {% endif %}
-        {{ ztbformelement(form.get('cancel')) }}
+        {{ lbs5formelement(form.get('cancel')) }}
     </div>
 </div>
 

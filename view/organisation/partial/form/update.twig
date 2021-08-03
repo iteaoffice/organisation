@@ -14,9 +14,9 @@
     </div>
 </div>
 
-{{ ztbformelement(updateForm.get('description')) }}
-{{ ztbformelement(updateForm.get('type')) }}
-{{ ztbformelement(updateForm.get('website')) }}
+{{ lbs5formelement(updateForm.get('description')) }}
+{{ lbs5formelement(updateForm.get('type')) }}
+{{ lbs5formelement(updateForm.get('website')) }}
 
 <div class="row mb-3">
     <label class="col-sm-3 col-form-label">{{ translate("txt-current-logo") }}</label>
@@ -28,16 +28,16 @@
         {% endif %}
     </div>
 </div>
-{{ ztbformelement(form.get('file')) }}
+{{ lbs5formelement(form.get('file')) }}
 
-{{ ztbformelement(form.get('csrf')) }}
+{{ lbs5formelement(form.get('csrf')) }}
 
 <div class="row mb-3">
     <div class="offset-sm-3 col-sm-9">
-        {{ ztbformelement(form.get('submit')) }}
-        {{ ztbformelement(form.get('cancel')) }}
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('cancel')) }}
         {% if form.has('delete') %}
-            {{ ztbformelement(form.get('delete')) }}
+            {{ lbs5formelement(form.get('delete')) }}
         {% endif %}
     </div>
 </div>

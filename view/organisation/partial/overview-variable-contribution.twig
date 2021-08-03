@@ -95,11 +95,11 @@
 {% endif  %}
 
 {% if invoiceMethod.id is constant('Invoice\\Entity\\Method::METHOD_FUNDING_MEMBER') %}
-    <div class="well">
+    <div class="bg-light p-3">
         {{ translate("txt-year-%s-variable-contribution-percentage-%s-%%-3-years-number-of-memberships-(%s)")|format(year,invoiceFactor, parentService.parseMembershipFactor(parent)) }}
     </div>
 {% else %}
-    <div class="well">
+    <div class="bg-light p-3">
         {{ translate("txt-year-%s-variable-contribution-percentage-%s-%%-3-years")|format(year,invoiceFactor) }}
     </div>
 {% endif %}

@@ -58,14 +58,11 @@
         {% endif %}
     </div>
     <div class="col-md-3">
-        <div class="well well-sm">
-            <fieldset>
-                {{ ztbformelement(filter.get('type'), true) }}
 
-                {{ ztbformelement(form.get('submit')) }}
-                {{ ztbformelement(form.get('clear')) }}
-            </fieldset>
-        </div>
+        {{ lbs5formelement(filter.get('type'), 'default') }}
+
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('clear')) }}
     </div>
 </div>
 

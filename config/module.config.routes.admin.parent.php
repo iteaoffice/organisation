@@ -66,7 +66,7 @@ return [
                                     'no-financial'     => [
                                         'type'    => 'Segment',
                                         'options' => [
-                                            'route'    => '/no-financial.html',
+                                            'route'    => '/no-financial[/f-:encodedFilter][/page-:page].html',
                                             'defaults' => [
                                                 'action' => 'no-financial',
                                             ],

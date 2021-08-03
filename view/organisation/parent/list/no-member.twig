@@ -75,9 +75,9 @@
     {{ lbs5alert().info(translate("txt-no-parent-found"))|raw }}
 {% endif %}
 
-{{ ztbformelement(filter.get('type'), true) }}
-{{ ztbformelement(filter.get('program'), true) }}
-{{ ztbformelement(form.get('submit')) }}
-{{ ztbformelement(form.get('clear')) }}
+{{ lbs5formelement(filter.get('type'), true) }}
+{{ lbs5formelement(filter.get('program'), true) }}
+{{ lbs5formelement(form.get('submit')) }}
+{{ lbs5formelement(form.get('clear')) }}
 
 {{ form().closeTag()|raw }}
