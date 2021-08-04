@@ -219,7 +219,7 @@ final class OrganisationController extends AbstractController
 
         $data = $this->getRequest()->getPost()->toArray();
 
-        $form = new Form\CreateAffiliation($this->projectService, $parentOrganisation);
+        $form = new Form\Parent\CreateAffiliation($this->projectService, $parentOrganisation);
         $form->setData($data);
 
         if ($this->getRequest()->isPost()) {

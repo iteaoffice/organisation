@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace Organisation\Form;
+namespace Organisation\Form\Parent;
 
 use Contact\Form\Element\Contact;
 use Laminas\Form\Element\Select;
