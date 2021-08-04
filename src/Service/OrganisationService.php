@@ -709,15 +709,27 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
 
     public function updateCollectionInSearchEngine(bool $clearIndex = false): void
     {
-        $organisationItems = $this->findAll(Entity\Organisation::class);
-        $collection        = [];
+        //Do a query to find the total amount of entries
+        $amount = $this->findCount(Entity\Organisation::class);
 
-        /** @var Entity\Organisation $organisation */
-        foreach ($organisationItems as $organisation) {
-            $collection[] = $this->prepareSearchUpdate($organisation);
+        if ($clearIndex) {
+            $this->organisationSearchService->clearIndex(true);
         }
 
-        $this->organisationSearchService->updateIndexWithCollection($collection, $clearIndex);
+        $i = 0;
+        while ($i < $amount) {
+            $elements   = $this->findSliced(Entity\Organisation::class, 10, $i);
+            $collection = [];
+            foreach ($elements as $asset) {
+                $collection[] = $this->prepareSearchUpdate($asset);
+            }
+            $this->organisationSearchService->updateIndexWithCollection($collection);
+
+            //clear the entity manager to prevent piling up entities
+            $this->entityManager->clear();
+
+            $i += 10;
+        }
     }
 
     public function searchOrganisation(
