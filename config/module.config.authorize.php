@@ -131,7 +131,6 @@ return [
                 ['route' => 'zfcadmin/parent/doa/edit', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/doa/download', 'roles' => ['office']],
                 ['route' => 'zfcadmin/parent/doa/upload', 'roles' => ['office']],
-                ['route' => 'cli-organisation-cleanup', 'roles' => [],],
             ],
         ],
     ],

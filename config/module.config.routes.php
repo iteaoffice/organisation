@@ -37,6 +37,36 @@ return [
                             ],
                         ],
                     ],
+                    'advisory-board'           => [
+                        'type'         => 'Literal',
+                        'options'      => [
+                            'route'    => '/a-b',
+                            'defaults' => [
+                                //Explicitly add the controller here as the assets are collected
+                                'controller' => Controller\ImageController::class,
+                            ],
+                        ],
+                        'child_routes' => [
+                            'city-image'     => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/c/[:id]-[:last-update].[:ext]',
+                                    'defaults' => [
+                                        'action' => 'city-image',
+                                    ],
+                                ],
+                            ],
+                            'solution-image' => [
+                                'type'    => 'Segment',
+                                'options' => [
+                                    'route'    => '/s/[:id]-[:last-update].[:ext]',
+                                    'defaults' => [
+                                        'action' => 'solution-image',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ],
             ],
             'organisation' => [

@@ -171,13 +171,12 @@ final class OrganisationHandler extends AbstractHandler
             ],
             $this->request->getQuery()->toArray()
         );
-        $searchFields = ['organisation_search', 'country_search', 'organisation_type_search'];
+
         $hasTerm = ! in_array($data['query'], ['*', ''], true);
 
         if ($this->request->isGet()) {
             $this->organisationSearchService->setSearchForWebsite(
                 $data['query'],
-                $searchFields,
                 $data['order'],
                 $data['direction']
             );

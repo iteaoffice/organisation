@@ -55,6 +55,14 @@ class Tender extends AbstractEntity
      */
     private $description;
     /**
+     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
+     * @Gedmo\Slug(fields={"title"})
+     * @Annotation\Exclude()
+     *
+     * @var string
+     */
+    private $docRef;
+    /**
      * @ORM\Column(name="website",nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\Url")
      * @Annotation\Options({"label":"txt-advisory-board-tender-website-label","help-block":"txt-advisory-board-tender-website-help-block"})
@@ -69,9 +77,9 @@ class Tender extends AbstractEntity
      * @Annotation\Options({"label":"txt-advisory-board-tender-deadline-label","help-block":"txt-advisory-board-tender-deadline-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-advisory-board-tender-deadline-placeholder"})
      *
-     * @var string
+     * @var DateTime
      */
-    private $daadline;
+    private $deadline;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
@@ -175,14 +183,14 @@ class Tender extends AbstractEntity
         return $this;
     }
 
-    public function getName(): ?string
+    public function getDocRef(): ?string
     {
-        return $this->name;
+        return $this->docRef;
     }
 
-    public function setName(?string $name): Tender
+    public function setDocRef(?string $docRef): Tender
     {
-        $this->name = $name;
+        $this->docRef = $docRef;
         return $this;
     }
 
@@ -252,14 +260,14 @@ class Tender extends AbstractEntity
         return $this;
     }
 
-    public function getDaadline(): ?string
+    public function getDeadline(): ?DateTime
     {
-        return $this->daadline;
+        return $this->deadline;
     }
 
-    public function setDaadline(?string $daadline): Tender
+    public function setDeadline(?DateTime $deadline): Tender
     {
-        $this->daadline = $daadline;
+        $this->deadline = $deadline;
         return $this;
     }
 

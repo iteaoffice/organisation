@@ -22,6 +22,8 @@ use Contact\Service\SelectionContactService;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use Search\Service\AbstractSearchService;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use function array_key_exists;
 
@@ -231,6 +233,31 @@ abstract class AbstractService
             foreach ($this->selectionContactService->findContactsInSelection($selection) as $contact) {
                 $repository->insertPermitsForRoleByContactAndId($role, $contact, $id);
             }
+        }
+    }
+
+    protected function updateCollectionInSearchEngineByEntity(string $entity, AbstractSearchService $searchService, $clearIndex, $limit): void
+    {
+        //Do a query to find the total amount of entries
+        $amount = $this->findCount($entity);
+
+        if ($clearIndex) {
+            $searchService->clearIndex(true);
+        }
+
+        $i = 0;
+        while ($i < $amount) {
+            $elements   = $this->findSliced($entity, $limit, $i);
+            $collection = [];
+            foreach ($elements as $element) {
+                $collection[] = $this->prepareSearchUpdate($element);
+            }
+            $searchService->updateIndexWithCollection($collection);
+
+            //clear the entity manager to prevent piling up entities
+            $this->entityManager->clear();
+
+            $i += $limit;
         }
     }
 

@@ -48,6 +48,14 @@ class City extends AbstractEntity
      */
     private $name;
     /**
+     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
+     * @Gedmo\Slug(fields={"name"})
+     * @Annotation\Exclude()
+     *
+     * @var string
+     */
+    private $docRef;
+    /**
      * @ORM\Column(name="website",nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\Url")
      * @Annotation\Options({"label":"txt-advisory-board-city-website-label","help-block":"txt-advisory-board-city-website-help-block"})
@@ -128,6 +136,17 @@ class City extends AbstractEntity
     public function setId(?int $id): City
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function getDocRef(): ?string
+    {
+        return $this->docRef;
+    }
+
+    public function setDocRef(?string $docRef): City
+    {
+        $this->docRef = $docRef;
         return $this;
     }
 

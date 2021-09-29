@@ -26,6 +26,9 @@ use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
 use Organisation\Controller;
 use Organisation\Form\View\Helper\OrganisationFormElement;
 use Organisation\Form\View\Helper\ParentFormElement;
+use Organisation\Search\Service\AdvisoryBoard\CitySearchService;
+use Organisation\Search\Service\AdvisoryBoard\SolutionSearchService;
+use Organisation\Search\Service\AdvisoryBoard\TenderSearchService;
 use Organisation\Service;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
@@ -39,6 +42,15 @@ return [
             Service\OrganisationService::class
         ],
         Search\Service\OrganisationSearchService::class                          => [
+            'Config'
+        ],
+        Search\Service\AdvisoryBoard\CitySearchService::class                    => [
+            'Config'
+        ],
+        Search\Service\AdvisoryBoard\SolutionSearchService::class                => [
+            'Config'
+        ],
+        Search\Service\AdvisoryBoard\TenderSearchService::class                  => [
             'Config'
         ],
         View\Handler\OrganisationHandler::class                                  => [
@@ -98,6 +110,9 @@ return [
         Form\OrganisationForm::class                                             => [
             EntityManager::class
         ],
+        Form\AdvisoryBoard\CityForm::class                                       => [
+            EntityManager::class
+        ],
         Form\UpdateForm::class                                                   => [
             EntityManager::class
         ],
@@ -134,6 +149,21 @@ return [
             InvoiceService::class,
             Service\ParentService::class,
             ContactService::class,
+        ],
+        Service\AdvisoryBoard\CityService::class                                 => [
+            EntityManager::class,
+            CitySearchService::class,
+            TranslatorInterface::class
+        ],
+        Service\AdvisoryBoard\TenderService::class                               => [
+            EntityManager::class,
+            TenderSearchService::class,
+            TranslatorInterface::class
+        ],
+        Service\AdvisoryBoard\SolutionService::class                             => [
+            EntityManager::class,
+            SolutionSearchService::class,
+            TranslatorInterface::class
         ],
         Service\BoardService::class                                              => [
             EntityManager::class

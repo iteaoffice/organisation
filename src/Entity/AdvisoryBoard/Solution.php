@@ -46,6 +46,14 @@ class Solution extends AbstractEntity
      */
     private $title;
     /**
+     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
+     * @Gedmo\Slug(fields={"title"})
+     * @Annotation\Exclude()
+     *
+     * @var string
+     */
+    private $docRef;
+    /**
      * @ORM\Column(name="description")
      * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-advisory-board-solution-description-label","help-block":"txt-advisory-board-solution-description-help-block"})
@@ -124,6 +132,17 @@ class Solution extends AbstractEntity
     public function setTitle(?string $title): Solution
     {
         $this->title = $title;
+        return $this;
+    }
+
+    public function getDocRef(): ?string
+    {
+        return $this->docRef;
+    }
+
+    public function setDocRef(?string $docRef): Solution
+    {
+        $this->docRef = $docRef;
         return $this;
     }
 

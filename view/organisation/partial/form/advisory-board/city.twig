@@ -1,0 +1,35 @@
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+{% set cityForm = form.get('organisation_entity_advisoryboard_city') %}
+
+    {{ lbs5formelement(cityForm.get('name')) }}
+    {{ lbs5formelement(cityForm.get('website')) }}
+    {{ lbs5formelement(cityForm.get('country')) }}
+    {{ contactformelement(cityForm.get('contact')) }}
+
+{% if city %}
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">{{ translate("txt-current-logo") }}</label>
+
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">{{ advisoryBoardCityImage(city, 300) }}</p>
+        </div>
+    </div>
+{% endif %}
+
+    {{ lbs5formelement(form.get('file')) }}
+    {{ formelement(form.get('csrf')) }}
+
+
+<div class="row mb-3">
+    <div class="offset-sm-3 col-sm-9">
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('cancel')) }}
+        {% if form.has('delete') %}
+            {{ lbs5formelement(form.get('delete')) }}
+        {% endif %}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}

@@ -59,15 +59,9 @@ final class ListController extends AbstractController
             ],
             $request->getQuery()->toArray()
         );
-        $searchFields = [
-            'organisation_search', //To search for numbers
-            'description_search',
-            'organisation_type_search',
-            'country_search',
-        ];
 
         if ($request->isGet()) {
-            $this->searchService->setSearch($data['query'], $searchFields, $data['order'], $data['direction']);
+            $this->searchService->setSearch($data['query'], [], $data['order'], $data['direction']);
             if (isset($data['facet'])) {
                 foreach ($data['facet'] as $facetField => $values) {
                     $quotedValues = [];

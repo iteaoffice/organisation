@@ -82,31 +82,70 @@ return [
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\SelectionController::class              => [
+
+        Controller\AdvisoryBoard\City\ManagerController::class         => [
+            Service\AdvisoryBoard\CityService::class,
+            Search\Service\AdvisoryBoard\CitySearchService::class,
+            GeneralService::class,
+            FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\AdvisoryBoard\City\Manager\DetailsController::class => [
+            Service\AdvisoryBoard\CityService::class,
+        ],
+
+        Controller\AdvisoryBoard\Tender\ManagerController::class         => [
+            Service\AdvisoryBoard\TenderService::class,
+            Search\Service\AdvisoryBoard\TenderSearchService::class,
+            FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\AdvisoryBoard\Tender\TypeController::class            => [
+            Service\AdvisoryBoard\TenderService::class,
+            FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\AdvisoryBoard\Tender\Manager\DetailsController::class => [
+            Service\AdvisoryBoard\CityService::class,
+        ],
+
+        Controller\AdvisoryBoard\Solution\ManagerController::class         => [
+            Service\AdvisoryBoard\SolutionService::class,
+            Search\Service\AdvisoryBoard\SolutionSearchService::class,
+            GeneralService::class,
+            FormService::class,
+            TranslatorInterface::class
+        ],
+        Controller\AdvisoryBoard\Solution\Manager\DetailsController::class => [
+            Service\AdvisoryBoard\CityService::class,
+        ],
+
+
+        Controller\SelectionController::class           => [
             Service\SelectionService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\ContributionController::class    => [
+        Controller\Parent\ContributionController::class => [
             Service\ParentService::class,
             ProgramService::class,
             InvoiceService::class,
         ],
-        Controller\Parent\ManagerController::class         => [
+        Controller\Parent\ManagerController::class      => [
             Service\ParentService::class,
             Service\OrganisationService::class,
             ContactService::class,
             FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\ListController::class            => [
+        Controller\Parent\ListController::class         => [
             Service\ParentService::class,
             Service\OrganisationService::class,
             ContactService::class,
             EntityManager::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\DetailsController::class         => [
+        Controller\Parent\DetailsController::class      => [
             Service\ParentService::class,
             Service\OrganisationService::class,
             ContactService::class,
@@ -115,7 +154,7 @@ return [
             EntityManager::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\OrganisationController::class    => [
+        Controller\Parent\OrganisationController::class => [
             Service\ParentService::class,
             ProjectService::class,
             AffiliationService::class,
@@ -123,12 +162,12 @@ return [
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\TypeController::class            => [
+        Controller\Parent\TypeController::class         => [
             Service\ParentService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\DoaController::class             => [
+        Controller\Parent\DoaController::class          => [
             Service\ParentService::class,
             EntityManager::class,
             GeneralService::class,
@@ -136,7 +175,7 @@ return [
             ProgramService::class,
             TranslatorInterface::class
         ],
-        Controller\Parent\FinancialController::class       => [
+        Controller\Parent\FinancialController::class    => [
             Service\ParentService::class,
             ContactService::class,
             ProjectService::class,
@@ -144,13 +183,13 @@ return [
             Service\OrganisationService::class,
             TranslatorInterface::class
         ],
-        Controller\UpdateController::class                 => [
+        Controller\UpdateController::class              => [
             Service\OrganisationService::class,
             GeneralService::class,
             Service\FormService::class,
             TranslatorInterface::class
         ],
-        Controller\Update\ManagerController::class         => [
+        Controller\Update\ManagerController::class      => [
             Service\UpdateService::class,
             Service\OrganisationService::class,
             GeneralService::class,

@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace organisation\Repository;
+namespace Organisation\Repository;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;

@@ -707,29 +707,16 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
         return $organisation->getFinancial()->getVatStatus() === Entity\Financial::VAT_STATUS_VALID;
     }
 
-    public function updateCollectionInSearchEngine(bool $clearIndex = false): void
-    {
-        //Do a query to find the total amount of entries
-        $amount = $this->findCount(Entity\Organisation::class);
-
-        if ($clearIndex) {
-            $this->organisationSearchService->clearIndex(true);
-        }
-
-        $i = 0;
-        while ($i < $amount) {
-            $elements   = $this->findSliced(Entity\Organisation::class, 10, $i);
-            $collection = [];
-            foreach ($elements as $asset) {
-                $collection[] = $this->prepareSearchUpdate($asset);
-            }
-            $this->organisationSearchService->updateIndexWithCollection($collection);
-
-            //clear the entity manager to prevent piling up entities
-            $this->entityManager->clear();
-
-            $i += 10;
-        }
+    public function updateCollectionInSearchEngine(
+        bool $clearIndex = false,
+        int $limit = 25
+    ): void {
+        $this->updateCollectionInSearchEngineByEntity(
+            Entity\Organisation::class,
+            $this->organisationSearchService,
+            $clearIndex,
+            $limit
+        );
     }
 
     public function searchOrganisation(

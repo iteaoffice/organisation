@@ -14,6 +14,8 @@ namespace Organisation\Search\Service;
 
 use Search\Service\AbstractSearchService;
 use Search\Service\SearchServiceInterface;
+use Search\Solr\Expression\CompositeExpression;
+use Search\Solr\Expression\ExpressionBuilder;
 use Solarium\QueryType\Select\Query\Query;
 
 /**
@@ -32,12 +34,30 @@ class OrganisationSearchService extends AbstractSearchService
         string $direction = Query::SORT_ASC
     ): SearchServiceInterface {
         $this->setQuery($this->getSolrClient()->createSelect());
-        $this->getQuery()->setQuery(static::parseQuery($searchTerm, $searchFields));
+
+        $eb          = new ExpressionBuilder();
+        $searchQuery = $eb->all(
+            $eb->comp(
+                [
+                    $eb->field('organisation', $eb->boost($searchTerm, 200)),
+                    $eb->field('parent', $eb->boost($searchTerm, 50)),
+                    $eb->field('organisation_type', $eb->boost($searchTerm, 50)),
+                    $eb->field('vat', $eb->boost($searchTerm, 50)),
+
+                    $eb->field('organisation_search', $eb->wild($searchTerm)),
+                    $eb->field('organisation_type_search', $eb->wild($searchTerm)),
+                    $eb->field('description_search', $eb->wild($searchTerm)),
+                    $eb->field('parent_search', $eb->wild($searchTerm))
+                ],
+                CompositeExpression::TYPE_OR
+            )
+        );
+
+        $this->getQuery()->setQuery((string)$searchQuery);
 
         $hasTerm = ! \in_array($searchTerm, ['*', ''], true);
-        $hasSort = ($order !== '');
 
-        if ($hasSort) {
+        if (! $hasTerm) {
             switch ($order) {
                 case 'organisation':
                     $this->getQuery()->addSort('organisation_sort', $direction);
@@ -63,8 +83,6 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
-        } elseif (! $hasSort) {
-            $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
@@ -93,20 +111,48 @@ class OrganisationSearchService extends AbstractSearchService
 
     public function setSearchForWebsite(
         string $searchTerm,
-        array $searchFields = [],
         string $order = '',
         string $direction = Query::SORT_ASC
     ): SearchServiceInterface {
         $this->setQuery($this->getSolrClient()->createSelect());
 
-        $query = '(has_projects_on_website:true) AND (' . static::parseQuery($searchTerm, $searchFields) . ')';
+        $eb          = new ExpressionBuilder();
+        $searchQuery = $eb->all(
+            $eb->comp(
+                [
+                    $eb->field('organisation', $eb->boost($searchTerm, 100)),
+                    $eb->field('parent', $eb->boost($searchTerm, 50)),
+                    $eb->field('organisation_type', $eb->boost($searchTerm, 50)),
+                    $eb->field('vat', $eb->boost($searchTerm, 50)),
 
-        $this->getQuery()->setQuery($query);
+                    $eb->field('organisation_search', $eb->wild($searchTerm)),
+                    $eb->field('organisation_type_search', $eb->wild($searchTerm)),
+                    $eb->field('description_search', $eb->wild($searchTerm)),
+                    $eb->field('parent_search', $eb->wild($searchTerm))
+                ],
+                CompositeExpression::TYPE_OR
+            )
+        );
+
+        $this->getQuery()->setQuery((string)$searchQuery);
+
+        $filterQuery = $eb->comp(
+            [
+                $eb->field('has_projects_on_website', $eb->eq(true))
+            ],
+            CompositeExpression::TYPE_AND
+        );
+        $this->getQuery()->addFilterQuery(
+            [
+                'key'   => 'filter_on_website',
+                'query' => (string)$filterQuery,
+            ]
+        );
+
 
         $hasTerm = ! \in_array($searchTerm, ['*', ''], true);
-        $hasSort = ($order !== '');
 
-        if ($hasSort) {
+        if (! $hasTerm) {
             switch ($order) {
                 case 'organisation':
                     $this->getQuery()->addSort('organisation_sort', $direction);
@@ -132,8 +178,6 @@ class OrganisationSearchService extends AbstractSearchService
 
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
-        } elseif (! $hasSort) {
-            $this->getQuery()->addSort('organisation_sort', Query::SORT_ASC);
         }
 
         $facetSet = $this->getQuery()->getFacetSet();
@@ -152,7 +196,6 @@ class OrganisationSearchService extends AbstractSearchService
 
         $query = 'has_projects_on_website:true';
         $this->getQuery()->setQuery($query);
-
 
         $result = $this->getSolrClient()->execute($this->query);
 

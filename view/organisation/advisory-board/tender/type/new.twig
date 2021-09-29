@@ -1,0 +1,7 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-advisory-board")) %}
+{% do headTitle().append(translate("txt-new-tender-type")) %}
+
+<h1>{{ translate("txt-new-tender-type") }}</h1>
+
+{% include 'organisation/partial/form/advisory-board/tender/type' %}
