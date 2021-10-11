@@ -41,7 +41,6 @@ final class SolutionLabel extends AbstractNavigationInvokable
 
             $label = (string)$solution;
         }
-
         if (null === $page->getLabel()) {
             $page->set('label', $label);
         }

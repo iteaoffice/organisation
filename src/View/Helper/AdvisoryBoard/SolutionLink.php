@@ -24,21 +24,23 @@ final class SolutionLink extends AbstractLink
 {
     public function __invoke(
         Solution $solution = null,
-        string $action = 'view',
-        string $show = 'name'
-    ): string {
+        string   $action = 'view',
+        string   $show = 'name'
+    ): string
+    {
         $solution ??= new Solution();
 
-        if (! $this->hasAccess($solution, SolutionAssertion::class, $action)) {
+        if (!$this->hasAccess($solution, SolutionAssertion::class, $action)) {
             return '';
         }
 
         $routeParams = [];
         $showOptions = [];
 
-        if (! $solution->isEmpty()) {
-            $routeParams['id']   = $solution->getId();
-            $showOptions['name'] = (string)$solution;
+        if (!$solution->isEmpty()) {
+            $routeParams['id']          = $solution->getId();
+            $showOptions['title']       = (string)$solution->getTitle();
+            $showOptions['description'] = (string)$solution->getDescription();
         }
 
         switch ($action) {

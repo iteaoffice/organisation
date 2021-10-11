@@ -28,7 +28,6 @@ use Organisation\Form\View\Helper\OrganisationFormElement;
 use Organisation\Form\View\Helper\ParentFormElement;
 use Organisation\Search\Service\AdvisoryBoard\CitySearchService;
 use Organisation\Search\Service\AdvisoryBoard\SolutionSearchService;
-use Organisation\Search\Service\AdvisoryBoard\TenderSearchService;
 use Organisation\Service;
 use Program\Service\CallService;
 use Program\Service\ProgramService;
@@ -48,9 +47,6 @@ return [
             'Config'
         ],
         Search\Service\AdvisoryBoard\SolutionSearchService::class                => [
-            'Config'
-        ],
-        Search\Service\AdvisoryBoard\TenderSearchService::class                  => [
             'Config'
         ],
         View\Handler\OrganisationHandler::class                                  => [
@@ -113,6 +109,9 @@ return [
         Form\AdvisoryBoard\CityForm::class                                       => [
             EntityManager::class
         ],
+        Form\AdvisoryBoard\SolutionForm::class                                   => [
+            EntityManager::class
+        ],
         Form\UpdateForm::class                                                   => [
             EntityManager::class
         ],
@@ -153,11 +152,6 @@ return [
         Service\AdvisoryBoard\CityService::class                                 => [
             EntityManager::class,
             CitySearchService::class,
-            TranslatorInterface::class
-        ],
-        Service\AdvisoryBoard\TenderService::class                               => [
-            EntityManager::class,
-            TenderSearchService::class,
             TranslatorInterface::class
         ],
         Service\AdvisoryBoard\SolutionService::class                             => [

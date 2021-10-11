@@ -52,10 +52,6 @@
     <copyField source="country" dest="country_sort"/>
     <copyField source="country" dest="country_search"/>
 
-    <field name="has_tenders" type="boolean" indexed="true" stored="true"/>
-    <field name="has_tenders_text" type="string" indexed="true" stored="true"/>
-    <field name="tenders" type="int" indexed="true" stored="true"/>
-
     <uniqueKey>id</uniqueKey>
 
     <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>

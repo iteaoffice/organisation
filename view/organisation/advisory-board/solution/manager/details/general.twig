@@ -1,0 +1,32 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-advisory-board")) %}
+{% do headTitle().append(translate("txt-solution")) %}
+
+<h1>{{ solution }} {{ advisoryBoardSolutionLink(solution,'edit-admin','button') }}</h1>
+
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-solution-title") }}</dt>
+    <dd>{{ solution.title }}</dd>
+    <dt>{{ translate("txt-solution-description") }}</dt>
+    <dd>{{ solution.description }}</dd>
+    <dt>{{ translate("txt-solution-targeted-customers") }}</dt>
+    <dd>{{ solution.targetedCustomers }}</dd>
+
+
+    <dt>{{ translate("txt-solution-contact") }}</dt>
+    <dd>{{ contactLink(solution.contact,'view-admin') }}</dd>
+
+
+    <dt>{{ translate("txt-date-created") }}</dt>
+    <dd>{{ solution.dateCreated|date('d-m-Y H:i') }}</dd>
+    {% if solution.dateUpdated %}
+        <dt>{{ translate("txt-last-update") }}</dt>
+        <dd>{{ solution.dateUpdated|date('d-m-Y H:i') }}</dd>
+    {% endif %}
+</dl>
+
+{% if solution.hasImage %}
+    <h2>{{ translate("txt-image") }}</h2>
+    {{ advisoryBoardSolutionImage(solution, 300) }}
+{% endif %}

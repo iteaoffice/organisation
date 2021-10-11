@@ -14,6 +14,8 @@ namespace Organisation\InputFilter\AdvisoryBoard;
 
 use Doctrine\ORM\EntityManager;
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\File\IsImage;
+use Laminas\Validator\File\Size;
 
 /**
  *
@@ -26,7 +28,7 @@ final class SolutionFilter extends InputFilter
 
         $inputFilter->add(
             [
-                'name'       => 'name',
+                'name'       => 'title',
                 'required'   => true,
                 'filters'    => [
                     ['name' => 'StripTags'],
@@ -37,7 +39,7 @@ final class SolutionFilter extends InputFilter
                         'name'    => 'StringLength',
                         'options' => [
                             'encoding' => 'UTF-8',
-                            'min'      => 1,
+                            'min'      => 3,
                             'max'      => 255,
                         ],
                     ],
@@ -56,11 +58,27 @@ final class SolutionFilter extends InputFilter
         );
         $inputFilter->add(
             [
-                'name'     => 'targetCustomers',
+                'name'     => 'targetedCustomers',
                 'required' => true,
                 'filters'  => [
                     ['name' => 'StripTags'],
                     ['name' => 'StringTrim'],
+                ],
+            ]
+        );
+
+        $this->add(
+            [
+                'name'       => 'file',
+                'required'   => true,
+                'validators' => [
+                    new Size(
+                        [
+                            'min' => '10kB',
+                            'max' => '16MB',
+                        ]
+                    ),
+                    new IsImage(),
                 ],
             ]
         );

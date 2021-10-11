@@ -19,7 +19,7 @@ return [
                 'order' => 31,
                 'uri'   => '#',
                 'pages' => [
-                    'city' => [
+                    'city'     => [
                         'label' => _('txt-nav-city-list'),
                         'order' => 20,
                         'route' => 'zfcadmin/advisory-board/city/list',
@@ -37,43 +37,19 @@ return [
                                 ],
                                 'pages'   => [
                                     'edit' => [
-                                        'label' => _('txt-edit-city'),
-                                        'route' => 'zfcadmin/advisory-board/city/edit',
+                                        'label'  => _('txt-edit-city'),
+                                        'route'  => 'zfcadmin/advisory-board/city/edit',
+                                        'params' => [
+                                            'entities' => [
+                                                'id' => Entity\AdvisoryBoard\City::class,
+                                            ],
+                                        ],
                                     ]
                                 ]
                             ],
                             'new'     => [
                                 'label' => _('txt-new-city'),
                                 'route' => 'zfcadmin/advisory-board/city/new',
-                            ],
-                        ],
-                    ],
-                    'tender' => [
-                        'label' => _('txt-nav-tender-list'),
-                        'order' => 20,
-                        'route' => 'zfcadmin/advisory-board/tender/list',
-                        'pages' => [
-                            'details' => [
-                                'route'   => 'zfcadmin/advisory-board/tender/details/general',
-                                'visible' => false,
-                                'params'  => [
-                                    'entities'   => [
-                                        'id' => Entity\AdvisoryBoard\Tender::class,
-                                    ],
-                                    'invokables' => [
-                                        Navigation\Invokable\AdvisoryBoard\TenderLabel::class,
-                                    ],
-                                ],
-                                'pages'   => [
-                                    'edit' => [
-                                        'label' => _('txt-edit-tender'),
-                                        'route' => 'zfcadmin/advisory-board/tender/edit',
-                                    ]
-                                ]
-                            ],
-                            'new'     => [
-                                'label' => _('txt-new-tender'),
-                                'route' => 'zfcadmin/advisory-board/tender/new',
                             ],
                         ],
                     ],
@@ -95,8 +71,13 @@ return [
                                 ],
                                 'pages'   => [
                                     'edit' => [
-                                        'label' => _('txt-edit-solution'),
-                                        'route' => 'zfcadmin/advisory-board/solution/edit',
+                                        'label'  => _('txt-edit-solution'),
+                                        'route'  => 'zfcadmin/advisory-board/solution/edit',
+                                        'params' => [
+                                            'entities' => [
+                                                'id' => Entity\AdvisoryBoard\Solution::class,
+                                            ],
+                                        ],
                                     ]
                                 ]
                             ],

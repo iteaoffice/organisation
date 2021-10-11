@@ -28,9 +28,6 @@ $config = [
 
             Controller\AdvisoryBoard\City\ManagerController::class             => ConfigAbstractFactory::class,
             Controller\AdvisoryBoard\City\Manager\DetailsController::class     => ConfigAbstractFactory::class,
-            Controller\AdvisoryBoard\Tender\ManagerController::class           => ConfigAbstractFactory::class,
-            Controller\AdvisoryBoard\Tender\Manager\DetailsController::class   => ConfigAbstractFactory::class,
-            Controller\AdvisoryBoard\Tender\TypeController::class              => ConfigAbstractFactory::class,
             Controller\AdvisoryBoard\Solution\ManagerController::class         => ConfigAbstractFactory::class,
             Controller\AdvisoryBoard\Solution\Manager\DetailsController::class => ConfigAbstractFactory::class,
 
@@ -96,10 +93,8 @@ $config = [
             'parentTypeLink'            => View\Helper\Parent\TypeLink::class,
             'parentFinancialLink'       => View\Helper\Parent\FinancialLink::class,
 
-            'advisoryBoardCityLink'       => View\Helper\AdvisoryBoard\CityLink::class,
-            'advisoryBoardCityImage'      => View\Helper\AdvisoryBoard\CityImage::class,
-            'advisoryBoardTenderLink'     => View\Helper\AdvisoryBoard\TenderLink::class,
-            'advisoryBoardTenderTypeLink' => View\Helper\AdvisoryBoard\Tender\TypeLink::class,
+            'advisoryBoardCityLink'  => View\Helper\AdvisoryBoard\CityLink::class,
+            'advisoryBoardCityImage' => View\Helper\AdvisoryBoard\CityImage::class,
 
             'advisoryBoardSolutionLink'  => View\Helper\AdvisoryBoard\SolutionLink::class,
             'advisoryBoardSolutionImage' => View\Helper\AdvisoryBoard\SolutionImage::class,
@@ -132,7 +127,6 @@ $config = [
             View\Helper\Parent\OrganisationLink::class                               => LinkHelperFactory::class,
             View\Helper\AdvisoryBoard\CityLink::class                                => LinkHelperFactory::class,
             View\Helper\AdvisoryBoard\CityImage::class                               => ImageHelperFactory::class,
-            View\Helper\AdvisoryBoard\TenderLink::class                              => LinkHelperFactory::class,
             View\Helper\AdvisoryBoard\SolutionLink::class                            => LinkHelperFactory::class,
             View\Helper\AdvisoryBoard\SolutionImage::class                           => ImageHelperFactory::class,
             View\Helper\UpdateLink::class                                            => LinkHelperFactory::class,
@@ -156,21 +150,20 @@ $config = [
     ],
     'service_manager'    => [
         'factories'  => [
-            Command\Cleanup::class             => ConfigAbstractFactory::class,
-            Options\ModuleOptions::class       => Factory\ModuleOptionsFactory::class,
-            Form\OrganisationForm::class       => ConfigAbstractFactory::class,
-            Form\AdvisoryBoard\CityForm::class => ConfigAbstractFactory::class,
-            Form\UpdateForm::class             => ConfigAbstractFactory::class,
-            Form\FinancialForm::class          => ConfigAbstractFactory::class,
-            Service\OrganisationService::class => Factory\InvokableFactory::class,
-            Service\UpdateService::class       => ConfigAbstractFactory::class,
-            Service\SelectionService::class    => ConfigAbstractFactory::class,
-            Service\BoardService::class        => ConfigAbstractFactory::class,
+            Command\Cleanup::class                 => ConfigAbstractFactory::class,
+            Options\ModuleOptions::class           => Factory\ModuleOptionsFactory::class,
+            Form\OrganisationForm::class           => ConfigAbstractFactory::class,
+            Form\AdvisoryBoard\CityForm::class     => ConfigAbstractFactory::class,
+            Form\AdvisoryBoard\SolutionForm::class => ConfigAbstractFactory::class,
+            Form\UpdateForm::class                 => ConfigAbstractFactory::class,
+            Form\FinancialForm::class              => ConfigAbstractFactory::class,
+            Service\OrganisationService::class     => Factory\InvokableFactory::class,
+            Service\UpdateService::class           => ConfigAbstractFactory::class,
+            Service\SelectionService::class        => ConfigAbstractFactory::class,
+            Service\BoardService::class            => ConfigAbstractFactory::class,
 
             Service\AdvisoryBoard\CityService::class     => ConfigAbstractFactory::class,
-            Service\AdvisoryBoard\TenderService::class   => ConfigAbstractFactory::class,
             Service\AdvisoryBoard\SolutionService::class => ConfigAbstractFactory::class,
-
 
             Service\ParentService::class                              => Factory\InvokableFactory::class,
             Service\FormService::class                                => Factory\FormServiceFactory::class,
@@ -181,7 +174,6 @@ $config = [
             InputFilter\ParentEntityFilter::class                     => Factory\InputFilterFactory::class,
             InputFilter\Parent\TypeFilter::class                      => Factory\InputFilterFactory::class,
             InputFilter\AdvisoryBoard\CityFilter::class               => Factory\InputFilterFactory::class,
-            InputFilter\AdvisoryBoard\TenderFilter::class             => Factory\InputFilterFactory::class,
             InputFilter\AdvisoryBoard\SolutionFilter::class           => Factory\InputFilterFactory::class,
             Acl\Assertion\OrganisationAssertion::class                => Factory\InvokableFactory::class,
             Acl\Assertion\TypeAssertion::class                        => Factory\InvokableFactory::class,
@@ -194,11 +186,9 @@ $config = [
             Acl\Assertion\Parent\OrganisationAssertion::class         => Factory\InvokableFactory::class,
             Acl\Assertion\AdvisoryBoard\CityAssertion::class          => Factory\InvokableFactory::class,
             Acl\Assertion\AdvisoryBoard\SolutionAssertion::class      => Factory\InvokableFactory::class,
-            Acl\Assertion\AdvisoryBoard\TenderAssertion::class        => Factory\InvokableFactory::class,
             Search\Service\OrganisationSearchService::class           => ConfigAbstractFactory::class,
             Search\Service\AdvisoryBoard\CitySearchService::class     => ConfigAbstractFactory::class,
             Search\Service\AdvisoryBoard\SolutionSearchService::class => ConfigAbstractFactory::class,
-            Search\Service\AdvisoryBoard\TenderSearchService::class   => ConfigAbstractFactory::class,
             Navigation\Invokable\OrganisationLabel::class             => NavigationInvokableFactory::class,
             Navigation\Invokable\TypeLabel::class                     => NavigationInvokableFactory::class,
             Navigation\Invokable\SelectionLabel::class                => NavigationInvokableFactory::class,
@@ -210,8 +200,7 @@ $config = [
             Navigation\Invokable\Parent\DoaLabel::class               => NavigationInvokableFactory::class,
             Navigation\Invokable\Parent\FinancialLabel::class         => NavigationInvokableFactory::class,
             Navigation\Invokable\AdvisoryBoard\CityLabel::class       => NavigationInvokableFactory::class,
-            Navigation\Invokable\AdvisoryBoard\SolutionLabel::class   => NavigationInvokableFactory::class,
-            Navigation\Invokable\AdvisoryBoard\TenderLabel::class     => NavigationInvokableFactory::class,
+            Navigation\Invokable\AdvisoryBoard\SolutionLabel::class   => NavigationInvokableFactory::class
         ],
         'invokables' => [
             InputFilter\NoteFilter::class

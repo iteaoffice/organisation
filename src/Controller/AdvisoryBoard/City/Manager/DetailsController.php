@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Organisation\Controller\AdvisoryBoard\City\Manager;
 
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\View\Model\ViewModel;
 use Organisation\Controller\AbstractController;
 use Organisation\Service\AdvisoryBoard\CityService;
@@ -21,7 +22,7 @@ final class DetailsController extends AbstractController
 {
     private CityService $cityService;
 
-    public function __construct(CityService $cityService, FormService $formService)
+    public function __construct(CityService $cityService)
     {
         $this->cityService = $cityService;
     }

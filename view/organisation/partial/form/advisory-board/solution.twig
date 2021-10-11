@@ -1,0 +1,37 @@
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+
+{% set solutionForm = form.get('organisation_entity_advisoryboard_solution') %}
+
+    {{ formelement(solutionForm.get('id')) }}
+    {{ lbs5formelement(solutionForm.get('title')) }}
+    {{ lbs5formelement(solutionForm.get('description')) }}
+    {{ lbs5formelement(solutionForm.get('targetedCustomers')) }}
+    {{ lbs5formelement(solutionForm.get('website')) }}
+    {{ contactformelement(solutionForm.get('contact')) }}
+
+{% if solution %}
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">{{ translate("txt-current-image") }}</label>
+
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">{{ advisoryBoardSolutionImage(solution, 300) }}</p>
+        </div>
+    </div>
+{% endif %}
+
+    {{ lbs5formelement(form.get('file')) }}
+    {{ formelement(form.get('csrf')) }}
+
+
+<div class="row mb-3">
+    <div class="offset-sm-3 col-sm-9">
+        {{ lbs5formelement(form.get('submit')) }}
+        {{ lbs5formelement(form.get('cancel')) }}
+        {% if form.has('delete') %}
+            {{ lbs5formelement(form.get('delete')) }}
+        {% endif %}
+    </div>
+</div>
+
+{{ form().closeTag()|raw }}

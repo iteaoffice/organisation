@@ -52,14 +52,35 @@ class CityService extends AbstractService implements SearchUpdateInterface
 
     public function updateCollectionInSearchEngine(
         bool $clearIndex = false,
-        int $limit = 25
-    ): void {
+        int  $limit = 25
+    ): void
+    {
         $this->updateCollectionInSearchEngineByEntity(
             Entity\AdvisoryBoard\City::class,
             $this->citySearchService,
             $clearIndex,
             $limit
         );
+    }
+
+    public function delete(Entity\AbstractEntity $abstractEntity): void
+    {
+        if ($abstractEntity instanceof Entity\AdvisoryBoard\Solution) {
+            $this->citySearchService->deleteDocument($abstractEntity);
+        }
+
+        parent::delete($abstractEntity);
+    }
+
+    public function save(Entity\AbstractEntity $abstractEntity): Entity\AbstractEntity
+    {
+        parent::save($abstractEntity);
+
+        if ($abstractEntity instanceof Entity\AdvisoryBoard\City) {
+            $this->updateEntityInSearchEngine($abstractEntity);
+        }
+
+        return $abstractEntity;
     }
 
     /**
@@ -86,7 +107,7 @@ class CityService extends AbstractService implements SearchUpdateInterface
 
         // Organisation properties
         $cityDocument->setField('id', $city->getResourceId());
-        $cityDocument->setField('organisation_id', $city->getId());
+        $cityDocument->setField('city_id', $city->getId());
         $cityDocument->setField('doc_ref', $city->getDocRef());
         $cityDocument->setField('date_created', $city->getDateCreated()->format(AbstractSearchService::DATE_SOLR));
         if (null !== $city->getDateUpdated()) {
@@ -96,10 +117,9 @@ class CityService extends AbstractService implements SearchUpdateInterface
         $cityDocument->setField('contact_id', $city->getContact()->getId());
         $cityDocument->setField('contact', $city->getContact()->parseFullName());
         $cityDocument->setField('country_id', $city->getCountry()->getId());
-        $cityDocument->setField('country', $city->getContact()->parseFullName());
-        $cityDocument->setField('tenders', $city->getAdvisoryBoardTenders()->count());
-        $cityDocument->setField('has_tenders_text', ! $city->getAdvisoryBoardTenders()->isEmpty());
-        $cityDocument->setField('has_tenders', $city->getAdvisoryBoardTenders()->isEmpty() ? $this->translator->translate('txt-yes') : $this->translator->translate('txt-no'));
+
+        $cityDocument->setField('country', $city->getCountry()->getCountry());
+        $cityDocument->setField('country_id', $city->getContact()->getId());
 
 
         $update->addDocument($cityDocument);

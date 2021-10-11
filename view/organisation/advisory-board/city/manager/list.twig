@@ -18,14 +18,14 @@
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/advisory-board/city/list', 'criteria': 'country', 'text': translate("txt-country")} %}</th>
             <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/advisory-board/city/list', 'criteria': 'contact', 'text': translate("txt-contact")} %}</th>
             <th>{{ translate("txt-website") }}</th>
-            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/advisory-board/city/list', 'criteria': 'tender', 'text': translate("txt-tenders")} %}</th>
+            <th>{{ translate("txt-tender-website") }}</th>
         </tr>
         </thead>
         <tfoot>
         </tfoot>
         <tbody>
         {% for result in paginator.getCurrentItems() %}
-            {% set city = cityService.findCityById(results.fields.city_id) %}
+            {% set city = cityService.findCityById(result.fields.city_id) %}
             <tr>
                 <td>
                     {{ advisoryBoardCityLink(city,'view-admin','name') }}
@@ -33,7 +33,8 @@
                 </td>
                 <td>{{ countryLink(city.country,'view-admin','name') }}</td>
                 <td>{{ contactLink(city.contact,'view-admin','name') }}</td>
-                <td>{{ result.fields.tenders }}</td>
+                <td><a href="{{ city.website }}">{{ city.website }}</a></td>
+                <td><a href="{{ city.tenderWebsite }}">{{ city.tenderWebsite }}</a></td>
             </tr>
         {% endfor %}
         </tbody>

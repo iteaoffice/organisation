@@ -14,7 +14,6 @@ namespace Organisation\Entity\AdvisoryBoard;
 
 use Contact\Entity\Contact;
 use DateTime;
-use Doctrine\Common\Collections;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use General\Entity\Country;
@@ -34,68 +33,59 @@ class City extends AbstractEntity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Laminas\Form\Element\Hidden")
-     *
-     * @var int
      */
-    private $id;
+    private ?int $id = null;
     /**
      * @ORM\Column(name="name", unique=true)
      * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-advisory-board-city-name-label","help-block":"txt-advisory-board-city-name-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-advisory-board-city-name-placeholder"})
-     *
-     * @var string
      */
-    private $name;
+    private string $name = '';
     /**
      * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
      * @Gedmo\Slug(fields={"name"})
      * @Annotation\Exclude()
-     *
-     * @var string
      */
-    private $docRef;
+    private string $docRef = '';
     /**
      * @ORM\Column(name="website",nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\Url")
      * @Annotation\Options({"label":"txt-advisory-board-city-website-label","help-block":"txt-advisory-board-city-website-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-advisory-board-city-website-placeholder"})
-     *
-     * @var string
      */
-    private $website;
+    private ?string $website = null;
+    /**
+     * @ORM\Column(name="tender_website",nullable=true)
+     * @Annotation\Type("\Laminas\Form\Element\Url")
+     * @Annotation\Options({"label":"txt-advisory-board-city-tender-website-label","help-block":"txt-advisory-board-city-tender-website-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-advisory-board-city-tender-website-placeholder"})
+     */
+    private ?string $tenderWebsite = null;
     /**
      * @ORM\Column(name="date_created", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      * @Annotation\Exclude()
-     *
-     * @var DateTime
      */
-    private $dateCreated;
+    private ?DateTime $dateCreated = null;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
      * @Annotation\Exclude()
-     *
-     * @var DateTime
      */
-    private $dateUpdated;
+    private ?DateTime $dateUpdated = null;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="advisoryBoardCities")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=true)
      * @Annotation\Type("Contact\Form\Element\Contact")
      * @Annotation\Options({"label":"txt-advisory-board-city-contact-label","help-block":"txt-advisory-board-city-contact-help-block"})
-     *
-     * @var Contact
      */
-    private $contact;
+    private ?Contact $contact = null;
     /**
-     * @ORM\OneToOne (targetEntity="Organisation\Entity\AdvisoryBoard\City\Image", cascade={"persist","remove"}, mappedBy="city")
+     * @ORM\OneToOne(targetEntity="Organisation\Entity\AdvisoryBoard\City\Image", cascade={"persist","remove"}, mappedBy="city")
      * @Annotation\Exclude()
-     *
-     * @var \Organisation\Entity\AdvisoryBoard\City\Image
      */
-    private $image;
+    private ?City\Image $image = null;
     /**
      * @ORM\ManyToOne(targetEntity="General\Entity\Country", cascade={"persist"}, inversedBy="advisoryBoardCities")
      * @ORM\JoinColumn(name="country_id", referencedColumnName="country_id", nullable=false)
@@ -111,21 +101,17 @@ class City extends AbstractEntity
      *      }
      * )
      * @Annotation\Attributes({"label":"txt-advisory-board-city-country-label","help-block":"txt-advisory-board-city-country-help-block"})
-     *
-     * @var Country
      */
-    private $country;
-    /**
-     * @ORM\OneToMany(targetEntity="Organisation\Entity\AdvisoryBoard\Tender", cascade={"persist"}, mappedBy="city")
-     * @Annotation\Exclude()
-     *
-     * @var \Organisation\Entity\AdvisoryBoard\Tender[]|Collections\ArrayCollection()
-     */
-    private $advisoryBoardTenders;
+    private ?Country $country = null;
 
-    public function __construct()
+    public function __toString(): string
     {
-        $this->advisoryBoardTenders = new Collections\ArrayCollection();
+        return (string)$this->name;
+    }
+
+    public function hasImage(): bool
+    {
+        return null !== $this->image;
     }
 
     public function getId(): ?int
@@ -172,6 +158,17 @@ class City extends AbstractEntity
         return $this;
     }
 
+    public function getTenderWebsite(): ?string
+    {
+        return $this->tenderWebsite;
+    }
+
+    public function setTenderWebsite(?string $tenderWebsite): City
+    {
+        $this->tenderWebsite = $tenderWebsite;
+        return $this;
+    }
+
     public function getDateCreated(): ?DateTime
     {
         return $this->dateCreated;
@@ -202,17 +199,6 @@ class City extends AbstractEntity
     public function setContact(?Contact $contact): City
     {
         $this->contact = $contact;
-        return $this;
-    }
-
-    public function getAdvisoryBoardTenders()
-    {
-        return $this->advisoryBoardTenders;
-    }
-
-    public function setAdvisoryBoardTenders($advisoryBoardTenders): City
-    {
-        $this->advisoryBoardTenders = $advisoryBoardTenders;
         return $this;
     }
 

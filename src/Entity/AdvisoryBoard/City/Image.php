@@ -38,7 +38,7 @@ class Image extends AbstractEntity
     /**
      * @ORM\Column(name="image", type="blob", nullable=false)
      */
-    private string $image;
+    private $image;
     /**
      * @ORM\Column(name="date_created", type="datetime")
      * @Gedmo\Timestampable(on="update")

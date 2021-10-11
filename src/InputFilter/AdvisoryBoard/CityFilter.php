@@ -15,6 +15,8 @@ namespace Organisation\InputFilter\AdvisoryBoard;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator\UniqueObject;
 use Laminas\InputFilter\InputFilter;
+use Laminas\Validator\File\IsImage;
+use Laminas\Validator\File\Size;
 use Organisation\Entity\AdvisoryBoard\City;
 
 /**
@@ -52,6 +54,22 @@ final class CityFilter extends InputFilter
                             'fields'            => 'name',
                         ],
                     ],
+                ],
+            ]
+        );
+
+        $inputFilter->add(
+            [
+                'name'       => 'file',
+                'required'   => false,
+                'validators' => [
+                    new Size(
+                        [
+                            'min' => '1kB',
+                            'max' => '16MB',
+                        ]
+                    ),
+                    new IsImage(),
                 ],
             ]
         );

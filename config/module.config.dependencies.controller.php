@@ -42,7 +42,9 @@ return [
             TranslatorInterface::class
         ],
         Controller\ImageController::class                  => [
-            Service\OrganisationService::class
+            Service\OrganisationService::class,
+            Service\AdvisoryBoard\CityService::class,
+            Service\AdvisoryBoard\SolutionService::class,
         ],
         Controller\BoardController::class                  => [
             Service\BoardService::class,
@@ -94,21 +96,6 @@ return [
             Service\AdvisoryBoard\CityService::class,
         ],
 
-        Controller\AdvisoryBoard\Tender\ManagerController::class         => [
-            Service\AdvisoryBoard\TenderService::class,
-            Search\Service\AdvisoryBoard\TenderSearchService::class,
-            FormService::class,
-            TranslatorInterface::class
-        ],
-        Controller\AdvisoryBoard\Tender\TypeController::class            => [
-            Service\AdvisoryBoard\TenderService::class,
-            FormService::class,
-            TranslatorInterface::class
-        ],
-        Controller\AdvisoryBoard\Tender\Manager\DetailsController::class => [
-            Service\AdvisoryBoard\CityService::class,
-        ],
-
         Controller\AdvisoryBoard\Solution\ManagerController::class         => [
             Service\AdvisoryBoard\SolutionService::class,
             Search\Service\AdvisoryBoard\SolutionSearchService::class,
@@ -117,7 +104,7 @@ return [
             TranslatorInterface::class
         ],
         Controller\AdvisoryBoard\Solution\Manager\DetailsController::class => [
-            Service\AdvisoryBoard\CityService::class,
+            Service\AdvisoryBoard\SolutionService::class,
         ],
 
 

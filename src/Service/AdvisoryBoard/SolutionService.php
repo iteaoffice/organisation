@@ -28,6 +28,7 @@ use Solarium\QueryType\Update\Query\Document;
  */
 class SolutionService extends AbstractService implements SearchUpdateInterface
 {
+
     private SolutionSearchService $solutionSearchService;
     private TranslatorInterface $translator;
 
@@ -49,10 +50,31 @@ class SolutionService extends AbstractService implements SearchUpdateInterface
         return true;
     }
 
+    public function delete(Entity\AbstractEntity $abstractEntity): void
+    {
+        if ($abstractEntity instanceof Entity\AdvisoryBoard\Solution) {
+            $this->solutionSearchService->deleteDocument($abstractEntity);
+        }
+
+        parent::delete($abstractEntity);
+    }
+
+    public function save(Entity\AbstractEntity $abstractEntity): Entity\AbstractEntity
+    {
+        parent::save($abstractEntity);
+
+        if ($abstractEntity instanceof Entity\AdvisoryBoard\Solution) {
+            $this->updateEntityInSearchEngine($abstractEntity);
+        }
+
+        return $abstractEntity;
+    }
+
     public function updateCollectionInSearchEngine(
         bool $clearIndex = false,
-        int $limit = 25
-    ): void {
+        int  $limit = 25
+    ): void
+    {
         $this->updateCollectionInSearchEngineByEntity(
             Entity\AdvisoryBoard\Solution::class,
             $this->solutionSearchService,

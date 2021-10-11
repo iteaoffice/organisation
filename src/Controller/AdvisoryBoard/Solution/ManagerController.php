@@ -94,20 +94,24 @@ final class ManagerController extends AbstractController
 
         return new ViewModel(
             [
-                'form'      => $form,
-                'order'     => $data['order'],
-                'direction' => $data['direction'],
-                'query'     => $data['query'],
-                'badges'    => $form->getBadges(),
-                'arguments' => http_build_query($form->getFilteredData()),
-                'paginator' => $paginator,
+                'form'            => $form,
+                'order'           => $data['order'],
+                'direction'       => $data['direction'],
+                'query'           => $data['query'],
+                'badges'          => $form->getBadges(),
+                'arguments'       => http_build_query($form->getFilteredData()),
+                'paginator'       => $paginator,
+                'solutionService' => $this->solutionService
             ]
         );
     }
 
     public function newAction()
     {
-        $data = $this->getRequest()->getPost()->toArray();
+        $data = array_merge(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
         $form = $this->formService->prepare(new Entity\AdvisoryBoard\Solution(), $data);
         $form->remove('delete');
 
@@ -120,7 +124,9 @@ final class ManagerController extends AbstractController
                 /* @var $solution Entity\AdvisoryBoard\Solution */
                 $solution = $form->getData();
 
-                if (! empty($fileData['file']['name'])) {
+                $fileData = $this->params()->fromFiles();
+
+                if (!empty($fileData['file']['name'])) {
                     $image = new Entity\AdvisoryBoard\Solution\Image();
                     $image->setSolution($solution);
                     $image->setImage(file_get_contents($fileData['file']['tmp_name']));
@@ -159,10 +165,14 @@ final class ManagerController extends AbstractController
             return $this->notFoundAction();
         }
 
-        $data = $this->getRequest()->getPost()->toArray();
+        $data = array_merge(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
+
         $form = $this->formService->prepare($solution, $data);
 
-        if (! $this->solutionService->canDeleteSolution($solution)) {
+        if (!$this->solutionService->canDeleteSolution($solution)) {
             $form->remove('delete');
         }
 
@@ -188,7 +198,9 @@ final class ManagerController extends AbstractController
                 /** @var Entity\AdvisoryBoard\Solution $solution */
                 $solution = $form->getData();
 
-                if (! empty($fileData['file']['name'])) {
+                $fileData = $this->params()->fromFiles();
+
+                if (!empty($fileData['file']['name'])) {
                     $image = $solution->getImage();
                     if (null === $image) {
                         // Create a new logo element

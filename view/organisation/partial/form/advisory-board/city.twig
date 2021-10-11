@@ -3,8 +3,10 @@
 
 {% set cityForm = form.get('organisation_entity_advisoryboard_city') %}
 
+    {{ formelement(cityForm.get('id')) }}
     {{ lbs5formelement(cityForm.get('name')) }}
     {{ lbs5formelement(cityForm.get('website')) }}
+    {{ lbs5formelement(cityForm.get('tenderWebsite')) }}
     {{ lbs5formelement(cityForm.get('country')) }}
     {{ contactformelement(cityForm.get('contact')) }}
 

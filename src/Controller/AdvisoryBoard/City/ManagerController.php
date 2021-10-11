@@ -94,20 +94,25 @@ final class ManagerController extends AbstractController
 
         return new ViewModel(
             [
-                'form'      => $form,
-                'order'     => $data['order'],
-                'direction' => $data['direction'],
-                'query'     => $data['query'],
-                'badges'    => $form->getBadges(),
-                'arguments' => http_build_query($form->getFilteredData()),
-                'paginator' => $paginator,
+                'form'        => $form,
+                'order'       => $data['order'],
+                'direction'   => $data['direction'],
+                'query'       => $data['query'],
+                'badges'      => $form->getBadges(),
+                'arguments'   => http_build_query($form->getFilteredData()),
+                'paginator'   => $paginator,
+                'cityService' => $this->cityService
             ]
         );
     }
 
     public function newAction()
     {
-        $data = $this->getRequest()->getPost()->toArray();
+        $data = array_merge(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
+
         $form = $this->formService->prepare(new Entity\AdvisoryBoard\City(), $data);
         $form->remove('delete');
 
@@ -122,7 +127,7 @@ final class ManagerController extends AbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (! empty($fileData['file']['name'])) {
+                if (!empty($fileData['file']['name'])) {
                     $image = new Entity\AdvisoryBoard\City\Image();
                     $image->setCity($city);
                     $image->setImage(file_get_contents($fileData['file']['tmp_name']));
@@ -161,10 +166,13 @@ final class ManagerController extends AbstractController
             return $this->notFoundAction();
         }
 
-        $data = $this->getRequest()->getPost()->toArray();
+        $data = array_merge(
+            $this->getRequest()->getPost()->toArray(),
+            $this->getRequest()->getFiles()->toArray()
+        );
         $form = $this->formService->prepare($city, $data);
 
-        if (! $this->cityService->canDeleteCity($city)) {
+        if (!$this->cityService->canDeleteCity($city)) {
             $form->remove('delete');
         }
 
@@ -192,7 +200,7 @@ final class ManagerController extends AbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (! empty($fileData['file']['name'])) {
+                if (!empty($fileData['file']['name'])) {
                     $image = $city->getImage();
                     if (null === $image) {
                         // Create a new logo element

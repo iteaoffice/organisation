@@ -1,0 +1,24 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-advisory-board")) %}
+{% do headTitle().append(translate("txt-city")) %}
+
+<h1>{{ city }} {{ advisoryBoardCityLink(city,'edit-admin','button') }}</h1>
+
+
+<dl class="dl-horizontal">
+    <dt>{{ translate("txt-city-name") }}</dt>
+    <dd>{{ city.name }}</dd>
+    <dt>{{ translate("txt-country") }}</dt>
+    <dd>{{ countryLink(city.country,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-date-created") }}</dt>
+    <dd>{{ city.dateCreated|date('d-m-Y H:i') }}</dd>
+    {% if city.dateUpdated %}
+        <dt>{{ translate("txt-last-update") }}</dt>
+        <dd>{{ city.dateUpdated|date('d-m-Y H:i') }}</dd>
+    {% endif %}
+</dl>
+
+{% if city.hasImage %}
+    <h2>{{ translate("txt-image") }}</h2>
+    {{ advisoryBoardCityImage(city, 300) }}
+{% endif %}

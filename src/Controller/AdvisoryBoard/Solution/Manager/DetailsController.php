@@ -21,7 +21,7 @@ final class DetailsController extends AbstractController
 {
     private SolutionService $solutionService;
 
-    public function __construct(SolutionService $solutionService, FormService $formService)
+    public function __construct(SolutionService $solutionService)
     {
         $this->solutionService = $solutionService;
     }

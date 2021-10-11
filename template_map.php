@@ -1,5 +1,4 @@
 <?php
-
 return [
     'organisation/update/new' => __DIR__ . '/./view/organisation/update/new.twig',
     'organisation/update/manager/view' => __DIR__ . '/./view/organisation/update/manager/view.twig',
@@ -50,11 +49,12 @@ return [
     'organisation/parent/organisation/edit' => __DIR__ . '/./view/organisation/parent/organisation/edit.twig',
     'organisation/advisory-board/city/manager/new' => __DIR__ . '/./view/organisation/advisory-board/city/manager/new.twig',
     'organisation/advisory-board/city/manager/list' => __DIR__ . '/./view/organisation/advisory-board/city/manager/list.twig',
+    'organisation/advisory-board/city/manager/details/general' => __DIR__ . '/./view/organisation/advisory-board/city/manager/details/general.twig',
     'organisation/advisory-board/city/manager/edit' => __DIR__ . '/./view/organisation/advisory-board/city/manager/edit.twig',
-    'organisation/advisory-board/tender/type/view' => __DIR__ . '/./view/organisation/advisory-board/tender/type/view.twig',
-    'organisation/advisory-board/tender/type/new' => __DIR__ . '/./view/organisation/advisory-board/tender/type/new.twig',
-    'organisation/advisory-board/tender/type/list' => __DIR__ . '/./view/organisation/advisory-board/tender/type/list.twig',
-    'organisation/advisory-board/tender/type/edit' => __DIR__ . '/./view/organisation/advisory-board/tender/type/edit.twig',
+    'organisation/advisory-board/solution/manager/new' => __DIR__ . '/./view/organisation/advisory-board/solution/manager/new.twig',
+    'organisation/advisory-board/solution/manager/list' => __DIR__ . '/./view/organisation/advisory-board/solution/manager/list.twig',
+    'organisation/advisory-board/solution/manager/details/general' => __DIR__ . '/./view/organisation/advisory-board/solution/manager/details/general.twig',
+    'organisation/advisory-board/solution/manager/edit' => __DIR__ . '/./view/organisation/advisory-board/solution/manager/edit.twig',
     'organisation/organisation/list/no-financial' => __DIR__ . '/./view/organisation/organisation/list/no-financial.twig',
     'organisation/organisation/list/duplicate' => __DIR__ . '/./view/organisation/organisation/list/duplicate.twig',
     'organisation/organisation/list/financial' => __DIR__ . '/./view/organisation/organisation/list/financial.twig',
@@ -87,6 +87,7 @@ return [
     'organisation/partial/form/update' => __DIR__ . '/./view/organisation/partial/form/update.twig',
     'organisation/partial/form/organisation' => __DIR__ . '/./view/organisation/partial/form/organisation.twig',
     'organisation/partial/form/advisory-board/city' => __DIR__ . '/./view/organisation/partial/form/advisory-board/city.twig',
+    'organisation/partial/form/advisory-board/solution' => __DIR__ . '/./view/organisation/partial/form/advisory-board/solution.twig',
     'organisation/partial/form/selection' => __DIR__ . '/./view/organisation/partial/form/selection.twig',
     'organisation/partial/overview-variable-contribution' => __DIR__ . '/./view/organisation/partial/overview-variable-contribution.twig',
     'organisation/partial/overview-extra-variable-contribution' => __DIR__ . '/./view/organisation/partial/overview-extra-variable-contribution.twig',

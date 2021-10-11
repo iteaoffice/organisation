@@ -1,0 +1,48 @@
+{% do headTitle().append(translate("txt-admin")) %}
+{% do headTitle().append(translate("txt-advisory-board")) %}
+{% do headTitle().append(translate("txt-solution-list")) %}
+
+{% do form.prepare() %}
+{{ form().openTag(form)|raw }}
+<h1>{{ translate("txt-advisory-board-solution-list") }} {{ advisoryBoardSolutionLink(null,'new-admin','button') }}</h1>
+
+{{ filterbarelement(form) }}
+{% include('application/partial/form-badges') %}
+<p class="text-muted">{{ translate("txt-%s-items-on-%s-pages")|format(paginator.adapter.count,paginator.pageRange) }}</p>
+
+{% if paginator.pageRange > 0 %}
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/advisory-board/solution/list', 'criteria': 'title', 'text': translate("txt-title")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/advisory-board/solution/list', 'criteria': 'description', 'text': translate("txt-description")} %}</th>
+            <th>{% include 'application/partial/sortable-table-header' with {'route': 'zfcadmin/advisory-board/solution/list', 'criteria': 'contact', 'text': translate("txt-contact")} %}</th>
+            <th>{{ translate("txt-website") }}</th>
+            <th>{{ translate("txt-targeted-customers") }}</th>
+        </tr>
+        </thead>
+        <tfoot>
+        </tfoot>
+        <tbody>
+        {% for result in paginator.getCurrentItems() %}
+            {% set solution = solutionService.findsolutionById(result.fields.solution_id) %}
+            <tr>
+                <td>
+                    {{ advisoryBoardSolutionLink(solution,'view-admin','title') }}
+                    {{ advisoryBoardSolutionLink(solution,'edit-admin','icon') }}
+                </td>
+                <td>{{ solution.description }}</td>
+                <td>{{ contactLink(solution.contact,'view-admin','name') }}</td>
+                <td><a href="{{ solution.website }}">{{ solution.website }}</a></td>
+                <td>{{ solution.targetedCustomers }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% include 'application/partial/pagination-control' with {'paginator': paginator} %}
+{% else %}
+    {{ lbs5alert().info(translate("txt-no-advisory-board-cities-found"))|raw }}
+{% endif %}
+
+{{ form().closeTag()|raw }}

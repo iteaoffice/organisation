@@ -23,11 +23,11 @@ use Organisation\Form\ObjectFieldset;
 /**
  *
  */
-final class CityForm extends Form
+final class SolutionForm extends Form
 {
     public function __construct(EntityManager $entityManager)
     {
-        $organisation = new Entity\AdvisoryBoard\City();
+        $organisation = new Entity\AdvisoryBoard\Solution();
         parent::__construct($organisation->get('underscore_entity_name'));
 
         $this->setAttribute('method', 'post');
@@ -50,7 +50,7 @@ final class CityForm extends Form
                 'name'    => 'file',
                 'options' => [
                     'label'      => 'txt-logo',
-                    'help-block' => _('txt-city-image-logo-requirements'),
+                    'help-block' => _('txt-solution-image-requirements'),
                 ],
             ]
         );

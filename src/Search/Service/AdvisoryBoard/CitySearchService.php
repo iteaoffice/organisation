@@ -29,10 +29,11 @@ class CitySearchService extends AbstractSearchService
 
     public function setSearch(
         string $searchTerm,
-        array $searchFields = [],
+        array  $searchFields = [],
         string $order = '',
         string $direction = Query::SORT_ASC
-    ): SearchServiceInterface {
+    ): SearchServiceInterface
+    {
         $this->setQuery($this->getSolrClient()->createSelect());
 
         $eb          = new ExpressionBuilder();
@@ -51,9 +52,9 @@ class CitySearchService extends AbstractSearchService
 
         $this->getQuery()->setQuery((string)$searchQuery);
 
-        $hasTerm = ! \in_array($searchTerm, ['*', ''], true);
+        $hasTerm = !\in_array($searchTerm, ['*', ''], true);
 
-        if (! $hasTerm) {
+        if (!$hasTerm) {
             switch ($order) {
                 case 'name':
                     $this->getQuery()->addSort('name_sort', $direction);
@@ -63,9 +64,6 @@ class CitySearchService extends AbstractSearchService
                     break;
                 case 'country':
                     $this->getQuery()->addSort('country_sort', $direction);
-                    break;
-                case 'tenders':
-                    $this->getQuery()->addSort('tenders', $direction);
                     break;
                 default:
                     $this->getQuery()->addSort('name_sort', Query::SORT_ASC);

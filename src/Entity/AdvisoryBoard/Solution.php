@@ -32,86 +32,76 @@ class Solution extends AbstractEntity
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Annotation\Type("\Laminas\Form\Element\Hidden")
-     *
-     * @var int
      */
-    private $id;
+    private ?int $id = null;
     /**
      * @ORM\Column(name="title")
      * @Annotation\Type("\Laminas\Form\Element\Text")
      * @Annotation\Options({"label":"txt-advisory-board-solution-title-label","help-block":"txt-advisory-board-solution-title-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-advisory-board-solution-title-placeholder"})
-     *
-     * @var string
      */
-    private $title;
+    private string $title = '';
     /**
-     * @ORM\Column(name="docref", type="string", nullable=true, unique=true)
+     * @ORM\Column(name="docref", type="string", unique=true)
      * @Gedmo\Slug(fields={"title"})
      * @Annotation\Exclude()
-     *
-     * @var string
      */
-    private $docRef;
+    private ?string $docRef = null;
     /**
      * @ORM\Column(name="description")
      * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-advisory-board-solution-description-label","help-block":"txt-advisory-board-solution-description-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-advisory-board-solution-description-placeholder"})
-     *
-     * @var string
      */
-    private $description;
+    private string $description = '';
     /**
      * @ORM\Column(name="targeted_customers")
      * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-advisory-board-solution-description-label","help-block":"txt-advisory-board-solution-description-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-advisory-board-solution-description-placeholder"})
-     *
-     * @var string
      */
-    private $targetedCustomers;
+    private string $targetedCustomers = '';
     /**
      * @ORM\Column(name="website",nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\Url")
      * @Annotation\Options({"label":"txt-advisory-board-solution-website-label","help-block":"txt-advisory-board-solution-website-help-block"})
      * @Annotation\Attributes({"placeholder":"txt-advisory-board-solution-website-placeholder"})
-     *
-     * @var string
      */
-    private $website;
+    private ?string $website = null;
     /**
-     * @ORM\Column(name="date_created", type="datetime", nullable=true)
+     * @ORM\Column(name="date_created", type="datetime")
      * @Gedmo\Timestampable(on="create")
      * @Annotation\Exclude()
-     *
-     * @var DateTime
      */
-    private $dateCreated;
+    private ?DateTime $dateCreated = null;
     /**
      * @ORM\Column(name="date_updated", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
      * @Annotation\Exclude()
-     *
-     * @var DateTime
      */
-    private $dateUpdated;
+    private ?DateTime $dateUpdated = null;
     /**
      * @ORM\OneToOne (targetEntity="Organisation\Entity\AdvisoryBoard\Solution\Image", cascade={"persist","remove"}, mappedBy="solution")
      * @Annotation\Exclude()
-     *
-     * @var \Organisation\Entity\AdvisoryBoard\Solution\Image
      */
-    private $image;
+    private ?Solution\Image $image = null;
     /**
      * @ORM\ManyToOne(targetEntity="Contact\Entity\Contact", cascade={"persist"}, inversedBy="advisoryBoardSolutions")
      * @ORM\JoinColumn(name="contact_id", referencedColumnName="contact_id", nullable=true)
      * @Annotation\Type("Contact\Form\Element\Contact")
      * @Annotation\Options({"label":"txt-advisory-board-solution-contact-label","help-block":"txt-advisory-board-solution-contact-help-block"})
-     *
-     * @var Contact
      */
-    private $contact;
+    private ?Contact $contact = null;
+
+    public function hasImage(): bool
+    {
+        return null !== $this->image;
+    }
+
+    public function __toString(): string
+    {
+        return (string)$this->title;
+    }
 
     public function getId(): ?int
     {
