@@ -28,7 +28,6 @@ use Solarium\QueryType\Update\Query\Document;
  */
 class SolutionService extends AbstractService implements SearchUpdateInterface
 {
-
     private SolutionSearchService $solutionSearchService;
     private TranslatorInterface $translator;
 
@@ -70,19 +69,6 @@ class SolutionService extends AbstractService implements SearchUpdateInterface
         return $abstractEntity;
     }
 
-    public function updateCollectionInSearchEngine(
-        bool $clearIndex = false,
-        int  $limit = 25
-    ): void
-    {
-        $this->updateCollectionInSearchEngineByEntity(
-            Entity\AdvisoryBoard\Solution::class,
-            $this->solutionSearchService,
-            $clearIndex,
-            $limit
-        );
-    }
-
     /**
      * @param Entity\AdvisoryBoard\Solution $solution
      */
@@ -117,13 +103,36 @@ class SolutionService extends AbstractService implements SearchUpdateInterface
         $solutionDocument->setField('title', $solution->getTitle());
         $solutionDocument->setField('description', $solution->getDescription());
         $solutionDocument->setField('target_customers', $solution->getTargetedCustomers());
+        $solutionDocument->setField('condition_of_use', $solution->getConditionOfUse());
+        $solutionDocument->setField('website', $solution->getWebsite());
 
         $solutionDocument->setField('contact_id', $solution->getContact()->getId());
         $solutionDocument->setField('contact', $solution->getContact()->parseFullName());
+
+        $solutionDocument->setField('hidden', $solution->getHidden());
+        $solutionDocument->setField('hidden_text', $this->translator->translate($solution->getHiddenText()));
+        $solutionDocument->setField('is_hidden', $solution->isHidden());
+
+        if ($solution->hasProject()) {
+            $solutionDocument->setField('project', $solution->getProject()->parseFullName());
+            $solutionDocument->setField('project_id', $solution->getProject()->getId());
+        }
 
         $update->addDocument($solutionDocument);
         $update->addCommit();
 
         return $update;
+    }
+
+    public function updateCollectionInSearchEngine(
+        bool $clearIndex = false,
+        int $limit = 25
+    ): void {
+        $this->updateCollectionInSearchEngineByEntity(
+            Entity\AdvisoryBoard\Solution::class,
+            $this->solutionSearchService,
+            $clearIndex,
+            $limit
+        );
     }
 }

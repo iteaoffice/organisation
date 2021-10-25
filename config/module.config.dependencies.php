@@ -14,7 +14,6 @@ namespace Organisation;
 
 use Affiliation\Service\AffiliationService;
 use Contact\Service\ContactService;
-use Content\Service\ArticleService;
 use Doctrine\ORM\EntityManager;
 use ErrorHeroModule\Handler\Logging;
 use General\Service\CountryService;
@@ -57,8 +56,26 @@ return [
             TranslatorInterface::class,
             Service\OrganisationService::class,
             Search\Service\OrganisationSearchService::class,
-            ProjectService::class,
-            ArticleService::class
+            Service\SelectionService::class,
+            ProjectService::class
+        ],
+        View\Handler\AdvisoryBoard\CityHandler::class                            => [
+            'Application',
+            'ViewHelperManager',
+            TwigRenderer::class,
+            AuthenticationService::class,
+            TranslatorInterface::class,
+            Service\AdvisoryBoard\CityService::class,
+            Search\Service\AdvisoryBoard\CitySearchService::class
+        ],
+        View\Handler\AdvisoryBoard\SolutionHandler::class                        => [
+            'Application',
+            'ViewHelperManager',
+            TwigRenderer::class,
+            AuthenticationService::class,
+            TranslatorInterface::class,
+            Service\AdvisoryBoard\SolutionService::class,
+            Search\Service\AdvisoryBoard\SolutionSearchService::class
         ],
         Controller\Plugin\HandleParentAndProjectImport::class                    => [
             EntityManager::class,

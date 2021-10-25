@@ -28,6 +28,14 @@ use Organisation\Entity\AbstractEntity;
  */
 class City extends AbstractEntity
 {
+    public const HIDDEN_NO  = 0;
+    public const HIDDEN_YES = 1;
+
+    private static array $hiddenTemplates = [
+        self::HIDDEN_NO  => 'txt-visible',
+        self::HIDDEN_YES => 'txt-hidden',
+    ];
+
     /**
      * @ORM\Column(name="city_id", type="integer", options={"unsigned":true})
      * @ORM\Id
@@ -48,6 +56,13 @@ class City extends AbstractEntity
      * @Annotation\Exclude()
      */
     private string $docRef = '';
+    /**
+     * @ORM\Column(name="`hidden`", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"hiddenTemplates"})
+     * @Annotation\Options({"label":"txt-advisory-board-city-hidden-label","help-block":"txt-advisory-board-city-hidden-help-block"})
+     */
+    private int $hidden = self::HIDDEN_NO;
     /**
      * @ORM\Column(name="website",nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\Url")
@@ -103,6 +118,38 @@ class City extends AbstractEntity
      * @Annotation\Attributes({"label":"txt-advisory-board-city-country-label","help-block":"txt-advisory-board-city-country-help-block"})
      */
     private ?Country $country = null;
+    /**
+     * @ORM\ManyToOne(targetEntity="General\Entity\Language", cascade={"persist"}, inversedBy="advisoryBoardCities")
+     * @ORM\JoinColumn(name="language_id", referencedColumnName="language_id", nullable=false)
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
+     * @Annotation\Options({
+     *      "target_class":"General\Entity\Language",
+     *      "find_method":{
+     *          "name":"findBy",
+     *          "params": {
+     *              "criteria":{},
+     *              "orderBy":{"language":"ASC"}
+     *          }}
+     *      }
+     * )
+     * @Annotation\Attributes({"label":"txt-advisory-board-city-language-label","help-block":"txt-advisory-board-city-language-help-block"})
+     */
+    private ?\General\Entity\Language $language = null;
+
+    public static function getHiddenTemplates(): array
+    {
+        return self::$hiddenTemplates;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden === self::HIDDEN_YES;
+    }
+
+    public function hasTenderWebsite(): bool
+    {
+        return null !== $this->tenderWebsite;
+    }
 
     public function __toString(): string
     {
@@ -169,6 +216,23 @@ class City extends AbstractEntity
         return $this;
     }
 
+    public function getHidden(): ?int
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden($hidden): City
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    public function getHiddenText(): string
+    {
+        return self::$hiddenTemplates[$this->hidden] ?? '';
+    }
+
     public function getDateCreated(): ?DateTime
     {
         return $this->dateCreated;
@@ -221,6 +285,17 @@ class City extends AbstractEntity
     public function setImage(?City\Image $image): City
     {
         $this->image = $image;
+        return $this;
+    }
+
+    public function getLanguage(): ?\General\Entity\Language
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?\General\Entity\Language $language): City
+    {
+        $this->language = $language;
         return $this;
     }
 }

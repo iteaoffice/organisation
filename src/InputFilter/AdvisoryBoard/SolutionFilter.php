@@ -67,6 +67,13 @@ final class SolutionFilter extends InputFilter
             ]
         );
 
+        $inputFilter->add(
+            [
+                'name'     => 'project',
+                'required' => false,
+            ]
+        );
+
         $this->add(
             [
                 'name'       => 'file',

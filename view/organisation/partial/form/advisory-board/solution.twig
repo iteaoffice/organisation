@@ -6,9 +6,12 @@
     {{ formelement(solutionForm.get('id')) }}
     {{ lbs5formelement(solutionForm.get('title')) }}
     {{ lbs5formelement(solutionForm.get('description')) }}
+    {{ lbs5formelement(solutionForm.get('hidden')) }}
     {{ lbs5formelement(solutionForm.get('targetedCustomers')) }}
+    {{ lbs5formelement(solutionForm.get('conditionOfUse')) }}
     {{ lbs5formelement(solutionForm.get('website')) }}
     {{ contactformelement(solutionForm.get('contact')) }}
+    {{ lbs5formelement(solutionForm.get('project')) }}
 
 {% if solution %}
     <div class="row mb-3">

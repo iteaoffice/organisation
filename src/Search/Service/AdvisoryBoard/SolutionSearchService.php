@@ -12,11 +12,14 @@ declare(strict_types=1);
 
 namespace Organisation\Search\Service\AdvisoryBoard;
 
+use Organisation\Entity\AdvisoryBoard\Solution;
 use Search\Service\AbstractSearchService;
 use Search\Service\SearchServiceInterface;
 use Search\Solr\Expression\CompositeExpression;
 use Search\Solr\Expression\ExpressionBuilder;
 use Solarium\QueryType\Select\Query\Query;
+
+use function in_array;
 
 /**
  * Class OrganisationSearchService
@@ -50,7 +53,7 @@ class SolutionSearchService extends AbstractSearchService
 
         $this->getQuery()->setQuery((string)$searchQuery);
 
-        $hasTerm = ! \in_array($searchTerm, ['*', ''], true);
+        $hasTerm = ! in_array($searchTerm, ['*', ''], true);
 
         if (! $hasTerm) {
             switch ($order) {
@@ -72,6 +75,51 @@ class SolutionSearchService extends AbstractSearchService
 
         if ($hasTerm) {
             $this->getQuery()->addSort('score', Query::SORT_DESC);
+        }
+
+        return $this;
+    }
+
+    public function setPublicSearch(string $searchTerm): SearchServiceInterface
+    {
+        $this->setQuery($this->getSolrClient()->createSelect());
+
+        $eb          = new ExpressionBuilder();
+        $searchQuery = $eb->all(
+            $eb->comp(
+                [
+                    $eb->field('name', $eb->boost($searchTerm, 200)),
+
+                    $eb->field('name_search', $eb->wild($searchTerm)),
+                    $eb->field('target_customers_search', $eb->wild($searchTerm)),
+                ],
+                CompositeExpression::TYPE_OR
+            )
+        );
+
+        $this->getQuery()->setQuery((string)$searchQuery);
+
+//        //We do not want any hidden
+        $filterQuery = $eb->comp(
+            [
+                $eb->field('is_hidden', false)
+            ],
+            CompositeExpression::TYPE_AND
+        );
+
+        $this->getQuery()->addFilterQuery(
+            [
+                'key'   => 'no_hidden',
+                'query' => (string)$filterQuery,
+            ]
+        );
+
+        $hasTerm = ! in_array($searchTerm, ['*', ''], true);
+
+        if ($hasTerm) {
+            $this->getQuery()->addSort('score', Query::SORT_DESC);
+        } else {
+            $this->getQuery()->addSort('title_sort', Query::SORT_ASC);
         }
 
         return $this;

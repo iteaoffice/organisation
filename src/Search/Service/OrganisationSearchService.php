@@ -138,7 +138,7 @@ class OrganisationSearchService extends AbstractSearchService
 
         $filterQuery = $eb->comp(
             [
-                $eb->field('has_projects_on_website', $eb->eq(true))
+                $eb->field('has_projects_on_website', true)
             ],
             CompositeExpression::TYPE_AND
         );

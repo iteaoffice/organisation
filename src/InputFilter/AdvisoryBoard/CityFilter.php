@@ -60,6 +60,13 @@ final class CityFilter extends InputFilter
 
         $inputFilter->add(
             [
+                'name'       => 'tenderWebsite',
+                'required'   => false,
+            ]
+        );
+
+        $inputFilter->add(
+            [
                 'name'       => 'file',
                 'required'   => false,
                 'validators' => [

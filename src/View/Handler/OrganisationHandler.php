@@ -13,24 +13,25 @@ declare(strict_types=1);
 namespace Organisation\View\Handler;
 
 use Content\Entity\Content;
-use Content\Service\ArticleService;
 use General\ValueObject\Link\LinkDecoration;
 use General\View\Handler\AbstractHandler;
 use General\View\Helper\Country\CountryMap;
-use Organisation\Entity\Organisation;
-use Organisation\Search\Service\OrganisationSearchService;
-use Organisation\Service\OrganisationService;
-use Organisation\View\Helper\OrganisationLink;
-use Project\Service\ProjectService;
-use Search\Form\SearchResult;
-use Search\Paginator\Adapter\SolariumPaginator;
-use Solarium\QueryType\Select\Query\Query as SolariumQuery;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Http\Response;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Mvc\Application;
 use Laminas\Paginator\Paginator;
 use Laminas\View\HelperPluginManager;
+use Organisation\Entity\Organisation;
+use Organisation\Entity\Selection;
+use Organisation\Search\Service\OrganisationSearchService;
+use Organisation\Service\OrganisationService;
+use Organisation\Service\SelectionService;
+use Organisation\View\Helper\OrganisationLink;
+use Project\Service\ProjectService;
+use Search\Form\SearchResult;
+use Search\Paginator\Adapter\SolariumPaginator;
+use Solarium\QueryType\Select\Query\Query as SolariumQuery;
 use ZfcTwig\View\TwigRenderer;
 
 use function http_build_query;
@@ -45,8 +46,8 @@ final class OrganisationHandler extends AbstractHandler
 {
     private OrganisationService $organisationService;
     private OrganisationSearchService $organisationSearchService;
+    private SelectionService $selectionService;
     private ProjectService $projectService;
-    private ArticleService $articleService;
 
     public function __construct(
         Application $application,
@@ -56,8 +57,8 @@ final class OrganisationHandler extends AbstractHandler
         TranslatorInterface $translator,
         OrganisationService $organisationService,
         OrganisationSearchService $organisationSearchService,
-        ProjectService $projectService,
-        ArticleService $articleService
+        SelectionService $selectionService,
+        ProjectService $projectService
     ) {
         parent::__construct(
             $application,
@@ -67,10 +68,10 @@ final class OrganisationHandler extends AbstractHandler
             $translator
         );
 
-        $this->projectService = $projectService;
-        $this->organisationService = $organisationService;
+        $this->organisationService       = $organisationService;
         $this->organisationSearchService = $organisationSearchService;
-        $this->articleService = $articleService;
+        $this->selectionService          = $selectionService;
+        $this->projectService            = $projectService;
     }
 
     public function __invoke(Content $content): ?string
@@ -99,6 +100,13 @@ final class OrganisationHandler extends AbstractHandler
                 $this->getHeadTitle()->append($this->translator->translate('txt-organisation-list'));
 
                 return $this->parseOrganisationList();
+            case 'organisation_list_selection':
+                $selection = $this->getOrganisationSelectionByParams($params);
+                if (null === $selection) {
+                    return 'The selected selection cannot be found';
+                }
+
+                return $this->parseOrganisationListSelection($selection);
             default:
                 return sprintf(
                     'No handler available for <code>%s</code> in class <code>%s</code>',
@@ -128,12 +136,12 @@ final class OrganisationHandler extends AbstractHandler
         return $this->renderer->render(
             'cms/organisation/organisation',
             [
-                'organisation' => $organisation,
+                'organisation'   => $organisation,
                 'projectService' => $this->projectService,
-                'projects' => $this->projectService->findProjectByOrganisation(
+                'projects'       => $this->projectService->findProjectByOrganisation(
                     $organisation
                 ),
-                'map' => $this->parseOrganisationMap($organisation)
+                'map'            => $this->parseOrganisationMap($organisation)
             ]
         );
     }
@@ -143,13 +151,13 @@ final class OrganisationHandler extends AbstractHandler
         /*
          * Collect the list of countries from the organisation and cluster
          */
-        $countries = [$organisation->getCountry()];
+        $countries  = [$organisation->getCountry()];
         $mapOptions = [
             'clickable' => true,
-            'colorMin' => '#00a651',
-            'colorMax' => '#005C00',
-            'focusOn' => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
-            'height' => '340px',
+            'colorMin'  => '#00a651',
+            'colorMax'  => '#005C00',
+            'focusOn'   => ['x' => 0.5, 'y' => 0.5, 'scale' => 1.1], // Slight zoom
+            'height'    => '340px',
         ];
 
         $countryMap = $this->helperPluginManager->get(CountryMap::class);
@@ -164,10 +172,10 @@ final class OrganisationHandler extends AbstractHandler
         $form = new SearchResult();
         $data = array_merge(
             [
-                'order' => '',
+                'order'     => '',
                 'direction' => '',
-                'query' => '',
-                'facet' => [],
+                'query'     => '',
+                'facet'     => [],
             ],
             $this->request->getQuery()->toArray()
         );
@@ -216,19 +224,43 @@ final class OrganisationHandler extends AbstractHandler
         return $this->renderer->render(
             'cms/organisation/list',
             [
-                'form' => $form,
-                'order' => $data['order'],
-                'direction' => $data['direction'],
-                'query' => $data['query'],
-                'badges' => $form->getBadges(),
-                'arguments' => http_build_query($form->getFilteredData()),
-                'paginator' => $paginator,
-                'page' => $page,
-                'hasTerm' => $hasTerm,
+                'form'                => $form,
+                'order'               => $data['order'],
+                'direction'           => $data['direction'],
+                'query'               => $data['query'],
+                'badges'              => $form->getBadges(),
+                'arguments'           => http_build_query($form->getFilteredData()),
+                'paginator'           => $paginator,
+                'page'                => $page,
+                'hasTerm'             => $hasTerm,
                 'organisationService' => $this->organisationService,
-                'route' => $this->routeMatch->getMatchedRouteName(),
-                'params' => $this->routeMatch->getParams(),
-                'docRef' => $this->routeMatch->getParam('docRef')
+                'route'               => $this->routeMatch->getMatchedRouteName(),
+                'params'              => $this->routeMatch->getParams(),
+                'docRef'              => $this->routeMatch->getParam('docRef')
+            ]
+        );
+    }
+
+    private function getOrganisationSelectionByParams(array $params): ?Selection
+    {
+        $selection = null;
+        if (null !== $params['selection']) {
+            $selection = $this->selectionService->findSelectionById((int)$params['selection']);
+        }
+
+        return $selection;
+    }
+
+    private function parseOrganisationListSelection(Selection $selection): string
+    {
+        //We have a selection, but we don't want do send the service in the function,
+        $organisations = $this->selectionService->findOrganisationsInSelection($selection);
+
+        return $this->renderer->render(
+            'cms/organisation/list-selection',
+            [
+                'organisations'       => $organisations,
+                'organisationService' => $this->organisationService,
             ]
         );
     }

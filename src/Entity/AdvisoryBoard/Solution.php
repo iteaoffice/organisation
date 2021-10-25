@@ -27,6 +27,14 @@ use Organisation\Entity\AbstractEntity;
  */
 class Solution extends AbstractEntity
 {
+    public const HIDDEN_NO  = 0;
+    public const HIDDEN_YES = 1;
+
+    private static array $hiddenTemplates = [
+        self::HIDDEN_NO  => 'txt-visible',
+        self::HIDDEN_YES => 'txt-hidden',
+    ];
+
     /**
      * @ORM\Column(name="solution_id", type="integer", options={"unsigned":true})
      * @ORM\Id
@@ -48,6 +56,13 @@ class Solution extends AbstractEntity
      */
     private ?string $docRef = null;
     /**
+     * @ORM\Column(name="`hidden`", type="smallint", nullable=false)
+     * @Annotation\Type("Laminas\Form\Element\Radio")
+     * @Annotation\Attributes({"array":"hiddenTemplates"})
+     * @Annotation\Options({"label":"txt-advisory-board-solution-hidden-label","help-block":"txt-advisory-board-solution-hidden-help-block"})
+     */
+    private int $hidden = self::HIDDEN_NO;
+    /**
      * @ORM\Column(name="description")
      * @Annotation\Type("\Laminas\Form\Element\Textarea")
      * @Annotation\Options({"label":"txt-advisory-board-solution-description-label","help-block":"txt-advisory-board-solution-description-help-block"})
@@ -57,10 +72,17 @@ class Solution extends AbstractEntity
     /**
      * @ORM\Column(name="targeted_customers")
      * @Annotation\Type("\Laminas\Form\Element\Textarea")
-     * @Annotation\Options({"label":"txt-advisory-board-solution-description-label","help-block":"txt-advisory-board-solution-description-help-block"})
-     * @Annotation\Attributes({"placeholder":"txt-advisory-board-solution-description-placeholder"})
+     * @Annotation\Options({"label":"txt-advisory-board-solution-targeted-customers-label","help-block":"txt-advisory-board-solution-targeted-customers-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-advisory-board-solution-targeted-customers-placeholder"})
      */
     private string $targetedCustomers = '';
+    /**
+     * @ORM\Column(name="condition_of_use")
+     * @Annotation\Type("\Laminas\Form\Element\Textarea")
+     * @Annotation\Options({"label":"txt-advisory-board-solution-condition-of-use-label","help-block":"txt-advisory-board-solution-condition-of-use-help-block"})
+     * @Annotation\Attributes({"placeholder":"txt-advisory-board-solution-condition-of-use-placeholder"})
+     */
+    private string $conditionOfUse = '';
     /**
      * @ORM\Column(name="website",nullable=true)
      * @Annotation\Type("\Laminas\Form\Element\Url")
@@ -92,6 +114,42 @@ class Solution extends AbstractEntity
      * @Annotation\Options({"label":"txt-advisory-board-solution-contact-label","help-block":"txt-advisory-board-solution-contact-help-block"})
      */
     private ?Contact $contact = null;
+    /**
+     * @ORM\ManyToOne(targetEntity="Project\Entity\Project", cascade={"persist"}, inversedBy="advisoryBoardSolutions")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=true)
+     * @Annotation\Type("DoctrineORMModule\Form\Element\EntitySelect")
+     * @Annotation\Options({
+     *     "target_class":"Project\Entity\Project",
+     *     "empty_option":"— Choose a project",
+     *     "allow_empty":true,
+     *      "find_method":{
+     *          "name":"findProjectsForForm",
+     *          "params": {
+     *              "criteria":{},
+     *              "orderBy":{
+     *                  "id":"DESC"}
+     *              }
+     *          }
+     *      }
+     * )
+     * @Annotation\Options({"label":"txt-advisory-board-solution-project-label","help-block":"txt-advisory-board-solution-project-help-block"})
+     */
+    private ?\Project\Entity\Project $project = null;
+
+    public static function getHiddenTemplates(): array
+    {
+        return self::$hiddenTemplates;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden === self::HIDDEN_YES;
+    }
+
+    public function hasProject(): bool
+    {
+        return null !== $this->project;
+    }
 
     public function hasImage(): bool
     {
@@ -202,6 +260,28 @@ class Solution extends AbstractEntity
         return $this;
     }
 
+    public function getConditionOfUse(): string
+    {
+        return $this->conditionOfUse;
+    }
+
+    public function setConditionOfUse(string $conditionOfUse): Solution
+    {
+        $this->conditionOfUse = $conditionOfUse;
+        return $this;
+    }
+
+    public function getProject(): ?\Project\Entity\Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?\Project\Entity\Project $project): Solution
+    {
+        $this->project = $project;
+        return $this;
+    }
+
     public function getImage(): ?Solution\Image
     {
         return $this->image;
@@ -211,5 +291,22 @@ class Solution extends AbstractEntity
     {
         $this->image = $image;
         return $this;
+    }
+
+    public function getHidden(): ?int
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden($hidden): Solution
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    public function getHiddenText(): string
+    {
+        return self::$hiddenTemplates[$this->hidden] ?? '';
     }
 }

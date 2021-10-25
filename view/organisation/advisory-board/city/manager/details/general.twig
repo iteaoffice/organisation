@@ -10,6 +10,14 @@
     <dd>{{ city.name }}</dd>
     <dt>{{ translate("txt-country") }}</dt>
     <dd>{{ countryLink(city.country,'view-admin','name') }}</dd>
+    <dt>{{ translate("txt-language") }}</dt>
+
+    <dt>{{ translate("txt-visibility") }}</dt>
+    <dd>{% if city.isHidden %}<i class="fas fa-eye-slash"></i>{% endif %} {{ translate(city.getHiddenText()) }}</dd>
+
+    <dd>{{ languageLink(city.language,'view','language') }}</dd>
+    <dt>{{ translate("txt-contact") }}</dt>
+    <dd>{{ contactLink(city.contact,'view-admin','name') }}</dd>
     <dt>{{ translate("txt-date-created") }}</dt>
     <dd>{{ city.dateCreated|date('d-m-Y H:i') }}</dd>
     {% if city.dateUpdated %}

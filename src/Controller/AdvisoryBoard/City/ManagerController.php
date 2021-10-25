@@ -127,7 +127,7 @@ final class ManagerController extends AbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $image = new Entity\AdvisoryBoard\City\Image();
                     $image->setCity($city);
                     $image->setImage(file_get_contents($fileData['file']['tmp_name']));
@@ -172,7 +172,7 @@ final class ManagerController extends AbstractController
         );
         $form = $this->formService->prepare($city, $data);
 
-        if (!$this->cityService->canDeleteCity($city)) {
+        if (! $this->cityService->canDeleteCity($city)) {
             $form->remove('delete');
         }
 
@@ -200,7 +200,7 @@ final class ManagerController extends AbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $image = $city->getImage();
                     if (null === $image) {
                         // Create a new logo element

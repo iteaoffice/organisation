@@ -26,10 +26,11 @@
         <tbody>
         {% for result in paginator.getCurrentItems() %}
             {% set solution = solutionService.findsolutionById(result.fields.solution_id) %}
-            <tr>
+            <tr {% if solution.isHidden %}class="table-warning"{% endif %}>
                 <td>
                     {{ advisoryBoardSolutionLink(solution,'view-admin','title') }}
                     {{ advisoryBoardSolutionLink(solution,'edit-admin','icon') }}
+                    {% if solution.isHidden %}<i class="fas fa-eye-slash"></i>{% endif %}
                 </td>
                 <td>{{ solution.description }}</td>
                 <td>{{ contactLink(solution.contact,'view-admin','name') }}</td>

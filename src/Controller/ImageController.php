@@ -94,7 +94,7 @@ final class ImageController extends AbstractController
         /** @var City $city */
         $city = $this->cityService->findCityById((int)$this->params('id'));
 
-        if (null === $city || !$city->hasImage()) {
+        if (null === $city || ! $city->hasImage()) {
             return $response;
         }
 
@@ -117,7 +117,7 @@ final class ImageController extends AbstractController
         /** @var Solution $solution */
         $solution = $this->solutionService->findSolutionById((int)$this->params('id'));
 
-        if (null === $solution || !$solution->hasImage()) {
+        if (null === $solution || ! $solution->hasImage()) {
             return $response;
         }
 

@@ -8,21 +8,35 @@
 <dl class="dl-horizontal">
     <dt>{{ translate("txt-solution-title") }}</dt>
     <dd>{{ solution.title }}</dd>
+
     <dt>{{ translate("txt-solution-description") }}</dt>
     <dd>{{ solution.description }}</dd>
+
+    <dt>{{ translate("txt-visibility") }}</dt>
+    <dd>{% if solution.isHidden %}<i class="fas fa-eye-slash"></i>{% endif %} {{ translate(solution.getHiddenText()) }}
+    </dd>
+
     <dt>{{ translate("txt-solution-targeted-customers") }}</dt>
     <dd>{{ solution.targetedCustomers }}</dd>
 
+    {% if solution.conditionOfUse %}
+        <dt>{{ translate("txt-solution-condition-of-use") }}</dt>
+        <dd>{{ solution.conditionOfUse }}</dd>
+    {% endif %}
 
     <dt>{{ translate("txt-solution-contact") }}</dt>
     <dd>{{ contactLink(solution.contact,'view-admin') }}</dd>
-
 
     <dt>{{ translate("txt-date-created") }}</dt>
     <dd>{{ solution.dateCreated|date('d-m-Y H:i') }}</dd>
     {% if solution.dateUpdated %}
         <dt>{{ translate("txt-last-update") }}</dt>
         <dd>{{ solution.dateUpdated|date('d-m-Y H:i') }}</dd>
+    {% endif %}
+
+    {% if solution.hasProject() %}
+        <dt>{{ translate("txt-project") }}</dt>
+        <dd>{{ projectLink(solution.project,'view-admin') }}</dd>
     {% endif %}
 </dl>
 

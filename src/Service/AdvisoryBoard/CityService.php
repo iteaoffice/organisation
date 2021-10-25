@@ -52,9 +52,8 @@ class CityService extends AbstractService implements SearchUpdateInterface
 
     public function updateCollectionInSearchEngine(
         bool $clearIndex = false,
-        int  $limit = 25
-    ): void
-    {
+        int $limit = 25
+    ): void {
         $this->updateCollectionInSearchEngineByEntity(
             Entity\AdvisoryBoard\City::class,
             $this->citySearchService,
@@ -114,13 +113,22 @@ class CityService extends AbstractService implements SearchUpdateInterface
             $cityDocument->setField('date_updated', $city->getDateUpdated()->format(AbstractSearchService::DATE_SOLR));
         }
         $cityDocument->setField('name', $city->getName());
-        $cityDocument->setField('contact_id', $city->getContact()->getId());
         $cityDocument->setField('contact', $city->getContact()->parseFullName());
-        $cityDocument->setField('country_id', $city->getCountry()->getId());
+        $cityDocument->setField('contact_id', $city->getContact()->getId());
+
+        $cityDocument->setField('language', $city->getLanguage()->getLanguage());
+        $cityDocument->setField('language_id', $city->getLanguage()->getId());
 
         $cityDocument->setField('country', $city->getCountry()->getCountry());
         $cityDocument->setField('country_id', $city->getContact()->getId());
 
+        $cityDocument->setField('website', $city->getWebsite());
+        $cityDocument->setField('tender_website', $city->getTenderWebsite());
+        $cityDocument->setField('has_tender_website', $city->hasTenderWebsite());
+
+        $cityDocument->setField('hidden', $city->getHidden());
+        $cityDocument->setField('hidden_text', $this->translator->translate($city->getHiddenText()));
+        $cityDocument->setField('is_hidden', $city->isHidden());
 
         $update->addDocument($cityDocument);
         $update->addCommit();

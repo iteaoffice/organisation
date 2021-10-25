@@ -29,11 +29,10 @@ class CitySearchService extends AbstractSearchService
 
     public function setSearch(
         string $searchTerm,
-        array  $searchFields = [],
+        array $searchFields = [],
         string $order = '',
         string $direction = Query::SORT_ASC
-    ): SearchServiceInterface
-    {
+    ): SearchServiceInterface {
         $this->setQuery($this->getSolrClient()->createSelect());
 
         $eb          = new ExpressionBuilder();
@@ -52,9 +51,9 @@ class CitySearchService extends AbstractSearchService
 
         $this->getQuery()->setQuery((string)$searchQuery);
 
-        $hasTerm = !\in_array($searchTerm, ['*', ''], true);
+        $hasTerm = ! \in_array($searchTerm, ['*', ''], true);
 
-        if (!$hasTerm) {
+        if (! $hasTerm) {
             switch ($order) {
                 case 'name':
                     $this->getQuery()->addSort('name_sort', $direction);
@@ -79,6 +78,97 @@ class CitySearchService extends AbstractSearchService
         $facetSet = $this->getQuery()->getFacetSet();
         $facetSet->createFacetField('country')->setField('country')->setSort('index')
             ->setMinCount(1)->setExcludes(['country']);
+
+        return $this;
+    }
+
+    public function setPublicSearch(string $searchTerm): SearchServiceInterface
+    {
+        $this->setQuery($this->getSolrClient()->createSelect());
+
+        $eb          = new ExpressionBuilder();
+        $searchQuery = $eb->all(
+            $eb->comp(
+                [
+                    $eb->field('name', $eb->boost($searchTerm, 200)),
+
+                    $eb->field('name_search', $eb->wild($searchTerm)),
+                    $eb->field('country_sear', $eb->wild($searchTerm)),
+                ],
+                CompositeExpression::TYPE_OR
+            )
+        );
+
+        $this->getQuery()->setQuery((string)$searchQuery);
+
+//        //We do not want any hidden
+        $filterQuery = $eb->comp(
+            [
+                $eb->field('is_hidden', false)
+            ],
+            CompositeExpression::TYPE_AND
+        );
+
+        $this->getQuery()->addFilterQuery(
+            [
+                'key'   => 'no_hidden',
+                'query' => (string)$filterQuery,
+            ]
+        );
+
+        $hasTerm = ! in_array($searchTerm, ['*', ''], true);
+
+        if ($hasTerm) {
+            $this->getQuery()->addSort('score', Query::SORT_DESC);
+        } else {
+            $this->getQuery()->addSort('name_sort', Query::SORT_ASC);
+        }
+
+        return $this;
+    }
+
+    public function setPublicTenderSearch(string $searchTerm): SearchServiceInterface
+    {
+        $this->setQuery($this->getSolrClient()->createSelect());
+
+        $eb          = new ExpressionBuilder();
+        $searchQuery = $eb->all(
+            $eb->comp(
+                [
+                    $eb->field('name', $eb->boost($searchTerm, 200)),
+
+                    $eb->field('name_search', $eb->wild($searchTerm)),
+                    $eb->field('country_sear', $eb->wild($searchTerm)),
+                ],
+                CompositeExpression::TYPE_OR
+            )
+        );
+
+        $this->getQuery()->setQuery((string)$searchQuery);
+
+//        //We do not want any hidden
+        $filterQuery = $eb->comp(
+            [
+                $eb->field('is_hidden', false),
+
+            ],
+            CompositeExpression::TYPE_AND
+        );
+
+        $this->getQuery()->addFilterQuery(
+            [
+                'key'   => 'no_hidden',
+                'query' => (string)$filterQuery,
+            ]
+        );
+
+        $hasTerm = ! in_array($searchTerm, ['*', ''], true);
+
+        if ($hasTerm) {
+            $this->getQuery()->addSort('score', Query::SORT_DESC);
+        } else {
+            $this->getQuery()->addSort('name_sort', Query::SORT_ASC);
+        }
 
         return $this;
     }

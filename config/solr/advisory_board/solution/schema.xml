@@ -32,28 +32,45 @@
     <field name="date_created" type="date" indexed="true" stored="true"/>
     <field name="date_updated" type="date" indexed="true" stored="true"/>
 
-    <field title="title" type="string" indexed="false" stored="true"/>
-    <field title="title_sort" type="string_ci" indexed="true" stored="false"/>
-    <field title="title_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
+    <field name="title" type="string" indexed="true" stored="true"/>
+    <field name="title_sort" type="string_ci" indexed="true" stored="false"/>
+    <field name="title_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
     <copyField source="title" dest="title_sort"/>
     <copyField source="title" dest="title_search"/>
 
-    <field name="description" type="string" indexed="false" stored="true"/>
+    <field name="description" type="string" indexed="true" stored="true"/>
     <field name="description_sort" type="string_ci" indexed="true" stored="false"/>
     <field name="description_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
     <copyField source="description" dest="description_sort"/>
     <copyField source="description" dest="description_search"/>
 
-    <field name="target_customers" type="string" indexed="false" stored="true"/>
+    <field name="target_customers" type="string" indexed="true" stored="true"/>
     <field name="target_customers_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
     <copyField source="target_customers" dest="target_customers_search"/>
 
+    <field name="condition_of_use" type="string" indexed="true" stored="true"/>
+    <field name="condition_of_use_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
+    <copyField source="condition_of_use" dest="condition_of_use_search"/>
+
     <field name="contact_id" type="int" indexed="true" stored="true"/>
-    <field name="contact" type="string" indexed="false" stored="true"/>
+    <field name="contact" type="string" indexed="true" stored="true"/>
     <field name="contact_sort" type="string_ci" indexed="true" stored="false"/>
     <field name="contact_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
     <copyField source="contact" dest="contact_sort"/>
     <copyField source="contact" dest="contact_search"/>
+
+    <field name="project_id" type="int" indexed="true" stored="true"/>
+    <field name="project" type="string" indexed="true" stored="true"/>
+    <field name="project_sort" type="string_ci" indexed="true" stored="false"/>
+    <field name="project_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
+    <copyField source="project" dest="project_sort"/>
+    <copyField source="project" dest="project_search"/>
+
+    <field name="website" type="string" indexed="true" stored="true"/>
+
+    <field name="hidden" type="int" indexed="true" stored="true"/>
+    <field name="hidden_text" type="string" indexed="true" stored="true"/>
+    <field name="is_hidden" type="boolean" indexed="true" stored="true"/>
 
     <uniqueKey>id</uniqueKey>
 

@@ -114,6 +114,8 @@ $config = [
         ],
         'factories'  => [
             View\Handler\OrganisationHandler::class                                  => ConfigAbstractFactory::class,
+            View\Handler\AdvisoryBoard\CityHandler::class                            => ConfigAbstractFactory::class,
+            View\Handler\AdvisoryBoard\SolutionHandler::class                        => ConfigAbstractFactory::class,
             View\Helper\OrganisationLink::class                                      => LinkHelperFactory::class,
             View\Helper\Organisation\TypeLink::class                                 => LinkHelperFactory::class,
             View\Helper\NoteLink::class                                              => LinkHelperFactory::class,

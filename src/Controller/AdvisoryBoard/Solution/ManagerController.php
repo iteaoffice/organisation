@@ -126,7 +126,7 @@ final class ManagerController extends AbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $image = new Entity\AdvisoryBoard\Solution\Image();
                     $image->setSolution($solution);
                     $image->setImage(file_get_contents($fileData['file']['tmp_name']));
@@ -172,7 +172,10 @@ final class ManagerController extends AbstractController
 
         $form = $this->formService->prepare($solution, $data);
 
-        if (!$this->solutionService->canDeleteSolution($solution)) {
+        //we do not need a file here
+        $form->getInputFilter()->get('file')->setRequired(false);
+
+        if (! $this->solutionService->canDeleteSolution($solution)) {
             $form->remove('delete');
         }
 
@@ -200,7 +203,7 @@ final class ManagerController extends AbstractController
 
                 $fileData = $this->params()->fromFiles();
 
-                if (!empty($fileData['file']['name'])) {
+                if (! empty($fileData['file']['name'])) {
                     $image = $solution->getImage();
                     if (null === $image) {
                         // Create a new logo element
@@ -229,6 +232,9 @@ final class ManagerController extends AbstractController
                         'id' => $solution->getId(),
                     ]
                 );
+            } else {
+                var_dump($form->getInputFilter()->getMessages());
+                die();
             }
         }
 

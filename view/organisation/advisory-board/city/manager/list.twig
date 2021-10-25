@@ -26,10 +26,11 @@
         <tbody>
         {% for result in paginator.getCurrentItems() %}
             {% set city = cityService.findCityById(result.fields.city_id) %}
-            <tr>
+            <tr {% if city.isHidden %}class="table-warning"{% endif %}>
                 <td>
                     {{ advisoryBoardCityLink(city,'view-admin','name') }}
                     {{ advisoryBoardCityLink(city,'edit-admin','icon') }}
+                    {% if city.isHidden %}<i class="fas fa-eye-slash"></i>{% endif %}
                 </td>
                 <td>{{ countryLink(city.country,'view-admin','name') }}</td>
                 <td>{{ contactLink(city.contact,'view-admin','name') }}</td>

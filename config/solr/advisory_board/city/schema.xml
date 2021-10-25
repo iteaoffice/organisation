@@ -32,25 +32,40 @@
     <field name="date_created" type="date" indexed="true" stored="true"/>
     <field name="date_updated" type="date" indexed="true" stored="true"/>
 
-    <field name="name" type="string" indexed="false" stored="true"/>
+    <field name="name" type="string" indexed="true" stored="true"/>
     <field name="name_sort" type="string_ci" indexed="true" stored="false"/>
     <field name="name_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
     <copyField source="name" dest="name_sort"/>
     <copyField source="name" dest="name_search"/>
 
     <field name="contact_id" type="int" indexed="true" stored="true"/>
-    <field name="contact" type="string" indexed="false" stored="true"/>
+    <field name="contact" type="string" indexed="true" stored="true"/>
     <field name="contact_sort" type="string_ci" indexed="true" stored="false"/>
     <field name="contact_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
     <copyField source="contact" dest="contact_sort"/>
     <copyField source="contact" dest="contact_search"/>
 
     <field name="country_id" type="int" indexed="true" stored="true"/>
-    <field name="country" type="string" indexed="false" stored="true"/>
+    <field name="country" type="string" indexed="true" stored="true"/>
     <field name="country_sort" type="string_ci" indexed="true" stored="false"/>
     <field name="country_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
     <copyField source="country" dest="country_sort"/>
     <copyField source="country" dest="country_search"/>
+
+    <field name="language_id" type="int" indexed="true" stored="true"/>
+    <field name="language" type="string" indexed="true" stored="true"/>
+    <field name="language_sort" type="string_ci" indexed="true" stored="false"/>
+    <field name="language_search" type="text_general_edge_ngram" indexed="true" stored="false"/>
+    <copyField source="language" dest="language_sort"/>
+    <copyField source="language" dest="language_search"/>
+
+    <field name="website" type="string" indexed="true" stored="true"/>
+    <field name="tender_website" type="string" indexed="true" stored="true"/>
+    <field name="has_tender_website" type="boolean" indexed="true" stored="true"/>
+
+    <field name="hidden" type="int" indexed="true" stored="true"/>
+    <field name="hidden_text" type="string" indexed="true" stored="true"/>
+    <field name="is_hidden" type="boolean" indexed="true" stored="true"/>
 
     <uniqueKey>id</uniqueKey>
 
