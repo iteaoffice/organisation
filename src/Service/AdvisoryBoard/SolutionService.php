@@ -20,14 +20,17 @@ use Organisation\Service\AbstractService;
 use Search\Service\AbstractSearchService;
 use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
+use Solarium\Core\Client\Adapter\Http;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  *
  */
 class SolutionService extends AbstractService implements SearchUpdateInterface
 {
+
     private SolutionSearchService $solutionSearchService;
     private TranslatorInterface $translator;
 
@@ -85,7 +88,7 @@ class SolutionService extends AbstractService implements SearchUpdateInterface
      */
     public function prepareSearchUpdate($solution): AbstractQuery
     {
-        $searchClient = new Client();
+        $searchClient = new Client(new Http(), new EventDispatcher(), []);
         $update       = $searchClient->createUpdate();
 
         /** @var Document $solutionDocument */
@@ -126,8 +129,9 @@ class SolutionService extends AbstractService implements SearchUpdateInterface
 
     public function updateCollectionInSearchEngine(
         bool $clearIndex = false,
-        int $limit = 25
-    ): void {
+        int  $limit = 25
+    ): void
+    {
         $this->updateCollectionInSearchEngineByEntity(
             Entity\AdvisoryBoard\Solution::class,
             $this->solutionSearchService,

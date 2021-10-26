@@ -20,8 +20,10 @@ use Organisation\Service\AbstractService;
 use Search\Service\AbstractSearchService;
 use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
+use Solarium\Core\Client\Adapter\Http;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  *
@@ -52,8 +54,9 @@ class CityService extends AbstractService implements SearchUpdateInterface
 
     public function updateCollectionInSearchEngine(
         bool $clearIndex = false,
-        int $limit = 25
-    ): void {
+        int  $limit = 25
+    ): void
+    {
         $this->updateCollectionInSearchEngineByEntity(
             Entity\AdvisoryBoard\City::class,
             $this->citySearchService,
@@ -98,7 +101,7 @@ class CityService extends AbstractService implements SearchUpdateInterface
      */
     public function prepareSearchUpdate($city): AbstractQuery
     {
-        $searchClient = new Client();
+        $searchClient = new Client(new Http(), new EventDispatcher(), []);
         $update       = $searchClient->createUpdate();
 
         /** @var Document $cityDocument */

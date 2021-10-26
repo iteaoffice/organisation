@@ -35,9 +35,12 @@ use Project\Service\ProjectService;
 use Search\Service\AbstractSearchService;
 use Search\Service\SearchUpdateInterface;
 use Solarium\Client;
+use Solarium\Core\Client\Adapter\Http;
 use Solarium\Core\Query\AbstractQuery;
 use Solarium\QueryType\Update\Query\Document;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 use function array_count_values;
 use function array_keys;
@@ -277,7 +280,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
             return substr($branch, 1);
         }
 
-        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', $branch));
+        return trim(preg_replace('/^(([^\~]*)\~\s?)?\s?(.*)$/', '${2}' . $organisation . ' ${3}', (string) $branch));
     }
 
     public function removeInactiveOrganisations(OutputInterface $output): void
@@ -383,7 +386,7 @@ class OrganisationService extends AbstractService implements SearchUpdateInterfa
      */
     public function prepareSearchUpdate($organisation): AbstractQuery
     {
-        $searchClient = new Client();
+        $searchClient = new Client(new Http(), new EventDispatcher(), []);
         $update       = $searchClient->createUpdate();
 
         /** @var Document $organisationDocument */
