@@ -1,5 +1,4 @@
 <?php
-
 return [
     'organisation/update/new' => __DIR__ . '/./view/organisation/update/new.twig',
     'organisation/update/manager/view' => __DIR__ . '/./view/organisation/update/manager/view.twig',
